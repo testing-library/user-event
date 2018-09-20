@@ -1,0 +1,19 @@
+{
+  "name": "user-event",
+  "version": "1.0.0",
+  "description": "Simulate user events for react-testing-library",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Gpx/user-event.git"
+  },
+  "author": "Giorgio Polvara <polvara@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Gpx/user-event/issues"
+  },
+  "homepage": "https://github.com/Gpx/user-event#readme"
+}

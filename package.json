@@ -5,6 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "test": "jest",
+    "test:coverage": "npm t -- --coverage",
     "build": "babel src -d dist",
     "semantic-release": "semantic-release",
     "travis-deploy-once": "travis-deploy-once",

@@ -18,12 +18,21 @@ function clickLabel(label) {
     input.focus();
     fireEvent.click(label);
   } else {
-    const input = label.querySelector("input");
+    const input = label.querySelector("input,textarea");
     input.focus();
     label.focus();
     fireEvent.click(input);
     fireEvent.click(label);
   }
+}
+
+function clickCheckbox(checkbox) {
+  fireEvent.mouseOver(checkbox);
+  fireEvent.mouseMove(checkbox);
+  fireEvent.mouseDown(checkbox);
+  fireEvent.mouseUp(checkbox);
+  fireEvent.click(checkbox);
+  fireEvent.change(checkbox);
 }
 
 function clickElement(element) {
@@ -48,10 +57,17 @@ const userEvent = {
       fireEvent.mouseLeave(focusedElement);
     }
 
-    if (element.tagName === "LABEL") {
-      clickLabel(element);
-    } else {
-      clickElement(element);
+    switch (element.tagName) {
+      case "LABEL":
+        clickLabel(element);
+        break;
+      case "INPUT":
+        if (element.type === "checkbox") {
+          clickCheckbox(element);
+          break;
+        }
+      default:
+        clickElement(element);
     }
 
     wasAnotherElementFocused && focusedElement.blur();

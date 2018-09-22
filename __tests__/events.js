@@ -6,22 +6,64 @@ import userEvent from "../src";
 afterEach(cleanup);
 
 describe("fireEvent.click", () => {
-  it("should fire the correct events for <input>", () => {
+  it.each(["input", "textarea"])(
+    "should fire the correct events for <%s>",
+    type => {
+      const onMouseOver = jest.fn();
+      const onMouseMove = jest.fn();
+      const onMouseDown = jest.fn();
+      const onFocus = jest.fn();
+      const onMouseUp = jest.fn();
+      const onClick = jest.fn();
+      const { getByTestId } = render(
+        React.createElement(type, {
+          "data-testid": "element",
+          onMouseOver: onMouseOver,
+          onMouseMove: onMouseMove,
+          onMouseDown: onMouseDown,
+          onFocus: onFocus,
+          onMouseUp: onMouseUp,
+          onClick: onClick
+        })
+      );
+
+      expect(onMouseOver).not.toHaveBeenCalled();
+      expect(onMouseMove).not.toHaveBeenCalled();
+      expect(onMouseDown).not.toHaveBeenCalled();
+      expect(onFocus).not.toHaveBeenCalled();
+      expect(onMouseUp).not.toHaveBeenCalled();
+      expect(onClick).not.toHaveBeenCalled();
+
+      userEvent.click(getByTestId("element"));
+
+      expect(onMouseOver).toHaveBeenCalledTimes(1);
+      expect(onMouseMove).toHaveBeenCalledTimes(1);
+      expect(onMouseDown).toHaveBeenCalledTimes(1);
+      expect(onFocus).toHaveBeenCalledTimes(1);
+      expect(onMouseUp).toHaveBeenCalledTimes(1);
+      expect(onClick).toHaveBeenCalledTimes(1);
+    }
+  );
+
+  it('should fire the correct events for <input type="checkbox">', () => {
     const onMouseOver = jest.fn();
     const onMouseMove = jest.fn();
     const onMouseDown = jest.fn();
     const onFocus = jest.fn();
     const onMouseUp = jest.fn();
     const onClick = jest.fn();
+    const onChange = jest.fn();
     const { getByTestId } = render(
       <input
-        data-testid="input"
+        data-testid="element"
+        type="checkbox"
         onMouseOver={onMouseOver}
         onMouseMove={onMouseMove}
         onMouseDown={onMouseDown}
         onFocus={onFocus}
         onMouseUp={onMouseUp}
         onClick={onClick}
+        onChange={onChange}
       />
     );
 
@@ -31,15 +73,18 @@ describe("fireEvent.click", () => {
     expect(onFocus).not.toHaveBeenCalled();
     expect(onMouseUp).not.toHaveBeenCalled();
     expect(onClick).not.toHaveBeenCalled();
+    expect(onChange).not.toHaveBeenCalled();
 
-    userEvent.click(getByTestId("input"));
+    userEvent.click(getByTestId("element"));
 
     expect(onMouseOver).toHaveBeenCalledTimes(1);
     expect(onMouseMove).toHaveBeenCalledTimes(1);
     expect(onMouseDown).toHaveBeenCalledTimes(1);
-    expect(onFocus).toHaveBeenCalledTimes(1);
+    expect(onFocus).not.toHaveBeenCalledTimes(1);
     expect(onMouseUp).toHaveBeenCalledTimes(1);
     expect(onClick).toHaveBeenCalledTimes(1);
+    expect(onChange).toHaveBeenCalledTimes(1);
+    expect(getByTestId("element")).toHaveProperty("checked", true);
   });
 
   it("should fire the correct events for <div>", () => {
@@ -101,42 +146,51 @@ describe("fireEvent.click", () => {
     expect(a).not.toHaveFocus();
   });
 
-  it("gives focus when clicking a <label> with htmlFor", () => {
-    const { getByTestId } = render(
-      <React.Fragment>
-        <label htmlFor="input" data-testid="label">
-          Label
-        </label>
-        <input id="input" data-testid="input" />
-      </React.Fragment>
-    );
-    userEvent.click(getByTestId("label"));
-    expect(getByTestId("input")).toHaveFocus();
-  });
+  it.each(["input", "textarea"])(
+    "gives focus to <%s> when clicking a <label> with htmlFor",
+    type => {
+      const { getByTestId } = render(
+        <React.Fragment>
+          <label htmlFor="input" data-testid="label">
+            Label
+          </label>
+          {React.createElement(type, { id: "input", "data-testid": "input" })}
+        </React.Fragment>
+      );
+      userEvent.click(getByTestId("label"));
+      expect(getByTestId("input")).toHaveFocus();
+    }
+  );
 
-  it("gives focus when clicking a <label> without htmlFor", () => {
-    const { getByTestId } = render(
-      <React.Fragment>
-        <label data-testid="label">
-          Label
-          <input data-testid="input" />
-        </label>
-      </React.Fragment>
-    );
-    userEvent.click(getByTestId("label"));
-    expect(getByTestId("input")).toHaveFocus();
-  });
+  it.each(["input", "textarea"])(
+    "gives focus to <%s> when clicking a <label> without htmlFor",
+    type => {
+      const { getByTestId } = render(
+        <React.Fragment>
+          <label data-testid="label">
+            Label
+            {React.createElement(type, { "data-testid": "input" })}
+          </label>
+        </React.Fragment>
+      );
+      userEvent.click(getByTestId("label"));
+      expect(getByTestId("input")).toHaveFocus();
+    }
+  );
 
-  it("gives focus when clicking on an element contained within a <label>", () => {
-    const { getByText, getByTestId } = render(
-      <React.Fragment>
-        <label htmlFor="input" data-testid="label">
-          <span>Label</span>
-        </label>
-        <input id="input" data-testid="input" />
-      </React.Fragment>
-    );
-    userEvent.click(getByText("Label"));
-    //expect(getByTestId('input')).toHaveFocus()
-  });
+  it.each(["input", "textarea"])(
+    "gives focus to <%s> when clicking on an element contained within a <label>",
+    type => {
+      const { getByText, getByTestId } = render(
+        <React.Fragment>
+          <label htmlFor="input" data-testid="label">
+            <span>Label</span>
+          </label>
+          {React.createElement(type, { id: "input", "data-testid": "input" })}
+        </React.Fragment>
+      );
+      userEvent.click(getByText("Label"));
+      expect(getByTestId("input")).toHaveFocus();
+    }
+  );
 });

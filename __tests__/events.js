@@ -118,12 +118,25 @@ describe('fireEvent.click', () => {
     const { getByTestId } = render(
       <React.Fragment>
         <label data-testid="label">
-          <span>Label</span>
+          Label
           <input data-testid="input" />
         </label>
       </React.Fragment>
     )
     userEvent.click(getByTestId('label'))
     expect(getByTestId('input')).toHaveFocus()
+  })
+
+  it('gives focus when clicking on an element contained within a <label>', () => {
+    const { getByText, getByTestId } = render(
+      <React.Fragment>
+        <label htmlFor="input" data-testid="label">
+          <span>Label</span>
+        </label>
+        <input id="input" data-testid="input" />
+      </React.Fragment>
+    )
+    userEvent.click(getByText('Label'))
+    //expect(getByTestId('input')).toHaveFocus()
   })
 })

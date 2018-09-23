@@ -71,6 +71,14 @@ const userEvent = {
     }
 
     wasAnotherElementFocused && focusedElement.blur();
+  },
+  type(element, text) {
+    this.click(element);
+    text
+      .split("")
+      .forEach((_, i) =>
+        fireEvent.change(element, { target: { value: text.slice(0, i + 1) } })
+      );
   }
 };
 

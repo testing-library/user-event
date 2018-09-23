@@ -72,13 +72,20 @@ const userEvent = {
 
     wasAnotherElementFocused && focusedElement.blur();
   },
-  type(element, text) {
+  type(element, text, userOpts = {}) {
+    const defaultOpts = { allAtOnce: false };
+    const opts = Object.assign(defaultOpts, userOpts);
+
     this.click(element);
-    text
-      .split("")
-      .forEach((_, i) =>
-        fireEvent.change(element, { target: { value: text.slice(0, i + 1) } })
-      );
+    if (opts.allAtOnce) {
+      fireEvent.change(element, { target: { value: text } });
+    } else {
+      text
+        .split("")
+        .forEach((_, i) =>
+          fireEvent.change(element, { target: { value: text.slice(0, i + 1) } })
+        );
+    }
   }
 };
 

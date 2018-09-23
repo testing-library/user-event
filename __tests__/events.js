@@ -143,7 +143,7 @@ describe("fireEvent.click", () => {
 
     userEvent.click(b);
     expect(a).not.toHaveFocus();
-    expect(a).not.toHaveFocus();
+    expect(b).toHaveFocus();
   });
 
   it.each(["input", "textarea"])(

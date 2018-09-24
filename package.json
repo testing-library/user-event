@@ -2,7 +2,7 @@
   "name": "user-event",
   "version": "0.0.0-development",
   "description": "Simulate user events for react-testing-library",
-  "keywords": ["react-testing-library", "react", "testing"],
+  "keywords": ["react-testing-library", "dom-testing-library", "react", "testing"],
   "main": "dist/index.js",
   "scripts": {
     "test": "jest",

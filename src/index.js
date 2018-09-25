@@ -11,7 +11,6 @@ function clickLabel(label) {
   fireEvent.mouseMove(label);
   fireEvent.mouseDown(label);
   fireEvent.mouseUp(label);
-  fireEvent.click(label);
 
   if (label.htmlFor) {
     const input = document.getElementById(label.htmlFor);
@@ -21,7 +20,6 @@ function clickLabel(label) {
     const input = label.querySelector("input,textarea");
     input.focus();
     label.focus();
-    fireEvent.click(input);
     fireEvent.click(label);
   }
 }

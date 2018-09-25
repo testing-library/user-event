@@ -193,4 +193,32 @@ describe("fireEvent.click", () => {
       expect(getByTestId("input")).toHaveFocus();
     }
   );
+
+  it('checks <input type="checkbox"> when clicking a <label> with htmlFor', () => {
+    const { getByTestId } = render(
+      <React.Fragment>
+        <label htmlFor="input" data-testid="label">
+          Label
+        </label>
+        <input id="input" data-testid="input" type="checkbox" />
+      </React.Fragment>
+    );
+    expect(getByTestId("input")).toHaveProperty("checked", false);
+    userEvent.click(getByTestId("label"));
+    expect(getByTestId("input")).toHaveProperty("checked", true);
+  });
+
+  it('checks <input type="checkbox"> when clicking a <label> without htmlFor', () => {
+    const { getByTestId } = render(
+      <React.Fragment>
+        <label data-testid="label">
+          Label
+          <input id="input" data-testid="input" type="checkbox" />
+        </label>
+      </React.Fragment>
+    );
+    expect(getByTestId("input")).toHaveProperty("checked", false);
+    userEvent.click(getByTestId("label"));
+    expect(getByTestId("input")).toHaveProperty("checked", true);
+  });
 });

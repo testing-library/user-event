@@ -5,122 +5,91 @@ import userEvent from "../src";
 
 afterEach(cleanup);
 
-describe("fireEvent.click", () => {
+describe("userEvent.click", () => {
   it.each(["input", "textarea"])(
     "should fire the correct events for <%s>",
     type => {
-      const onMouseOver = jest.fn();
-      const onMouseMove = jest.fn();
-      const onMouseDown = jest.fn();
-      const onFocus = jest.fn();
-      const onMouseUp = jest.fn();
-      const onClick = jest.fn();
+      const events = [];
+      const eventsHandler = jest.fn(evt => events.push(evt.type));
       const { getByTestId } = render(
         React.createElement(type, {
           "data-testid": "element",
-          onMouseOver: onMouseOver,
-          onMouseMove: onMouseMove,
-          onMouseDown: onMouseDown,
-          onFocus: onFocus,
-          onMouseUp: onMouseUp,
-          onClick: onClick
+          onMouseOver: eventsHandler,
+          onMouseMove: eventsHandler,
+          onMouseDown: eventsHandler,
+          onFocus: eventsHandler,
+          onMouseUp: eventsHandler,
+          onClick: eventsHandler
         })
       );
 
-      expect(onMouseOver).not.toHaveBeenCalled();
-      expect(onMouseMove).not.toHaveBeenCalled();
-      expect(onMouseDown).not.toHaveBeenCalled();
-      expect(onFocus).not.toHaveBeenCalled();
-      expect(onMouseUp).not.toHaveBeenCalled();
-      expect(onClick).not.toHaveBeenCalled();
-
       userEvent.click(getByTestId("element"));
 
-      expect(onMouseOver).toHaveBeenCalledTimes(1);
-      expect(onMouseMove).toHaveBeenCalledTimes(1);
-      expect(onMouseDown).toHaveBeenCalledTimes(1);
-      expect(onFocus).toHaveBeenCalledTimes(1);
-      expect(onMouseUp).toHaveBeenCalledTimes(1);
-      expect(onClick).toHaveBeenCalledTimes(1);
+      expect(events).toEqual([
+        "mouseover",
+        "mousemove",
+        "mousedown",
+        "focus",
+        "mouseup",
+        "click"
+      ]);
     }
   );
 
   it('should fire the correct events for <input type="checkbox">', () => {
-    const onMouseOver = jest.fn();
-    const onMouseMove = jest.fn();
-    const onMouseDown = jest.fn();
-    const onFocus = jest.fn();
-    const onMouseUp = jest.fn();
-    const onClick = jest.fn();
-    const onChange = jest.fn();
+    const events = [];
+    const eventsHandler = jest.fn(evt => events.push(evt.type));
     const { getByTestId } = render(
       <input
         data-testid="element"
         type="checkbox"
-        onMouseOver={onMouseOver}
-        onMouseMove={onMouseMove}
-        onMouseDown={onMouseDown}
-        onFocus={onFocus}
-        onMouseUp={onMouseUp}
-        onClick={onClick}
-        onChange={onChange}
+        onMouseOver={eventsHandler}
+        onMouseMove={eventsHandler}
+        onMouseDown={eventsHandler}
+        onFocus={eventsHandler}
+        onMouseUp={eventsHandler}
+        onClick={eventsHandler}
+        onChange={eventsHandler}
       />
     );
 
-    expect(onMouseOver).not.toHaveBeenCalled();
-    expect(onMouseMove).not.toHaveBeenCalled();
-    expect(onMouseDown).not.toHaveBeenCalled();
-    expect(onFocus).not.toHaveBeenCalled();
-    expect(onMouseUp).not.toHaveBeenCalled();
-    expect(onClick).not.toHaveBeenCalled();
-    expect(onChange).not.toHaveBeenCalled();
-
     userEvent.click(getByTestId("element"));
 
-    expect(onMouseOver).toHaveBeenCalledTimes(1);
-    expect(onMouseMove).toHaveBeenCalledTimes(1);
-    expect(onMouseDown).toHaveBeenCalledTimes(1);
-    expect(onFocus).not.toHaveBeenCalledTimes(1);
-    expect(onMouseUp).toHaveBeenCalledTimes(1);
-    expect(onClick).toHaveBeenCalledTimes(1);
-    expect(onChange).toHaveBeenCalledTimes(1);
+    expect(events).toEqual([
+      "mouseover",
+      "mousemove",
+      "mousedown",
+      "mouseup",
+      "click",
+      "change"
+    ]);
+
     expect(getByTestId("element")).toHaveProperty("checked", true);
   });
 
   it("should fire the correct events for <div>", () => {
-    const onMouseOver = jest.fn();
-    const onMouseMove = jest.fn();
-    const onMouseDown = jest.fn();
-    const onFocus = jest.fn();
-    const onMouseUp = jest.fn();
-    const onClick = jest.fn();
+    const events = [];
+    const eventsHandler = jest.fn(evt => events.push(evt.type));
     const { getByTestId } = render(
       <div
         data-testid="div"
-        onMouseOver={onMouseOver}
-        onMouseMove={onMouseMove}
-        onMouseDown={onMouseDown}
-        onFocus={onFocus}
-        onMouseUp={onMouseUp}
-        onClick={onClick}
+        onMouseOver={eventsHandler}
+        onMouseMove={eventsHandler}
+        onMouseDown={eventsHandler}
+        onFocus={eventsHandler}
+        onMouseUp={eventsHandler}
+        onClick={eventsHandler}
       />
     );
 
-    expect(onMouseOver).not.toHaveBeenCalled();
-    expect(onMouseMove).not.toHaveBeenCalled();
-    expect(onMouseDown).not.toHaveBeenCalled();
-    expect(onFocus).not.toHaveBeenCalled();
-    expect(onMouseUp).not.toHaveBeenCalled();
-    expect(onClick).not.toHaveBeenCalled();
-
     userEvent.click(getByTestId("div"));
-
-    expect(onMouseOver).toHaveBeenCalledTimes(1);
-    expect(onMouseMove).toHaveBeenCalledTimes(1);
-    expect(onMouseDown).toHaveBeenCalledTimes(1);
-    expect(onFocus).not.toHaveBeenCalled();
-    expect(onMouseUp).toHaveBeenCalledTimes(1);
-    expect(onClick).toHaveBeenCalledTimes(1);
+    expect(events).toEqual([
+      "mouseover",
+      "mousemove",
+      "mousedown",
+      "mouseup",
+      "click"
+    ]);
   });
 
   it("toggles the focus", () => {

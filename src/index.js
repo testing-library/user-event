@@ -45,6 +45,35 @@ function clickElement(element) {
   labelAncestor && clickLabel(labelAncestor);
 }
 
+function dblClickElement(element) {
+  fireEvent.mouseOver(element);
+  fireEvent.mouseMove(element);
+  fireEvent.mouseDown(element);
+  element.focus();
+  fireEvent.mouseUp(element);
+  fireEvent.click(element);
+  fireEvent.mouseDown(element);
+  fireEvent.mouseUp(element);
+  fireEvent.click(element);
+  fireEvent.dblClick(element);
+
+  const labelAncestor = findTagInParents(element, "LABEL");
+  labelAncestor && clickLabel(labelAncestor);
+}
+
+function dblClickCheckbox(checkbox) {
+  fireEvent.mouseOver(checkbox);
+  fireEvent.mouseMove(checkbox);
+  fireEvent.mouseDown(checkbox);
+  fireEvent.mouseUp(checkbox);
+  fireEvent.click(checkbox);
+  fireEvent.change(checkbox);
+  fireEvent.mouseDown(checkbox);
+  fireEvent.mouseUp(checkbox);
+  fireEvent.click(checkbox);
+  fireEvent.change(checkbox);
+}
+
 const userEvent = {
   click(element) {
     const focusedElement = document.activeElement;
@@ -70,6 +99,29 @@ const userEvent = {
 
     wasAnotherElementFocused && focusedElement.blur();
   },
+
+  dblClick(element) {
+    const focusedElement = document.activeElement;
+    const wasAnotherElementFocused =
+      focusedElement !== document.body && focusedElement !== element;
+    if (wasAnotherElementFocused) {
+      fireEvent.mouseMove(focusedElement);
+      fireEvent.mouseLeave(focusedElement);
+    }
+
+    switch (element.tagName) {
+      case "INPUT":
+        if (element.type === "checkbox") {
+          dblClickCheckbox(element);
+          break;
+        }
+      default:
+        dblClickElement(element);
+    }
+
+    wasAnotherElementFocused && focusedElement.blur();
+  },
+
   type(element, text, userOpts = {}) {
     const defaultOpts = { allAtOnce: false };
     const opts = Object.assign(defaultOpts, userOpts);

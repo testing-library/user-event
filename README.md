@@ -73,6 +73,28 @@ userEvent.click(getByText("Check"));
 expect(getByTestId("checkbox")).toHaveAttribute("checked", true);
 ```
 
+### `dblClick(element)`
+
+Clicks `element` twice, depending on what `element` is it can have different
+side effects.
+
+```jsx
+import React from "react";
+import { render } from "react-testing-library";
+import userEvent from "user-event";
+
+test("double click", () => {
+  const onChange = jest.fn();
+  const { getByTestId } = render(
+    <input type="checkbox" id="checkbox" onChange={onChange} />
+  );
+  const checkbox = getByTestId("checkbox");
+  userEvent.dblClick(checkbox);
+  expect(onChange).toHaveBeenCalledTimes(2);
+  expect(checkbox).toHaveProperty("checked", false);
+});
+```
+
 ### `type(element, text, [options])`
 
 Writes `text` inside an `<input>` or a `<textarea>`. `options` accepts one

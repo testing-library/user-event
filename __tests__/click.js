@@ -5,7 +5,7 @@ import userEvent from "../src";
 
 afterEach(cleanup);
 
-describe("fireEvent.click", () => {
+describe("userEvent.click", () => {
   it.each(["input", "textarea"])(
     "should fire the correct events for <%s>",
     type => {

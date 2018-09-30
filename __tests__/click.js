@@ -221,4 +221,26 @@ describe("fireEvent.click", () => {
     userEvent.click(getByTestId("label"));
     expect(getByTestId("input")).toHaveProperty("checked", true);
   });
+
+  it("should submit a form when clicking on a <button>", () => {
+    const onSubmit = jest.fn();
+    const { getByText } = render(
+      <form onSubmit={onSubmit}>
+        <button>Submit</button>
+      </form>
+    );
+    userEvent.click(getByText("Submit"));
+    expect(onSubmit).toHaveBeenCalledTimes(1);
+  });
+
+  it('should not submit a form when clicking on a <button type="button">', () => {
+    const onSubmit = jest.fn();
+    const { getByText } = render(
+      <form onSubmit={onSubmit}>
+        <button type="button">Submit</button>
+      </form>
+    );
+    userEvent.click(getByText("Submit"));
+    expect(onSubmit).not.toHaveBeenCalled();
+  });
 });

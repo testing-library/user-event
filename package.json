@@ -12,6 +12,7 @@
   "scripts": {
     "test": "jest",
     "test:coverage": "npm t -- --coverage",
+    "codecov": "codecov",
     "build": "babel src -d dist",
     "semantic-release": "semantic-release",
     "travis-deploy-once": "travis-deploy-once",
@@ -33,6 +34,7 @@
     "babel-jest": "23.6.0",
     "babel-preset-env": "1.7.0",
     "babel-preset-react": "6.24.1",
+    "codecov": "3.1.0",
     "husky": "1.0.1",
     "jest": "23.6.0",
     "jest-dom": "1.12.1",

@@ -33,7 +33,7 @@
     "babel-jest": "23.6.0",
     "babel-preset-env": "1.7.0",
     "babel-preset-react": "6.24.1",
-    "husky": "1.0.0-rc.14",
+    "husky": "1.0.1",
     "jest": "23.6.0",
     "jest-dom": "1.12.1",
     "lint-staged": "7.3.0",

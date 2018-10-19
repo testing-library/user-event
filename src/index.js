@@ -151,26 +151,28 @@ const userEvent = {
 
         if (opts.delay > 0) await delay(opts.delay);
 
-        const event = fireEvent.keyDown(element, {
+        const downEvent = fireEvent.keyDown(element, {
           key: key,
           keyCode: keyCode,
           which: keyCode
         });
-        if (event) {
-          fireEvent.keyPress(element, {
+        if (downEvent) {
+          const pressEvent = fireEvent.keyPress(element, {
             key: key,
-            keyCode: keyCode,
-            which: keyCode
+            keyCode,
+            charCode: keyCode,
+            keyCode: keyCode
           });
-
-          actuallyTyped += key;
-          fireEvent.change(element, {
-            target: {
-              value: actuallyTyped
-            },
-            bubbles: true,
-            cancelable: true
-          });
+          if (pressEvent) {
+            actuallyTyped += key;
+            fireEvent.change(element, {
+              target: {
+                value: actuallyTyped
+              },
+              bubbles: true,
+              cancelable: true
+            });
+          }
         }
 
         fireEvent.keyUp(element, {

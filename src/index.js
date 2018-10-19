@@ -157,7 +157,12 @@ const userEvent = {
           which: keyCode
         });
         if (event) {
-          // change event is not getting dispatch when keydown has been prevented
+          fireEvent.keyPress(element, {
+            key: key,
+            keyCode: keyCode,
+            which: keyCode
+          });
+
           actuallyTyped += key;
           fireEvent.change(element, {
             target: {

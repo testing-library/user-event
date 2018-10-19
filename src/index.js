@@ -1,5 +1,11 @@
 import { fireEvent } from "dom-testing-library";
 
+function delay(t, v) {
+  return new Promise(function(resolve) {
+    setTimeout(resolve.bind(null, v), t);
+  });
+}
+
 function findTagInParents(element, tagName) {
   if (element.parentNode == null) return undefined;
   if (element.parentNode.tagName === tagName) return element.parentNode;
@@ -122,19 +128,52 @@ const userEvent = {
     wasAnotherElementFocused && focusedElement.blur();
   },
 
-  type(element, text, userOpts = {}) {
-    const defaultOpts = { allAtOnce: false };
+  async type(element, text, userOpts = {}) {
+    const defaultOpts = {
+      allAtOnce: false,
+      delay: 0
+    };
     const opts = Object.assign(defaultOpts, userOpts);
-
-    this.click(element);
     if (opts.allAtOnce) {
-      fireEvent.change(element, { target: { value: text } });
+      fireEvent.change(element, {
+        target: {
+          value: text
+        }
+      });
     } else {
-      text
-        .split("")
-        .forEach((_, i) =>
-          fireEvent.change(element, { target: { value: text.slice(0, i + 1) } })
-        );
+      const typedCharacters = text.split("");
+
+      let actuallyTyped = "";
+      for (let index = 0; index < text.length; index++) {
+        const char = text[index];
+        const key = char; // TODO: check if this also valid for characters with diacritic markers e.g. úé etc
+        const keyCode = char.charCodeAt(0);
+
+        if (opts.delay > 0) await delay(opts.delay);
+
+        const event = fireEvent.keyDown(element, {
+          key: key,
+          keyCode: keyCode,
+          which: keyCode
+        });
+        if (event) {
+          // change event is not getting dispatch when keydown has been prevented
+          actuallyTyped += key;
+          fireEvent.change(element, {
+            target: {
+              value: actuallyTyped
+            },
+            bubbles: true,
+            cancelable: true
+          });
+        }
+
+        fireEvent.keyUp(element, {
+          key: key,
+          keyCode: keyCode,
+          which: keyCode
+        });
+      }
     }
   }
 };

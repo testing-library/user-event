@@ -1,8 +1,8 @@
 import { fireEvent } from "dom-testing-library";
 
-function delay(t, v) {
+function wait(time) {
   return new Promise(function(resolve) {
-    setTimeout(resolve.bind(null, v), t);
+    setTimeout(() => resolve(), time);
   });
 }
 
@@ -135,11 +135,7 @@ const userEvent = {
     };
     const opts = Object.assign(defaultOpts, userOpts);
     if (opts.allAtOnce) {
-      fireEvent.change(element, {
-        target: {
-          value: text
-        }
-      });
+      fireEvent.change(element, { target: { value: text } });
     } else {
       const typedCharacters = text.split("");
 
@@ -149,7 +145,7 @@ const userEvent = {
         const key = char; // TODO: check if this also valid for characters with diacritic markers e.g. úé etc
         const keyCode = char.charCodeAt(0);
 
-        if (opts.delay > 0) await delay(opts.delay);
+        if (opts.delay > 0) await wait(opts.delay);
 
         const downEvent = fireEvent.keyDown(element, {
           key: key,

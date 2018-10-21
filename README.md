@@ -97,9 +97,7 @@ test("double click", () => {
 
 ### `type(element, text, [options])`
 
-Writes `text` inside an `<input>` or a `<textarea>`. `options` accepts one
-argument `allAtOnce` which is `false` by default. If it's set to `true` it will
-write `text` at once rather than one character at the time.
+Writes `text` inside an `<input>` or a `<textarea>`.
 
 ```jsx
 import React from "react";
@@ -113,3 +111,10 @@ const { getByText } = test("click", () => {
 userEvent.type(getByTestId("email"), "Hello, World!");
 expect(getByTestId("email")).toHaveAttribute("value", "Hello, World!");
 ```
+
+If `options.allAtOnce` is `true` type will write `text` at once rather than one
+character at the time. `false` is the default value`.
+
+`options.delay` is the number of milliseconds that pass between to characters
+are typed. By default it's 0. You can use this option if your component has a
+different behavior for fast or slow users.

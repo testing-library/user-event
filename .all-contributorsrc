@@ -1,0 +1,28 @@
+{
+  "projectName": "user-event",
+  "projectOwner": "Gpx",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": true,
+  "contributors": [
+    {
+      "login": "Gpx",
+      "name": "Giorgio Polvara",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/767959?v=4",
+      "profile": "https://twitter.com/Gpx",
+      "contributions": [
+        "bug",
+        "code",
+        "doc",
+        "ideas",
+        "infra",
+        "review",
+        "test"
+      ]
+    }
+  ]
+}

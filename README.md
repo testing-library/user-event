@@ -13,7 +13,7 @@
 [![Build Status](https://travis-ci.org/Gpx/user-event.svg?branch=master)](https://travis-ci.org/Gpx/user-event)
 [![Maintainability](https://api.codeclimate.com/v1/badges/75f1ff4397e994c6004e/maintainability)](https://codeclimate.com/github/Gpx/user-event/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/75f1ff4397e994c6004e/test_coverage)](https://codeclimate.com/github/Gpx/user-event/test_coverage)
-[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors)
+[![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors)
 
 ## The problem
 
@@ -127,8 +127,8 @@ Thanks goes to these wonderful people
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore -->
-| [<img src="https://avatars0.githubusercontent.com/u/767959?v=4" width="100px;"/><br /><sub><b>Giorgio Polvara</b></sub>](https://twitter.com/Gpx)<br />[🐛](https://github.com/Gpx/user-event/issues?q=author%3AGpx "Bug reports") [💻](https://github.com/Gpx/user-event/commits?author=Gpx "Code") [📖](https://github.com/Gpx/user-event/commits?author=Gpx "Documentation") [🤔](#ideas-Gpx "Ideas, Planning, & Feedback") [🚇](#infra-Gpx "Infrastructure (Hosting, Build-Tools, etc)") [👀](#review-Gpx "Reviewed Pull Requests") [⚠️](https://github.com/Gpx/user-event/commits?author=Gpx "Tests") |
-| :---: |
+| [<img src="https://avatars0.githubusercontent.com/u/767959?v=4" width="100px;"/><br /><sub><b>Giorgio Polvara</b></sub>](https://twitter.com/Gpx)<br />[🐛](https://github.com/Gpx/user-event/issues?q=author%3AGpx "Bug reports") [💻](https://github.com/Gpx/user-event/commits?author=Gpx "Code") [📖](https://github.com/Gpx/user-event/commits?author=Gpx "Documentation") [🤔](#ideas-Gpx "Ideas, Planning, & Feedback") [🚇](#infra-Gpx "Infrastructure (Hosting, Build-Tools, etc)") [👀](#review-Gpx "Reviewed Pull Requests") [⚠️](https://github.com/Gpx/user-event/commits?author=Gpx "Tests") | [<img src="https://avatars3.githubusercontent.com/u/7049?v=4" width="100px;"/><br /><sub><b>Weyert de Boer</b></sub>](https://github.com/weyert)<br />[💻](https://github.com/Gpx/user-event/commits?author=weyert "Code") [⚠️](https://github.com/Gpx/user-event/commits?author=weyert "Tests") |
+| :---: | :---: |
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 

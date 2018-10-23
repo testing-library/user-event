@@ -46,7 +46,7 @@
     "prettier": "1.14.3",
     "react": "16.5.2",
     "react-dom": "16.5.2",
-    "react-testing-library": "5.1.0",
+    "react-testing-library": "5.2.1",
     "regenerator-runtime": "0.12.1",
     "semantic-release": "^15.9.16",
     "travis-deploy-once": "5.0.9"

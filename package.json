@@ -39,20 +39,20 @@
     "babel-core": "7.0.0-bridge.0",
     "babel-jest": "23.6.0",
     "codecov": "3.1.0",
-    "husky": "1.0.1",
+    "husky": "1.1.2",
     "jest": "23.6.0",
-    "jest-dom": "1.12.1",
+    "jest-dom": "2.1.0",
     "lint-staged": "7.3.0",
     "prettier": "1.14.3",
     "react": "16.5.2",
     "react-dom": "16.5.2",
-    "react-testing-library": "5.1.0",
+    "react-testing-library": "5.2.1",
     "regenerator-runtime": "0.12.1",
-    "semantic-release": "^15.9.16",
+    "semantic-release": "15.10.5",
     "travis-deploy-once": "5.0.9"
   },
   "dependencies": {
-    "dom-testing-library": "3.6.0"
+    "dom-testing-library": "3.11.2"
   },
   "husky": {
     "hooks": {

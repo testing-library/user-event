@@ -52,7 +52,7 @@
     "travis-deploy-once": "5.0.9"
   },
   "dependencies": {
-    "dom-testing-library": "3.11.3"
+    "dom-testing-library": "3.12.0"
   },
   "husky": {
     "hooks": {

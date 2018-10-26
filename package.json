@@ -46,13 +46,13 @@
     "prettier": "1.14.3",
     "react": "16.6.0",
     "react-dom": "16.6.0",
-    "react-testing-library": "5.2.1",
+    "react-testing-library": "5.2.3",
     "regenerator-runtime": "0.12.1",
     "semantic-release": "15.10.5",
     "travis-deploy-once": "5.0.9"
   },
   "dependencies": {
-    "dom-testing-library": "3.11.3"
+    "dom-testing-library": "3.12.0"
   },
   "husky": {
     "hooks": {

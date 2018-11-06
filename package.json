@@ -41,7 +41,7 @@
     "codecov": "3.1.0",
     "husky": "1.1.2",
     "jest": "23.6.0",
-    "jest-dom": "2.1.0",
+    "jest-dom": "2.1.1",
     "lint-staged": "8.0.4",
     "prettier": "1.14.3",
     "react": "16.6.0",

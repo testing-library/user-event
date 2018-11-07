@@ -32,7 +32,7 @@
   "homepage": "https://github.com/Gpx/user-event#readme",
   "devDependencies": {
     "@babel/cli": "7.1.5",
-    "@babel/core": "7.1.2",
+    "@babel/core": "7.1.5",
     "@babel/preset-env": "7.1.0",
     "@babel/preset-react": "7.0.0",
     "all-contributors-cli": "5.4.1",

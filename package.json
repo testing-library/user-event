@@ -43,7 +43,7 @@
     "jest": "23.6.0",
     "jest-dom": "2.1.0",
     "lint-staged": "8.0.4",
-    "prettier": "1.14.3",
+    "prettier": "1.15.0",
     "react": "16.6.0",
     "react-dom": "16.6.0",
     "react-testing-library": "5.2.3",

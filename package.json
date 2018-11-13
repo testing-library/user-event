@@ -45,7 +45,7 @@
     "lint-staged": "8.0.4",
     "prettier": "1.15.1",
     "react": "16.6.2",
-    "react-dom": "16.6.1",
+    "react-dom": "16.6.2",
     "react-testing-library": "5.2.3",
     "regenerator-runtime": "0.12.1",
     "semantic-release": "15.10.8",

@@ -49,7 +49,7 @@
     "react-testing-library": "5.2.3",
     "regenerator-runtime": "0.12.1",
     "semantic-release": "15.10.8",
-    "travis-deploy-once": "5.0.9"
+    "travis-deploy-once": "5.0.10"
   },
   "dependencies": {
     "dom-testing-library": "3.12.2"

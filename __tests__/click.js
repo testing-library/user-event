@@ -191,6 +191,15 @@ describe("userEvent.click", () => {
     expect(getByTestId("input")).toHaveProperty("checked", true);
   });
 
+  it('should not check a disabled <input type="checkbox">', () => {
+    const { getByTestId } = render(
+      <input id="input" data-testid="input" type="checkbox" disabled />
+    );
+    expect(getByTestId("input")).toHaveProperty("checked", false);
+    userEvent.click(getByTestId("input"));
+    expect(getByTestId("input")).toHaveProperty("checked", false);
+  });
+
   it("should submit a form when clicking on a <button>", () => {
     const onSubmit = jest.fn();
     const { getByText } = render(

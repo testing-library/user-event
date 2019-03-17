@@ -96,7 +96,9 @@ const userEvent = {
         break;
       case "INPUT":
         if (element.type === "checkbox") {
-          clickCheckbox(element);
+          if (!element.disabled) {
+            clickCheckbox(element);
+          }
           break;
         }
       default:

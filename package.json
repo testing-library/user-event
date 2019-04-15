@@ -43,7 +43,7 @@
     "jest": "24.7.1",
     "jest-dom": "3.1.3",
     "lint-staged": "8.1.5",
-    "prettier": "1.16.4",
+    "prettier": "1.17.0",
     "react": "16.8.6",
     "react-dom": "16.8.6",
     "react-testing-library": "6.1.2",
@@ -52,7 +52,7 @@
     "travis-deploy-once": "5.0.11"
   },
   "dependencies": {
-    "dom-testing-library": "3.19.0"
+    "dom-testing-library": "3.19.1"
   },
   "husky": {
     "hooks": {

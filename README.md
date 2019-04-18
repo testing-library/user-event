@@ -13,7 +13,8 @@
 [![Build Status](https://travis-ci.org/Gpx/user-event.svg?branch=master)](https://travis-ci.org/Gpx/user-event)
 [![Maintainability](https://api.codeclimate.com/v1/badges/75f1ff4397e994c6004e/maintainability)](https://codeclimate.com/github/Gpx/user-event/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/75f1ff4397e994c6004e/test_coverage)](https://codeclimate.com/github/Gpx/user-event/test_coverage)
-[![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors) [![Greenkeeper badge](https://badges.greenkeeper.io/Gpx/user-event.svg)](https://greenkeeper.io/)
+[![All Contributors](https://img.shields.io/badge/all_contributors-3-orange.svg?style=flat-square)](#contributors)
+[![Greenkeeper badge](https://badges.greenkeeper.io/Gpx/user-event.svg)](https://greenkeeper.io/)
 
 ## The problem
 
@@ -127,8 +128,7 @@ Thanks goes to these wonderful people
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore -->
-| [<img src="https://avatars0.githubusercontent.com/u/767959?v=4" width="100px;"/><br /><sub><b>Giorgio Polvara</b></sub>](https://twitter.com/Gpx)<br />[🐛](https://github.com/Gpx/user-event/issues?q=author%3AGpx "Bug reports") [💻](https://github.com/Gpx/user-event/commits?author=Gpx "Code") [📖](https://github.com/Gpx/user-event/commits?author=Gpx "Documentation") [🤔](#ideas-Gpx "Ideas, Planning, & Feedback") [🚇](#infra-Gpx "Infrastructure (Hosting, Build-Tools, etc)") [👀](#review-Gpx "Reviewed Pull Requests") [⚠️](https://github.com/Gpx/user-event/commits?author=Gpx "Tests") | [<img src="https://avatars3.githubusercontent.com/u/7049?v=4" width="100px;"/><br /><sub><b>Weyert de Boer</b></sub>](https://github.com/weyert)<br />[💻](https://github.com/Gpx/user-event/commits?author=weyert "Code") [⚠️](https://github.com/Gpx/user-event/commits?author=weyert "Tests") |
-| :---: | :---: |
+<table><tr><td align="center"><a href="https://twitter.com/Gpx"><img src="https://avatars0.githubusercontent.com/u/767959?v=4" width="100px;" alt="Giorgio Polvara"/><br /><sub><b>Giorgio Polvara</b></sub></a><br /><a href="https://github.com/Gpx/user-event/issues?q=author%3AGpx" title="Bug reports">🐛</a> <a href="https://github.com/Gpx/user-event/commits?author=Gpx" title="Code">💻</a> <a href="https://github.com/Gpx/user-event/commits?author=Gpx" title="Documentation">📖</a> <a href="#ideas-Gpx" title="Ideas, Planning, & Feedback">🤔</a> <a href="#infra-Gpx" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="#review-Gpx" title="Reviewed Pull Requests">👀</a> <a href="https://github.com/Gpx/user-event/commits?author=Gpx" title="Tests">⚠️</a></td><td align="center"><a href="https://github.com/weyert"><img src="https://avatars3.githubusercontent.com/u/7049?v=4" width="100px;" alt="Weyert de Boer"/><br /><sub><b>Weyert de Boer</b></sub></a><br /><a href="https://github.com/Gpx/user-event/commits?author=weyert" title="Code">💻</a> <a href="https://github.com/Gpx/user-event/commits?author=weyert" title="Tests">⚠️</a></td><td align="center"><a href="https://github.com/twhitbeck"><img src="https://avatars2.githubusercontent.com/u/762471?v=4" width="100px;" alt="Tim Whitbeck"/><br /><sub><b>Tim Whitbeck</b></sub></a><br /><a href="https://github.com/Gpx/user-event/issues?q=author%3Atwhitbeck" title="Bug reports">🐛</a> <a href="https://github.com/Gpx/user-event/commits?author=twhitbeck" title="Code">💻</a></td></tr></table>
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 

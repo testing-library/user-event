@@ -31,6 +31,8 @@ function clickLabel(label) {
 }
 
 function clickCheckbox(checkbox) {
+  if (checkbox.disabled) return;
+
   fireEvent.mouseOver(checkbox);
   fireEvent.mouseMove(checkbox);
   fireEvent.mouseDown(checkbox);

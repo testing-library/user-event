@@ -92,6 +92,62 @@ describe("userEvent.click", () => {
     expect(getByTestId("element")).toHaveProperty("checked", false);
   });
 
+  it('should fire the correct events for <input type="radio">', () => {
+    const events = [];
+    const eventsHandler = jest.fn(evt => events.push(evt.type));
+    const { getByTestId } = render(
+      <input
+        data-testid="element"
+        type="radio"
+        onMouseOver={eventsHandler}
+        onMouseMove={eventsHandler}
+        onMouseDown={eventsHandler}
+        onFocus={eventsHandler}
+        onMouseUp={eventsHandler}
+        onClick={eventsHandler}
+        onChange={eventsHandler}
+      />
+    );
+
+    userEvent.click(getByTestId("element"));
+
+    expect(events).toEqual([
+      "mouseover",
+      "mousemove",
+      "mousedown",
+      "mouseup",
+      "click",
+      "change"
+    ]);
+
+    expect(getByTestId("element")).toHaveProperty("checked", true);
+  });
+
+  it('should fire the correct events for <input type="radio" disabled>', () => {
+    const events = [];
+    const eventsHandler = jest.fn(evt => events.push(evt.type));
+    const { getByTestId } = render(
+      <input
+        data-testid="element"
+        type="radio"
+        onMouseOver={eventsHandler}
+        onMouseMove={eventsHandler}
+        onMouseDown={eventsHandler}
+        onFocus={eventsHandler}
+        onMouseUp={eventsHandler}
+        onClick={eventsHandler}
+        onChange={eventsHandler}
+        disabled
+      />
+    );
+
+    userEvent.click(getByTestId("element"));
+
+    expect(events).toEqual([]);
+
+    expect(getByTestId("element")).toHaveProperty("checked", false);
+  });
+
   it("should fire the correct events for <div>", () => {
     const events = [];
     const eventsHandler = jest.fn(evt => events.push(evt.type));

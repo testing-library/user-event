@@ -48,7 +48,7 @@
     "react-dom": "16.8.6",
     "react-testing-library": "6.1.2",
     "regenerator-runtime": "0.13.2",
-    "semantic-release": "15.13.3",
+    "semantic-release": "15.13.12",
     "travis-deploy-once": "5.0.11"
   },
   "dependencies": {

@@ -11,7 +11,7 @@ describe("userEvent.type", () => {
     const { getByTestId } = render(
       React.createElement(type, {
         "data-testid": "input",
-        onChange: onChange
+        onChange: onChange,
       })
     );
     const text = "Hello, world!";
@@ -41,13 +41,13 @@ describe("userEvent.type", () => {
     const { getByTestId } = render(
       React.createElement("input", {
         "data-testid": "input",
-        onChange: onChange
+        onChange: onChange,
       })
     );
     const text = "Hello, world!";
     const delay = 10;
     userEvent.type(getByTestId("input"), text, {
-      delay
+      delay,
     });
     expect(onChange).not.toHaveBeenCalled();
     expect(getByTestId("input")).not.toHaveProperty("value", text);
@@ -69,12 +69,12 @@ describe("userEvent.type", () => {
       const { getByTestId } = render(
         React.createElement(type, {
           "data-testid": "input",
-          onChange: onChange
+          onChange: onChange,
         })
       );
       const text = "Hello, world!";
       userEvent.type(getByTestId("input"), text, {
-        allAtOnce: true
+        allAtOnce: true,
       });
 
       expect(onChange).toHaveBeenCalledTimes(1);

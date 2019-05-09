@@ -20,7 +20,7 @@ describe("userEvent.dblClick", () => {
           onFocus: eventsHandler,
           onMouseUp: eventsHandler,
           onClick: eventsHandler,
-          onDoubleClick: eventsHandler
+          onDoubleClick: eventsHandler,
         })
       );
 
@@ -36,7 +36,7 @@ describe("userEvent.dblClick", () => {
         "mousedown",
         "mouseup",
         "click",
-        "dblclick"
+        "dblclick",
       ]);
     }
   );
@@ -70,7 +70,7 @@ describe("userEvent.dblClick", () => {
       "mousedown",
       "mouseup",
       "click",
-      "change"
+      "change",
     ]);
 
     expect(getByTestId("element")).toHaveProperty("checked", false);
@@ -100,7 +100,7 @@ describe("userEvent.dblClick", () => {
       "click",
       "mousedown",
       "mouseup",
-      "click"
+      "click",
     ]);
   });
 });

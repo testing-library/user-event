@@ -19,7 +19,7 @@ describe("userEvent.click", () => {
           onMouseDown: eventsHandler,
           onFocus: eventsHandler,
           onMouseUp: eventsHandler,
-          onClick: eventsHandler
+          onClick: eventsHandler,
         })
       );
 
@@ -31,7 +31,7 @@ describe("userEvent.click", () => {
         "mousedown",
         "focus",
         "mouseup",
-        "click"
+        "click",
       ]);
     }
   );
@@ -61,7 +61,7 @@ describe("userEvent.click", () => {
       "mousedown",
       "mouseup",
       "click",
-      "change"
+      "change",
     ]);
 
     expect(getByTestId("element")).toHaveProperty("checked", true);
@@ -117,7 +117,7 @@ describe("userEvent.click", () => {
       "mousedown",
       "mouseup",
       "click",
-      "change"
+      "change",
     ]);
 
     expect(getByTestId("element")).toHaveProperty("checked", true);
@@ -169,7 +169,7 @@ describe("userEvent.click", () => {
       "mousemove",
       "mousedown",
       "mouseup",
-      "click"
+      "click",
     ]);
   });
 

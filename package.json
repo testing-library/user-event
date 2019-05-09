@@ -30,6 +30,9 @@
     "url": "https://github.com/testing-library/user-event/issues"
   },
   "homepage": "https://github.com/testing-library/user-event#readme",
+  "dependencies": {
+    "dom-testing-library": "4.0.1"
+  },
   "devDependencies": {
     "@babel/cli": "7.4.4",
     "@babel/core": "7.4.4",
@@ -42,8 +45,8 @@
     "husky": "2.2.0",
     "jest": "24.8.0",
     "jest-dom": "3.2.2",
-    "lint-staged": "8.1.6",
     "prettier": "1.17.0",
+    "pretty-quick": "^1.10.0",
     "react": "16.8.6",
     "react-dom": "16.8.6",
     "react-testing-library": "7.0.0",
@@ -51,30 +54,7 @@
     "semantic-release": "15.13.12",
     "travis-deploy-once": "5.0.11"
   },
-  "dependencies": {
-    "dom-testing-library": "4.0.1"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
-  "lint-staged": {
-    "linters": {
-      "*.{js,json}": [
-        "prettier --write",
-        "git add"
-      ],
-      "*.md": [
-        "prettier --write --parser markdown",
-        "git add"
-      ]
-    },
-    "ignore": [
-      "package.json",
-      "package-lock.json",
-      "node_modules/**",
-      "dist/**"
-    ]
+  "engines": {
+    "node": ">=8"
   }
 }

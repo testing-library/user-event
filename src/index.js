@@ -133,7 +133,7 @@ const userEvent = {
   async type(element, text, userOpts = {}) {
     const defaultOpts = {
       allAtOnce: false,
-      delay: 0
+      delay: 0,
     };
     const opts = Object.assign(defaultOpts, userOpts);
     if (opts.allAtOnce) {
@@ -152,23 +152,22 @@ const userEvent = {
         const downEvent = fireEvent.keyDown(element, {
           key: key,
           keyCode: keyCode,
-          which: keyCode
+          which: keyCode,
         });
         if (downEvent) {
           const pressEvent = fireEvent.keyPress(element, {
             key: key,
-            keyCode,
             charCode: keyCode,
-            keyCode: keyCode
+            keyCode,
           });
           if (pressEvent) {
             actuallyTyped += key;
             fireEvent.change(element, {
               target: {
-                value: actuallyTyped
+                value: actuallyTyped,
               },
               bubbles: true,
-              cancelable: true
+              cancelable: true,
             });
           }
         }
@@ -176,11 +175,11 @@ const userEvent = {
         fireEvent.keyUp(element, {
           key: key,
           keyCode: keyCode,
-          which: keyCode
+          which: keyCode,
         });
       }
     }
-  }
+  },
 };
 
 export default userEvent;

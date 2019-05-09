@@ -1,3 +1,4 @@
 module.exports = {
-  proseWrap: "always"
+  endOfLine: "lf",
+  trailingComma: "es5",
 };

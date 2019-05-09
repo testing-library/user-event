@@ -30,15 +30,15 @@ function clickLabel(label) {
   }
 }
 
-function clickCheckbox(checkbox) {
-  if (checkbox.disabled) return;
+function clickBooleanElement(element) {
+  if (element.disabled) return;
 
-  fireEvent.mouseOver(checkbox);
-  fireEvent.mouseMove(checkbox);
-  fireEvent.mouseDown(checkbox);
-  fireEvent.mouseUp(checkbox);
-  fireEvent.click(checkbox);
-  fireEvent.change(checkbox);
+  fireEvent.mouseOver(element);
+  fireEvent.mouseMove(element);
+  fireEvent.mouseDown(element);
+  fireEvent.mouseUp(element);
+  fireEvent.click(element);
+  fireEvent.change(element);
 }
 
 function clickElement(element) {
@@ -97,8 +97,8 @@ const userEvent = {
         clickLabel(element);
         break;
       case "INPUT":
-        if (element.type === "checkbox") {
-          clickCheckbox(element);
+        if (element.type === "checkbox" || element.type === "radio") {
+          clickBooleanElement(element);
           break;
         }
       default:

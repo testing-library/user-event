@@ -114,10 +114,10 @@ userEvent.type(getByTestId("email"), "Hello, World!");
 expect(getByTestId("email")).toHaveAttribute("value", "Hello, World!");
 ```
 
-If `options.allAtOnce` is `true` type will write `text` at once rather than one
-character at the time. `false` is the default value`.
+If `options.allAtOnce` is `true`, `type` will write `text` at once rather than
+one character at the time. `false` is the default value.
 
-`options.delay` is the number of milliseconds that pass between to characters
+`options.delay` is the number of milliseconds that pass between two characters
 are typed. By default it's 0. You can use this option if your component has a
 different behavior for fast or slow users.
 

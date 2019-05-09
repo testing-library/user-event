@@ -2,24 +2,31 @@
 <h1>user-event</h1>
 
 <a href="https://www.emojione.com/emoji/1f415">
-<img height="80" width="80" alt="dog" src="https://raw.githubusercontent.com/gpx/user-event/master/other/dog.png" />
+  <img
+    height="80"
+    width="80"
+    alt="dog"
+    src="https://raw.githubusercontent.com/testing-library/user-event/master/other/dog.png"
+  />
 </a>
 
-<p>Simulate user events for <a href="https://github.com/kentcdodds/react-testing-library">react-testing-library</a></p>
+<p>Simulate user events for <a href="https://github.com/testing-library/react-testing-library">react-testing-library</a>.</p>
+
+<br />
 </div>
 
 <hr />
 
-[![Build Status](https://travis-ci.org/Gpx/user-event.svg?branch=master)](https://travis-ci.org/Gpx/user-event)
-[![Maintainability](https://api.codeclimate.com/v1/badges/75f1ff4397e994c6004e/maintainability)](https://codeclimate.com/github/Gpx/user-event/maintainability)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/75f1ff4397e994c6004e/test_coverage)](https://codeclimate.com/github/Gpx/user-event/test_coverage)
-[![All Contributors](https://img.shields.io/badge/all_contributors-3-orange.svg?style=flat-square)](#contributors)
-[![Greenkeeper badge](https://badges.greenkeeper.io/Gpx/user-event.svg)](https://greenkeeper.io/)
+[![Build Status](https://travis-ci.org/testing-library/user-event.svg?branch=master)](https://travis-ci.org/testing-library/user-event)
+[![Maintainability](https://api.codeclimate.com/v1/badges/75f1ff4397e994c6004e/maintainability)](https://codeclimate.com/github/testing-library/user-event/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/75f1ff4397e994c6004e/test_coverage)](https://codeclimate.com/github/testing-library/user-event/test_coverage)
+[![All Contributors](https://img.shields.io/badge/all_contributors-4-orange.svg?style=flat-square)](#contributors)
+[![Greenkeeper badge](https://badges.greenkeeper.io/testing-library/user-event.svg)](https://greenkeeper.io/)
 
 ## The problem
 
 From
-[kentcdodds/dom-testing-library#107](https://github.com/kentcdodds/dom-testing-library/issues/107):
+[testing-library/dom-testing-library#107](https://github.com/testing-library/dom-testing-library/issues/107):
 
 > [...] it is becoming apparent the need to express user actions on a web page
 > using a higher-level abstraction than `fireEvent`
@@ -36,17 +43,23 @@ change the state of the checkbox.
 
 With NPM:
 
-`npm install user-event --dev`
+```sh
+npm install user-event --dev
+```
 
 With Yarn:
 
-`yarn add user-event --dev`
+```sh
+yarn add user-event --dev
+```
 
 Now simply import it in your tests:
 
 ```js
 import userEvent from "user-event";
+
 // or
+
 var userEvent = require("user-event");
 ```
 
@@ -124,14 +137,14 @@ different behavior for fast or slow users.
 ## Contributors
 
 Thanks goes to these wonderful people
-([emoji key](https://github.com/kentcdodds/all-contributors#emoji-key)):
+([emoji key](https://github.com/all-contributors/all-contributors#emoji-key)):
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore -->
-<table><tr><td align="center"><a href="https://twitter.com/Gpx"><img src="https://avatars0.githubusercontent.com/u/767959?v=4" width="100px;" alt="Giorgio Polvara"/><br /><sub><b>Giorgio Polvara</b></sub></a><br /><a href="https://github.com/Gpx/user-event/issues?q=author%3AGpx" title="Bug reports">🐛</a> <a href="https://github.com/Gpx/user-event/commits?author=Gpx" title="Code">💻</a> <a href="https://github.com/Gpx/user-event/commits?author=Gpx" title="Documentation">📖</a> <a href="#ideas-Gpx" title="Ideas, Planning, & Feedback">🤔</a> <a href="#infra-Gpx" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="#review-Gpx" title="Reviewed Pull Requests">👀</a> <a href="https://github.com/Gpx/user-event/commits?author=Gpx" title="Tests">⚠️</a></td><td align="center"><a href="https://github.com/weyert"><img src="https://avatars3.githubusercontent.com/u/7049?v=4" width="100px;" alt="Weyert de Boer"/><br /><sub><b>Weyert de Boer</b></sub></a><br /><a href="https://github.com/Gpx/user-event/commits?author=weyert" title="Code">💻</a> <a href="https://github.com/Gpx/user-event/commits?author=weyert" title="Tests">⚠️</a></td><td align="center"><a href="https://github.com/twhitbeck"><img src="https://avatars2.githubusercontent.com/u/762471?v=4" width="100px;" alt="Tim Whitbeck"/><br /><sub><b>Tim Whitbeck</b></sub></a><br /><a href="https://github.com/Gpx/user-event/issues?q=author%3Atwhitbeck" title="Bug reports">🐛</a> <a href="https://github.com/Gpx/user-event/commits?author=twhitbeck" title="Code">💻</a></td></tr></table>
+<table><tr><td align="center"><a href="https://twitter.com/Gpx"><img src="https://avatars0.githubusercontent.com/u/767959?v=4" width="100px;" alt="Giorgio Polvara"/><br /><sub><b>Giorgio Polvara</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3AGpx" title="Bug reports">🐛</a> <a href="https://github.com/testing-library/user-event/commits?author=Gpx" title="Code">💻</a> <a href="https://github.com/testing-library/user-event/commits?author=Gpx" title="Documentation">📖</a> <a href="#ideas-Gpx" title="Ideas, Planning, & Feedback">🤔</a> <a href="#infra-Gpx" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="#review-Gpx" title="Reviewed Pull Requests">👀</a> <a href="https://github.com/testing-library/user-event/commits?author=Gpx" title="Tests">⚠️</a></td><td align="center"><a href="https://github.com/weyert"><img src="https://avatars3.githubusercontent.com/u/7049?v=4" width="100px;" alt="Weyert de Boer"/><br /><sub><b>Weyert de Boer</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=weyert" title="Code">💻</a> <a href="https://github.com/testing-library/user-event/commits?author=weyert" title="Tests">⚠️</a></td><td align="center"><a href="https://github.com/twhitbeck"><img src="https://avatars2.githubusercontent.com/u/762471?v=4" width="100px;" alt="Tim Whitbeck"/><br /><sub><b>Tim Whitbeck</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3Atwhitbeck" title="Bug reports">🐛</a> <a href="https://github.com/testing-library/user-event/commits?author=twhitbeck" title="Code">💻</a></td><td align="center"><a href="https://michaeldeboey.be"><img src="https://avatars3.githubusercontent.com/u/6643991?v=4" width="100px;" alt="Michaël De Boey"/><br /><sub><b>Michaël De Boey</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=MichaelDeBoey" title="Documentation">📖</a></td></tr></table>
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the
-[all-contributors](https://github.com/kentcdodds/all-contributors)
+[all-contributors](https://github.com/all-contributors/all-contributors)
 specification. Contributions of any kind welcome!

@@ -22,14 +22,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Gpx/user-event.git"
+    "url": "https://github.com/testing-library/user-event.git"
   },
   "author": "Giorgio Polvara <polvara@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Gpx/user-event/issues"
+    "url": "https://github.com/testing-library/user-event/issues"
   },
-  "homepage": "https://github.com/Gpx/user-event#readme",
+  "homepage": "https://github.com/testing-library/user-event#readme",
   "devDependencies": {
     "@babel/cli": "7.4.4",
     "@babel/core": "7.4.4",

@@ -31,9 +31,9 @@
   },
   "homepage": "https://github.com/Gpx/user-event#readme",
   "devDependencies": {
-    "@babel/cli": "7.4.3",
-    "@babel/core": "7.4.3",
-    "@babel/preset-env": "7.4.3",
+    "@babel/cli": "7.4.4",
+    "@babel/core": "7.4.4",
+    "@babel/preset-env": "7.4.4",
     "@babel/preset-react": "7.0.0",
     "all-contributors-cli": "6.3.0",
     "babel-core": "7.0.0-bridge.0",

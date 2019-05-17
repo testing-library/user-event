@@ -39,7 +39,7 @@
     "babel-core": "7.0.0-bridge.0",
     "babel-jest": "24.8.0",
     "codecov": "3.5.0",
-    "husky": "2.2.0",
+    "husky": "2.3.0",
     "jest": "24.8.0",
     "jest-dom": "3.2.2",
     "lint-staged": "8.1.7",

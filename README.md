@@ -21,7 +21,6 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/75f1ff4397e994c6004e/maintainability)](https://codeclimate.com/github/testing-library/user-event/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/75f1ff4397e994c6004e/test_coverage)](https://codeclimate.com/github/testing-library/user-event/test_coverage)
 [![All Contributors](https://img.shields.io/badge/all_contributors-4-orange.svg?style=flat-square)](#contributors)
-[![Greenkeeper badge](https://badges.greenkeeper.io/testing-library/user-event.svg)](https://greenkeeper.io/)
 
 ## The problem
 

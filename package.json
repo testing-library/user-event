@@ -32,27 +32,27 @@
   "homepage": "https://github.com/testing-library/user-event#readme",
   "devDependencies": {
     "@babel/cli": "7.4.4",
-    "@babel/core": "7.4.4",
-    "@babel/preset-env": "7.4.4",
+    "@babel/core": "7.4.5",
+    "@babel/preset-env": "7.4.5",
     "@babel/preset-react": "7.0.0",
-    "all-contributors-cli": "6.4.0",
+    "all-contributors-cli": "6.6.0",
     "babel-core": "7.0.0-bridge.0",
     "babel-jest": "24.8.0",
     "codecov": "3.5.0",
     "husky": "2.3.0",
     "jest": "24.8.0",
-    "jest-dom": "3.2.2",
+    "jest-dom": "3.3.0",
     "lint-staged": "8.1.7",
     "prettier": "1.17.1",
     "react": "16.8.6",
     "react-dom": "16.8.6",
-    "react-testing-library": "7.0.0",
+    "react-testing-library": "7.0.1",
     "regenerator-runtime": "0.13.2",
     "semantic-release": "15.13.12",
     "travis-deploy-once": "5.0.11"
   },
   "dependencies": {
-    "dom-testing-library": "4.1.0"
+    "dom-testing-library": "4.1.1"
   },
   "husky": {
     "hooks": {

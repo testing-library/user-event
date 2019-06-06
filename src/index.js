@@ -82,6 +82,17 @@ function dblClickCheckbox(checkbox) {
   fireEvent.change(checkbox);
 }
 
+function selectOption(option) {
+  fireEvent.mouseOver(option);
+  fireEvent.mouseMove(option);
+  fireEvent.mouseDown(option);
+  fireEvent.focus(option);
+  fireEvent.mouseUp(option);
+  fireEvent.click(option);
+
+  option.selected = true;
+}
+
 const userEvent = {
   click(element) {
     const focusedElement = document.activeElement;
@@ -125,6 +136,32 @@ const userEvent = {
         }
       default:
         dblClickElement(element);
+    }
+
+    wasAnotherElementFocused && focusedElement.blur();
+  },
+
+  selectOptions(element, selectorFn) {
+    const focusedElement = document.activeElement;
+    const wasAnotherElementFocused =
+      focusedElement !== document.body && focusedElement !== element;
+    if (wasAnotherElementFocused) {
+      fireEvent.mouseMove(focusedElement);
+      fireEvent.mouseLeave(focusedElement);
+    }
+
+    clickElement(element);
+
+    const selectedOptions = Array.from(element.children).filter(
+      option => option.tagName === "OPTION" && selectorFn(option)
+    );
+
+    if (selectedOptions.length > 0) {
+      if (element.multiple) {
+        selectedOptions.forEach(option => selectOption(option));
+      } else {
+        selectOption(selectedOptions[selectedOptions.length - 1]);
+      }
     }
 
     wasAnotherElementFocused && focusedElement.blur();

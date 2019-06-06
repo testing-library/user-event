@@ -43,23 +43,23 @@ change the state of the checkbox.
 With NPM:
 
 ```sh
-npm install user-event --dev
+npm install @testing-library/user-event --dev
 ```
 
 With Yarn:
 
 ```sh
-yarn add user-event --dev
+yarn add @testing-library/user-event --dev
 ```
 
 Now simply import it in your tests:
 
 ```js
-import userEvent from "user-event";
+import userEvent from "@testing-library/user-event";
 
 // or
 
-var userEvent = require("user-event");
+var userEvent = require("@testing-library/user-event");
 ```
 
 ## API
@@ -71,8 +71,8 @@ effects.
 
 ```jsx
 import React from "react";
-import { render } from "react-testing-library";
-import userEvent from "user-event";
+import { render } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 
 const { getByText, getByTestId } = test("click", () => {
   render(
@@ -94,8 +94,8 @@ side effects.
 
 ```jsx
 import React from "react";
-import { render } from "react-testing-library";
-import userEvent from "user-event";
+import { render } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 
 test("double click", () => {
   const onChange = jest.fn();
@@ -115,8 +115,8 @@ Writes `text` inside an `<input>` or a `<textarea>`.
 
 ```jsx
 import React from "react";
-import { render } from "react-testing-library";
-import userEvent from "user-event";
+import { render } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 
 const { getByText } = test("click", () => {
   render(<textarea data-testid="email" />);

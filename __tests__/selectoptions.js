@@ -29,10 +29,7 @@ describe("userEvent.selectOptions", () => {
         </select>
       );
 
-      userEvent.selectOptions(
-        getByTestId("element"),
-        option => option.value === "1"
-      );
+      userEvent.selectOptions(getByTestId("element"), "1");
 
       expect(events).toEqual([
         "mouseover",
@@ -82,10 +79,7 @@ describe("userEvent.selectOptions", () => {
       </select>
     );
 
-    userEvent.selectOptions(
-      getByTestId("element"),
-      option => option.value === "2"
-    );
+    userEvent.selectOptions(getByTestId("element"), ["2"]);
 
     expect(events[1]).toBe(undefined);
     expect(events[3]).toBe(undefined);
@@ -130,10 +124,7 @@ describe("userEvent.selectOptions", () => {
       </select>
     );
 
-    userEvent.selectOptions(
-      getByTestId("element"),
-      option => option.value === "1" || option.value === "3"
-    );
+    userEvent.selectOptions(getByTestId("element"), ["1", "3"]);
 
     expect(events[2]).toBe(undefined);
     expect(events[1]).toEqual([
@@ -175,10 +166,7 @@ describe("userEvent.selectOptions", () => {
       </form>
     );
 
-    userEvent.selectOptions(
-      getByTestId("element"),
-      option => option.value === "1" || option.value === "3"
-    );
+    userEvent.selectOptions(getByTestId("element"), ["1", "3"]);
 
     fireEvent.click(getByTestId("submit"));
 

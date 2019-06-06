@@ -1,4 +1,4 @@
-import { fireEvent } from "dom-testing-library";
+import { fireEvent } from "@testing-library/dom";
 
 function wait(time) {
   return new Promise(function(resolve) {

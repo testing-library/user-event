@@ -35,7 +35,7 @@
     "@babel/core": "7.4.5",
     "@babel/preset-env": "7.4.5",
     "@babel/preset-react": "7.0.0",
-    "all-contributors-cli": "6.6.0",
+    "all-contributors-cli": "6.6.1",
     "babel-core": "7.0.0-bridge.0",
     "babel-jest": "24.8.0",
     "codecov": "3.5.0",

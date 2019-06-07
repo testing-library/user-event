@@ -133,6 +133,40 @@ one character at the time. `false` is the default value.
 are typed. By default it's 0. You can use this option if your component has a
 different behavior for fast or slow users.
 
+### `selectOptions(element, values)`
+
+Selects the specified option(s) of a `<select>` or a `<select multiple>`
+element.
+
+```jsx
+import React from "react";
+import { render } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+
+const { getByTestId } = render(
+  <select multiple data-testid="select-multiple">
+    <option data-testid="val1" value="1">
+      1
+    </option>
+    <option data-testid="val2" value="2">
+      2
+    </option>
+    <option data-testid="val3" value="3">
+      3
+    </option>
+  </select>
+);
+
+userEvent.selectOptions(getByTestId("select-multiple"), ["1", "3"]);
+
+expect(getByTestId("val1").selected).toBe(true);
+expect(getByTestId("val2").selected).toBe(false);
+expect(getByTestId("val3").selected).toBe(true);
+```
+
+The `values` parameter can be either an array of values or a singular scalar
+value.
+
 ## Contributors
 
 Thanks goes to these wonderful people

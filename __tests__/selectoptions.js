@@ -162,15 +162,11 @@ describe("userEvent.selectOptions", () => {
             3
           </option>
         </select>
-        <input type="submit" data-testid="submit" value="Submit" />
       </form>
     );
 
     userEvent.selectOptions(getByTestId("element"), ["1", "3"]);
 
-    fireEvent.click(getByTestId("submit"));
-
-    expect(onSubmit.mock.calls.length).toBe(1);
     expect(getByTestId("val1").selected).toBe(true);
     expect(getByTestId("val2").selected).toBe(false);
     expect(getByTestId("val3").selected).toBe(true);

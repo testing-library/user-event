@@ -199,6 +199,27 @@ describe("userEvent.selectOptions", () => {
     expect(getByTestId("val3").selected).toBe(false);
   });
 
+  it("should fire onChange event on a SELECT element", () => {
+    const onChangeHandler = jest.fn();
+
+    const { getByTestId } = render(
+      <select data-testid="element" onChange={onChangeHandler}>
+        <option data-testid="val1" value="1">
+          1
+        </option>
+        <option data-testid="val2" value="2">
+          2
+        </option>
+        <option data-testid="val3" value="3">
+          3
+        </option>
+      </select>);
+
+    userEvent.selectOptions(getByTestId("element"), "2");
+
+    expect(onChangeHandler).toBeCalled();
+  });
+
   it("sets the selected prop on the selected OPTION using nested SELECT", () => {
     const onSubmit = jest.fn();
 

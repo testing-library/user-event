@@ -161,7 +161,7 @@ const userEvent = {
       if (element.multiple) {
         selectedOptions.forEach(option => selectOption(option));
       } else {
-        selectOption(selectedOptions[selectedOptions.length - 1]);
+        selectOption(selectedOptions[0]);
       }
     }
 

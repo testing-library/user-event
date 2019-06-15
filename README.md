@@ -43,7 +43,7 @@ change the state of the checkbox.
 With NPM:
 
 ```sh
-npm install @testing-library/user-event --dev
+npm install @testing-library/user-event --save-dev
 ```
 
 With Yarn:

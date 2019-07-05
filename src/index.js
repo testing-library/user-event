@@ -74,11 +74,9 @@ function dblClickCheckbox(checkbox) {
   fireEvent.mouseDown(checkbox);
   fireEvent.mouseUp(checkbox);
   fireEvent.click(checkbox);
-  fireEvent.change(checkbox);
   fireEvent.mouseDown(checkbox);
   fireEvent.mouseUp(checkbox);
   fireEvent.click(checkbox);
-  fireEvent.change(checkbox);
 }
 
 function selectOption(option) {

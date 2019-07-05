@@ -38,7 +38,6 @@ function clickBooleanElement(element) {
   fireEvent.mouseDown(element);
   fireEvent.mouseUp(element);
   fireEvent.click(element);
-  fireEvent.change(element);
 }
 
 function clickElement(element) {

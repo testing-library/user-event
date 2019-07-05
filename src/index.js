@@ -38,7 +38,6 @@ function clickBooleanElement(element) {
   fireEvent.mouseDown(element);
   fireEvent.mouseUp(element);
   fireEvent.click(element);
-  fireEvent.change(element);
 }
 
 function clickElement(element) {
@@ -75,11 +74,9 @@ function dblClickCheckbox(checkbox) {
   fireEvent.mouseDown(checkbox);
   fireEvent.mouseUp(checkbox);
   fireEvent.click(checkbox);
-  fireEvent.change(checkbox);
   fireEvent.mouseDown(checkbox);
   fireEvent.mouseUp(checkbox);
   fireEvent.click(checkbox);
-  fireEvent.change(checkbox);
 }
 
 function selectOption(option) {

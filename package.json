@@ -36,6 +36,7 @@
     "@babel/core": "7.4.5",
     "@babel/preset-env": "7.4.5",
     "@babel/preset-react": "7.0.0",
+    "@testing-library/dom": "^5.1.1",
     "@testing-library/react": "8.0.1",
     "all-contributors-cli": "6.6.1",
     "babel-core": "7.0.0-bridge.0",
@@ -52,8 +53,8 @@
     "semantic-release": "15.13.12",
     "travis-deploy-once": "5.0.11"
   },
-  "dependencies": {
-    "@testing-library/dom": "5.1.1"
+  "peerDependencies": {
+    "@testing-library/dom": "^5.1.1"
   },
   "husky": {
     "hooks": {

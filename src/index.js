@@ -90,11 +90,17 @@ function selectOption(option) {
   option.selected = true;
 }
 
+function fireChangeEvent(event) {
+  fireEvent.change(event.target);
+  event.target.removeEventListener("blur", fireChangeEvent);
+}
+
 const userEvent = {
   click(element) {
-    const focusedElement = document.activeElement;
+    const focusedElement = element.ownerDocument.activeElement;
     const wasAnotherElementFocused =
-      focusedElement !== document.body && focusedElement !== element;
+      focusedElement !== element.ownerDocument.body &&
+      focusedElement !== element;
     if (wasAnotherElementFocused) {
       fireEvent.mouseMove(focusedElement);
       fireEvent.mouseLeave(focusedElement);
@@ -172,10 +178,8 @@ const userEvent = {
     };
     const opts = Object.assign(defaultOpts, userOpts);
     if (opts.allAtOnce) {
-      fireEvent.change(element, { target: { value: text } });
+      fireEvent.input(element, { target: { value: text } });
     } else {
-      const typedCharacters = text.split("");
-
       let actuallyTyped = "";
       for (let index = 0; index < text.length; index++) {
         const char = text[index];
@@ -193,12 +197,11 @@ const userEvent = {
           const pressEvent = fireEvent.keyPress(element, {
             key: key,
             keyCode,
-            charCode: keyCode,
-            keyCode: keyCode
+            charCode: keyCode
           });
           if (pressEvent) {
             actuallyTyped += key;
-            fireEvent.change(element, {
+            fireEvent.input(element, {
               target: {
                 value: actuallyTyped
               },
@@ -215,6 +218,7 @@ const userEvent = {
         });
       }
     }
+    element.addEventListener("blur", fireChangeEvent);
   }
 };
 

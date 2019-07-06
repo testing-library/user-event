@@ -17,11 +17,11 @@ describe("userEvent.click", () => {
               "data-testid": "element"
             },
             on: {
-              mouseOver: eventsHandler,
-              mouseMove: eventsHandler,
-              mouseDown: eventsHandler,
+              mouseover: eventsHandler,
+              mousemove: eventsHandler,
+              mousedown: eventsHandler,
               focus: eventsHandler,
-              mouseUp: eventsHandler,
+              mouseup: eventsHandler,
               click: eventsHandler
             }
           });
@@ -32,11 +32,11 @@ describe("userEvent.click", () => {
 
       // baseElement is always <body>, si wasAnotherElementFocused is false
       expect(events).toEqual([
-        // "mouseover",
-        // "mousemove",
-        // "mousedown",
+        "mouseover",
+        "mousemove",
+        "mousedown",
         "focus",
-        // "mouseup",
+        "mouseup",
         "click"
       ]);
     }
@@ -54,11 +54,11 @@ describe("userEvent.click", () => {
             "data-testid": "element"
           },
           on: {
-            mouseOver: eventsHandler,
-            mouseMove: eventsHandler,
-            mouseDown: eventsHandler,
+            mouseover: eventsHandler,
+            mousemove: eventsHandler,
+            mousedown: eventsHandler,
             focus: eventsHandler,
-            mouseUp: eventsHandler,
+            mouseup: eventsHandler,
             click: eventsHandler,
             change: eventsHandler
           }
@@ -69,10 +69,10 @@ describe("userEvent.click", () => {
     userEvent.click(getByTestId("element"));
 
     expect(events).toEqual([
-      // "mouseover",
-      // "mousemove",
-      // "mousedown",
-      // "mouseup",
+      "mouseover",
+      "mousemove",
+      "mousedown",
+      "mouseup",
       "click",
       "change",
       "change" // Right now it's receiving two `change` events.
@@ -93,11 +93,11 @@ describe("userEvent.click", () => {
             disabled: "disabled"
           },
           on: {
-            mouseOver: eventsHandler,
-            mouseMove: eventsHandler,
-            mouseDown: eventsHandler,
+            mouseover: eventsHandler,
+            mousemove: eventsHandler,
+            mousedown: eventsHandler,
             focus: eventsHandler,
-            mouseUp: eventsHandler,
+            mouseup: eventsHandler,
             click: eventsHandler,
             change: eventsHandler
           }
@@ -123,11 +123,11 @@ describe("userEvent.click", () => {
             "data-testid": "element"
           },
           on: {
-            mouseOver: eventsHandler,
-            mouseMove: eventsHandler,
-            mouseDown: eventsHandler,
+            mouseover: eventsHandler,
+            mousemove: eventsHandler,
+            mousedown: eventsHandler,
             focus: eventsHandler,
-            mouseUp: eventsHandler,
+            mouseup: eventsHandler,
             click: eventsHandler,
             change: eventsHandler
           }
@@ -138,10 +138,10 @@ describe("userEvent.click", () => {
     userEvent.click(getByTestId("element"));
 
     expect(events).toEqual([
-      // "mouseover",
-      // "mousemove",
-      // "mousedown",
-      // "mouseup",
+      "mouseover",
+      "mousemove",
+      "mousedown",
+      "mouseup",
       "click",
       "change",
       "change"
@@ -162,11 +162,11 @@ describe("userEvent.click", () => {
             disabled: "disabled"
           },
           on: {
-            mouseOver: eventsHandler,
-            mouseMove: eventsHandler,
-            mouseDown: eventsHandler,
+            mouseover: eventsHandler,
+            mousemove: eventsHandler,
+            mousedown: eventsHandler,
             focus: eventsHandler,
-            mouseUp: eventsHandler,
+            mouseup: eventsHandler,
             click: eventsHandler,
             change: eventsHandler
           }
@@ -191,11 +191,11 @@ describe("userEvent.click", () => {
             "data-testid": "div"
           },
           on: {
-            mouseOver: eventsHandler,
-            mouseMove: eventsHandler,
-            mouseDown: eventsHandler,
+            mouseover: eventsHandler,
+            mousemove: eventsHandler,
+            mousedown: eventsHandler,
             focus: eventsHandler,
-            mouseUp: eventsHandler,
+            mouseup: eventsHandler,
             click: eventsHandler
           }
         });
@@ -204,10 +204,10 @@ describe("userEvent.click", () => {
 
     userEvent.click(getByTestId("div"));
     expect(events).toEqual([
-      // "mouseover",
-      // "mousemove",
-      // "mousedown",
-      // "mouseup",
+      "mouseover",
+      "mousemove",
+      "mousedown",
+      "mouseup",
       "click"
     ]);
   });

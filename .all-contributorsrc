@@ -72,6 +72,15 @@
       "contributions": [
         "doc"
       ]
+    },
+    {
+      "login": "calebeby",
+      "name": "Caleb Eby",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/13206945?v=4",
+      "profile": "https://calebeby.ml",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "commitConvention": "none"

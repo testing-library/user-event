@@ -51,7 +51,7 @@
     "react": "16.8.6",
     "react-dom": "16.8.6",
     "regenerator-runtime": "0.13.2",
-    "semantic-release": "15.13.12",
+    "semantic-release": "15.13.18",
     "travis-deploy-once": "5.0.11"
   },
   "peerDependencies": {

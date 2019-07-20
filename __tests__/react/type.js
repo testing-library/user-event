@@ -1,6 +1,6 @@
 import React from "react";
 import { cleanup, render, wait } from "@testing-library/react";
-import "jest-dom/extend-expect";
+import "@testing-library/jest-dom/extend-expect";
 import userEvent from "../../src";
 
 afterEach(cleanup);

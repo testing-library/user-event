@@ -1,5 +1,5 @@
 import { render, cleanup } from "@testing-library/vue";
-import "jest-dom/extend-expect";
+import "@testing-library/jest-dom/extend-expect";
 import userEvent from "../../src";
 
 afterEach(cleanup);

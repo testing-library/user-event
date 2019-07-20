@@ -47,7 +47,7 @@
     "jest": "24.8.0",
     "jest-dom": "3.4.0",
     "lint-staged": "8.1.7",
-    "prettier": "1.17.1",
+    "prettier": "1.18.2",
     "react": "16.8.6",
     "react-dom": "16.8.6",
     "regenerator-runtime": "0.13.2",

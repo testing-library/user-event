@@ -23,7 +23,7 @@ function clickLabel(label) {
     input.focus();
     fireEvent.click(label);
   } else {
-    const input = label.querySelector("input,textarea");
+    const input = label.querySelector("input,textarea,select");
     input.focus();
     label.focus();
     fireEvent.click(label);

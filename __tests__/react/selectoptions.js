@@ -178,7 +178,7 @@ describe("userEvent.selectOptions", () => {
     const { getByTestId } = render(
       <form onSubmit={onSubmit}>
         <label htmlFor="select">Example Select</label>
-        <select id="select£" multiple data-testid="element">
+        <select id="select" data-testid="element">
           <option data-testid="val1" value="1">
             1
           </option>
@@ -192,11 +192,11 @@ describe("userEvent.selectOptions", () => {
       </form>
     );
 
-    userEvent.selectOptions(getByTestId("element"), ["1", "3"]);
+    userEvent.selectOptions(getByTestId("element"), "2");
 
-    expect(getByTestId("val1").selected).toBe(true);
-    expect(getByTestId("val2").selected).toBe(false);
-    expect(getByTestId("val3").selected).toBe(true);
+    expect(getByTestId("val1").selected).toBe(false);
+    expect(getByTestId("val2").selected).toBe(true);
+    expect(getByTestId("val3").selected).toBe(false);
   });
 
   it("sets the selected prop on the selected OPTION using nested SELECT", () => {
@@ -206,7 +206,7 @@ describe("userEvent.selectOptions", () => {
       <form onSubmit={onSubmit}>
         <label>
           Example Select
-          <select id="select£" multiple data-testid="element">
+          <select data-testid="element">
             <option data-testid="val1" value="1">
               1
             </option>
@@ -221,10 +221,10 @@ describe("userEvent.selectOptions", () => {
       </form>
     );
 
-    userEvent.selectOptions(getByTestId("element"), ["1", "3"]);
+    userEvent.selectOptions(getByTestId("element"), "2");
 
-    expect(getByTestId("val1").selected).toBe(true);
-    expect(getByTestId("val2").selected).toBe(false);
-    expect(getByTestId("val3").selected).toBe(true);
+    expect(getByTestId("val1").selected).toBe(false);
+    expect(getByTestId("val2").selected).toBe(true);
+    expect(getByTestId("val3").selected).toBe(false);
   });
 });

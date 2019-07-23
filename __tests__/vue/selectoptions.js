@@ -167,11 +167,9 @@ describe("userEvent.selectOptions", () => {
   });
 
   it("sets the selected prop on the selected OPTION", () => {
-    const onSubmit = jest.fn();
-
     const { getByTestId } = render({
       template: `
-        <form @submit="${onSubmit}">
+        <form>
           <select data-testid="element" multiple>
             <option value="1" data-testid="val1">1</option>
             <option value="2" data-testid="val2">2</option>

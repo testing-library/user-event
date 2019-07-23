@@ -4,50 +4,49 @@ import userEvent from "../../src";
 
 afterEach(cleanup);
 
-const renderComponent = (type, change, additionalEvents) =>
+const renderComponent = (type, events = {}) =>
   render({
     render: function(h) {
       return h(type, {
         attrs: { "data-testid": "input" },
-        on: { change, ...additionalEvents }
+        on: events
       });
     }
   });
 
 describe("userEvent.type", () => {
   it.each(["input", "textarea"])("should type text in <%s>", type => {
-    const onChange = jest.fn();
-    const { getByTestId } = renderComponent(type, onChange);
+    const change = jest.fn();
+
+    const { getByTestId } = renderComponent(type, { change });
 
     const text = "Hello, world!";
     userEvent.type(getByTestId("input"), text);
 
-    expect(onChange).toHaveBeenCalledTimes(text.length);
+    expect(change).toHaveBeenCalledTimes(text.length);
     expect(getByTestId("input")).toHaveProperty("value", text);
   });
 
-  // it("should not type when event.preventDefault() is called", () => {
-  //   const onChange = jest.fn();
-  //   const onKeydown = jest
-  //     .fn()
-  //     .mockImplementation(event => event.preventDefault());
-  //   const { getByTestId } = renderComponent(
-  //     "input",
-  //     onChange,
-  //     { keydown: onKeydown }
-  //   );
+  it("should not type when event.preventDefault() is called", () => {
+    const change = jest.fn();
+    const keydown = jest
+      .fn()
+      .mockImplementation(event => event.preventDefault());
 
-  //   const text = "Hello, world!";
-  //   userEvent.type(getByTestId("input"), text);
-  //   expect(onKeydown).toHaveBeenCalledTimes(text.length);
-  //   expect(onChange).toHaveBeenCalledTimes(0);
-  //   expect(getByTestId("input")).not.toHaveProperty("value", text);
-  // });
+    const { getByTestId } = renderComponent("input", { change, keydown });
+
+    const text = "Hello, world!";
+    userEvent.type(getByTestId("input"), text);
+    expect(keydown).toHaveBeenCalledTimes(text.length);
+    expect(change).toHaveBeenCalledTimes(0);
+    expect(getByTestId("input")).not.toHaveProperty("value", text);
+  });
 
   it("should delayed the typing when opts.dealy is not 0", async () => {
     jest.useFakeTimers();
     const onChange = jest.fn();
-    const { getByTestId } = renderComponent("input", onChange);
+
+    const { getByTestId } = renderComponent("input", { change: onChange });
     const text = "Hello, world!";
     const delay = 10;
     userEvent.type(getByTestId("input"), text, {
@@ -69,14 +68,15 @@ describe("userEvent.type", () => {
   it.each(["input", "textarea"])(
     "should type text in <%s> all at once",
     type => {
-      const onChange = jest.fn();
-      const { getByTestId } = renderComponent(type, onChange);
+      const change = jest.fn();
+
+      const { getByTestId } = renderComponent(type, { change });
       const text = "Hello, world!";
       userEvent.type(getByTestId("input"), text, {
         allAtOnce: true
       });
 
-      expect(onChange).toHaveBeenCalledTimes(1);
+      expect(change).toHaveBeenCalledTimes(1);
       expect(getByTestId("input")).toHaveProperty("value", text);
     }
   );

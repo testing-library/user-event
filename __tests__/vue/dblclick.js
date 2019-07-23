@@ -79,12 +79,10 @@ describe("userEvent.dblClick", () => {
       "mouseup",
       "click",
       "change",
-      "change", // Duplicate change event
       "mousedown",
       "mouseup",
       "click",
-      "change",
-      "change" // Duplicate change event
+      "change"
     ]);
 
     expect(getByTestId("element")).toHaveProperty("checked", false);

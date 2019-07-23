@@ -170,32 +170,14 @@ describe("userEvent.selectOptions", () => {
     const onSubmit = jest.fn();
 
     const { getByTestId } = render({
-      render: function(h) {
-        return h("form", { on: { submit: onSubmit } }, [
-          h(
-            "select",
-            {
-              attrs: {
-                "data-testid": "element",
-                multiple: true
-              }
-            },
-            [
-              h(
-                "option",
-                { attrs: { value: "1", "data-testid": "val1" } },
-                "1"
-              ),
-              h(
-                "option",
-                { attrs: { value: "2", "data-testid": "val2" } },
-                "2"
-              ),
-              h("option", { attrs: { value: "3", "data-testid": "val3" } }, "3")
-            ]
-          )
-        ]);
-      }
+      template: `
+        <form @submit="${onSubmit}">
+          <select data-testid="element" multiple>
+            <option value="1" data-testid="val1">1</option>
+            <option value="2" data-testid="val2">2</option>
+            <option value="3" data-testid="val3">3</option>
+          </select>
+        </form>`
     });
 
     userEvent.selectOptions(getByTestId("element"), ["1", "3"]);
@@ -211,15 +193,9 @@ describe("userEvent.selectOptions", () => {
         <form>
           <label htmlFor="select">Example Select</label>
           <select id="select" data-testid="element">
-            <option data-testid="val1" value="1">
-              1
-            </option>
-            <option data-testid="val2" value="2">
-              2
-            </option>
-            <option data-testid="val3" value="3">
-              3
-            </option>
+            <option data-testid="val1" value="1">1</option>
+            <option data-testid="val2" value="2">2</option>
+            <option data-testid="val3" value="3">3</option>
           </select>
         </form>`
     });
@@ -234,22 +210,16 @@ describe("userEvent.selectOptions", () => {
   it("sets the selected prop on the selected OPTION using nested SELECT", () => {
     const { getByTestId } = render({
       template: `
-      <form>
-      <label>
-        Example Select
-        <select data-testid="element">
-          <option data-testid="val1" value="1">
-            1
-          </option>
-          <option data-testid="val2" value="2">
-            2
-          </option>
-          <option data-testid="val3" value="3">
-            3
-          </option>
-        </select>
-      </label>
-    </form>`
+        <form>
+          <label>
+            Example Select
+            <select data-testid="element">
+              <option data-testid="val1" value="1">1</option>
+              <option data-testid="val2" value="2">2</option>
+              <option data-testid="val3" value="3">3</option>
+            </select>
+          </label>
+        </form>`
     });
 
     userEvent.selectOptions(getByTestId("element"), "2");

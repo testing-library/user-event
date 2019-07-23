@@ -92,6 +92,16 @@
         "bug",
         "test"
       ]
+    },
+    {
+      "login": "skywickenden",
+      "name": "Sky Wickenden",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/4930551?v=4",
+      "profile": "https://github.com/skywickenden",
+      "contributions": [
+        "bug",
+        "code"
+      ]
     }
   ],
   "commitConvention": "none"

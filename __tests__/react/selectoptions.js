@@ -171,4 +171,60 @@ describe("userEvent.selectOptions", () => {
     expect(getByTestId("val2").selected).toBe(false);
     expect(getByTestId("val3").selected).toBe(true);
   });
+
+  it("sets the selected prop on the selected OPTION using htmlFor", () => {
+    const onSubmit = jest.fn();
+
+    const { getByTestId } = render(
+      <form onSubmit={onSubmit}>
+        <label htmlFor="select">Example Select</label>
+        <select id="select" data-testid="element">
+          <option data-testid="val1" value="1">
+            1
+          </option>
+          <option data-testid="val2" value="2">
+            2
+          </option>
+          <option data-testid="val3" value="3">
+            3
+          </option>
+        </select>
+      </form>
+    );
+
+    userEvent.selectOptions(getByTestId("element"), "2");
+
+    expect(getByTestId("val1").selected).toBe(false);
+    expect(getByTestId("val2").selected).toBe(true);
+    expect(getByTestId("val3").selected).toBe(false);
+  });
+
+  it("sets the selected prop on the selected OPTION using nested SELECT", () => {
+    const onSubmit = jest.fn();
+
+    const { getByTestId } = render(
+      <form onSubmit={onSubmit}>
+        <label>
+          Example Select
+          <select data-testid="element">
+            <option data-testid="val1" value="1">
+              1
+            </option>
+            <option data-testid="val2" value="2">
+              2
+            </option>
+            <option data-testid="val3" value="3">
+              3
+            </option>
+          </select>
+        </label>
+      </form>
+    );
+
+    userEvent.selectOptions(getByTestId("element"), "2");
+
+    expect(getByTestId("val1").selected).toBe(false);
+    expect(getByTestId("val2").selected).toBe(true);
+    expect(getByTestId("val3").selected).toBe(false);
+  });
 });

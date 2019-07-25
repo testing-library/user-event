@@ -79,7 +79,7 @@ function dblClickCheckbox(checkbox) {
   fireEvent.click(checkbox);
 }
 
-function selectOption(option) {
+function selectOption(select, option) {
   fireEvent.mouseOver(option);
   fireEvent.mouseMove(option);
   fireEvent.mouseDown(option);
@@ -88,6 +88,8 @@ function selectOption(option) {
   fireEvent.click(option);
 
   option.selected = true;
+
+  fireEvent.change(select);
 }
 
 const userEvent = {
@@ -156,9 +158,9 @@ const userEvent = {
 
     if (selectedOptions.length > 0) {
       if (element.multiple) {
-        selectedOptions.forEach(option => selectOption(option));
+        selectedOptions.forEach(option => selectOption(element, option));
       } else {
-        selectOption(selectedOptions[0]);
+        selectOption(element, selectedOptions[0]);
       }
     }
 

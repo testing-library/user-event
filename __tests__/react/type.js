@@ -1,5 +1,5 @@
 import React from "react";
-import { cleanup, render, wait } from "@testing-library/react";
+import { cleanup, render, wait, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import userEvent from "../../src";
 
@@ -35,31 +35,40 @@ describe("userEvent.type", () => {
     expect(getByTestId("input")).not.toHaveProperty("value", text);
   });
 
-  it("should delayed the typing when opts.dealy is not 0", async () => {
+  it("should delay the typing when opts.delay is not 0", async () => {
     jest.useFakeTimers();
     const onChange = jest.fn();
+    const onInput = jest.fn();
     const { getByTestId } = render(
       React.createElement("input", {
         "data-testid": "input",
-        onChange: onChange
+        onInput,
+        onChange
       })
     );
     const text = "Hello, world!";
     const delay = 10;
+    // Attach a native change listener because React cannot listen for text input change events
     userEvent.type(getByTestId("input"), text, {
       delay
     });
-    expect(onChange).not.toHaveBeenCalled();
+    expect(onInput).not.toHaveBeenCalled();
     expect(getByTestId("input")).not.toHaveProperty("value", text);
 
     for (let i = 0; i < text.length; i++) {
       jest.advanceTimersByTime(delay);
-      await wait(() => expect(onChange).toHaveBeenCalledTimes(i + 1));
+      await wait(() => expect(onInput).toHaveBeenCalledTimes(i + 1));
+      expect(onChange).toHaveBeenCalledTimes(i + 1);
       expect(getByTestId("input")).toHaveProperty(
         "value",
         text.slice(0, i + 1)
       );
     }
+    // Blurring the input "commits" the value, React's onChange should not fire
+    fireEvent.blur(getByTestId("input"));
+    await wait(() => expect(onChange).toHaveBeenCalledTimes(text.length), {
+      timeout: 300
+    });
   });
 
   it.each(["input", "textarea"])(

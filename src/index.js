@@ -144,7 +144,11 @@ const userEvent = {
     wasAnotherElementFocused && focusedElement.blur();
   },
 
-  selectOptions(element, values) {
+  selectOptions(element, values, userOpts = {}) {
+    const defaultOpts = {
+      target: "value"
+    };
+    const opts = Object.assign(defaultOpts, userOpts);
     const focusedElement = document.activeElement;
     const wasAnotherElementFocused =
       focusedElement !== document.body && focusedElement !== element;
@@ -157,7 +161,7 @@ const userEvent = {
 
     const valArray = Array.isArray(values) ? values : [values];
     const selectedOptions = Array.from(element.children).filter(
-      opt => opt.tagName === "OPTION" && valArray.includes(opt.value)
+      opt => opt.tagName === "OPTION" && valArray.includes(opt[opts.target])
     );
 
     if (selectedOptions.length > 0) {

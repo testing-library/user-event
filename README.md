@@ -133,7 +133,7 @@ one character at the time. `false` is the default value.
 are typed. By default it's 0. You can use this option if your component has a
 different behavior for fast or slow users.
 
-### `selectOptions(element, values)`
+### `selectOptions(element, values, [options])`
 
 Selects the specified option(s) of a `<select>` or a `<select multiple>`
 element.
@@ -166,6 +166,9 @@ expect(getByTestId("val3").selected).toBe(true);
 
 The `values` parameter can be either an array of values or a singular scalar
 value.
+
+If `options.target` parameter is set, it will use its value to extract option to
+select.
 
 ## Contributors
 

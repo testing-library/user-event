@@ -4,12 +4,20 @@ export interface IUserOptions {
     delay?: number;
 }
 
+export interface IUserSelectOptions {
+    target?: string;
+}
+
 type TargetElement = Element | Window;
 
 declare const userEvent: {
     click: (element: TargetElement) => void;
     dblClick: (element: TargetElement) => void;
-    selectOptions: (element: TargetElement, values: string | string[]) => void;
+    selectOptions: (
+        element: TargetElement,
+        values: string | string[],
+        userOpts?: IUserSelectOptions
+    ) => void;
     type: (
         element: TargetElement,
         text: string,

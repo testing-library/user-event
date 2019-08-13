@@ -44,8 +44,8 @@ describe("userEvent.type", () => {
     userEvent.type(getByTestId("input"), text);
     expect(keydown).toHaveBeenCalledTimes(text.length);
     expect(change).toHaveBeenCalledTimes(0);
-    // expect(input).toHaveBeenCalledTimes(0);
-    // expect(getByTestId("input")).not.toHaveProperty("value", text);
+    expect(input).toHaveBeenCalledTimes(0);
+    expect(getByTestId("input")).not.toHaveProperty("value", text);
   });
 
   it("should delay the typing when opts.delay is not 0", async () => {

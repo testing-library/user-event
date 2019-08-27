@@ -4,11 +4,11 @@ import userEvent from "../../src";
 
 afterEach(cleanup);
 
-const renderComponent = (type, events = {}) =>
+const renderComponent = (type, events = {}, attrs = {}) =>
   render({
     render: function(h) {
       return h(type, {
-        attrs: { "data-testid": "input" },
+        attrs: { "data-testid": "input", ...attrs },
         on: events
       });
     }
@@ -47,6 +47,55 @@ describe("userEvent.type", () => {
     expect(input).toHaveBeenCalledTimes(0);
     expect(getByTestId("input")).not.toHaveProperty("value", text);
   });
+
+  it.each(["input", "textarea"])(
+    "should not type when <%s> is disabled",
+    type => {
+      const change = jest.fn();
+      const { getByTestId } = renderComponent(
+        type,
+        {
+          change
+        },
+        {
+          disabled: true
+        }
+      );
+      const text = "Hello, world!";
+      userEvent.type(getByTestId("input"), text);
+      expect(change).not.toHaveBeenCalled();
+      expect(getByTestId("input")).toHaveProperty("value", "");
+    }
+  );
+
+  it.each(["input", "textarea"])(
+    "should not type when <%s> is readOnly",
+    type => {
+      const change = jest.fn();
+      const keydown = jest.fn();
+      const keypress = jest.fn();
+      const keyup = jest.fn();
+      const { getByTestId } = renderComponent(
+        type,
+        {
+          change,
+          keydown,
+          keypress,
+          keyup
+        },
+        {
+          readOnly: true
+        }
+      );
+      const text = "Hello, world!";
+      userEvent.type(getByTestId("input"), text);
+      expect(keydown).toHaveBeenCalledTimes(text.length);
+      expect(keypress).toHaveBeenCalledTimes(text.length);
+      expect(keyup).toHaveBeenCalledTimes(text.length);
+      expect(change).not.toHaveBeenCalled();
+      expect(getByTestId("input")).toHaveProperty("value", "");
+    }
+  );
 
   it("should delay the typing when opts.delay is not 0", async () => {
     jest.useFakeTimers();

@@ -102,6 +102,16 @@
         "bug",
         "code"
       ]
+    },
+    {
+      "login": "bogdanbodnar",
+      "name": "Bodnar Bogdan",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/9034868?v=4",
+      "profile": "https://github.com/bogdanbodnar",
+      "contributions": [
+        "bug",
+        "code"
+      ]
     }
   ],
   "commitConvention": "none"

@@ -174,12 +174,14 @@ const userEvent = {
   },
 
   async type(element, text, userOpts = {}) {
+    if (element.disabled) return;
     const defaultOpts = {
       allAtOnce: false,
       delay: 0
     };
     const opts = Object.assign(defaultOpts, userOpts);
     if (opts.allAtOnce) {
+      if (element.readOnly) return;
       fireEvent.input(element, { target: { value: text } });
     } else {
       let actuallyTyped = "";
@@ -203,13 +205,14 @@ const userEvent = {
           });
           if (pressEvent) {
             actuallyTyped += key;
-            fireEvent.input(element, {
-              target: {
-                value: actuallyTyped
-              },
-              bubbles: true,
-              cancelable: true
-            });
+            if (!element.readOnly)
+              fireEvent.input(element, {
+                target: {
+                  value: actuallyTyped
+                },
+                bubbles: true,
+                cancelable: true
+              });
           }
         }
 

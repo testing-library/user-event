@@ -50,7 +50,7 @@
     "prettier": "1.18.2",
     "react": "16.9.0",
     "react-dom": "16.9.0",
-    "regenerator-runtime": "0.13.2",
+    "regenerator-runtime": "0.13.3",
     "semantic-release": "15.13.24",
     "travis-deploy-once": "5.0.11",
     "vue": "^2.6.10",

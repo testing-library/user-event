@@ -46,7 +46,7 @@
     "codecov": "3.5.0",
     "husky": "3.0.4",
     "jest": "24.9.0",
-    "lint-staged": "8.1.7",
+    "lint-staged": "9.2.5",
     "prettier": "1.18.2",
     "react": "16.9.0",
     "react-dom": "16.9.0",
@@ -63,23 +63,5 @@
     "hooks": {
       "pre-commit": "lint-staged"
     }
-  },
-  "lint-staged": {
-    "linters": {
-      "*.{js,json}": [
-        "prettier --write",
-        "git add"
-      ],
-      "*.md": [
-        "prettier --write --parser markdown",
-        "git add"
-      ]
-    },
-    "ignore": [
-      "package.json",
-      "package-lock.json",
-      "node_modules/**",
-      "dist/**"
-    ]
   }
 }

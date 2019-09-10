@@ -113,6 +113,15 @@
         "bug",
         "code"
       ]
+    },
+    {
+      "login": "zperrault",
+      "name": "Zach Perrault",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/1699281?v=4",
+      "profile": "https://zach.website",
+      "contributions": [
+        "doc"
+      ]
     }
   ],
   "commitConvention": "none"

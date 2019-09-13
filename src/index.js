@@ -1,7 +1,7 @@
 import { fireEvent } from "@testing-library/dom";
 
 function wait(time) {
-  return new Promise(function(resolve) {
+  return new Promise(function (resolve) {
     setTimeout(() => resolve(), time);
   });
 }
@@ -224,6 +224,22 @@ const userEvent = {
       }
     }
     element.addEventListener("blur", fireChangeEvent);
+  },
+
+  tab({ shift = false } = {}) {
+    const focusableElements = document.querySelectorAll('input, button, select, textarea, a, [tabindex]');
+    const list = Array.prototype.filter.call(focusableElements, function (item) { return item.getAttribute('tabindex') !== '-1'; });
+    const index = list.indexOf(document.activeElement);
+
+    let nextIndex = shift ? index - 1 : index + 1;
+    let defaultIndex = shift ? list.length - 1 : 0;
+
+    const next = list[nextIndex] || list[defaultIndex];
+
+    if (next.getAttribute('tabindex') === null) {
+      next.setAttribute('tabindex', '0'); // jsdom requires tabIndex=0 for an item to become 'document.activeElement' (the browser does not)
+    }
+    next.focus();
   }
 };
 

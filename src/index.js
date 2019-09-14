@@ -227,8 +227,16 @@ const userEvent = {
   },
 
   tab({ shift = false } = {}) {
-    const focusableElements = document.querySelectorAll('input, button, select, textarea, a, [tabindex]');
-    const list = Array.prototype.filter.call(focusableElements, function (item) { return item.getAttribute('tabindex') !== '-1'; });
+    const focusableElements = document.querySelectorAll(
+      "input, button, select, textarea, a[href], [tabindex]"
+    );
+    const list = Array.prototype.filter.call(focusableElements, function (item) {
+      return item.getAttribute("tabindex") !== "-1";
+    }).sort((a, b) => {
+      const tabIndexA = a.getAttribute('tabindex');
+      const tabIndexB = b.getAttribute('tabindex');
+      return tabIndexA < tabIndexB ? -1 : tabIndexA > tabIndexB ? 1 : 0;
+    });
     const index = list.indexOf(document.activeElement);
 
     let nextIndex = shift ? index - 1 : index + 1;
@@ -236,8 +244,8 @@ const userEvent = {
 
     const next = list[nextIndex] || list[defaultIndex];
 
-    if (next.getAttribute('tabindex') === null) {
-      next.setAttribute('tabindex', '0'); // jsdom requires tabIndex=0 for an item to become 'document.activeElement' (the browser does not)
+    if (next.getAttribute("tabindex") === null) {
+      next.setAttribute("tabindex", "0"); // jsdom requires tabIndex=0 for an item to become 'document.activeElement' (the browser does not)
     }
     next.focus();
   }

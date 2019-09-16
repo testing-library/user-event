@@ -122,6 +122,15 @@
       "contributions": [
         "doc"
       ]
+    },
+    {
+      "login": "FLGMwt",
+      "name": "Ryan Stelly",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/4138357?v=4",
+      "profile": "https://twitter.com/ryanastelly",
+      "contributions": [
+        "doc"
+      ]
     }
   ],
   "commitConvention": "none"

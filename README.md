@@ -74,17 +74,17 @@ import React from "react";
 import { render } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
-const { getByText, getByTestId } = test("click", () => {
-  render(
+test("click", () => {
+  const { getByText, getByTestId } = render(
     <div>
       <label htmlFor="checkbox">Check</label>
       <input id="checkbox" data-testid="checkbox" type="checkbox" />
     </div>
   );
-});
 
-userEvent.click(getByText("Check"));
-expect(getByTestId("checkbox")).toHaveAttribute("checked", true);
+  userEvent.click(getByText("Check"));
+  expect(getByTestId("checkbox")).toHaveAttribute("checked", true);
+});
 ```
 
 ### `dblClick(element)`

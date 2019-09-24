@@ -6,7 +6,7 @@ import userEvent from "../../src";
 afterEach(cleanup);
 
 describe("userEvent.tab", () => {
-    it("should go from one element to the next, then back to the 1st", () => {
+     it("should cycle elements in document tab order", () => {
         const { getAllByTestId } = render(
             <div>
                 <input data-testid="element" type="checkbox" />

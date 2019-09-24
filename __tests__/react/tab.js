@@ -33,7 +33,8 @@ describe("userEvent.tab", () => {
 
         userEvent.tab();
 
-        expect(document.activeElement).toBe(checkbox);
+         // cycle goes back to first element
+         expect(document.activeElement).toBe(checkbox); 
     });
 
     it("should go backwards when shift = true", () => {

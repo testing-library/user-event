@@ -1,9 +1,7 @@
 import React from "react";
-import { render, cleanup } from "@testing-library/react";
+import { render } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import userEvent from "../../src";
-
-afterEach(cleanup);
 
 describe("userEvent.tab", () => {
      it("should cycle elements in document tab order", () => {

@@ -40,7 +40,7 @@
     "@testing-library/jest-dom": "4.1.0",
     "@testing-library/react": "9.1.4",
     "@testing-library/vue": "3.0.0",
-    "all-contributors-cli": "6.9.0",
+    "all-contributors-cli": "6.9.1",
     "babel-core": "7.0.0-bridge.0",
     "babel-jest": "24.9.0",
     "codecov": "3.5.0",

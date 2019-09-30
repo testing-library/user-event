@@ -36,7 +36,7 @@
     "@babel/core": "7.6.2",
     "@babel/preset-env": "7.6.2",
     "@babel/preset-react": "7.0.0",
-    "@testing-library/dom": "6.2.0",
+    "@testing-library/dom": "6.4.1",
     "@testing-library/jest-dom": "4.1.0",
     "@testing-library/react": "9.1.4",
     "@testing-library/vue": "3.0.0",

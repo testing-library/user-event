@@ -167,6 +167,30 @@ expect(getByTestId("val3").selected).toBe(true);
 The `values` parameter can be either an array of values or a singular scalar
 value.
 
+### `tab([options])`
+
+Focuses elements in the correct tab order.
+
+```jsx
+import React from "react";
+import { render } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+
+test("tab", () => {
+  const { getByText, getByTestId } = render(
+    <div>
+      <label htmlFor="checkbox">Check</label>
+      <input id="checkbox" data-testid="checkbox" type="checkbox" />
+    </div>
+  );
+
+  userEvent.tab();
+  expect(getByTestId("checkbox")).toBe(document.activeElement);
+});
+```
+
+If `options.shift` is `true`, `tab` will cycle backwards through the tab order.
+
 ## Contributors
 
 Thanks goes to these wonderful people

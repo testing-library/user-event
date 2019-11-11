@@ -15,6 +15,7 @@ declare const userEvent: {
         text: string,
         userOpts?: IUserOptions
     ) => Promise<void>;
+    tab: (userOpts?: { shift: boolean }) = void;
 };
 
 export default userEvent;

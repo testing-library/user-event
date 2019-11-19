@@ -1,7 +1,7 @@
 import { fireEvent } from "@testing-library/dom";
 
 function wait(time) {
-  return new Promise(function (resolve) {
+  return new Promise(function(resolve) {
     setTimeout(() => resolve(), time);
   });
 }
@@ -171,9 +171,9 @@ const userEvent = {
     clickElement(element);
 
     const valArray = Array.isArray(values) ? values : [values];
-    const selectedOptions = Array.from(element.querySelectorAll('option')).filter(
-      opt => valArray.includes(opt.value)
-    );
+    const selectedOptions = Array.from(
+      element.querySelectorAll("option")
+    ).filter(opt => valArray.includes(opt.value));
 
     if (selectedOptions.length > 0) {
       if (element.multiple) {
@@ -193,13 +193,16 @@ const userEvent = {
       delay: 0
     };
     const opts = Object.assign(defaultOpts, userOpts);
+
+    const computedText = text.slice(0, element.maxLength || text.length);
+
     if (opts.allAtOnce) {
       if (element.readOnly) return;
-      fireEvent.input(element, { target: { value: text } });
+      fireEvent.input(element, { target: { value: computedText } });
     } else {
       let actuallyTyped = "";
-      for (let index = 0; index < text.length; index++) {
-        const char = text[index];
+      for (let index = 0; index < computedText.length; index++) {
+        const char = computedText[index];
         const key = char; // TODO: check if this also valid for characters with diacritic markers e.g. úé etc
         const keyCode = char.charCodeAt(0);
 
@@ -244,9 +247,11 @@ const userEvent = {
       "input, button, select, textarea, a[href], [tabindex]"
     );
 
-    let list = Array.prototype.filter.call(focusableElements, function (item) {
-      return item.getAttribute("tabindex") !== "-1"&& !item.disabled;
-    }).map((el, idx) => ({ el, idx }))
+    let list = Array.prototype.filter
+      .call(focusableElements, function(item) {
+        return item.getAttribute("tabindex") !== "-1" && !item.disabled;
+      })
+      .map((el, idx) => ({ el, idx }))
       .sort((a, b) => {
         const tabIndexA = a.el.getAttribute("tabindex");
         const tabIndexB = b.el.getAttribute("tabindex");
@@ -254,14 +259,14 @@ const userEvent = {
         const diff = tabIndexA - tabIndexB;
 
         return diff !== 0 ? diff : a.idx - b.idx;
-      })
+      });
 
     const index = list.findIndex(({ el }) => el === document.activeElement);
 
     let nextIndex = shift ? index - 1 : index + 1;
     let defaultIndex = shift ? list.length - 1 : 0;
 
-    const { el: next } = (list[nextIndex] || list[defaultIndex]);
+    const { el: next } = list[nextIndex] || list[defaultIndex];
 
     if (next.getAttribute("tabindex") === null) {
       next.setAttribute("tabindex", "0"); // jsdom requires tabIndex=0 for an item to become 'document.activeElement' (the browser does not)

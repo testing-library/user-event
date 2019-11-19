@@ -145,4 +145,31 @@ describe("userEvent.type", () => {
       expect(input).toHaveBeenCalledTimes(1);
     }
   );
+
+  it.each(["input", "textarea"])(
+    "should type text in <%s> up to maxLength if provided",
+    type => {
+      const input = jest.fn();
+      const maxLength = 10;
+
+      const { getByTestId } = renderComponent(type, { input }, { maxLength });
+
+      const text = "superlongtext";
+      const slicedText = text.slice(0, maxLength);
+
+      const inputEl = getByTestId("input");
+
+      userEvent.type(inputEl, text, {
+        allAtOnce: true
+      });
+      expect(inputEl).toHaveProperty("value", slicedText);
+
+      inputEl.value = "";
+      input.mockClear();
+
+      userEvent.type(inputEl, text);
+      expect(inputEl).toHaveProperty("value", slicedText);
+      expect(input).toHaveBeenCalledTimes(slicedText.length);
+    }
+  );
 });

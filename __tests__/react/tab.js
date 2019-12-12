@@ -15,24 +15,24 @@ describe("userEvent.tab", () => {
 
         const [checkbox, radio, number] = getAllByTestId("element");
 
-        expect(document.activeElement).toBe(document.body);
+        expect(document.body).toHaveFocus()
 
         userEvent.tab();
 
-        expect(document.activeElement).toBe(checkbox);
+        expect(checkbox).toHaveFocus();
 
         userEvent.tab();
 
-        expect(document.activeElement).toBe(radio);
+        expect(radio).toHaveFocus()
 
         userEvent.tab();
 
-        expect(document.activeElement).toBe(number);
+        expect(number).toHaveFocus()
 
         userEvent.tab();
 
         // cycle goes back to first element
-        expect(document.activeElement).toBe(checkbox);
+        expect(checkbox).toHaveFocus()
     });
 
     it("should go backwards when shift = true", () => {
@@ -50,11 +50,11 @@ describe("userEvent.tab", () => {
 
         userEvent.tab({ shift: true });
 
-        expect(document.activeElement).toBe(checkbox);
+        expect(checkbox).toHaveFocus()
 
         userEvent.tab({ shift: true });
 
-        expect(document.activeElement).toBe(number);
+        expect(number).toHaveFocus()
     });
 
     it("should respect tabindex, regardless of dom position", () => {
@@ -70,22 +70,22 @@ describe("userEvent.tab", () => {
 
         userEvent.tab();
 
-        expect(document.activeElement).toBe(radio);
+        expect(radio).toHaveFocus()
 
         userEvent.tab();
 
-        expect(document.activeElement).toBe(checkbox);
+        expect(checkbox).toHaveFocus()
 
         userEvent.tab();
 
-        expect(document.activeElement).toBe(number);
+        expect(number).toHaveFocus()
 
         userEvent.tab();
 
-        expect(document.activeElement).toBe(radio);
+        expect(radio).toHaveFocus()
     });
 
-    it('should respect dom order when tabindex are all the same', () => {
+    it("should respect dom order when tabindex are all the same", () => {
         const { getAllByTestId } = render(
             <div>
                 <input data-testid="element" tabIndex={0} type="checkbox" />
@@ -98,22 +98,22 @@ describe("userEvent.tab", () => {
 
         userEvent.tab();
 
-        expect(document.activeElement).toBe(checkbox);
+        expect(checkbox).toHaveFocus()
 
         userEvent.tab();
 
-        expect(document.activeElement).toBe(number);
+        expect(number).toHaveFocus()
 
         userEvent.tab();
 
-        expect(document.activeElement).toBe(radio);
+        expect(radio).toHaveFocus()
 
         userEvent.tab();
 
-        expect(document.activeElement).toBe(checkbox);
+        expect(checkbox).toHaveFocus()
     });
 
-    it('should suport a mix of elements with/without tab index', () => {
+    it("should suport a mix of elements with/without tab index", () => {
         const { getAllByTestId } = render(
             <div>
                 <input data-testid="element" tabIndex={0} type="checkbox" />
@@ -126,22 +126,23 @@ describe("userEvent.tab", () => {
 
         userEvent.tab();
 
-        expect(document.activeElement).toBe(checkbox);
+        expect(checkbox).toHaveFocus()
         userEvent.tab();
 
-        expect(document.activeElement).toBe(number);
+        expect(number).toHaveFocus()
         userEvent.tab();
 
-        expect(document.activeElement).toBe(radio);
-
+        expect(radio).toHaveFocus()
     });
 
-    it('should not tab to <a> with no href', () => {
+    it("should not tab to <a> with no href", () => {
         const { getAllByTestId } = render(
             <div>
                 <input data-testid="element" tabIndex={0} type="checkbox" />
                 <a>ignore this</a>
-                <a data-testid="element" href="http://www.testingjavascript.com">a link</a>
+                <a data-testid="element" href="http://www.testingjavascript.com">
+                    a link
+        </a>
             </div>
         );
 
@@ -149,11 +150,11 @@ describe("userEvent.tab", () => {
 
         userEvent.tab();
 
-        expect(document.activeElement).toBe(checkbox);
+        expect(checkbox).toHaveFocus()
 
         userEvent.tab();
 
-        expect(document.activeElement).toBe(link);
+        expect(link).toHaveFocus()
     });
 
     it("should stay within a focus trab", () => {
@@ -172,44 +173,50 @@ describe("userEvent.tab", () => {
             </>
         );
 
-        const [div1, div2] = [getByTestId("div1"), getByTestId("div2")]
-        const [checkbox1, radio1, number1, checkbox2, radio2, number2] = getAllByTestId("element");
+        const [div1, div2] = [getByTestId("div1"), getByTestId("div2")];
+        const [
+            checkbox1,
+            radio1,
+            number1,
+            checkbox2,
+            radio2,
+            number2
+        ] = getAllByTestId("element");
 
-        expect(document.activeElement).toBe(document.body);
+        expect(document.body).toHaveFocus()
 
         userEvent.tab({ focusTrap: div1 });
 
-        expect(document.activeElement).toBe(checkbox1);
+        expect(checkbox1).toHaveFocus()
 
         userEvent.tab({ focusTrap: div1 });
 
-        expect(document.activeElement).toBe(radio1);
+        expect(radio1).toHaveFocus()
 
         userEvent.tab({ focusTrap: div1 });
 
-        expect(document.activeElement).toBe(number1);
+        expect(number1).toHaveFocus()
 
         userEvent.tab({ focusTrap: div1 });
 
         // cycle goes back to first element
-        expect(document.activeElement).toBe(checkbox1);
+        expect(checkbox1).toHaveFocus()
 
         userEvent.tab({ focusTrap: div2 });
 
-        expect(document.activeElement).toBe(checkbox2);
+        expect(checkbox2).toHaveFocus()
 
         userEvent.tab({ focusTrap: div2 });
 
-        expect(document.activeElement).toBe(radio2);
+        expect(radio2).toHaveFocus()
 
         userEvent.tab({ focusTrap: div2 });
 
-        expect(document.activeElement).toBe(number2);
+        expect(number2).toHaveFocus()
 
         userEvent.tab({ focusTrap: div2 });
 
         // cycle goes back to first element
-        expect(document.activeElement).toBe(checkbox2);
-    })
-
+        expect(checkbox2).toHaveFocus()
+    });
 });

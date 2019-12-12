@@ -226,8 +226,8 @@ const userEvent = {
     element.addEventListener("blur", fireChangeEvent);
   },
 
-  tab({ shift = false } = {}) {
-    const focusableElements = document.querySelectorAll(
+  tab({ shift = false, focusTrap = document } = {}) {
+    const focusableElements = focusTrap.querySelectorAll(
       "input, button, select, textarea, a[href], [tabindex]"
     );
     const list = Array.prototype.filter

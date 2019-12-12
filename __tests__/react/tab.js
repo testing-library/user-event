@@ -4,7 +4,7 @@ import "@testing-library/jest-dom/extend-expect";
 import userEvent from "../../src";
 
 describe("userEvent.tab", () => {
-     it("should cycle elements in document tab order", () => {
+    it("should cycle elements in document tab order", () => {
         const { getAllByTestId } = render(
             <div>
                 <input data-testid="element" type="checkbox" />
@@ -31,8 +31,8 @@ describe("userEvent.tab", () => {
 
         userEvent.tab();
 
-         // cycle goes back to first element
-         expect(document.activeElement).toBe(checkbox); 
+        // cycle goes back to first element
+        expect(document.activeElement).toBe(checkbox);
     });
 
     it("should go backwards when shift = true", () => {
@@ -155,5 +155,61 @@ describe("userEvent.tab", () => {
 
         expect(document.activeElement).toBe(link);
     });
+
+    it("should stay within a focus trab", () => {
+        const { getAllByTestId, getByTestId } = render(
+            <>
+                <div data-testid="div1">
+                    <input data-testid="element" type="checkbox" />
+                    <input data-testid="element" type="radio" />
+                    <input data-testid="element" type="number" />
+                </div>
+                <div data-testid="div2">
+                    <input data-testid="element" foo="bar" type="checkbox" />
+                    <input data-testid="element" foo="bar" type="radio" />
+                    <input data-testid="element" foo="bar" type="number" />
+                </div>
+            </>
+        );
+
+        const [div1, div2] = [getByTestId("div1"), getByTestId("div2")]
+        const [checkbox1, radio1, number1, checkbox2, radio2, number2] = getAllByTestId("element");
+
+        expect(document.activeElement).toBe(document.body);
+
+        userEvent.tab({ focusTrap: div1 });
+
+        expect(document.activeElement).toBe(checkbox1);
+
+        userEvent.tab({ focusTrap: div1 });
+
+        expect(document.activeElement).toBe(radio1);
+
+        userEvent.tab({ focusTrap: div1 });
+
+        expect(document.activeElement).toBe(number1);
+
+        userEvent.tab({ focusTrap: div1 });
+
+        // cycle goes back to first element
+        expect(document.activeElement).toBe(checkbox1);
+
+        userEvent.tab({ focusTrap: div2 });
+
+        expect(document.activeElement).toBe(checkbox2);
+
+        userEvent.tab({ focusTrap: div2 });
+
+        expect(document.activeElement).toBe(radio2);
+
+        userEvent.tab({ focusTrap: div2 });
+
+        expect(document.activeElement).toBe(number2);
+
+        userEvent.tab({ focusTrap: div2 });
+
+        // cycle goes back to first element
+        expect(document.activeElement).toBe(checkbox2);
+    })
 
 });

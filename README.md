@@ -169,11 +169,14 @@ value.
 
 ### `tab({shift, focusTrap})`
 
-Fires a tab event changing the document.activeElement in the same way the browser does.
+Fires a tab event changing the document.activeElement in the same way the
+browser does.
 
-Options: 
+Options:
+
 - `shift` (default `false`) can be true or false to invert tab direction.
-- `focusTrap` (default `document`) a container element to restrict the tabbing within.
+- `focusTrap` (default `document`) a container element to restrict the tabbing
+  within.
 
 ```jsx
 import React from "react";
@@ -181,36 +184,35 @@ import { render } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import userEvent from "@testing-library/user-event";
 
-
 it("should cycle elements in document tab order", () => {
-      const { getAllByTestId } = render(
-          <div>
-              <input data-testid="element" type="checkbox" />
-              <input data-testid="element" type="radio" />
-              <input data-testid="element" type="number" />
-          </div>
-      );
+  const { getAllByTestId } = render(
+    <div>
+      <input data-testid="element" type="checkbox" />
+      <input data-testid="element" type="radio" />
+      <input data-testid="element" type="number" />
+    </div>
+  );
 
-      const [checkbox, radio, number] = getAllByTestId("element");
+  const [checkbox, radio, number] = getAllByTestId("element");
 
-      expect(document.body).toHaveFocus()
+  expect(document.body).toHaveFocus();
 
-      userEvent.tab();
+  userEvent.tab();
 
-      expect(checkbox).toHaveFocus();
+  expect(checkbox).toHaveFocus();
 
-      userEvent.tab();
+  userEvent.tab();
 
-      expect(radio).toHaveFocus()
+  expect(radio).toHaveFocus();
 
-      userEvent.tab();
+  userEvent.tab();
 
-      expect(number).toHaveFocus()
+  expect(number).toHaveFocus();
 
-      userEvent.tab();
+  userEvent.tab();
 
-      // cycle goes back to first element
-      expect(checkbox).toHaveFocus()
+  // cycle goes back to first element
+  expect(checkbox).toHaveFocus();
 });
 ```
 
@@ -244,6 +246,7 @@ Thanks goes to these wonderful people
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the

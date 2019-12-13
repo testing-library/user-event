@@ -158,7 +158,7 @@ const { getByTestId } = render(
 );
 
 userEvent.selectOptions(getByTestId("select-multiple"), ["1", "3"]);
-
+j
 expect(getByTestId("val1").selected).toBe(true);
 expect(getByTestId("val2").selected).toBe(false);
 expect(getByTestId("val3").selected).toBe(true);
@@ -177,6 +177,8 @@ Options:
 - `shift` (default `false`) can be true or false to invert tab direction.
 - `focusTrap` (default `document`) a container element to restrict the tabbing
   within.
+
+> **A note about tab**: [jsdom does not support tabbing](https://github.com/jsdom/jsdom/issues/2102), so this feature  is a way to enable tests to verify tabbing from the end user's perspective.  However, this limitation in jsdom will mean that components like [focus-trap-react](https://github.com/davidtheclark/focus-trap-react) will not work with `userEvent.tab()` or jsdom.  For that reason, the `focusTrap` option is available to let you ensure your user is restricted within a focus-trap.  
 
 ```jsx
 import React from "react";

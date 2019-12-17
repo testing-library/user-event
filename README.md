@@ -158,7 +158,7 @@ const { getByTestId } = render(
 );
 
 userEvent.selectOptions(getByTestId("select-multiple"), ["1", "3"]);
-j
+
 expect(getByTestId("val1").selected).toBe(true);
 expect(getByTestId("val2").selected).toBe(false);
 expect(getByTestId("val3").selected).toBe(true);

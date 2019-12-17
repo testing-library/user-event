@@ -226,4 +226,29 @@ describe("userEvent.selectOptions", () => {
     expect(getByTestId("val2").selected).toBe(true);
     expect(getByTestId("val3").selected).toBe(false);
   });
+
+  it("sets the selected prop on the selected OPTION using OPTGROUPS", () => {
+    const { getByTestId } = render({
+      template: `
+        <form>
+          <select data-testid="element" multiple>
+            <optgroup label="test optgroup 1">
+               <option value="1" data-testid="val1">1</option>
+            </optgroup>
+            <optgroup label="test optgroup 2">
+                <option value="2" data-testid="val2">2</option>
+            </optgroup>
+            <optgroup label="test optgroup 3">
+                <option value="3" data-testid="val3">3</option>
+            </optgroup>
+          </select>
+        </form>`
+    });
+
+    userEvent.selectOptions(getByTestId("element"), ["1", "3"]);
+
+    expect(getByTestId("val1").selected).toBe(true);
+    expect(getByTestId("val2").selected).toBe(false);
+    expect(getByTestId("val3").selected).toBe(true);
+  });
 });

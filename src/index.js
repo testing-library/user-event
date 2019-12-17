@@ -1,7 +1,7 @@
 import { fireEvent } from "@testing-library/dom";
 
 function wait(time) {
-  return new Promise(function (resolve) {
+  return new Promise(function(resolve) {
     setTimeout(() => resolve(), time);
   });
 }
@@ -226,12 +226,12 @@ const userEvent = {
     element.addEventListener("blur", fireChangeEvent);
   },
 
-  tab({ shift = false } = {}) {
-    const focusableElements = document.querySelectorAll(
+  tab({ shift = false, focusTrap = document } = {}) {
+    const focusableElements = focusTrap.querySelectorAll(
       "input, button, select, textarea, a[href], [tabindex]"
     );
     const list = Array.prototype.filter
-      .call(focusableElements, function (item) {
+      .call(focusableElements, function(item) {
         return item.getAttribute("tabindex") !== "-1";
       })
       .sort((a, b) => {

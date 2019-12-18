@@ -53,8 +53,8 @@
     "regenerator-runtime": "0.13.3",
     "semantic-release": "^15.13.31",
     "travis-deploy-once": "5.0.11",
-    "vue": "^2.6.10",
-    "vue-template-compiler": "^2.6.10"
+    "vue": "^2.6.11",
+    "vue-template-compiler": "^2.6.11"
   },
   "peerDependencies": {
     "@testing-library/dom": ">=5"

@@ -213,7 +213,8 @@ describe("userEvent.selectOptions", () => {
         <option data-testid="val3" value="3">
           3
         </option>
-      </select>);
+      </select>
+    );
 
     userEvent.selectOptions(getByTestId("element"), "2");
 

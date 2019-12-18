@@ -167,6 +167,57 @@ expect(getByTestId("val3").selected).toBe(true);
 The `values` parameter can be either an array of values or a singular scalar
 value.
 
+### `tab({shift, focusTrap})`
+
+Fires a tab event changing the document.activeElement in the same way the
+browser does.
+
+Options:
+
+- `shift` (default `false`) can be true or false to invert tab direction.
+- `focusTrap` (default `document`) a container element to restrict the tabbing
+  within.
+
+> **A note about tab**: [jsdom does not support tabbing](https://github.com/jsdom/jsdom/issues/2102), so this feature  is a way to enable tests to verify tabbing from the end user's perspective.  However, this limitation in jsdom will mean that components like [focus-trap-react](https://github.com/davidtheclark/focus-trap-react) will not work with `userEvent.tab()` or jsdom.  For that reason, the `focusTrap` option is available to let you ensure your user is restricted within a focus-trap.  
+
+```jsx
+import React from "react";
+import { render } from "@testing-library/react";
+import "@testing-library/jest-dom/extend-expect";
+import userEvent from "@testing-library/user-event";
+
+it("should cycle elements in document tab order", () => {
+  const { getAllByTestId } = render(
+    <div>
+      <input data-testid="element" type="checkbox" />
+      <input data-testid="element" type="radio" />
+      <input data-testid="element" type="number" />
+    </div>
+  );
+
+  const [checkbox, radio, number] = getAllByTestId("element");
+
+  expect(document.body).toHaveFocus();
+
+  userEvent.tab();
+
+  expect(checkbox).toHaveFocus();
+
+  userEvent.tab();
+
+  expect(radio).toHaveFocus();
+
+  userEvent.tab();
+
+  expect(number).toHaveFocus();
+
+  userEvent.tab();
+
+  // cycle goes back to first element
+  expect(checkbox).toHaveFocus();
+});
+```
+
 ## Contributors
 
 Thanks goes to these wonderful people
@@ -197,6 +248,7 @@ Thanks goes to these wonderful people
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the

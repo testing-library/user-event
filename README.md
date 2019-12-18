@@ -109,7 +109,7 @@ test("double click", () => {
 });
 ```
 
-### `type(element, text, [options])`
+### `async type(element, text, [options])`
 
 Writes `text` inside an `<input>` or a `<textarea>`.
 
@@ -122,7 +122,7 @@ const { getByTestId } = test("click", () => {
   render(<textarea data-testid="email" />);
 });
 
-userEvent.type(getByTestId("email"), "Hello, World!");
+await userEvent.type(getByTestId("email"), "Hello, World!");
 expect(getByTestId("email")).toHaveAttribute("value", "Hello, World!");
 ```
 

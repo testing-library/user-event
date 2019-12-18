@@ -51,7 +51,7 @@
     "react": "16.10.1",
     "react-dom": "16.10.1",
     "regenerator-runtime": "0.13.3",
-    "semantic-release": "15.13.24",
+    "semantic-release": "^15.13.31",
     "travis-deploy-once": "5.0.11",
     "vue": "^2.6.10",
     "vue-template-compiler": "^2.6.10"

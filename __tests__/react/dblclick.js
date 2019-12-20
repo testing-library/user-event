@@ -64,6 +64,7 @@ describe("userEvent.dblClick", () => {
       "mouseover",
       "mousemove",
       "mousedown",
+      "focus",
       "mouseup",
       "click",
       "change",

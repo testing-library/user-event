@@ -140,6 +140,33 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "GentlemanHal",
+      "name": "Christopher Martin",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/415521?v=4",
+      "profile": "https://github.com/GentlemanHal",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "YuanchengWu",
+      "name": "Yuancheng Wu",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/32252769?v=4",
+      "profile": "http://fullgallop.me",
+      "contributions": [
+        "review"
+      ]
+    },
+    {
+      "login": "maheshjag",
+      "name": "MJ",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/1705603?v=4",
+      "profile": "https://github.com/maheshjag",
+      "contributions": [
+        "doc"
+      ]
     }
   ],
   "commitConvention": "none"

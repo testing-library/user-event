@@ -72,6 +72,7 @@ describe("userEvent.click", () => {
       "mouseover",
       "mousemove",
       "mousedown",
+      "focus",
       "mouseup",
       "click",
       "change"
@@ -140,6 +141,7 @@ describe("userEvent.click", () => {
       "mouseover",
       "mousemove",
       "mousedown",
+      "focus",
       "mouseup",
       "click",
       "change"

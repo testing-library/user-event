@@ -4,6 +4,11 @@ export interface IUserOptions {
     delay?: number;
 }
 
+interface ITabUserOptions {
+    shift?: boolean;
+    focusTrap?: Document | Element;
+}
+
 type TargetElement = Element | Window;
 
 declare const userEvent: {
@@ -15,6 +20,7 @@ declare const userEvent: {
         text: string,
         userOpts?: IUserOptions
     ) => Promise<void>;
+    tab: (userOpts?: ITabUserOptions) => void;
 };
 
 export default userEvent;

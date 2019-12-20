@@ -140,6 +140,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "GentlemanHal",
+      "name": "Christopher Martin",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/415521?v=4",
+      "profile": "https://github.com/GentlemanHal",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "commitConvention": "none"

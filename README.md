@@ -178,7 +178,13 @@ Options:
 - `focusTrap` (default `document`) a container element to restrict the tabbing
   within.
 
-> **A note about tab**: [jsdom does not support tabbing](https://github.com/jsdom/jsdom/issues/2102), so this feature  is a way to enable tests to verify tabbing from the end user's perspective.  However, this limitation in jsdom will mean that components like [focus-trap-react](https://github.com/davidtheclark/focus-trap-react) will not work with `userEvent.tab()` or jsdom.  For that reason, the `focusTrap` option is available to let you ensure your user is restricted within a focus-trap.  
+> **A note about tab**:
+> [jsdom does not support tabbing](https://github.com/jsdom/jsdom/issues/2102),
+> so this feature is a way to enable tests to verify tabbing from the end user's
+> perspective. However, this limitation in jsdom will mean that components like
+> [focus-trap-react](https://github.com/davidtheclark/focus-trap-react) will not
+> work with `userEvent.tab()` or jsdom. For that reason, the `focusTrap` option
+> is available to let you ensure your user is restricted within a focus-trap.
 
 ```jsx
 import React from "react";
@@ -244,6 +250,9 @@ Thanks goes to these wonderful people
     <td align="center"><a href="https://twitter.com/ryanastelly"><img src="https://avatars1.githubusercontent.com/u/4138357?v=4" width="100px;" alt=""/><br /><sub><b>Ryan Stelly</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=FLGMwt" title="Documentation">📖</a></td>
     <td align="center"><a href="https://github.com/benmonro"><img src="https://avatars3.githubusercontent.com/u/399236?v=4" width="100px;" alt=""/><br /><sub><b>Ben Monro</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=benmonro" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/GentlemanHal"><img src="https://avatars2.githubusercontent.com/u/415521?v=4" width="100px;" alt=""/><br /><sub><b>Christopher Martin</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=GentlemanHal" title="Code">💻</a></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="http://fullgallop.me"><img src="https://avatars0.githubusercontent.com/u/32252769?v=4" width="100px;" alt=""/><br /><sub><b>Yuancheng Wu</b></sub></a><br /><a href="https://github.com/testing-library/user-event/pulls?q=is%3Apr+reviewed-by%3AYuanchengWu" title="Reviewed Pull Requests">👀</a></td>
   </tr>
 </table>
 

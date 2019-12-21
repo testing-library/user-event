@@ -234,7 +234,7 @@ const userEvent = {
     );
     const list = Array.prototype.filter
       .call(focusableElements, function(item) {
-        return item.getAttribute("tabindex") !== "-1";
+        return item.getAttribute("tabindex") !== "-1" && !item.disabled;
       })
       .sort((a, b) => {
         const tabIndexA = a.getAttribute("tabindex");

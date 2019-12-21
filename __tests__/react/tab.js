@@ -220,3 +220,23 @@ describe("userEvent.tab", () => {
     expect(checkbox2).toHaveFocus();
   });
 });
+
+it("should not focus disabled elements", () => {
+  const { getByTestId } = render(
+    <div>
+      <input data-testid="one" />
+      <input tabIndex={-1} />
+      <button disabled>click</button>
+      <input disabled />
+      <input data-testid="five" />
+    </div>
+  );
+
+  const [one, five] = [getByTestId("one"), getByTestId("five")];
+
+  userEvent.tab();
+  expect(one).toHaveFocus();
+
+  userEvent.tab();
+  expect(five).toHaveFocus();
+});

@@ -157,7 +157,8 @@ describe("userEvent.tab", () => {
     expect(link).toHaveFocus();
   });
 
-  it("should stay within a focus trab", () => {
+
+  it("should stay within a focus trap", () => {
     const { getAllByTestId, getByTestId } = render(
       <>
         <div data-testid="div1">
@@ -219,4 +220,27 @@ describe("userEvent.tab", () => {
     // cycle goes back to first element
     expect(checkbox2).toHaveFocus();
   });
+
+  // prior to node 11, Array.sort was unstable for arrays w/ length > 10.
+  // https://twitter.com/mathias/status/1036626116654637057
+  // for this reason, the tab() function needs to account for this in it's sorting.
+  // for example under node 10 in this test:
+  // > 'abcdefghijklmnopqrstuvwxyz'.split('').sort(() => 0).join('')
+  // will give you 'nacdefghijklmbopqrstuvwxyz'
+  it("should support unstable sorting environments like node 10", () => {
+    const letters = 'abcdefghijklmnopqrstuvwxyz';
+
+    const { getByTestId } = render(<>
+      {letters.split('').map(letter => <input key={letter} type="text" data-testid={letter} />)}
+    </>)
+
+    expect.assertions(26);
+
+
+    letters.split('').forEach(letter => {
+      userEvent.tab();
+      expect(getByTestId(letter)).toHaveFocus();
+    })
+
+  })
 });

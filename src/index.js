@@ -1,7 +1,7 @@
 import { fireEvent } from "@testing-library/dom";
 
 function wait(time) {
-  return new Promise(function(resolve) {
+  return new Promise(function (resolve) {
     setTimeout(() => resolve(), time);
   });
 }
@@ -10,6 +10,23 @@ function findTagInParents(element, tagName) {
   if (element.parentNode == null) return undefined;
   if (element.parentNode.tagName === tagName) return element.parentNode;
   return findTagInParents(element.parentNode, tagName);
+}
+
+let sortListByTabIndex;
+let nodeVersion = +process.version.slice(1).split('.')[0];
+if (nodeVersion < 11) {
+  sortListByTabIndex = list => list.map((el, idx) => ({ el, idx }))
+    .sort((a, b) => {
+      const tabIndexA = +a.el.getAttribute("tabindex");
+      const tabIndexB = +b.el.getAttribute("tabindex");
+      return tabIndexA < tabIndexB ? -1 : tabIndexA > tabIndexB ? 1 : a.idx - b.idx;
+    }).map(({ el }) => el);
+} else {
+  sortListByTabIndex = list => list.sort((a, b) => {
+    const tabIndexA = +a.getAttribute("tabindex");
+    const tabIndexB = +b.getAttribute("tabindex");
+    return tabIndexA < tabIndexB ? -1 : tabIndexA > tabIndexB ? 1 : 0;
+  });
 }
 
 function clickLabel(label) {
@@ -232,15 +249,13 @@ const userEvent = {
     const focusableElements = focusTrap.querySelectorAll(
       "input, button, select, textarea, a[href], [tabindex]"
     );
-    const list = Array.prototype.filter
-      .call(focusableElements, function(item) {
+    let list = Array.prototype.filter
+      .call(focusableElements, function (item) {
         return item.getAttribute("tabindex") !== "-1";
-      })
-      .sort((a, b) => {
-        const tabIndexA = a.getAttribute("tabindex");
-        const tabIndexB = b.getAttribute("tabindex");
-        return tabIndexA < tabIndexB ? -1 : tabIndexA > tabIndexB ? 1 : 0;
       });
+
+    list = sortListByTabIndex(list);
+
     const index = list.indexOf(document.activeElement);
 
     let nextIndex = shift ? index - 1 : index + 1;

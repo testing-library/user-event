@@ -12,23 +12,6 @@ function findTagInParents(element, tagName) {
   return findTagInParents(element.parentNode, tagName);
 }
 
-let sortListByTabIndex;
-let nodeVersion = +process.version.slice(1).split('.')[0];
-if (nodeVersion < 11) {
-  sortListByTabIndex = list => list.map((el, idx) => ({ el, idx }))
-    .sort((a, b) => {
-      const tabIndexA = +a.el.getAttribute("tabindex");
-      const tabIndexB = +b.el.getAttribute("tabindex");
-      return tabIndexA < tabIndexB ? -1 : tabIndexA > tabIndexB ? 1 : a.idx - b.idx;
-    }).map(({ el }) => el);
-} else {
-  sortListByTabIndex = list => list.sort((a, b) => {
-    const tabIndexA = +a.getAttribute("tabindex");
-    const tabIndexB = +b.getAttribute("tabindex");
-    return tabIndexA < tabIndexB ? -1 : tabIndexA > tabIndexB ? 1 : 0;
-  });
-}
-
 function clickLabel(label) {
   fireEvent.mouseOver(label);
   fireEvent.mouseMove(label);
@@ -249,19 +232,24 @@ const userEvent = {
     const focusableElements = focusTrap.querySelectorAll(
       "input, button, select, textarea, a[href], [tabindex]"
     );
-    let list = Array.prototype.filter
-      .call(focusableElements, function (item) {
-        return item.getAttribute("tabindex") !== "-1";
-      });
+    let list = Array.prototype.filter.call(focusableElements, function (item) {
+      return item.getAttribute("tabindex") !== "-1";
+    }).map((el, idx) => ({ el, idx }))
+      .sort((a, b) => {
+        const tabIndexA = a.el.getAttribute("tabindex");
+        const tabIndexB = b.el.getAttribute("tabindex");
 
-    list = sortListByTabIndex(list);
+        const diff = tabIndexA - tabIndexB;
 
-    const index = list.indexOf(document.activeElement);
+        return diff !== 0 ? diff : a.idx - b.idx;
+      })
+
+    const index = list.findIndex(({ el }) => el === document.activeElement);
 
     let nextIndex = shift ? index - 1 : index + 1;
     let defaultIndex = shift ? list.length - 1 : 0;
 
-    const next = list[nextIndex] || list[defaultIndex];
+    const { el: next } = (list[nextIndex] || list[defaultIndex]);
 
     if (next.getAttribute("tabindex") === null) {
       next.setAttribute("tabindex", "0"); // jsdom requires tabIndex=0 for an item to become 'document.activeElement' (the browser does not)

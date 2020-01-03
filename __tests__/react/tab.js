@@ -157,7 +157,6 @@ describe("userEvent.tab", () => {
     expect(link).toHaveFocus();
   });
 
-
   it("should stay within a focus trap", () => {
     const { getAllByTestId, getByTestId } = render(
       <>
@@ -228,19 +227,21 @@ describe("userEvent.tab", () => {
   // > 'abcdefghijklmnopqrstuvwxyz'.split('').sort(() => 0).join('')
   // will give you 'nacdefghijklmbopqrstuvwxyz'
   it("should support unstable sorting environments like node 10", () => {
-    const letters = 'abcdefghijklmnopqrstuvwxyz';
+    const letters = "abcdefghijklmnopqrstuvwxyz";
 
-    const { getByTestId } = render(<>
-      {letters.split('').map(letter => <input key={letter} type="text" data-testid={letter} />)}
-    </>)
+    const { getByTestId } = render(
+      <>
+        {letters.split("").map(letter => (
+          <input key={letter} type="text" data-testid={letter} />
+        ))}
+      </>
+    );
 
     expect.assertions(26);
 
-
-    letters.split('').forEach(letter => {
+    letters.split("").forEach(letter => {
       userEvent.tab();
       expect(getByTestId(letter)).toHaveFocus();
-    })
-
-  })
+    });
+  });
 });

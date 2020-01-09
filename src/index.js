@@ -99,6 +99,15 @@ function fireChangeEvent(event) {
   event.target.removeEventListener("blur", fireChangeEvent);
 }
 
+function blurFocusedElement(element, focusedElement, wasAnotherElementFocused) {
+  if (
+    wasAnotherElementFocused &&
+    element.ownerDocument.activeElement === element
+  ) {
+    focusedElement.blur();
+  }
+}
+
 const userEvent = {
   click(element) {
     const focusedElement = element.ownerDocument.activeElement;
@@ -123,7 +132,7 @@ const userEvent = {
         clickElement(element);
     }
 
-    wasAnotherElementFocused && focusedElement.blur();
+    blurFocusedElement(element, focusedElement, wasAnotherElementFocused);
   },
 
   dblClick(element) {
@@ -145,7 +154,7 @@ const userEvent = {
         dblClickElement(element);
     }
 
-    wasAnotherElementFocused && focusedElement.blur();
+    blurFocusedElement(element, focusedElement, wasAnotherElementFocused);
   },
 
   selectOptions(element, values) {
@@ -172,7 +181,7 @@ const userEvent = {
       }
     }
 
-    wasAnotherElementFocused && focusedElement.blur();
+    blurFocusedElement(element, focusedElement, wasAnotherElementFocused);
   },
 
   async type(element, text, userOpts = {}) {

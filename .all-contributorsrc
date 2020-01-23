@@ -180,6 +180,6 @@
     }
   ],
   "commitConvention": "none",
-  "skipCi": true,
+  "skipCi": false,
   "contributorsPerLine": 7
 }

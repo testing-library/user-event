@@ -1,7 +1,7 @@
 import { fireEvent } from "@testing-library/dom";
 
 function wait(time) {
-  return new Promise(function(resolve) {
+  return new Promise(function (resolve) {
     setTimeout(() => resolve(), time);
   });
 }
@@ -99,6 +99,15 @@ function fireChangeEvent(event) {
   event.target.removeEventListener("blur", fireChangeEvent);
 }
 
+function blurFocusedElement(element, focusedElement, wasAnotherElementFocused) {
+  if (
+    wasAnotherElementFocused &&
+    element.ownerDocument.activeElement === element
+  ) {
+    focusedElement.blur();
+  }
+}
+
 const userEvent = {
   click(element) {
     const focusedElement = element.ownerDocument.activeElement;
@@ -123,7 +132,7 @@ const userEvent = {
         clickElement(element);
     }
 
-    wasAnotherElementFocused && focusedElement.blur();
+    blurFocusedElement(element, focusedElement, wasAnotherElementFocused);
   },
 
   dblClick(element) {
@@ -145,7 +154,7 @@ const userEvent = {
         dblClickElement(element);
     }
 
-    wasAnotherElementFocused && focusedElement.blur();
+    blurFocusedElement(element, focusedElement, wasAnotherElementFocused);
   },
 
   selectOptions(element, values) {
@@ -172,7 +181,7 @@ const userEvent = {
       }
     }
 
-    wasAnotherElementFocused && focusedElement.blur();
+    blurFocusedElement(element, focusedElement, wasAnotherElementFocused);
   },
 
   async type(element, text, userOpts = {}) {
@@ -232,21 +241,25 @@ const userEvent = {
     const focusableElements = focusTrap.querySelectorAll(
       "input, button, select, textarea, a[href], [tabindex]"
     );
-    const list = Array.prototype.filter
-      .call(focusableElements, function(item) {
-        return item.getAttribute("tabindex") !== "-1" && !item.disabled;
-      })
+
+    let list = Array.prototype.filter.call(focusableElements, function (item) {
+      return item.getAttribute("tabindex") !== "-1"&& !item.disabled;
+    }).map((el, idx) => ({ el, idx }))
       .sort((a, b) => {
-        const tabIndexA = a.getAttribute("tabindex");
-        const tabIndexB = b.getAttribute("tabindex");
-        return tabIndexA < tabIndexB ? -1 : tabIndexA > tabIndexB ? 1 : 0;
-      });
-    const index = list.indexOf(document.activeElement);
+        const tabIndexA = a.el.getAttribute("tabindex");
+        const tabIndexB = b.el.getAttribute("tabindex");
+
+        const diff = tabIndexA - tabIndexB;
+
+        return diff !== 0 ? diff : a.idx - b.idx;
+      })
+
+    const index = list.findIndex(({ el }) => el === document.activeElement);
 
     let nextIndex = shift ? index - 1 : index + 1;
     let defaultIndex = shift ? list.length - 1 : 0;
 
-    const next = list[nextIndex] || list[defaultIndex];
+    const { el: next } = (list[nextIndex] || list[defaultIndex]);
 
     if (next.getAttribute("tabindex") === null) {
       next.setAttribute("tabindex", "0"); // jsdom requires tabIndex=0 for an item to become 'document.activeElement' (the browser does not)

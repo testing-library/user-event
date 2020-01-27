@@ -198,6 +198,32 @@ describe("userEvent.click", () => {
     expect(b).toHaveFocus();
   });
 
+  it("does not lose focus when click updates focus", () => {
+    const FocusComponent = () => {
+      const inputRef = React.useRef();
+      const focusInput = () => inputRef.current.focus();
+
+      return (
+        <React.Fragment>
+          <input data-testid="input" ref={inputRef} />
+          <button onClick={focusInput}>Update Focus</button>
+        </React.Fragment>
+      );
+    };
+    const { getByTestId, getByText } = render(<FocusComponent />);
+
+    const input = getByTestId("input");
+    const button = getByText("Update Focus");
+
+    expect(input).not.toHaveFocus();
+
+    userEvent.click(button);
+    expect(input).toHaveFocus();
+
+    userEvent.click(button);
+    expect(input).toHaveFocus();
+  });
+
   it.each(["input", "textarea"])(
     "gives focus to <%s> when clicking a <label> with htmlFor",
     type => {

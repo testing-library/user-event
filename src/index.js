@@ -169,8 +169,8 @@ const userEvent = {
     clickElement(element);
 
     const valArray = Array.isArray(values) ? values : [values];
-    const selectedOptions = Array.from(element.children).filter(
-      opt => opt.tagName === "OPTION" && valArray.includes(opt.value)
+    const selectedOptions = Array.from(element.querySelectorAll('option')).filter(
+      opt => valArray.includes(opt.value)
     );
 
     if (selectedOptions.length > 0) {

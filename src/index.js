@@ -44,8 +44,10 @@ function clickBooleanElement(element) {
 function clickElement(element) {
   fireEvent.mouseOver(element);
   fireEvent.mouseMove(element);
-  fireEvent.mouseDown(element);
-  element.focus();
+  const continueDefaultHandling = fireEvent.mouseDown(element);
+  if (continueDefaultHandling) {
+    element.focus();
+  }
   fireEvent.mouseUp(element);
   fireEvent.click(element);
 

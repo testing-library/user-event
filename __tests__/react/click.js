@@ -321,4 +321,22 @@ describe("userEvent.click", () => {
     userEvent.click(getByText("Submit"));
     expect(onSubmit).not.toHaveBeenCalled();
   });
+
+  it.each(["input", "textarea"])(
+    "should not give focus for <%s> when mouseDown is prevented",
+    type => {
+      const { getByTestId } = render(
+        React.createElement(type, {
+          "data-testid": "element",
+          onMouseDown: (evt) => {
+            evt.preventDefault();
+          },
+        })
+      );
+
+      userEvent.click(getByTestId("element"));
+
+      expect(getByTestId("element")).not.toHaveFocus();
+    }
+  );
 });

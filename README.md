@@ -255,6 +255,7 @@ Thanks goes to these wonderful people
     <td align="center"><a href="http://fullgallop.me"><img src="https://avatars0.githubusercontent.com/u/32252769?v=4" width="100px;" alt=""/><br /><sub><b>Yuancheng Wu</b></sub></a><br /><a href="https://github.com/testing-library/user-event/pulls?q=is%3Apr+reviewed-by%3AYuanchengWu" title="Reviewed Pull Requests">👀</a></td>
     <td align="center"><a href="https://github.com/maheshjag"><img src="https://avatars0.githubusercontent.com/u/1705603?v=4" width="100px;" alt=""/><br /><sub><b>MJ</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=maheshjag" title="Documentation">📖</a></td>
     <td align="center"><a href="https://github.com/jmcriffey"><img src="https://avatars0.githubusercontent.com/u/2831294?v=4" width="100px;" alt=""/><br /><sub><b>Jeff McRiffey</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=jmcriffey" title="Code">💻</a> <a href="https://github.com/testing-library/user-event/commits?author=jmcriffey" title="Tests">⚠️</a></td>
+    <td align="center"><a href="http://jagascript.com"><img src="https://avatars0.githubusercontent.com/u/4562878?v=4" width="100px;" alt=""/><br /><sub><b>Jaga Santagostino</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=kandros" title="Code">💻</a> <a href="https://github.com/testing-library/user-event/commits?author=kandros" title="Tests">⚠️</a></td>
   </tr>
 </table>
 

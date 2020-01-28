@@ -241,8 +241,9 @@ const userEvent = {
     const focusableElements = focusTrap.querySelectorAll(
       "input, button, select, textarea, a[href], [tabindex]"
     );
+
     let list = Array.prototype.filter.call(focusableElements, function (item) {
-      return item.getAttribute("tabindex") !== "-1";
+      return item.getAttribute("tabindex") !== "-1"&& !item.disabled;
     }).map((el, idx) => ({ el, idx }))
       .sort((a, b) => {
         const tabIndexA = a.el.getAttribute("tabindex");

@@ -187,6 +187,16 @@
         "code",
         "test"
       ]
+    },
+    {
+      "login": "jordyvandomselaar",
+      "name": "jordyvandomselaar",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/12712484?v=4",
+      "profile": "http://jordy.app",
+      "contributions": [
+        "code",
+        "test"
+      ]
     }
   ],
   "commitConvention": "none",

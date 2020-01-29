@@ -145,4 +145,48 @@ describe("userEvent.type", () => {
       expect(input).toHaveBeenCalledTimes(1);
     }
   );
+
+  it.each(["input", "textarea"])(
+    "should type text in <%s> up to maxLength if provided",
+    type => {
+      const input = jest.fn();
+      const keydown = jest.fn();
+      const keypress = jest.fn();
+      const keyup = jest.fn();
+      const maxLength = 10;
+
+      const { getByTestId } = renderComponent(
+        type,
+        { input, keydown, keypress, keyup },
+        { maxLength }
+      );
+
+      const text = "superlongtext";
+      const slicedText = text.slice(0, maxLength);
+
+      const inputEl = getByTestId("input");
+
+      userEvent.type(inputEl, text);
+      expect(inputEl).toHaveProperty("value", slicedText);
+      expect(keydown).toHaveBeenCalledTimes(text.length);
+      expect(keypress).toHaveBeenCalledTimes(text.length);
+      expect(keyup).toHaveBeenCalledTimes(text.length);
+
+      inputEl.value = "";
+      input.mockClear();
+      keydown.mockClear();
+      keypress.mockClear();
+      keyup.mockClear();
+
+      userEvent.type(inputEl, text, {
+        allAtOnce: true
+      });
+
+      expect(inputEl).toHaveProperty("value", slicedText);
+      expect(input).toHaveBeenCalledTimes(1);
+      expect(keydown).not.toHaveBeenCalled();
+      expect(keypress).not.toHaveBeenCalled();
+      expect(keyup).not.toHaveBeenCalled();
+    }
+  );
 });

@@ -207,6 +207,16 @@
         "code",
         "test"
       ]
+    },
+    {
+      "login": "klujanrosas",
+      "name": "Kenneth Luján Rosas",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/4474353?v=4",
+      "profile": "http://todofullstack.com",
+      "contributions": [
+        "code",
+        "test"
+      ]
     }
   ],
   "commitConvention": "none",

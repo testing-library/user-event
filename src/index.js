@@ -201,8 +201,8 @@ const userEvent = {
       fireEvent.input(element, { target: { value: computedText } });
     } else {
       let actuallyTyped = "";
-      for (let index = 0; index < computedText.length; index++) {
-        const char = computedText[index];
+      for (let index = 0; index < text.length; index++) {
+        const char = text[index];
         const key = char; // TODO: check if this also valid for characters with diacritic markers e.g. úé etc
         const keyCode = char.charCodeAt(0);
 
@@ -213,13 +213,18 @@ const userEvent = {
           keyCode: keyCode,
           which: keyCode
         });
+
         if (downEvent) {
           const pressEvent = fireEvent.keyPress(element, {
             key: key,
             keyCode,
             charCode: keyCode
           });
-          if (pressEvent) {
+
+          const isTextPastThreshold =
+            (actuallyTyped + key).length > computedText.length;
+
+          if (pressEvent && !isTextPastThreshold) {
             actuallyTyped += key;
             if (!element.readOnly)
               fireEvent.input(element, {

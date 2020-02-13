@@ -41,11 +41,12 @@ function clickBooleanElement(element) {
   fireEvent.click(element);
 }
 
-function clickElement(element) {
+function clickElement(element, previousElement) {
   fireEvent.mouseOver(element);
   fireEvent.mouseMove(element);
   const continueDefaultHandling = fireEvent.mouseDown(element);
   if (continueDefaultHandling) {
+    previousElement && previousElement.blur();
     element.focus();
   }
   fireEvent.mouseUp(element);
@@ -55,11 +56,14 @@ function clickElement(element) {
   labelAncestor && clickLabel(labelAncestor);
 }
 
-function dblClickElement(element) {
+function dblClickElement(element, previousElement) {
   fireEvent.mouseOver(element);
   fireEvent.mouseMove(element);
-  fireEvent.mouseDown(element);
-  element.focus();
+  const continueDefaultHandling = fireEvent.mouseDown(element);
+  if (continueDefaultHandling) {
+    previousElement && previousElement.blur();
+    element.focus();
+  }
   fireEvent.mouseUp(element);
   fireEvent.click(element);
   fireEvent.mouseDown(element);
@@ -101,15 +105,6 @@ function fireChangeEvent(event) {
   event.target.removeEventListener("blur", fireChangeEvent);
 }
 
-function blurFocusedElement(element, focusedElement, wasAnotherElementFocused) {
-  if (
-    wasAnotherElementFocused &&
-    element.ownerDocument.activeElement === element
-  ) {
-    focusedElement.blur();
-  }
-}
-
 const userEvent = {
   click(element) {
     const focusedElement = element.ownerDocument.activeElement;
@@ -131,10 +126,8 @@ const userEvent = {
           break;
         }
       default:
-        clickElement(element);
+        clickElement(element, wasAnotherElementFocused && focusedElement);
     }
-
-    blurFocusedElement(element, focusedElement, wasAnotherElementFocused);
   },
 
   dblClick(element) {
@@ -149,14 +142,12 @@ const userEvent = {
     switch (element.tagName) {
       case "INPUT":
         if (element.type === "checkbox") {
-          dblClickCheckbox(element);
+          dblClickCheckbox(element, wasAnotherElementFocused && focusedElement);
           break;
         }
       default:
-        dblClickElement(element);
+        dblClickElement(element, wasAnotherElementFocused && focusedElement);
     }
-
-    blurFocusedElement(element, focusedElement, wasAnotherElementFocused);
   },
 
   selectOptions(element, values) {
@@ -168,7 +159,7 @@ const userEvent = {
       fireEvent.mouseLeave(focusedElement);
     }
 
-    clickElement(element);
+    clickElement(element, wasAnotherElementFocused && focusedElement);
 
     const valArray = Array.isArray(values) ? values : [values];
     const selectedOptions = Array.from(
@@ -182,8 +173,6 @@ const userEvent = {
         selectOption(element, selectedOptions[0]);
       }
     }
-
-    blurFocusedElement(element, focusedElement, wasAnotherElementFocused);
   },
 
   async type(element, text, userOpts = {}) {

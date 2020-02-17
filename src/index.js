@@ -196,11 +196,15 @@ const userEvent = {
 
     const computedText = text.slice(0, element.maxLength || text.length);
 
+    const previousText = element.value;
+
     if (opts.allAtOnce) {
       if (element.readOnly) return;
-      fireEvent.input(element, { target: { value: computedText } });
+      fireEvent.input(element, {
+        target: { value: previousText + computedText }
+      });
     } else {
-      let actuallyTyped = "";
+      let actuallyTyped = previousText;
       for (let index = 0; index < text.length; index++) {
         const char = text[index];
         const key = char; // TODO: check if this also valid for characters with diacritic markers e.g. úé etc
@@ -222,7 +226,7 @@ const userEvent = {
           });
 
           const isTextPastThreshold =
-            (actuallyTyped + key).length > computedText.length;
+            (actuallyTyped + key).length > (previousText + computedText).length;
 
           if (pressEvent && !isTextPastThreshold) {
             actuallyTyped += key;

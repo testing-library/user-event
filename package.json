@@ -44,7 +44,7 @@
     "babel-core": "7.0.0-bridge.0",
     "babel-jest": "^25.1.0",
     "codecov": "^3.6.5",
-    "husky": "^3.1.0",
+    "husky": "^4.2.3",
     "jest": "24.9.0",
     "lint-staged": "^9.5.0",
     "prettier": "^1.19.1",

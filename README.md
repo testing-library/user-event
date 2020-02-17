@@ -260,6 +260,9 @@ Thanks goes to these wonderful people
     <td align="center"><a href="https://lyamkin.com"><img src="https://avatars2.githubusercontent.com/u/3854930?v=4" width="100px;" alt=""/><br /><sub><b>Ilya Lyamkin</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=ilyamkin" title="Code">💻</a> <a href="https://github.com/testing-library/user-event/commits?author=ilyamkin" title="Tests">⚠️</a></td>
     <td align="center"><a href="http://todofullstack.com"><img src="https://avatars2.githubusercontent.com/u/4474353?v=4" width="100px;" alt=""/><br /><sub><b>Kenneth Luján Rosas</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=klujanrosas" title="Code">💻</a> <a href="https://github.com/testing-library/user-event/commits?author=klujanrosas" title="Tests">⚠️</a></td>
   </tr>
+  <tr>
+    <td align="center"><a href="http://thejoemorgan.com"><img src="https://avatars1.githubusercontent.com/u/2388943?v=4" width="100px;" alt=""/><br /><sub><b>Joe Morgan</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=jsmapr1" title="Code">💻</a></td>
+  </tr>
 </table>
 
 <!-- markdownlint-enable -->

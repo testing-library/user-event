@@ -217,6 +217,15 @@
         "code",
         "test"
       ]
+    },
+    {
+      "login": "jsmapr1",
+      "name": "Joe Morgan",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/2388943?v=4",
+      "profile": "http://thejoemorgan.com",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "commitConvention": "none",

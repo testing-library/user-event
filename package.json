@@ -43,7 +43,7 @@
     "all-contributors-cli": "^6.11.2",
     "babel-core": "7.0.0-bridge.0",
     "babel-jest": "24.9.0",
-    "codecov": "3.6.1",
+    "codecov": "^3.6.5",
     "husky": "^3.1.0",
     "jest": "24.9.0",
     "lint-staged": "^9.5.0",

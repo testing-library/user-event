@@ -4,12 +4,12 @@ export interface IUserOptions {
     delay?: number;
 }
 
-interface ITabUserOptions {
+export interface ITabUserOptions {
     shift?: boolean;
     focusTrap?: Document | Element;
 }
 
-type TargetElement = Element | Window;
+export type TargetElement = Element | Window;
 
 declare const userEvent: {
     click: (element: TargetElement) => void;

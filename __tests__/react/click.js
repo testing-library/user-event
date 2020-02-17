@@ -198,6 +198,92 @@ describe("userEvent.click", () => {
     expect(b).toHaveFocus();
   });
 
+  it("should not blur when mousedown prevents default", () => {
+    let events = [];
+    const eventsHandler = jest.fn(evt => events.push(evt.type));
+    const commonEvents = {
+      onBlur: eventsHandler,
+      onMouseOver: eventsHandler,
+      onMouseMove: eventsHandler,
+      onMouseDown: eventsHandler,
+      onFocus: eventsHandler,
+      onMouseUp: eventsHandler,
+      onClick: eventsHandler,
+      onChange: eventsHandler
+    };
+
+    const { getByTestId } = render(
+      <React.Fragment>
+        <input data-testid="A" {...commonEvents} />
+        <input
+          data-testid="B"
+          {...commonEvents}
+          onMouseDown={e => {
+            e.preventDefault();
+            eventsHandler(e);
+          }}
+        />
+        <input data-testid="C" {...commonEvents} />
+      </React.Fragment>
+    );
+
+    const a = getByTestId("A");
+    const b = getByTestId("B");
+    const c = getByTestId("C");
+
+    expect(a).not.toHaveFocus();
+    expect(b).not.toHaveFocus();
+    expect(c).not.toHaveFocus();
+
+    userEvent.click(a);
+    expect(a).toHaveFocus();
+    expect(b).not.toHaveFocus();
+    expect(c).not.toHaveFocus();
+
+    expect(events).toEqual([
+      "mouseover",
+      "mousemove",
+      "mousedown",
+      "focus",
+      "mouseup",
+      "click"
+    ]);
+
+    events = [];
+
+    userEvent.click(b);
+    expect(a).toHaveFocus();
+    expect(b).not.toHaveFocus();
+    expect(c).not.toHaveFocus();
+
+    expect(events).toEqual([
+      "mousemove",
+      "mouseover",
+      "mousemove",
+      "mousedown",
+      "mouseup",
+      "click"
+    ]);
+
+    events = [];
+
+    userEvent.click(c);
+    expect(a).not.toHaveFocus();
+    expect(b).not.toHaveFocus();
+    expect(c).toHaveFocus();
+
+    expect(events).toEqual([
+      "mousemove",
+      "mouseover",
+      "mousemove",
+      "mousedown",
+      "blur",
+      "focus",
+      "mouseup",
+      "click"
+    ]);
+  });
+
   it("does not lose focus when click updates focus", () => {
     const FocusComponent = () => {
       const inputRef = React.useRef();
@@ -328,9 +414,9 @@ describe("userEvent.click", () => {
       const { getByTestId } = render(
         React.createElement(type, {
           "data-testid": "element",
-          onMouseDown: (evt) => {
+          onMouseDown: evt => {
             evt.preventDefault();
-          },
+          }
         })
       );
 

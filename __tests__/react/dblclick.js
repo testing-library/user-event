@@ -104,4 +104,99 @@ describe("userEvent.dblClick", () => {
       "click"
     ]);
   });
+
+  it("should not blur when mousedown prevents default", () => {
+    let events = [];
+    const eventsHandler = jest.fn(evt => events.push(evt.type));
+    const commonEvents = {
+      onBlur: eventsHandler,
+      onMouseOver: eventsHandler,
+      onMouseMove: eventsHandler,
+      onMouseDown: eventsHandler,
+      onFocus: eventsHandler,
+      onMouseUp: eventsHandler,
+      onClick: eventsHandler,
+      onChange: eventsHandler
+    };
+
+    const { getByTestId } = render(
+      <React.Fragment>
+        <input data-testid="A" {...commonEvents} />
+        <input
+          data-testid="B"
+          {...commonEvents}
+          onMouseDown={e => {
+            e.preventDefault();
+            eventsHandler(e);
+          }}
+        />
+        <input data-testid="C" {...commonEvents} />
+      </React.Fragment>
+    );
+
+    const a = getByTestId("A");
+    const b = getByTestId("B");
+    const c = getByTestId("C");
+
+    expect(a).not.toHaveFocus();
+    expect(b).not.toHaveFocus();
+    expect(c).not.toHaveFocus();
+
+    userEvent.dblClick(a);
+    expect(a).toHaveFocus();
+    expect(b).not.toHaveFocus();
+    expect(c).not.toHaveFocus();
+
+    expect(events).toEqual([
+      "mouseover",
+      "mousemove",
+      "mousedown",
+      "focus",
+      "mouseup",
+      "click",
+      "mousedown",
+      "mouseup",
+      "click"
+    ]);
+
+    events = [];
+
+    userEvent.dblClick(b);
+    expect(a).toHaveFocus();
+    expect(b).not.toHaveFocus();
+    expect(c).not.toHaveFocus();
+
+    expect(events).toEqual([
+      "mousemove",
+      "mouseover",
+      "mousemove",
+      "mousedown",
+      "mouseup",
+      "click",
+      "mousedown",
+      "mouseup",
+      "click"
+    ]);
+
+    events = [];
+
+    userEvent.dblClick(c);
+    expect(a).not.toHaveFocus();
+    expect(b).not.toHaveFocus();
+    expect(c).toHaveFocus();
+
+    expect(events).toEqual([
+      "mousemove",
+      "mouseover",
+      "mousemove",
+      "mousedown",
+      "blur",
+      "focus",
+      "mouseup",
+      "click",
+      "mousedown",
+      "mouseup",
+      "click"
+    ]);
+  });
 });

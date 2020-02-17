@@ -20,6 +20,28 @@ describe("userEvent.type", () => {
     expect(getByTestId("input")).toHaveProperty("value", text);
   });
 
+  it("should append text one by one", () => {
+    const onChange = jest.fn();
+    const { getByTestId } = render(
+      <input data-testid="input" onChange={onChange} />
+    );
+    userEvent.type(getByTestId("input"), "hello");
+    userEvent.type(getByTestId("input"), " world");
+    expect(onChange).toHaveBeenCalledTimes("hello world".length);
+    expect(getByTestId("input")).toHaveProperty("value", "hello world");
+  });
+
+  it("should append text all at once", () => {
+    const onChange = jest.fn();
+    const { getByTestId } = render(
+      <input data-testid="input" onChange={onChange} />
+    );
+    userEvent.type(getByTestId("input"), "hello", { allAtOnce: true });
+    userEvent.type(getByTestId("input"), " world", { allAtOnce: true });
+    expect(onChange).toHaveBeenCalledTimes(2);
+    expect(getByTestId("input")).toHaveProperty("value", "hello world");
+  });
+
   it("should not type when event.preventDefault() is called", () => {
     const onChange = jest.fn();
     const onKeydown = jest

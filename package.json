@@ -56,9 +56,6 @@
     "vue": "^2.6.11",
     "vue-template-compiler": "^2.6.11"
   },
-  "peerDependencies": {
-    "@testing-library/dom": ">=5"
-  },
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged"

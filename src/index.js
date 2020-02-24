@@ -87,6 +87,19 @@ function dblClickCheckbox(checkbox) {
   fireEvent.click(checkbox);
 }
 
+function toggleOption(select, option) {
+  fireEvent.mouseOver(option);
+  fireEvent.mouseMove(option);
+  fireEvent.mouseDown(option);
+  fireEvent.focus(option);
+  fireEvent.mouseUp(option);
+  fireEvent.click(option);
+
+  option.selected = !option.selected;
+
+  fireEvent.change(select);
+}
+
 function selectOption(select, option) {
   fireEvent.mouseOver(option);
   fireEvent.mouseMove(option);
@@ -171,6 +184,31 @@ const userEvent = {
         selectedOptions.forEach(option => selectOption(element, option));
       } else {
         selectOption(element, selectedOptions[0]);
+      }
+    }
+  },
+
+  toggleOptions(element, values) {
+    const focusedElement = document.activeElement;
+    const wasAnotherElementFocused =
+      focusedElement !== document.body && focusedElement !== element;
+    if (wasAnotherElementFocused) {
+      fireEvent.mouseMove(focusedElement);
+      fireEvent.mouseLeave(focusedElement);
+    }
+
+    clickElement(element, wasAnotherElementFocused && focusedElement);
+
+    const valArray = Array.isArray(values) ? values : [values];
+    const selectedOptions = Array.from(
+      element.querySelectorAll("option")
+    ).filter(opt => valArray.includes(opt.value));
+
+    if (selectedOptions.length > 0) {
+      if (element.multiple) {
+        selectedOptions.forEach(option => toggleOption(element, option));
+      } else {
+        toggleOption(element, selectedOptions[0]);
       }
     }
   },

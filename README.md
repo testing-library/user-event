@@ -87,6 +87,15 @@ test("click", () => {
 });
 ```
 
+You can also ctrlClick / shiftClick etc with
+
+```js
+userEvent.click(elem, { ctrlKey: true, shiftKey: true })
+```
+
+See the [`MouseEvent`](https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/MouseEvent)
+constructor documentation for more options.
+
 ### `dblClick(element)`
 
 Clicks `element` twice, depending on what `element` is it can have different

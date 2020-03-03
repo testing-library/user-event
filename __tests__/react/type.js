@@ -1,5 +1,5 @@
 import React from "react";
-import { cleanup, render, wait, fireEvent } from "@testing-library/react";
+import { cleanup, fireEvent, render, wait } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import userEvent from "../../src";
 
@@ -208,4 +208,17 @@ describe("userEvent.type", () => {
       expect(onKeyUp).not.toHaveBeenCalled();
     }
   );
+
+  it.each(["input", "textarea"])("should focus on type", type => {
+    const onFocus = jest.fn();
+    const { getByTestId } = render(
+      React.createElement(type, {
+        "data-testid": "input",
+        onFocus: onFocus
+      })
+    );
+    userEvent.type(getByTestId("input"), "Text");
+    expect(document.activeElement).toBe(getByTestId("input"));
+    expect(onFocus).toHaveBeenCalledTimes(1);
+  });
 });

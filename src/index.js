@@ -187,6 +187,8 @@ const userEvent = {
 
     const previousText = element.value;
 
+    element.focus();
+
     if (opts.allAtOnce) {
       if (element.readOnly) return;
       fireEvent.input(element, {

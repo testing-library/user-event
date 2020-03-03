@@ -189,4 +189,15 @@ describe("userEvent.type", () => {
       expect(keyup).not.toHaveBeenCalled();
     }
   );
+
+  it.each(["input", "textarea"])("should focus on type", type => {
+    const focus = jest.fn();
+
+    const { getByTestId } = renderComponent(type, { focus });
+
+    userEvent.type(getByTestId("input"), "Hello, world!");
+
+    expect(focus).toHaveBeenCalledTimes(1);
+    expect(document.activeElement).toBe(getByTestId("input"));
+  });
 });

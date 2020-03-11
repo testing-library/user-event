@@ -105,30 +105,6 @@ function fireChangeEvent(event) {
   event.target.removeEventListener("blur", fireChangeEvent);
 }
 
-function getSelectionBounds(element) {
-  return {
-    start: element.selectionStart,
-    end: element.selectionEnd
-  };
-}
-
-function deleteLeftOfCursor(element) {
-  const { start, end } = getSelectionBounds(element);
-  if (start === end) {
-    if (start === 0) {
-      // there's nothing left of cursor
-      return;
-    }
-    element.setSelectionRange(start - 1, end);
-  }
-
-  const value = element.value || "";
-  const updatedValue = value.substring(0, start) + value.substring(end);
-  element.value = updatedValue;
-
-  element.setSelectionRange(start, start);
-}
-
 const Keys = {
   Backspace: { keyCode: 8, code: "Backspace", key: "Backspace" }
 };
@@ -146,7 +122,7 @@ function backspace(element) {
     fireEvent.input(element, {
       inputType: "deleteContentBackward"
     });
-    deleteLeftOfCursor(element);
+    element.value = ""; // when we add special keys to API, will need to respect selected range
   }
 }
 

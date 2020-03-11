@@ -105,6 +105,56 @@ function fireChangeEvent(event) {
   event.target.removeEventListener("blur", fireChangeEvent);
 }
 
+function getSelectionBounds(element) {
+  return {
+    start: element.selectionStart,
+    end: element.selectionEnd
+  };
+}
+
+function deleteLeftOfCursor(element) {
+  const { start, end } = getSelectionBounds(element);
+  if (start === end) {
+    if (start === 0) {
+      // there's nothing left of cursor
+      return;
+    }
+    element.setSelectionRange(start - 1, end);
+  }
+
+  const value = element.value || "";
+  const updatedValue = value.substring(0, start) + value.substring(end);
+  element.value = updatedValue;
+
+  element.setSelectionRange(start, start);
+}
+
+const Keys = {
+  Backspace: { keyCode: 8, code: "Backspace", key: "Backspace" }
+};
+
+function backspace(element) {
+  const eventOptions = {
+    key: Keys.Backspace.key,
+    keyCode: Keys.Backspace.keyCode,
+    which: Keys.Backspace.keyCode
+  };
+  fireEvent.keyDown(element, eventOptions);
+  fireEvent.keyUp(element, eventOptions);
+
+  if (!element.readOnly) {
+    fireEvent.input(element, {
+      inputType: "deleteContentBackward"
+    });
+    deleteLeftOfCursor(element);
+  }
+}
+
+function selectAll(element) {
+  userEvent.dblClick(element); // simulate events (will not actually select)
+  element.setSelectionRange(0, element.value.length);
+}
+
 const userEvent = {
   click(element) {
     const focusedElement = element.ownerDocument.activeElement;
@@ -173,6 +223,14 @@ const userEvent = {
         selectOption(element, selectedOptions[0]);
       }
     }
+  },
+
+  clear(element) {
+    if (element.disabled) return;
+
+    selectAll(element);
+    backspace(element);
+    element.addEventListener("blur", fireChangeEvent);
   },
 
   async type(element, text, userOpts = {}) {

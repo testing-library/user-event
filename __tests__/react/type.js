@@ -31,6 +31,24 @@ describe("userEvent.type", () => {
     expect(getByTestId("input")).toHaveProperty("value", "hello world");
   });
 
+  it.each(["input", "textarea"])(
+    "includes entire textstring with negative maxlength in <%s>",
+    type => {
+      const onChange = jest.fn();
+      const { getByTestId } = render(
+        React.createElement(type, {
+          "data-testid": "input",
+          onChange: onChange,
+          maxLength: -1
+        })
+      );
+      const text = "Hello, world!";
+      userEvent.type(getByTestId("input"), text);
+      expect(onChange).toHaveBeenCalledTimes(text.length);
+      expect(getByTestId("input")).toHaveProperty("value", text);
+    }
+  );
+
   it("should append text all at once", () => {
     const onChange = jest.fn();
     const { getByTestId } = render(

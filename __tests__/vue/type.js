@@ -27,6 +27,24 @@ describe("userEvent.type", () => {
     expect(getByTestId("input")).toHaveProperty("value", text);
   });
 
+  it.each(["input", "textarea"])(
+    "includes entire textstring with negative maxlength in <%s>",
+    type => {
+      const input = jest.fn();
+
+      const { getByTestId } = renderComponent(
+        type,
+        { input },
+        { maxLength: -1 }
+      );
+
+      const text = "Hello, world!";
+      userEvent.type(getByTestId("input"), text);
+      expect(input).toHaveBeenCalledTimes(text.length);
+      expect(getByTestId("input")).toHaveProperty("value", text);
+    }
+  );
+
   it("should not type when event.preventDefault() is called", () => {
     const input = jest.fn();
     const change = jest.fn();

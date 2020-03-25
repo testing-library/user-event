@@ -208,4 +208,13 @@ describe("userEvent.type", () => {
       expect(onKeyUp).not.toHaveBeenCalled();
     }
   );
+
+  it("should ignore maxLength with value -1", () => {
+    const { getByTestId } = render(
+      <input data-testid="input" maxLength="-1" />
+    );
+    const input = getByTestId("input");
+    userEvent.type(input, "test");
+    expect(input).toHaveProperty("value", "test");
+  });
 });

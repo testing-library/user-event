@@ -183,7 +183,12 @@ const userEvent = {
     };
     const opts = Object.assign(defaultOpts, userOpts);
 
-    const computedText = text.slice(0, element.maxLength || text.length);
+    let computedText;
+    if (!element.maxLength || element.maxLength === -1) {
+      computedText = text.slice(0, text.length);
+    } else {
+      computedText = text.slice(0, element.maxLength);
+    }
 
     const previousText = element.value;
 

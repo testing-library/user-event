@@ -265,3 +265,13 @@ it("should not focus disabled elements", () => {
   userEvent.tab();
   expect(five).toHaveFocus();
 });
+
+it("should keep focus on the document if there are no enabled, focusable elements", () => {
+  render(<button disabled>no clicky</button>);
+
+  userEvent.tab();
+  expect(document.body).toHaveFocus();
+
+  userEvent.tab({ shift: true });
+  expect(document.body).toHaveFocus();
+});

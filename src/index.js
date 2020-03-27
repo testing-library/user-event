@@ -245,10 +245,16 @@ const userEvent = {
       "input, button, select, textarea, a[href], [tabindex]"
     );
 
-    let list = Array.prototype.filter
-      .call(focusableElements, function(item) {
-        return item.getAttribute("tabindex") !== "-1" && !item.disabled;
-      })
+    const enabledElements = Array.prototype.filter.call(
+      focusableElements,
+      function(el) {
+        return el.getAttribute("tabindex") !== "-1" && !el.disabled;
+      }
+    );
+
+    if (enabledElements.length === 0) return;
+
+    const orderedElements = enabledElements
       .map((el, idx) => ({ el, idx }))
       .sort((a, b) => {
         const tabIndexA = a.el.getAttribute("tabindex");
@@ -259,12 +265,15 @@ const userEvent = {
         return diff !== 0 ? diff : a.idx - b.idx;
       });
 
-    const index = list.findIndex(({ el }) => el === document.activeElement);
+    const index = orderedElements.findIndex(
+      ({ el }) => el === document.activeElement
+    );
 
     let nextIndex = shift ? index - 1 : index + 1;
-    let defaultIndex = shift ? list.length - 1 : 0;
+    let defaultIndex = shift ? orderedElements.length - 1 : 0;
 
-    const { el: next } = list[nextIndex] || list[defaultIndex];
+    const { el: next } =
+      orderedElements[nextIndex] || orderedElements[defaultIndex];
 
     if (next.getAttribute("tabindex") === null) {
       next.setAttribute("tabindex", "0"); // jsdom requires tabIndex=0 for an item to become 'document.activeElement' (the browser does not)

@@ -183,10 +183,7 @@ const userEvent = {
     };
     const opts = Object.assign(defaultOpts, userOpts);
 
-    const maxLength =
-      element.maxLength && element.maxLength >= 0
-        ? element.maxLength
-        : text.length;
+    const maxLength = element.maxLength > 0 ? element.maxLength : text.length;
     const computedText = text.slice(0, maxLength);
 
     const previousText = element.value;

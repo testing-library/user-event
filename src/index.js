@@ -185,7 +185,7 @@ const userEvent = {
 
     let computedText;
     if (!element.maxLength || element.maxLength === -1) {
-      computedText = text.slice(0, text.length);
+      computedText = text.slice(0, element.maxLength > 0 ? element.maxLength : text.length);
     } else {
       computedText = text.slice(0, element.maxLength);
     }

@@ -214,7 +214,7 @@ describe("userEvent.type", () => {
     const { getByTestId } = render(
       React.createElement(type, {
         "data-testid": "input",
-        onFocus: onFocus
+        onFocus
       })
     );
     userEvent.type(getByTestId("input"), "Text");

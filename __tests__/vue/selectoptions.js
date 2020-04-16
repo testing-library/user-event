@@ -7,9 +7,9 @@ afterEach(cleanup);
 describe("userEvent.selectOptions", () => {
   it.each(["select", "select multiple"])(
     "should fire the correct events for <%s>",
-    type => {
+    (type) => {
       const events = [];
-      const eventsHandler = jest.fn(evt => events.push(evt.type));
+      const eventsHandler = jest.fn((evt) => events.push(evt.type));
       const multiple = type === "select multiple";
       const eventHandlers = {
         mouseover: eventsHandler,
@@ -17,27 +17,27 @@ describe("userEvent.selectOptions", () => {
         mousedown: eventsHandler,
         focus: eventsHandler,
         mouseup: eventsHandler,
-        click: eventsHandler
+        click: eventsHandler,
       };
 
       const { getByTestId } = render({
-        render: function(h) {
+        render: function (h) {
           return h(
             "select",
             {
               attrs: {
                 "data-testid": "element",
-                ...(multiple && { multiple: true })
+                ...(multiple && { multiple: true }),
               },
-              on: eventHandlers
+              on: eventHandlers,
             },
             [
               h("option", { attrs: { value: "1" } }, "1"),
               h("option", { attrs: { value: "2" } }, "2"),
-              h("option", { attrs: { value: "3" } }, "3")
+              h("option", { attrs: { value: "3" } }, "3"),
             ]
           );
-        }
+        },
       });
 
       userEvent.selectOptions(getByTestId("element"), "1");
@@ -54,7 +54,7 @@ describe("userEvent.selectOptions", () => {
         "mousedown",
         // "focus", // Focus event isn't being emitted?
         "mouseup",
-        "click"
+        "click",
       ]);
     }
   );
@@ -73,25 +73,25 @@ describe("userEvent.selectOptions", () => {
       mousedown: eventsHandler,
       focus: eventsHandler,
       mouseup: eventsHandler,
-      click: eventsHandler
+      click: eventsHandler,
     };
 
     const { getByTestId } = render({
-      render: function(h) {
+      render: function (h) {
         return h(
           "select",
           {
             attrs: {
-              "data-testid": "element"
-            }
+              "data-testid": "element",
+            },
           },
           [
             h("option", { attrs: { value: "1" }, on: eventHandlers }, "1"),
             h("option", { attrs: { value: "2" }, on: eventHandlers }, "2"),
-            h("option", { attrs: { value: "3" }, on: eventHandlers }, "3")
+            h("option", { attrs: { value: "3" }, on: eventHandlers }, "3"),
           ]
         );
-      }
+      },
     });
 
     userEvent.selectOptions(getByTestId("element"), ["2"]);
@@ -104,7 +104,7 @@ describe("userEvent.selectOptions", () => {
       "mousedown",
       "focus",
       "mouseup",
-      "click"
+      "click",
     ]);
   });
 
@@ -122,26 +122,26 @@ describe("userEvent.selectOptions", () => {
       mousedown: eventsHandler,
       focus: eventsHandler,
       mouseup: eventsHandler,
-      click: eventsHandler
+      click: eventsHandler,
     };
 
     const { getByTestId } = render({
-      render: function(h) {
+      render: function (h) {
         return h(
           "select",
           {
             attrs: {
               "data-testid": "element",
-              multiple: true
-            }
+              multiple: true,
+            },
           },
           [
             h("option", { attrs: { value: "1" }, on: eventHandlers }, "1"),
             h("option", { attrs: { value: "2" }, on: eventHandlers }, "2"),
-            h("option", { attrs: { value: "3" }, on: eventHandlers }, "3")
+            h("option", { attrs: { value: "3" }, on: eventHandlers }, "3"),
           ]
         );
-      }
+      },
     });
 
     userEvent.selectOptions(getByTestId("element"), ["1", "3"]);
@@ -153,7 +153,7 @@ describe("userEvent.selectOptions", () => {
       "mousedown",
       "focus",
       "mouseup",
-      "click"
+      "click",
     ]);
 
     expect(events[3]).toEqual([
@@ -162,7 +162,7 @@ describe("userEvent.selectOptions", () => {
       "mousedown",
       "focus",
       "mouseup",
-      "click"
+      "click",
     ]);
   });
 
@@ -175,7 +175,7 @@ describe("userEvent.selectOptions", () => {
             <option value="2" data-testid="val2">2</option>
             <option value="3" data-testid="val3">3</option>
           </select>
-        </form>`
+        </form>`,
     });
 
     userEvent.selectOptions(getByTestId("element"), ["1", "3"]);
@@ -195,7 +195,7 @@ describe("userEvent.selectOptions", () => {
             <option data-testid="val2" value="2">2</option>
             <option data-testid="val3" value="3">3</option>
           </select>
-        </form>`
+        </form>`,
     });
 
     userEvent.selectOptions(getByTestId("element"), "2");
@@ -217,7 +217,7 @@ describe("userEvent.selectOptions", () => {
               <option data-testid="val3" value="3">3</option>
             </select>
           </label>
-        </form>`
+        </form>`,
     });
 
     userEvent.selectOptions(getByTestId("element"), "2");
@@ -242,7 +242,7 @@ describe("userEvent.selectOptions", () => {
                 <option value="3" data-testid="val3">3</option>
             </optgroup>
           </select>
-        </form>`
+        </form>`,
     });
 
     userEvent.selectOptions(getByTestId("element"), ["1", "3"]);

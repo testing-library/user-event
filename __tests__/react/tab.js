@@ -180,7 +180,7 @@ describe("userEvent.tab", () => {
       number1,
       checkbox2,
       radio2,
-      number2
+      number2,
     ] = getAllByTestId("element");
 
     expect(document.body).toHaveFocus();
@@ -231,7 +231,7 @@ describe("userEvent.tab", () => {
 
     const { getByTestId } = render(
       <>
-        {letters.split("").map(letter => (
+        {letters.split("").map((letter) => (
           <input key={letter} type="text" data-testid={letter} />
         ))}
       </>
@@ -239,7 +239,7 @@ describe("userEvent.tab", () => {
 
     expect.assertions(26);
 
-    letters.split("").forEach(letter => {
+    letters.split("").forEach((letter) => {
       userEvent.tab();
       expect(getByTestId(letter)).toHaveFocus();
     });

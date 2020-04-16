@@ -7,14 +7,14 @@ afterEach(cleanup);
 describe("userEvent.click", () => {
   it.each(["input", "textarea"])(
     "should fire the correct events for <%s>",
-    type => {
+    (type) => {
       const events = [];
-      const eventsHandler = jest.fn(evt => events.push(evt.type));
+      const eventsHandler = jest.fn((evt) => events.push(evt.type));
       const { getByTestId } = render({
-        render: function(h) {
+        render: function (h) {
           return h(type, {
             attrs: {
-              "data-testid": "element"
+              "data-testid": "element",
             },
             on: {
               mouseover: eventsHandler,
@@ -22,10 +22,10 @@ describe("userEvent.click", () => {
               mousedown: eventsHandler,
               focus: eventsHandler,
               mouseup: eventsHandler,
-              click: eventsHandler
-            }
+              click: eventsHandler,
+            },
           });
-        }
+        },
       });
 
       userEvent.click(getByTestId("element"));
@@ -37,21 +37,21 @@ describe("userEvent.click", () => {
         "mousedown",
         "focus",
         "mouseup",
-        "click"
+        "click",
       ]);
     }
   );
 
   it('should fire the correct events for <input type="checkbox">', () => {
     const events = [];
-    const eventsHandler = jest.fn(evt => events.push(evt.type));
+    const eventsHandler = jest.fn((evt) => events.push(evt.type));
 
     const { getByTestId } = render({
-      render: function(h) {
+      render: function (h) {
         return h("input", {
           attrs: {
             type: "checkbox",
-            "data-testid": "element"
+            "data-testid": "element",
           },
           on: {
             mouseover: eventsHandler,
@@ -60,10 +60,10 @@ describe("userEvent.click", () => {
             focus: eventsHandler,
             mouseup: eventsHandler,
             click: eventsHandler,
-            change: eventsHandler
-          }
+            change: eventsHandler,
+          },
         });
-      }
+      },
     });
 
     userEvent.click(getByTestId("element"));
@@ -75,7 +75,7 @@ describe("userEvent.click", () => {
       "focus",
       "mouseup",
       "click",
-      "change"
+      "change",
     ]);
 
     expect(getByTestId("element")).toHaveProperty("checked", true);
@@ -83,14 +83,14 @@ describe("userEvent.click", () => {
 
   it('should fire the correct events for <input type="checkbox" disabled>', () => {
     const events = [];
-    const eventsHandler = jest.fn(evt => events.push(evt.type));
+    const eventsHandler = jest.fn((evt) => events.push(evt.type));
     const { getByTestId } = render({
-      render: function(h) {
+      render: function (h) {
         return h("input", {
           attrs: {
             type: "checkbox",
             "data-testid": "element",
-            disabled: "disabled"
+            disabled: "disabled",
           },
           on: {
             mouseover: eventsHandler,
@@ -99,10 +99,10 @@ describe("userEvent.click", () => {
             focus: eventsHandler,
             mouseup: eventsHandler,
             click: eventsHandler,
-            change: eventsHandler
-          }
+            change: eventsHandler,
+          },
         });
-      }
+      },
     });
 
     userEvent.click(getByTestId("element"));
@@ -114,13 +114,13 @@ describe("userEvent.click", () => {
 
   it('should fire the correct events for <input type="radio">', () => {
     const events = [];
-    const eventsHandler = jest.fn(evt => events.push(evt.type));
+    const eventsHandler = jest.fn((evt) => events.push(evt.type));
     const { getByTestId } = render({
-      render: function(h) {
+      render: function (h) {
         return h("input", {
           attrs: {
             type: "radio",
-            "data-testid": "element"
+            "data-testid": "element",
           },
           on: {
             mouseover: eventsHandler,
@@ -129,10 +129,10 @@ describe("userEvent.click", () => {
             focus: eventsHandler,
             mouseup: eventsHandler,
             click: eventsHandler,
-            change: eventsHandler
-          }
+            change: eventsHandler,
+          },
         });
-      }
+      },
     });
 
     userEvent.click(getByTestId("element"));
@@ -144,7 +144,7 @@ describe("userEvent.click", () => {
       "focus",
       "mouseup",
       "click",
-      "change"
+      "change",
     ]);
 
     expect(getByTestId("element")).toHaveProperty("checked", true);
@@ -152,14 +152,14 @@ describe("userEvent.click", () => {
 
   it('should fire the correct events for <input type="radio" disabled>', () => {
     const events = [];
-    const eventsHandler = jest.fn(evt => events.push(evt.type));
+    const eventsHandler = jest.fn((evt) => events.push(evt.type));
     const { getByTestId } = render({
-      render: function(h) {
+      render: function (h) {
         return h("input", {
           attrs: {
             type: "radio",
             "data-testid": "element",
-            disabled: "disabled"
+            disabled: "disabled",
           },
           on: {
             mouseover: eventsHandler,
@@ -168,10 +168,10 @@ describe("userEvent.click", () => {
             focus: eventsHandler,
             mouseup: eventsHandler,
             click: eventsHandler,
-            change: eventsHandler
-          }
+            change: eventsHandler,
+          },
         });
-      }
+      },
     });
 
     userEvent.click(getByTestId("element"));
@@ -183,12 +183,12 @@ describe("userEvent.click", () => {
 
   it("should fire the correct events for <div>", () => {
     const events = [];
-    const eventsHandler = jest.fn(evt => events.push(evt.type));
+    const eventsHandler = jest.fn((evt) => events.push(evt.type));
     const { getByTestId } = render({
-      render: function(h) {
+      render: function (h) {
         return h("div", {
           attrs: {
-            "data-testid": "div"
+            "data-testid": "div",
           },
           on: {
             mouseover: eventsHandler,
@@ -196,10 +196,10 @@ describe("userEvent.click", () => {
             mousedown: eventsHandler,
             focus: eventsHandler,
             mouseup: eventsHandler,
-            click: eventsHandler
-          }
+            click: eventsHandler,
+          },
         });
-      }
+      },
     });
 
     userEvent.click(getByTestId("div"));
@@ -208,7 +208,7 @@ describe("userEvent.click", () => {
       "mousemove",
       "mousedown",
       "mouseup",
-      "click"
+      "click",
     ]);
   });
 
@@ -218,7 +218,7 @@ describe("userEvent.click", () => {
       <div>
         <input data-testid="A" />
         <input data-testid="B" />
-      </div>`
+      </div>`,
     });
 
     const a = getByTestId("A");
@@ -238,13 +238,13 @@ describe("userEvent.click", () => {
 
   it.each(["input", "textarea"])(
     "gives focus to <%s> when clicking a <label> with for",
-    type => {
+    (type) => {
       const { getByTestId } = render({
         template: `
         <div>
           <label data-testid="label" for="input" />
           <component is="${type}" data-testid="input" id="input" />
-        </div>`
+        </div>`,
       });
 
       userEvent.click(getByTestId("label"));
@@ -254,13 +254,13 @@ describe("userEvent.click", () => {
 
   it.each(["input", "textarea"])(
     "gives focus to <%s> when clicking a <label> without htmlFor",
-    type => {
+    (type) => {
       const { getByTestId } = render({
         template: `
         <label data-testid="label">
           My label text
           <component is="${type}" data-testid="input" />
-        </label>`
+        </label>`,
       });
 
       userEvent.click(getByTestId("label"));
@@ -270,13 +270,13 @@ describe("userEvent.click", () => {
 
   it.each(["input", "textarea"])(
     "gives focus to <%s> when clicking on an element contained within a <label>",
-    type => {
+    (type) => {
       const { getByText, getByTestId } = render({
         template: `
         <div>
           <label for="input" data-testid="label">Label</Label>
           <component is="${type}" id="input" data-testid="input" />
-        </div>`
+        </div>`,
       });
 
       userEvent.click(getByText("Label"));
@@ -292,7 +292,7 @@ describe("userEvent.click", () => {
           Label
         </label>
         <input id="input" data-testid="input" type="checkbox" />
-      </div>`
+      </div>`,
     });
 
     expect(getByTestId("input")).toHaveProperty("checked", false);
@@ -308,7 +308,7 @@ describe("userEvent.click", () => {
           Label
           <input id="input" data-testid="input" type="checkbox" />
         </label>
-      </div>`
+      </div>`,
     });
 
     expect(getByTestId("input")).toHaveProperty("checked", false);
@@ -321,7 +321,7 @@ describe("userEvent.click", () => {
       template: `
       <form @submit="$emit('submit')">
         <button>Submit</button>
-      </form>`
+      </form>`,
     });
 
     userEvent.click(getByText("Submit"));
@@ -333,7 +333,7 @@ describe("userEvent.click", () => {
       template: `
       <form @submit="$emit('submit')">
         <button type="button">Submit</button>
-      </form>`
+      </form>`,
     });
 
     userEvent.click(getByText("Submit"));

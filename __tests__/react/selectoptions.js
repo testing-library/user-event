@@ -8,9 +8,9 @@ afterEach(cleanup);
 describe("userEvent.selectOptions", () => {
   it.each(["select", "select multiple"])(
     "should fire the correct events for <%s>",
-    type => {
+    (type) => {
       const events = [];
-      const eventsHandler = jest.fn(evt => events.push(evt.type));
+      const eventsHandler = jest.fn((evt) => events.push(evt.type));
       const multiple = type === "select multiple";
       const eventHandlers = {
         onMouseOver: eventsHandler,
@@ -18,7 +18,7 @@ describe("userEvent.selectOptions", () => {
         onMouseDown: eventsHandler,
         onFocus: eventsHandler,
         onMouseUp: eventsHandler,
-        onClick: eventsHandler
+        onClick: eventsHandler,
       };
 
       const { getByTestId } = render(
@@ -43,7 +43,7 @@ describe("userEvent.selectOptions", () => {
         "mousedown",
         "focus",
         "mouseup",
-        "click"
+        "click",
       ]);
     }
   );
@@ -62,7 +62,7 @@ describe("userEvent.selectOptions", () => {
       onMouseDown: eventsHandler,
       onFocus: eventsHandler,
       onMouseUp: eventsHandler,
-      onClick: eventsHandler
+      onClick: eventsHandler,
     };
 
     const { getByTestId } = render(
@@ -89,7 +89,7 @@ describe("userEvent.selectOptions", () => {
       "mousedown",
       "focus",
       "mouseup",
-      "click"
+      "click",
     ]);
   });
 
@@ -107,7 +107,7 @@ describe("userEvent.selectOptions", () => {
       onMouseDown: eventsHandler,
       onFocus: eventsHandler,
       onMouseUp: eventsHandler,
-      onClick: eventsHandler
+      onClick: eventsHandler,
     };
 
     const { getByTestId } = render(
@@ -133,7 +133,7 @@ describe("userEvent.selectOptions", () => {
       "mousedown",
       "focus",
       "mouseup",
-      "click"
+      "click",
     ]);
 
     expect(events[3]).toEqual([
@@ -142,7 +142,7 @@ describe("userEvent.selectOptions", () => {
       "mousedown",
       "focus",
       "mouseup",
-      "click"
+      "click",
     ]);
   });
 
@@ -252,25 +252,25 @@ describe("userEvent.selectOptions", () => {
 
   it("sets the selected prop on the selected OPTION using OPTGROUPS", () => {
     const { getByTestId } = render(
-        <form>
-          <select multiple data-testid="element">
-            <optgroup label="test optgroup 1">
-              <option data-testid="val1" value="1">
-                1
-              </option>
-            </optgroup>
-            <optgroup label="test optgroup 2">
+      <form>
+        <select multiple data-testid="element">
+          <optgroup label="test optgroup 1">
+            <option data-testid="val1" value="1">
+              1
+            </option>
+          </optgroup>
+          <optgroup label="test optgroup 2">
             <option data-testid="val2" value="2">
               2
             </option>
-            </optgroup>
-            <optgroup label="test optgroup 1">
+          </optgroup>
+          <optgroup label="test optgroup 1">
             <option data-testid="val3" value="3">
               3
             </option>
-            </optgroup>
-          </select>
-        </form>
+          </optgroup>
+        </select>
+      </form>
     );
 
     userEvent.selectOptions(getByTestId("element"), ["1", "3"]);

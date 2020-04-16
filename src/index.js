@@ -1,7 +1,7 @@
 import { fireEvent } from "@testing-library/dom";
 
 function wait(time) {
-  return new Promise(function(resolve) {
+  return new Promise(function (resolve) {
     setTimeout(() => resolve(), time);
   });
 }
@@ -164,11 +164,11 @@ const userEvent = {
     const valArray = Array.isArray(values) ? values : [values];
     const selectedOptions = Array.from(
       element.querySelectorAll("option")
-    ).filter(opt => valArray.includes(opt.value));
+    ).filter((opt) => valArray.includes(opt.value));
 
     if (selectedOptions.length > 0) {
       if (element.multiple) {
-        selectedOptions.forEach(option => selectOption(element, option));
+        selectedOptions.forEach((option) => selectOption(element, option));
       } else {
         selectOption(element, selectedOptions[0]);
       }
@@ -179,7 +179,7 @@ const userEvent = {
     if (element.disabled) return;
     const defaultOpts = {
       allAtOnce: false,
-      delay: 0
+      delay: 0,
     };
     const opts = Object.assign(defaultOpts, userOpts);
 
@@ -190,7 +190,7 @@ const userEvent = {
     if (opts.allAtOnce) {
       if (element.readOnly) return;
       fireEvent.input(element, {
-        target: { value: previousText + computedText }
+        target: { value: previousText + computedText },
       });
     } else {
       let actuallyTyped = previousText;
@@ -204,14 +204,14 @@ const userEvent = {
         const downEvent = fireEvent.keyDown(element, {
           key: key,
           keyCode: keyCode,
-          which: keyCode
+          which: keyCode,
         });
 
         if (downEvent) {
           const pressEvent = fireEvent.keyPress(element, {
             key: key,
             keyCode,
-            charCode: keyCode
+            charCode: keyCode,
           });
 
           const isTextPastThreshold =
@@ -222,10 +222,10 @@ const userEvent = {
             if (!element.readOnly)
               fireEvent.input(element, {
                 target: {
-                  value: actuallyTyped
+                  value: actuallyTyped,
                 },
                 bubbles: true,
-                cancelable: true
+                cancelable: true,
               });
           }
         }
@@ -233,7 +233,7 @@ const userEvent = {
         fireEvent.keyUp(element, {
           key: key,
           keyCode: keyCode,
-          which: keyCode
+          which: keyCode,
         });
       }
     }
@@ -247,7 +247,7 @@ const userEvent = {
 
     const enabledElements = Array.prototype.filter.call(
       focusableElements,
-      function(el) {
+      function (el) {
         return el.getAttribute("tabindex") !== "-1" && !el.disabled;
       }
     );
@@ -282,7 +282,7 @@ const userEvent = {
     } else {
       next.focus();
     }
-  }
+  },
 };
 
 export default userEvent;

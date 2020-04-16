@@ -6,16 +6,16 @@ afterEach(cleanup);
 
 const renderComponent = (type, events = {}, attrs = {}) =>
   render({
-    render: function(h) {
+    render: function (h) {
       return h(type, {
         attrs: { "data-testid": "input", ...attrs },
-        on: events
+        on: events,
       });
-    }
+    },
   });
 
 describe("userEvent.type", () => {
-  it.each(["input", "textarea"])("should type text in <%s>", type => {
+  it.each(["input", "textarea"])("should type text in <%s>", (type) => {
     const input = jest.fn();
 
     const { getByTestId } = renderComponent(type, { input });
@@ -32,12 +32,12 @@ describe("userEvent.type", () => {
     const change = jest.fn();
     const keydown = jest
       .fn()
-      .mockImplementation(event => event.preventDefault());
+      .mockImplementation((event) => event.preventDefault());
 
     const { getByTestId } = renderComponent("input", {
       input,
       keydown,
-      change
+      change,
     });
 
     const text = "Hello, world!";
@@ -50,15 +50,15 @@ describe("userEvent.type", () => {
 
   it.each(["input", "textarea"])(
     "should not type when <%s> is disabled",
-    type => {
+    (type) => {
       const change = jest.fn();
       const { getByTestId } = renderComponent(
         type,
         {
-          change
+          change,
         },
         {
-          disabled: true
+          disabled: true,
         }
       );
       const text = "Hello, world!";
@@ -70,7 +70,7 @@ describe("userEvent.type", () => {
 
   it.each(["input", "textarea"])(
     "should not type when <%s> is readOnly",
-    type => {
+    (type) => {
       const change = jest.fn();
       const keydown = jest.fn();
       const keypress = jest.fn();
@@ -81,10 +81,10 @@ describe("userEvent.type", () => {
           change,
           keydown,
           keypress,
-          keyup
+          keyup,
         },
         {
-          readOnly: true
+          readOnly: true,
         }
       );
       const text = "Hello, world!";
@@ -106,7 +106,7 @@ describe("userEvent.type", () => {
     const delay = 10;
 
     userEvent.type(getByTestId("input"), text, {
-      delay
+      delay,
     });
 
     expect(input).not.toHaveBeenCalled();
@@ -131,14 +131,14 @@ describe("userEvent.type", () => {
 
   it.each(["input", "textarea"])(
     "should type text in <%s> all at once",
-    type => {
+    (type) => {
       const input = jest.fn();
 
       const { getByTestId } = renderComponent(type, { input });
       const text = "Hello, world!";
 
       userEvent.type(getByTestId("input"), text, {
-        allAtOnce: true
+        allAtOnce: true,
       });
 
       expect(getByTestId("input")).toHaveProperty("value", text);
@@ -148,7 +148,7 @@ describe("userEvent.type", () => {
 
   it.each(["input", "textarea"])(
     "should type text in <%s> up to maxLength if provided",
-    type => {
+    (type) => {
       const input = jest.fn();
       const keydown = jest.fn();
       const keypress = jest.fn();
@@ -179,7 +179,7 @@ describe("userEvent.type", () => {
       keyup.mockClear();
 
       userEvent.type(inputEl, text, {
-        allAtOnce: true
+        allAtOnce: true,
       });
 
       expect(inputEl).toHaveProperty("value", slicedText);

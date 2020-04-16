@@ -6,12 +6,12 @@ import userEvent from "../../src";
 afterEach(cleanup);
 
 describe("userEvent.type", () => {
-  it.each(["input", "textarea"])("should type text in <%s>", type => {
+  it.each(["input", "textarea"])("should type text in <%s>", (type) => {
     const onChange = jest.fn();
     const { getByTestId } = render(
       React.createElement(type, {
         "data-testid": "input",
-        onChange: onChange
+        onChange: onChange,
       })
     );
     const text = "Hello, world!";
@@ -46,7 +46,7 @@ describe("userEvent.type", () => {
     const onChange = jest.fn();
     const onKeydown = jest
       .fn()
-      .mockImplementation(event => event.preventDefault());
+      .mockImplementation((event) => event.preventDefault());
     const { getByTestId } = render(
       <input data-testid="input" onKeyDown={onKeydown} onChange={onChange} />
     );
@@ -59,13 +59,13 @@ describe("userEvent.type", () => {
 
   it.each(["input", "textarea"])(
     "should not type when <%s> is disabled",
-    type => {
+    (type) => {
       const onChange = jest.fn();
       const { getByTestId } = render(
         React.createElement(type, {
           "data-testid": "input",
           onChange: onChange,
-          disabled: true
+          disabled: true,
         })
       );
       const text = "Hello, world!";
@@ -77,7 +77,7 @@ describe("userEvent.type", () => {
 
   it.each(["input", "textarea"])(
     "should not type when <%s> is readOnly",
-    type => {
+    (type) => {
       const onChange = jest.fn();
       const onKeyDown = jest.fn();
       const onKeyPress = jest.fn();
@@ -89,7 +89,7 @@ describe("userEvent.type", () => {
           onKeyDown,
           onKeyPress,
           onKeyUp,
-          readOnly: true
+          readOnly: true,
         })
       );
       const text = "Hello, world!";
@@ -110,14 +110,14 @@ describe("userEvent.type", () => {
       React.createElement("input", {
         "data-testid": "input",
         onInput,
-        onChange
+        onChange,
       })
     );
     const text = "Hello, world!";
     const delay = 10;
     // Attach a native change listener because React cannot listen for text input change events
     userEvent.type(getByTestId("input"), text, {
-      delay
+      delay,
     });
     expect(onInput).not.toHaveBeenCalled();
     expect(getByTestId("input")).not.toHaveProperty("value", text);
@@ -134,23 +134,23 @@ describe("userEvent.type", () => {
     // Blurring the input "commits" the value, React's onChange should not fire
     fireEvent.blur(getByTestId("input"));
     await wait(() => expect(onChange).toHaveBeenCalledTimes(text.length), {
-      timeout: 300
+      timeout: 300,
     });
   });
 
   it.each(["input", "textarea"])(
     "should type text in <%s> all at once",
-    type => {
+    (type) => {
       const onChange = jest.fn();
       const { getByTestId } = render(
         React.createElement(type, {
           "data-testid": "input",
-          onChange: onChange
+          onChange: onChange,
         })
       );
       const text = "Hello, world!";
       userEvent.type(getByTestId("input"), text, {
-        allAtOnce: true
+        allAtOnce: true,
       });
 
       expect(onChange).toHaveBeenCalledTimes(1);
@@ -160,7 +160,7 @@ describe("userEvent.type", () => {
 
   it.each(["input", "textarea"])(
     "should type text in <%s> up to maxLength if provided",
-    type => {
+    (type) => {
       const onChange = jest.fn();
       const onKeyDown = jest.fn();
       const onKeyPress = jest.fn();
@@ -174,7 +174,7 @@ describe("userEvent.type", () => {
           onKeyDown,
           onKeyPress,
           onKeyUp,
-          maxLength
+          maxLength,
         })
       );
 
@@ -198,7 +198,7 @@ describe("userEvent.type", () => {
       onKeyUp.mockClear();
 
       userEvent.type(inputEl, text, {
-        allAtOnce: true
+        allAtOnce: true,
       });
 
       expect(inputEl).toHaveProperty("value", slicedText);

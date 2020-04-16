@@ -8,9 +8,9 @@ afterEach(cleanup);
 describe("userEvent.dblClick", () => {
   it.each(["input", "textarea"])(
     "should fire the correct events for <%s>",
-    type => {
+    (type) => {
       const events = [];
-      const eventsHandler = jest.fn(evt => events.push(evt.type));
+      const eventsHandler = jest.fn((evt) => events.push(evt.type));
       const { getByTestId } = render(
         React.createElement(type, {
           "data-testid": "element",
@@ -20,7 +20,7 @@ describe("userEvent.dblClick", () => {
           onFocus: eventsHandler,
           onMouseUp: eventsHandler,
           onClick: eventsHandler,
-          onDoubleClick: eventsHandler
+          onDoubleClick: eventsHandler,
         })
       );
 
@@ -36,14 +36,14 @@ describe("userEvent.dblClick", () => {
         "mousedown",
         "mouseup",
         "click",
-        "dblclick"
+        "dblclick",
       ]);
     }
   );
 
   it('should fire the correct events for <input type="checkbox">', () => {
     const events = [];
-    const eventsHandler = jest.fn(evt => events.push(evt.type));
+    const eventsHandler = jest.fn((evt) => events.push(evt.type));
     const { getByTestId } = render(
       <input
         data-testid="element"
@@ -71,7 +71,7 @@ describe("userEvent.dblClick", () => {
       "mousedown",
       "mouseup",
       "click",
-      "change"
+      "change",
     ]);
 
     expect(getByTestId("element")).toHaveProperty("checked", false);
@@ -79,7 +79,7 @@ describe("userEvent.dblClick", () => {
 
   it("should fire the correct events for <div>", () => {
     const events = [];
-    const eventsHandler = jest.fn(evt => events.push(evt.type));
+    const eventsHandler = jest.fn((evt) => events.push(evt.type));
     const { getByTestId } = render(
       <div
         data-testid="div"
@@ -101,13 +101,13 @@ describe("userEvent.dblClick", () => {
       "click",
       "mousedown",
       "mouseup",
-      "click"
+      "click",
     ]);
   });
 
   it("should not blur when mousedown prevents default", () => {
     let events = [];
-    const eventsHandler = jest.fn(evt => events.push(evt.type));
+    const eventsHandler = jest.fn((evt) => events.push(evt.type));
     const commonEvents = {
       onBlur: eventsHandler,
       onMouseOver: eventsHandler,
@@ -116,7 +116,7 @@ describe("userEvent.dblClick", () => {
       onFocus: eventsHandler,
       onMouseUp: eventsHandler,
       onClick: eventsHandler,
-      onChange: eventsHandler
+      onChange: eventsHandler,
     };
 
     const { getByTestId } = render(
@@ -125,7 +125,7 @@ describe("userEvent.dblClick", () => {
         <input
           data-testid="B"
           {...commonEvents}
-          onMouseDown={e => {
+          onMouseDown={(e) => {
             e.preventDefault();
             eventsHandler(e);
           }}
@@ -156,7 +156,7 @@ describe("userEvent.dblClick", () => {
       "click",
       "mousedown",
       "mouseup",
-      "click"
+      "click",
     ]);
 
     events = [];
@@ -175,7 +175,7 @@ describe("userEvent.dblClick", () => {
       "click",
       "mousedown",
       "mouseup",
-      "click"
+      "click",
     ]);
 
     events = [];
@@ -196,7 +196,7 @@ describe("userEvent.dblClick", () => {
       "click",
       "mousedown",
       "mouseup",
-      "click"
+      "click",
     ]);
   });
 });

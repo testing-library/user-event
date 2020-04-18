@@ -42,6 +42,34 @@ describe("userEvent.type", () => {
     expect(getByTestId("input")).toHaveProperty("value", "hello world");
   });
 
+  it("should replace text one by one", () => {
+    const onChange = jest.fn();
+    const { getByTestId } = render(
+      <input data-testid="input" onChange={onChange} />
+    );
+    userEvent.type(getByTestId("input"), "hello", { replaceExisting: true });
+    userEvent.type(getByTestId("input"), "welcome", { replaceExisting: true });
+    expect(onChange).toHaveBeenCalledTimes("hello".length + "welcome".length);
+    expect(getByTestId("input")).toHaveProperty("value", "welcome");
+  });
+
+  it("should replace text all at once", () => {
+    const onChange = jest.fn();
+    const { getByTestId } = render(
+      <input data-testid="input" onChange={onChange} />
+    );
+    userEvent.type(getByTestId("input"), "hello", {
+      allAtOnce: true,
+      replaceExisting: true,
+    });
+    userEvent.type(getByTestId("input"), "welcome", {
+      allAtOnce: true,
+      replaceExisting: true,
+    });
+    expect(onChange).toHaveBeenCalledTimes(2);
+    expect(getByTestId("input")).toHaveProperty("value", "welcome");
+  });
+
   it("should not type when event.preventDefault() is called", () => {
     const onChange = jest.fn();
     const onKeydown = jest

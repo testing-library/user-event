@@ -180,12 +180,13 @@ const userEvent = {
     const defaultOpts = {
       allAtOnce: false,
       delay: 0,
+      replaceExisting: false,
     };
     const opts = Object.assign(defaultOpts, userOpts);
 
     const computedText = text.slice(0, element.maxLength || text.length);
 
-    const previousText = element.value;
+    const previousText = opts.replaceExisting ? "" : element.value;
 
     if (opts.allAtOnce) {
       if (element.readOnly) return;

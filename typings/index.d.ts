@@ -2,6 +2,7 @@
 export interface IUserOptions {
     allAtOnce?: boolean;
     delay?: number;
+    replaceExisting?: boolean;
 }
 
 export interface ITabUserOptions {

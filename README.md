@@ -146,13 +146,13 @@ import userEvent from "@testing-library/user-event";
 const { getByTestId } = render(
   <select multiple data-testid="select-multiple">
     <option data-testid="val1" value="1">
-      1
+      A
     </option>
     <option data-testid="val2" value="2">
-      2
+      B
     </option>
     <option data-testid="val3" value="3">
-      3
+      C
     </option>
   </select>
 );

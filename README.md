@@ -133,6 +133,23 @@ one character at the time. `false` is the default value.
 are typed. By default it's 0. You can use this option if your component has a
 different behavior for fast or slow users.
 
+### clear(element)
+
+Selects the text inside an `<input>` or `<textarea>` and deletes it.
+
+```jsx
+import React from "react";
+import { render } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+
+const { getByTestId } = test("click", () => {
+  render(<textarea data-testid="email" value="Hello, World!" />);
+});
+
+userEvent.clear(getByTestId("email");
+expect(getByTestId("email")).toHaveAttribute("value", "");
+```
+
 ### `selectOptions(element, values)`
 
 Selects the specified option(s) of a `<select>` or a `<select multiple>`

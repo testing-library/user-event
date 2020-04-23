@@ -180,7 +180,7 @@ describe("userEvent.tab", () => {
       number1,
       checkbox2,
       radio2,
-      number2
+      number2,
     ] = getAllByTestId("element");
 
     expect(document.body).toHaveFocus();
@@ -231,7 +231,7 @@ describe("userEvent.tab", () => {
 
     const { getByTestId } = render(
       <>
-        {letters.split("").map(letter => (
+        {letters.split("").map((letter) => (
           <input key={letter} type="text" data-testid={letter} />
         ))}
       </>
@@ -239,7 +239,7 @@ describe("userEvent.tab", () => {
 
     expect.assertions(26);
 
-    letters.split("").forEach(letter => {
+    letters.split("").forEach((letter) => {
       userEvent.tab();
       expect(getByTestId(letter)).toHaveFocus();
     });
@@ -264,4 +264,14 @@ it("should not focus disabled elements", () => {
 
   userEvent.tab();
   expect(five).toHaveFocus();
+});
+
+it("should keep focus on the document if there are no enabled, focusable elements", () => {
+  render(<button disabled>no clicky</button>);
+
+  userEvent.tab();
+  expect(document.body).toHaveFocus();
+
+  userEvent.tab({ shift: true });
+  expect(document.body).toHaveFocus();
 });

@@ -8,9 +8,9 @@ afterEach(cleanup);
 describe("userEvent.click", () => {
   it.each(["input", "textarea"])(
     "should fire the correct events for <%s>",
-    type => {
+    (type) => {
       const events = [];
-      const eventsHandler = jest.fn(evt => events.push(evt.type));
+      const eventsHandler = jest.fn((evt) => events.push(evt.type));
       const { getByTestId } = render(
         React.createElement(type, {
           "data-testid": "element",
@@ -19,7 +19,7 @@ describe("userEvent.click", () => {
           onMouseDown: eventsHandler,
           onFocus: eventsHandler,
           onMouseUp: eventsHandler,
-          onClick: eventsHandler
+          onClick: eventsHandler,
         })
       );
 
@@ -31,14 +31,14 @@ describe("userEvent.click", () => {
         "mousedown",
         "focus",
         "mouseup",
-        "click"
+        "click",
       ]);
     }
   );
 
   it('should fire the correct events for <input type="checkbox">', () => {
     const events = [];
-    const eventsHandler = jest.fn(evt => events.push(evt.type));
+    const eventsHandler = jest.fn((evt) => events.push(evt.type));
     const { getByTestId } = render(
       <input
         data-testid="element"
@@ -62,7 +62,7 @@ describe("userEvent.click", () => {
       "focus",
       "mouseup",
       "click",
-      "change"
+      "change",
     ]);
 
     expect(getByTestId("element")).toHaveProperty("checked", true);
@@ -70,7 +70,7 @@ describe("userEvent.click", () => {
 
   it('should fire the correct events for <input type="checkbox" disabled>', () => {
     const events = [];
-    const eventsHandler = jest.fn(evt => events.push(evt.type));
+    const eventsHandler = jest.fn((evt) => events.push(evt.type));
     const { getByTestId } = render(
       <input
         data-testid="element"
@@ -95,7 +95,7 @@ describe("userEvent.click", () => {
 
   it('should fire the correct events for <input type="radio">', () => {
     const events = [];
-    const eventsHandler = jest.fn(evt => events.push(evt.type));
+    const eventsHandler = jest.fn((evt) => events.push(evt.type));
     const { getByTestId } = render(
       <input
         data-testid="element"
@@ -119,7 +119,7 @@ describe("userEvent.click", () => {
       "focus",
       "mouseup",
       "click",
-      "change"
+      "change",
     ]);
 
     expect(getByTestId("element")).toHaveProperty("checked", true);
@@ -127,7 +127,7 @@ describe("userEvent.click", () => {
 
   it('should fire the correct events for <input type="radio" disabled>', () => {
     const events = [];
-    const eventsHandler = jest.fn(evt => events.push(evt.type));
+    const eventsHandler = jest.fn((evt) => events.push(evt.type));
     const { getByTestId } = render(
       <input
         data-testid="element"
@@ -152,7 +152,7 @@ describe("userEvent.click", () => {
 
   it("should fire the correct events for <div>", () => {
     const events = [];
-    const eventsHandler = jest.fn(evt => events.push(evt.type));
+    const eventsHandler = jest.fn((evt) => events.push(evt.type));
     const { getByTestId } = render(
       <div
         data-testid="div"
@@ -171,7 +171,7 @@ describe("userEvent.click", () => {
       "mousemove",
       "mousedown",
       "mouseup",
-      "click"
+      "click",
     ]);
   });
 
@@ -200,7 +200,7 @@ describe("userEvent.click", () => {
 
   it("should not blur when mousedown prevents default", () => {
     let events = [];
-    const eventsHandler = jest.fn(evt => events.push(evt.type));
+    const eventsHandler = jest.fn((evt) => events.push(evt.type));
     const commonEvents = {
       onBlur: eventsHandler,
       onMouseOver: eventsHandler,
@@ -209,7 +209,7 @@ describe("userEvent.click", () => {
       onFocus: eventsHandler,
       onMouseUp: eventsHandler,
       onClick: eventsHandler,
-      onChange: eventsHandler
+      onChange: eventsHandler,
     };
 
     const { getByTestId } = render(
@@ -218,7 +218,7 @@ describe("userEvent.click", () => {
         <input
           data-testid="B"
           {...commonEvents}
-          onMouseDown={e => {
+          onMouseDown={(e) => {
             e.preventDefault();
             eventsHandler(e);
           }}
@@ -246,7 +246,7 @@ describe("userEvent.click", () => {
       "mousedown",
       "focus",
       "mouseup",
-      "click"
+      "click",
     ]);
 
     events = [];
@@ -262,7 +262,7 @@ describe("userEvent.click", () => {
       "mousemove",
       "mousedown",
       "mouseup",
-      "click"
+      "click",
     ]);
 
     events = [];
@@ -280,7 +280,7 @@ describe("userEvent.click", () => {
       "blur",
       "focus",
       "mouseup",
-      "click"
+      "click",
     ]);
   });
 
@@ -312,7 +312,7 @@ describe("userEvent.click", () => {
 
   it.each(["input", "textarea"])(
     "gives focus to <%s> when clicking a <label> with htmlFor",
-    type => {
+    (type) => {
       const { getByTestId } = render(
         <React.Fragment>
           <label htmlFor="input" data-testid="label">
@@ -328,7 +328,7 @@ describe("userEvent.click", () => {
 
   it.each(["input", "textarea"])(
     "gives focus to <%s> when clicking a <label> without htmlFor",
-    type => {
+    (type) => {
       const { getByTestId } = render(
         <React.Fragment>
           <label data-testid="label">
@@ -344,7 +344,7 @@ describe("userEvent.click", () => {
 
   it.each(["input", "textarea"])(
     "gives focus to <%s> when clicking on an element contained within a <label>",
-    type => {
+    (type) => {
       const { getByText, getByTestId } = render(
         <React.Fragment>
           <label htmlFor="input" data-testid="label">
@@ -410,13 +410,13 @@ describe("userEvent.click", () => {
 
   it.each(["input", "textarea"])(
     "should not give focus for <%s> when mouseDown is prevented",
-    type => {
+    (type) => {
       const { getByTestId } = render(
         React.createElement(type, {
           "data-testid": "element",
-          onMouseDown: evt => {
+          onMouseDown: (evt) => {
             evt.preventDefault();
-          }
+          },
         })
       );
 

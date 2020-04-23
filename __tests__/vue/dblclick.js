@@ -7,14 +7,14 @@ afterEach(cleanup);
 describe("userEvent.dblClick", () => {
   it.each(["input", "textarea"])(
     "should fire the correct events for <%s>",
-    type => {
+    (type) => {
       const events = [];
-      const eventsHandler = jest.fn(evt => events.push(evt.type));
+      const eventsHandler = jest.fn((evt) => events.push(evt.type));
       const { getByTestId } = render({
-        render: function(h) {
+        render: function (h) {
           return h(type, {
             attrs: {
-              "data-testid": "element"
+              "data-testid": "element",
             },
             on: {
               mouseover: eventsHandler,
@@ -23,10 +23,10 @@ describe("userEvent.dblClick", () => {
               focus: eventsHandler,
               mouseup: eventsHandler,
               click: eventsHandler,
-              dblclick: eventsHandler
-            }
+              dblclick: eventsHandler,
+            },
           });
-        }
+        },
       });
 
       userEvent.dblClick(getByTestId("element"));
@@ -41,21 +41,21 @@ describe("userEvent.dblClick", () => {
         "mousedown",
         "mouseup",
         "click",
-        "dblclick"
+        "dblclick",
       ]);
     }
   );
 
   it('should fire the correct events for <input type="checkbox">', () => {
     const events = [];
-    const eventsHandler = jest.fn(evt => events.push(evt.type));
+    const eventsHandler = jest.fn((evt) => events.push(evt.type));
 
     const { getByTestId } = render({
-      render: function(h) {
+      render: function (h) {
         return h("input", {
           attrs: {
             type: "checkbox",
-            "data-testid": "element"
+            "data-testid": "element",
           },
           on: {
             mouseover: eventsHandler,
@@ -64,10 +64,10 @@ describe("userEvent.dblClick", () => {
             focus: eventsHandler,
             mouseup: eventsHandler,
             click: eventsHandler,
-            change: eventsHandler
-          }
+            change: eventsHandler,
+          },
         });
-      }
+      },
     });
 
     userEvent.dblClick(getByTestId("element"));
@@ -83,7 +83,7 @@ describe("userEvent.dblClick", () => {
       "mousedown",
       "mouseup",
       "click",
-      "change"
+      "change",
     ]);
 
     expect(getByTestId("element")).toHaveProperty("checked", false);
@@ -91,12 +91,12 @@ describe("userEvent.dblClick", () => {
 
   it("should fire the correct events for <div>", () => {
     const events = [];
-    const eventsHandler = jest.fn(evt => events.push(evt.type));
+    const eventsHandler = jest.fn((evt) => events.push(evt.type));
     const { getByTestId } = render({
-      render: function(h) {
+      render: function (h) {
         return h("div", {
           attrs: {
-            "data-testid": "div"
+            "data-testid": "div",
           },
           on: {
             mouseover: eventsHandler,
@@ -105,10 +105,10 @@ describe("userEvent.dblClick", () => {
             focus: eventsHandler,
             mouseup: eventsHandler,
             click: eventsHandler,
-            change: eventsHandler
-          }
+            change: eventsHandler,
+          },
         });
-      }
+      },
     });
 
     userEvent.dblClick(getByTestId("div"));
@@ -120,7 +120,7 @@ describe("userEvent.dblClick", () => {
       "click",
       "mousedown",
       "mouseup",
-      "click"
+      "click",
     ]);
   });
 });

@@ -105,6 +105,32 @@ function fireChangeEvent(event) {
   event.target.removeEventListener("blur", fireChangeEvent);
 }
 
+const Keys = {
+  Backspace: { keyCode: 8, code: "Backspace", key: "Backspace" }
+};
+
+function backspace(element) {
+  const eventOptions = {
+    key: Keys.Backspace.key,
+    keyCode: Keys.Backspace.keyCode,
+    which: Keys.Backspace.keyCode
+  };
+  fireEvent.keyDown(element, eventOptions);
+  fireEvent.keyUp(element, eventOptions);
+
+  if (!element.readOnly) {
+    fireEvent.input(element, {
+      inputType: "deleteContentBackward"
+    });
+    element.value = ""; // when we add special keys to API, will need to respect selected range
+  }
+}
+
+function selectAll(element) {
+  userEvent.dblClick(element); // simulate events (will not actually select)
+  element.setSelectionRange(0, element.value.length);
+}
+
 const userEvent = {
   click(element) {
     const focusedElement = element.ownerDocument.activeElement;
@@ -173,6 +199,14 @@ const userEvent = {
         selectOption(element, selectedOptions[0]);
       }
     }
+  },
+
+  clear(element) {
+    if (element.disabled) return;
+
+    selectAll(element);
+    backspace(element);
+    element.addEventListener("blur", fireChangeEvent);
   },
 
   async type(element, text, userOpts = {}) {

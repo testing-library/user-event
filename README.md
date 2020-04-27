@@ -71,19 +71,19 @@ effects.
 
 ```jsx
 import React from "react";
-import { render } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 test("click", () => {
-  const { getByText, getByTestId } = render(
+  render(
     <div>
       <label htmlFor="checkbox">Check</label>
       <input id="checkbox" data-testid="checkbox" type="checkbox" />
     </div>
   );
 
-  userEvent.click(getByText("Check"));
-  expect(getByTestId("checkbox")).toHaveAttribute("checked", true);
+  userEvent.click(screen.getByText("Check"));
+  expect(screen.getByTestId("checkbox")).toHaveAttribute("checked", true);
 });
 ```
 
@@ -94,15 +94,13 @@ side effects.
 
 ```jsx
 import React from "react";
-import { render } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 test("double click", () => {
   const onChange = jest.fn();
-  const { getByTestId } = render(
-    <input type="checkbox" id="checkbox" onChange={onChange} />
-  );
-  const checkbox = getByTestId("checkbox");
+  render(<input type="checkbox" id="checkbox" onChange={onChange} />);
+  const checkbox = screen.getByTestId("checkbox");
   userEvent.dblClick(checkbox);
   expect(onChange).toHaveBeenCalledTimes(2);
   expect(checkbox).toHaveProperty("checked", false);
@@ -115,15 +113,15 @@ Writes `text` inside an `<input>` or a `<textarea>`.
 
 ```jsx
 import React from "react";
-import { render } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
-const { getByTestId } = test("click", () => {
+test("type", async () => {
   render(<textarea data-testid="email" />);
-});
 
-await userEvent.type(getByTestId("email"), "Hello, World!");
-expect(getByTestId("email")).toHaveAttribute("value", "Hello, World!");
+  await userEvent.type(screen.getByTestId("email"), "Hello, World!");
+  expect(screen.getByTestId("email")).toHaveAttribute("value", "Hello, World!");
+});
 ```
 
 If `options.allAtOnce` is `true`, `type` will write `text` at once rather than
@@ -133,6 +131,23 @@ one character at the time. `false` is the default value.
 are typed. By default it's 0. You can use this option if your component has a
 different behavior for fast or slow users.
 
+### clear(element)
+
+Selects the text inside an `<input>` or `<textarea>` and deletes it.
+
+```jsx
+import React from "react";
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+
+test("clear", () => {
+  render(<textarea data-testid="email" value="Hello, World!" />);
+
+  userEvent.clear(screen.getByTestId("email"));
+  expect(screen.getByTestId("email")).toHaveAttribute("value", "");
+});
+```
+
 ### `selectOptions(element, values)`
 
 Selects the specified option(s) of a `<select>` or a `<select multiple>`
@@ -140,28 +155,30 @@ element.
 
 ```jsx
 import React from "react";
-import { render } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
-const { getByTestId } = render(
-  <select multiple data-testid="select-multiple">
-    <option data-testid="val1" value="1">
-      1
-    </option>
-    <option data-testid="val2" value="2">
-      2
-    </option>
-    <option data-testid="val3" value="3">
-      3
-    </option>
-  </select>
-);
+test("selectOptions", () => {
+  render(
+    <select multiple data-testid="select-multiple">
+      <option data-testid="val1" value="1">
+        A
+      </option>
+      <option data-testid="val2" value="2">
+        B
+      </option>
+      <option data-testid="val3" value="3">
+        C
+      </option>
+    </select>
+  );
 
-userEvent.selectOptions(getByTestId("select-multiple"), ["1", "3"]);
+  userEvent.selectOptions(screen.getByTestId("select-multiple"), ["1", "3"]);
 
-expect(getByTestId("val1").selected).toBe(true);
-expect(getByTestId("val2").selected).toBe(false);
-expect(getByTestId("val3").selected).toBe(true);
+  expect(screen.getByTestId("val1").selected).toBe(true);
+  expect(screen.getByTestId("val2").selected).toBe(false);
+  expect(screen.getByTestId("val3").selected).toBe(true);
+});
 ```
 
 The `values` parameter can be either an array of values or a singular scalar
@@ -188,12 +205,12 @@ Options:
 
 ```jsx
 import React from "react";
-import { render } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import userEvent from "@testing-library/user-event";
 
 it("should cycle elements in document tab order", () => {
-  const { getAllByTestId } = render(
+  render(
     <div>
       <input data-testid="element" type="checkbox" />
       <input data-testid="element" type="radio" />
@@ -201,7 +218,7 @@ it("should cycle elements in document tab order", () => {
     </div>
   );
 
-  const [checkbox, radio, number] = getAllByTestId("element");
+  const [checkbox, radio, number] = screen.getAllByTestId("element");
 
   expect(document.body).toHaveFocus();
 
@@ -262,11 +279,13 @@ Thanks goes to these wonderful people
   </tr>
   <tr>
     <td align="center"><a href="http://thejoemorgan.com"><img src="https://avatars1.githubusercontent.com/u/2388943?v=4" width="100px;" alt=""/><br /><sub><b>Joe Morgan</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=jsmapr1" title="Code">💻</a></td>
+    <td align="center"><a href="https://twitter.com/wachunga"><img src="https://avatars0.githubusercontent.com/u/438545?v=4" width="100px;" alt=""/><br /><sub><b>David Hirtle</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=wachunga" title="Code">💻</a></td>
   </tr>
 </table>
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the

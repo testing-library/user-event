@@ -226,6 +226,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "wachunga",
+      "name": "David Hirtle",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/438545?v=4",
+      "profile": "https://twitter.com/wachunga",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "commitConvention": "none",

@@ -44,6 +44,65 @@ describe("userEvent.toggleOptions", () => {
     ]);
   });
 
+  it("should fire the correct events for multiple select when focus is in other element", () => {
+    const events = [];
+    const eventsHandler = jest.fn((evt) => events.push(evt.type));
+    const eventHandlers = {
+      onMouseOver: eventsHandler,
+      onMouseMove: eventsHandler,
+      onMouseDown: eventsHandler,
+      onFocus: eventsHandler,
+      onMouseUp: eventsHandler,
+      onClick: eventsHandler,
+    };
+
+    const focusedElEvents = [];
+    const focusedElEvHandler = jest.fn((ev) => focusedElEvents.push(ev.type));
+    const focusedElEvHandlers = {
+      onMouseOver: focusedElEvHandler,
+      onMouseMove: focusedElEvHandler,
+      onMouseDown: focusedElEvHandler,
+      onMouseLeave: focusedElEvHandler,
+      onFocus: focusedElEvHandler,
+      onMouseUp: focusedElEvHandler,
+      onClick: focusedElEvHandler,
+    };
+
+    const { getByTestId } = render(
+      <>
+        <button data-testid="other" {...focusedElEvHandlers} tabIndex={0}>
+          Other
+        </button>
+        <select {...{ ...eventHandlers }} data-testid="element" multiple>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+        </select>
+      </>
+    );
+
+    getByTestId("other").focus();
+
+    userEvent.toggleOptions(getByTestId("element"), "1");
+
+    expect(events).toStrictEqual([
+      "mouseover",
+      "mousemove",
+      "mousedown",
+      "focus",
+      "mouseup",
+      "click",
+      "mouseover", // The events repeat because we click on the child OPTION too
+      "mousemove", // But these specifically are the events bubbling up to the <select>
+      "mousedown",
+      "focus",
+      "mouseup",
+      "click",
+    ]);
+
+    expect(focusedElEvents).toStrictEqual(["focus", "mousemove"]);
+  });
+
   it("should fire the correct events on selected OPTION child with <select>", () => {
     function handleEvent(evt) {
       const optValue = parseInt(evt.target.value);

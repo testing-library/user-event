@@ -184,6 +184,41 @@ test("selectOptions", () => {
 The `values` parameter can be either an array of values or a singular scalar
 value.
 
+### `toggleOptions(element, values)`
+
+Toggle the specified option(s) of a `<select multiple>` element.
+
+```jsx
+import * as React from "react";
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+
+test("toggleOptions", () => {
+  render(
+    <select multiple value={["1"]} data-testid="select-multiple">
+      <option data-testid="val1" value="1">
+        A
+      </option>
+      <option data-testid="val2" value="2">
+        B
+      </option>
+      <option data-testid="val3" value="3">
+        C
+      </option>
+    </select>
+  );
+
+  userEvent.toggleOptions(screen.getByTestId("select-multiple"), ["1", "3"]);
+
+  expect(screen.getByTestId("val1").selected).toBe(false); // selected becomes unselected
+  expect(screen.getByTestId("val2").selected).toBe(false); // unaffected
+  expect(screen.getByTestId("val3").selected).toBe(true); // unselected becomes selected
+});
+```
+
+The `values` parameter can be either an array of values or a singular scalar
+value.
+
 ### `tab({shift, focusTrap})`
 
 Fires a tab event changing the document.activeElement in the same way the

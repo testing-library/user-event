@@ -215,6 +215,12 @@ const userEvent = {
   },
 
   toggleOptions(element, values) {
+    if (!element || element.tagName !== "SELECT" || !element.multiple) {
+      throw new Error(
+        `Unable to toggleOptions - please provide a select element with multiple=true`
+      );
+    }
+
     const focusedElement = document.activeElement;
     const wasAnotherElementFocused =
       focusedElement !== document.body && focusedElement !== element;
@@ -231,11 +237,7 @@ const userEvent = {
     ).filter((opt) => valArray.includes(opt.value));
 
     if (selectedOptions.length > 0) {
-      if (element.multiple) {
-        selectedOptions.forEach((option) => toggleOption(element, option));
-      } else {
-        toggleOption(element, selectedOptions[0]);
-      }
+      selectedOptions.forEach((option) => toggleOption(element, option));
     }
   },
 

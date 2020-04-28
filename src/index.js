@@ -137,7 +137,7 @@ const userEvent = {
     const wasAnotherElementFocused =
       focusedElement !== element.ownerDocument.body &&
       focusedElement !== element;
-    if (wasAnotherElementFocused) {
+    if (focusedElement && wasAnotherElementFocused) {
       fireEvent.mouseMove(focusedElement);
       fireEvent.mouseLeave(focusedElement);
     }
@@ -160,7 +160,7 @@ const userEvent = {
     const focusedElement = document.activeElement;
     const wasAnotherElementFocused =
       focusedElement !== document.body && focusedElement !== element;
-    if (wasAnotherElementFocused) {
+    if (focusedElement && wasAnotherElementFocused) {
       fireEvent.mouseMove(focusedElement);
       fireEvent.mouseLeave(focusedElement);
     }
@@ -180,7 +180,7 @@ const userEvent = {
     const focusedElement = document.activeElement;
     const wasAnotherElementFocused =
       focusedElement !== document.body && focusedElement !== element;
-    if (wasAnotherElementFocused) {
+    if (focusedElement && wasAnotherElementFocused) {
       fireEvent.mouseMove(focusedElement);
       fireEvent.mouseLeave(focusedElement);
     }

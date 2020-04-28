@@ -1,5 +1,5 @@
 import React from "react";
-import { render, cleanup } from "@testing-library/react";
+import { render, cleanup, fireEvent, act } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import userEvent from "../../src";
 
@@ -425,4 +425,26 @@ describe("userEvent.click", () => {
       expect(getByTestId("element")).not.toHaveFocus();
     }
   );
+  it("handles null activeElement", async () => {
+    function App() {
+      const [show, setShow] = React.useState(true);
+      return show ? (
+        <button key="btn1" data-testid="btn1" onClick={() => setShow(false)}>
+          First button
+        </button>
+      ) : (
+        <button key="btn2" data-testid="btn2">
+          Second buttom
+        </button>
+      );
+    }
+
+    const tree = render(<App />);
+    const btn1 = tree.getByTestId("btn1");
+    fireEvent.click(btn1);
+    btn1.focus();
+    expect(() => {
+      userEvent.click(tree.getByTestId("btn2"));
+    }).not.toThrow();
+  });
 });

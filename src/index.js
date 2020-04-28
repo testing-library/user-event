@@ -106,21 +106,21 @@ function fireChangeEvent(event) {
 }
 
 const Keys = {
-  Backspace: { keyCode: 8, code: "Backspace", key: "Backspace" }
+  Backspace: { keyCode: 8, code: "Backspace", key: "Backspace" },
 };
 
 function backspace(element) {
   const eventOptions = {
     key: Keys.Backspace.key,
     keyCode: Keys.Backspace.keyCode,
-    which: Keys.Backspace.keyCode
+    which: Keys.Backspace.keyCode,
   };
   fireEvent.keyDown(element, eventOptions);
   fireEvent.keyUp(element, eventOptions);
 
   if (!element.readOnly) {
     fireEvent.input(element, {
-      inputType: "deleteContentBackward"
+      inputType: "deleteContentBackward",
     });
     element.value = ""; // when we add special keys to API, will need to respect selected range
   }
@@ -137,7 +137,7 @@ const userEvent = {
     const wasAnotherElementFocused =
       focusedElement !== element.ownerDocument.body &&
       focusedElement !== element;
-    if (focusedElement && wasAnotherElementFocused) {
+    if (wasAnotherElementFocused) {
       fireEvent.mouseMove(focusedElement);
       fireEvent.mouseLeave(focusedElement);
     }
@@ -160,7 +160,7 @@ const userEvent = {
     const focusedElement = document.activeElement;
     const wasAnotherElementFocused =
       focusedElement !== document.body && focusedElement !== element;
-    if (focusedElement && wasAnotherElementFocused) {
+    if (wasAnotherElementFocused) {
       fireEvent.mouseMove(focusedElement);
       fireEvent.mouseLeave(focusedElement);
     }
@@ -180,7 +180,7 @@ const userEvent = {
     const focusedElement = document.activeElement;
     const wasAnotherElementFocused =
       focusedElement !== document.body && focusedElement !== element;
-    if (focusedElement && wasAnotherElementFocused) {
+    if (wasAnotherElementFocused) {
       fireEvent.mouseMove(focusedElement);
       fireEvent.mouseLeave(focusedElement);
     }

@@ -434,14 +434,14 @@ describe("userEvent.click", () => {
         </button>
       ) : (
         <button key="btn2" data-testid="btn2">
-          Second buttom
+          Second button
         </button>
       );
     }
 
     const tree = render(<App />);
     const btn1 = tree.getByTestId("btn1");
-    fireEvent.click(btn1);
+    userEvent.click(btn1);
     btn1.focus();
     expect(() => {
       userEvent.click(tree.getByTestId("btn2"));

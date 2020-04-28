@@ -339,4 +339,27 @@ describe("userEvent.click", () => {
     userEvent.click(getByText("Submit"));
     expect(emitted()).toEqual({});
   });
+  it("handles null activeElement", async () => {
+    const App = {
+      data() {
+        return { show: true };
+      },
+      template: `
+        <div v-if="show">
+          <button data-testid="btn1" @click="show = false">My button</button>
+        </div>
+        <button data-testid="btn2" v-else>My button</button>
+      `,
+    };
+
+    const tree = render(App);
+    const btn1 = tree.getByTestId("btn1");
+    userEvent.click(btn1);
+
+    const btn2 = await tree.findByTestId("btn2");
+    btn1.focus();
+    expect(() => {
+      userEvent.click(btn2);
+    }).not.toThrow();
+  });
 });

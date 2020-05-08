@@ -245,6 +245,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "Meemaw",
+      "name": "Matej Šnuderl",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/8524109?v=4",
+      "profile": "https://www.matej.snuderl.si/",
+      "contributions": [
+        "review"
+      ]
     }
   ],
   "commitConvention": "none",

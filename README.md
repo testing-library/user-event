@@ -280,12 +280,12 @@ Thanks goes to these wonderful people
   <tr>
     <td align="center"><a href="http://thejoemorgan.com"><img src="https://avatars1.githubusercontent.com/u/2388943?v=4" width="100px;" alt=""/><br /><sub><b>Joe Morgan</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=jsmapr1" title="Code">💻</a></td>
     <td align="center"><a href="https://twitter.com/wachunga"><img src="https://avatars0.githubusercontent.com/u/438545?v=4" width="100px;" alt=""/><br /><sub><b>David Hirtle</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=wachunga" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/bdh1011"><img src="https://avatars2.githubusercontent.com/u/8446067?v=4" width="100px;" alt=""/><br /><sub><b>whiteUnicorn</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=bdh1011" title="Code">💻</a></td>
   </tr>
 </table>
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
-
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the

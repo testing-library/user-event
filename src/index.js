@@ -106,21 +106,21 @@ function fireChangeEvent(event) {
 }
 
 const Keys = {
-  Backspace: { keyCode: 8, code: "Backspace", key: "Backspace" }
+  Backspace: { keyCode: 8, code: "Backspace", key: "Backspace" },
 };
 
 function backspace(element) {
   const eventOptions = {
     key: Keys.Backspace.key,
     keyCode: Keys.Backspace.keyCode,
-    which: Keys.Backspace.keyCode
+    which: Keys.Backspace.keyCode,
   };
   fireEvent.keyDown(element, eventOptions);
   fireEvent.keyUp(element, eventOptions);
 
   if (!element.readOnly) {
     fireEvent.input(element, {
-      inputType: "deleteContentBackward"
+      inputType: "deleteContentBackward",
     });
     element.value = ""; // when we add special keys to API, will need to respect selected range
   }
@@ -128,7 +128,18 @@ function backspace(element) {
 
 function selectAll(element) {
   userEvent.dblClick(element); // simulate events (will not actually select)
+  const elementType = element.type;
+  if (isInputElement(element)) {
+    element.type = "text";
+  }
   element.setSelectionRange(0, element.value.length);
+  if (isInputElement(element)) {
+    element.type = elementType;
+  }
+}
+
+function isInputElement(element) {
+  return element.tagName.toLowerCase() === "input";
 }
 
 const userEvent = {

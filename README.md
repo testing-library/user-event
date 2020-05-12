@@ -131,7 +131,7 @@ one character at the time. `false` is the default value.
 are typed. By default it's 0. You can use this option if your component has a
 different behavior for fast or slow users.
 
-### clear(element)
+### `clear(element)`
 
 Selects the text inside an `<input>` or `<textarea>` and deletes it.
 

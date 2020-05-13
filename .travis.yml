@@ -23,6 +23,7 @@ script:
 after_success:
   - npm run codecov
   - npm run build
+  - rm ./cc-test-reporter
   - npm run travis-deploy-once "npm run semantic-release"
 branches:
   except:

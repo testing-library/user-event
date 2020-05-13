@@ -41,7 +41,7 @@ function clickBooleanElement(element) {
   fireEvent.click(element);
 }
 
-function clickElement(element, previousElement) {
+function clickElement(element, previousElement, init) {
   fireEvent.mouseOver(element);
   fireEvent.mouseMove(element);
   const continueDefaultHandling = fireEvent.mouseDown(element);
@@ -50,7 +50,7 @@ function clickElement(element, previousElement) {
     element.focus();
   }
   fireEvent.mouseUp(element);
-  fireEvent.click(element);
+  fireEvent.click(element, init);
 
   const labelAncestor = findTagInParents(element, "LABEL");
   labelAncestor && clickLabel(labelAncestor);
@@ -143,7 +143,7 @@ function isInputElement(element) {
 }
 
 const userEvent = {
-  click(element) {
+  click(element, init) {
     const focusedElement = element.ownerDocument.activeElement;
     const wasAnotherElementFocused =
       focusedElement !== element.ownerDocument.body &&
@@ -163,7 +163,7 @@ const userEvent = {
           break;
         }
       default:
-        clickElement(element, wasAnotherElementFocused && focusedElement);
+        clickElement(element, wasAnotherElementFocused && focusedElement, init);
     }
   },
 
@@ -228,7 +228,8 @@ const userEvent = {
     };
     const opts = Object.assign(defaultOpts, userOpts);
 
-    const computedText = text.slice(0, element.maxLength || text.length);
+    const computedText =
+      element.maxLength > 0 ? text.slice(0, element.maxLength) : text;
 
     const previousText = element.value;
 

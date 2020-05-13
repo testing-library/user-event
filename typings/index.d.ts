@@ -13,7 +13,7 @@ export type TargetElement = Element | Window;
 
 declare const userEvent: {
     clear: (element: TargetElement) => void;
-    click: (element: TargetElement) => void;
+    click: (element: TargetElement, init?: MouseEventInit) => void;
     dblClick: (element: TargetElement) => void;
     selectOptions: (element: TargetElement, values: string | string[]) => void;
     type: (

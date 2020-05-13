@@ -44,10 +44,13 @@ function clickBooleanElement(element) {
 function clickElement(element, previousElement, init) {
   fireEvent.mouseOver(element);
   fireEvent.mouseMove(element);
+  const wasAnotherElementFocused =
+    previousElement !== element.ownerDocument.body &&
+    previousElement !== element;
   const continueDefaultHandling = fireEvent.mouseDown(element);
   if (continueDefaultHandling) {
-    previousElement && previousElement.blur();
-    element.focus();
+    wasAnotherElementFocused && previousElement.blur();
+    previousElement !== element && element.focus();
   }
   fireEvent.mouseUp(element);
   fireEvent.click(element, init);
@@ -59,10 +62,13 @@ function clickElement(element, previousElement, init) {
 function dblClickElement(element, previousElement) {
   fireEvent.mouseOver(element);
   fireEvent.mouseMove(element);
+  const wasAnotherElementFocused =
+    previousElement !== element.ownerDocument.body &&
+    previousElement !== element;
   const continueDefaultHandling = fireEvent.mouseDown(element);
   if (continueDefaultHandling) {
-    previousElement && previousElement.blur();
-    element.focus();
+    wasAnotherElementFocused && previousElement.blur();
+    previousElement !== element && element.focus();
   }
   fireEvent.mouseUp(element);
   fireEvent.click(element);
@@ -106,21 +112,21 @@ function fireChangeEvent(event) {
 }
 
 const Keys = {
-  Backspace: { keyCode: 8, code: "Backspace", key: "Backspace" }
+  Backspace: { keyCode: 8, code: "Backspace", key: "Backspace" },
 };
 
 function backspace(element) {
   const eventOptions = {
     key: Keys.Backspace.key,
     keyCode: Keys.Backspace.keyCode,
-    which: Keys.Backspace.keyCode
+    which: Keys.Backspace.keyCode,
   };
   fireEvent.keyDown(element, eventOptions);
   fireEvent.keyUp(element, eventOptions);
 
   if (!element.readOnly) {
     fireEvent.input(element, {
-      inputType: "deleteContentBackward"
+      inputType: "deleteContentBackward",
     });
     element.value = ""; // when we add special keys to API, will need to respect selected range
   }
@@ -152,7 +158,7 @@ const userEvent = {
           break;
         }
       default:
-        clickElement(element, wasAnotherElementFocused && focusedElement, init);
+        clickElement(element, focusedElement, init);
     }
   },
 
@@ -172,7 +178,7 @@ const userEvent = {
           break;
         }
       default:
-        dblClickElement(element, wasAnotherElementFocused && focusedElement);
+        dblClickElement(element, focusedElement);
     }
   },
 
@@ -185,7 +191,7 @@ const userEvent = {
       fireEvent.mouseLeave(focusedElement);
     }
 
-    clickElement(element, wasAnotherElementFocused && focusedElement);
+    clickElement(element, focusedElement);
 
     const valArray = Array.isArray(values) ? values : [values];
     const selectedOptions = Array.from(

@@ -263,6 +263,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "Raynos",
+      "name": "Jake Verbaten",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/479538?v=4",
+      "profile": "http://github.com/Raynos",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "commitConvention": "none",

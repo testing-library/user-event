@@ -129,7 +129,9 @@ function backspace(element) {
 function selectAll(element) {
   userEvent.dblClick(element); // simulate events (will not actually select)
   const elementType = element.type;
+  // type is a readonly property on textarea, so check if element is an input before trying to modify it
   if (isInputElement(element)) {
+    // setSelectionRange is not supported on certain types of inputs, e.g. "number" or "email"
     element.type = "text";
   }
   element.setSelectionRange(0, element.value.length);

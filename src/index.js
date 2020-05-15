@@ -294,7 +294,7 @@ const userEvent = {
     element.addEventListener("blur", fireChangeEvent);
   },
 
-  upload(element, fileOrFiles, init) {
+  upload(element, fileOrFiles, { clickInit, changeInit } = {}) {
     if (element.disabled) return;
     const focusedElement = element.ownerDocument.activeElement;
 
@@ -308,7 +308,7 @@ const userEvent = {
       files = inputElement.multiple ? fileOrFiles : [fileOrFiles];
     } else {
       files = element.multiple ? fileOrFiles : [fileOrFiles];
-      clickElement(element, focusedElement, init);
+      clickElement(element, focusedElement, clickInit);
     }
 
     fireEvent.change(element, {
@@ -319,6 +319,7 @@ const userEvent = {
           ...files,
         },
       },
+      ...changeInit,
     });
   },
 

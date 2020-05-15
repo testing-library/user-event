@@ -141,10 +141,11 @@ one character at the time. `false` is the default value.
 are typed. By default it's 0. You can use this option if your component has a
 different behavior for fast or slow users.
 
-### `upload(element, file)`
+### `upload(element, file, [{ clickInit, changeInit }])`
 
 Uploads file to an `<input>`. For uploading multiple files use `<input>` with
-`multiple` attribute and the second `upload` argument must be array then.
+`multiple` attribute and the second `upload` argument must be array then. Also
+it's possible to initialize click or change event with using third argument.
 
 ```jsx
 import React from "react";

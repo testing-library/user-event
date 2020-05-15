@@ -181,8 +181,7 @@ test("upload multiple files", () => {
 
 ### `clear(element)`
 
-Selects the text inside an `<input>` or `<textarea>` and deletes it. Also
-removes files from `<input type="file">`
+Selects the text inside an `<input>` or `<textarea>` and deletes it.
 
 ```jsx
 import React from "react";

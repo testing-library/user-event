@@ -223,13 +223,6 @@ const userEvent = {
   clear(element) {
     if (element.disabled) return;
 
-    if (element.type === "file") {
-      fireEvent.change(element, {
-        target: { files: { item: () => {}, length: 0 } },
-      });
-      return;
-    }
-
     selectAll(element);
     backspace(element);
     element.addEventListener("blur", fireChangeEvent);

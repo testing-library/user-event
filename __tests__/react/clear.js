@@ -91,23 +91,4 @@ describe("userEvent.clear", () => {
       }
     );
   });
-
-  it(`should remove file`, () => {
-    const file = new File(["hello"], "hello.png", { type: "image/png" });
-    const { getByTestId } = render(<input type="file" data-testid="element" />);
-
-    const input = getByTestId("element");
-
-    userEvent.upload(input, file);
-
-    expect(input.files[0]).toStrictEqual(file);
-    expect(input.files.item(0)).toStrictEqual(file);
-    expect(input.files).toHaveLength(1);
-
-    userEvent.clear(input);
-
-    expect(input.files[0]).toBeUndefined();
-    expect(input.files.item[0]).toBeUndefined();
-    expect(input.files).toHaveLength(0);
-  });
 });

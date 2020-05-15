@@ -335,11 +335,13 @@ Thanks goes to these wonderful people
     <td align="center"><a href="http://github.com/Raynos"><img src="https://avatars3.githubusercontent.com/u/479538?v=4" width="100px;" alt=""/><br /><sub><b>Jake Verbaten</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=Raynos" title="Code">💻</a></td>
     <td align="center"><a href="https://skovy.dev"><img src="https://avatars1.githubusercontent.com/u/5247455?v=4" width="100px;" alt=""/><br /><sub><b>Spencer Miskoviak</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=skovy" title="Documentation">📖</a></td>
   </tr>
+  <tr>
+    <td align="center"><a href="https://proling.ru/"><img src="https://avatars2.githubusercontent.com/u/16336572?v=4" width="100px;" alt=""/><br /><sub><b>Vadim Shvetsov</b></sub></a><br /><a href="#ideas-vadimshvetsov" title="Ideas, Planning, & Feedback">🤔</a> <a href="https://github.com/testing-library/user-event/commits?author=vadimshvetsov" title="Code">💻</a> <a href="https://github.com/testing-library/user-event/commits?author=vadimshvetsov" title="Tests">⚠️</a></td>
+  </tr>
 </table>
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
-
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the

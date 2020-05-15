@@ -281,6 +281,17 @@
       "contributions": [
         "doc"
       ]
+    },
+    {
+      "login": "vadimshvetsov",
+      "name": "Vadim Shvetsov",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/16336572?v=4",
+      "profile": "https://proling.ru/",
+      "contributions": [
+        "ideas",
+        "code",
+        "test"
+      ]
     }
   ],
   "commitConvention": "none",

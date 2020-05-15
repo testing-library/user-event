@@ -316,7 +316,7 @@ const userEvent = {
         files: {
           length: files.length,
           item: (index) => files[index],
-          ...{ ...files },
+          ...files,
         },
       },
     });

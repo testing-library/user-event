@@ -294,6 +294,35 @@ const userEvent = {
     element.addEventListener("blur", fireChangeEvent);
   },
 
+  upload(element, fileOrFiles, { clickInit, changeInit } = {}) {
+    if (element.disabled) return;
+    const focusedElement = element.ownerDocument.activeElement;
+
+    let files;
+
+    if (element.tagName === "LABEL") {
+      clickLabel(element);
+      const inputElement = element.htmlFor
+        ? document.getElementById(element.htmlFor)
+        : querySelector("input");
+      files = inputElement.multiple ? fileOrFiles : [fileOrFiles];
+    } else {
+      files = element.multiple ? fileOrFiles : [fileOrFiles];
+      clickElement(element, focusedElement, clickInit);
+    }
+
+    fireEvent.change(element, {
+      target: {
+        files: {
+          length: files.length,
+          item: (index) => files[index],
+          ...files,
+        },
+      },
+      ...changeInit,
+    });
+  },
+
   tab({ shift = false, focusTrap = document } = {}) {
     const focusableElements = focusTrap.querySelectorAll(
       "input, button, select, textarea, a[href], [tabindex]"

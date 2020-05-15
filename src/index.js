@@ -41,16 +41,19 @@ function clickBooleanElement(element) {
   fireEvent.click(element);
 }
 
-function clickElement(element, previousElement) {
+function clickElement(element, previousElement, init) {
   fireEvent.mouseOver(element);
   fireEvent.mouseMove(element);
+  const wasAnotherElementFocused =
+    previousElement !== element.ownerDocument.body &&
+    previousElement !== element;
   const continueDefaultHandling = fireEvent.mouseDown(element);
   if (continueDefaultHandling) {
-    previousElement && previousElement.blur();
-    element.focus();
+    wasAnotherElementFocused && previousElement.blur();
+    previousElement !== element && element.focus();
   }
   fireEvent.mouseUp(element);
-  fireEvent.click(element);
+  fireEvent.click(element, init);
 
   const labelAncestor = findTagInParents(element, "LABEL");
   labelAncestor && clickLabel(labelAncestor);
@@ -59,10 +62,13 @@ function clickElement(element, previousElement) {
 function dblClickElement(element, previousElement) {
   fireEvent.mouseOver(element);
   fireEvent.mouseMove(element);
+  const wasAnotherElementFocused =
+    previousElement !== element.ownerDocument.body &&
+    previousElement !== element;
   const continueDefaultHandling = fireEvent.mouseDown(element);
   if (continueDefaultHandling) {
-    previousElement && previousElement.blur();
-    element.focus();
+    wasAnotherElementFocused && previousElement.blur();
+    previousElement !== element && element.focus();
   }
   fireEvent.mouseUp(element);
   fireEvent.click(element);
@@ -128,11 +134,24 @@ function backspace(element) {
 
 function selectAll(element) {
   userEvent.dblClick(element); // simulate events (will not actually select)
+  const elementType = element.type;
+  // type is a readonly property on textarea, so check if element is an input before trying to modify it
+  if (isInputElement(element)) {
+    // setSelectionRange is not supported on certain types of inputs, e.g. "number" or "email"
+    element.type = "text";
+  }
   element.setSelectionRange(0, element.value.length);
+  if (isInputElement(element)) {
+    element.type = elementType;
+  }
+}
+
+function isInputElement(element) {
+  return element.tagName.toLowerCase() === "input";
 }
 
 const userEvent = {
-  click(element) {
+  click(element, init) {
     const focusedElement = element.ownerDocument.activeElement;
     const wasAnotherElementFocused =
       focusedElement !== element.ownerDocument.body &&
@@ -152,7 +171,7 @@ const userEvent = {
           break;
         }
       default:
-        clickElement(element, wasAnotherElementFocused && focusedElement);
+        clickElement(element, focusedElement, init);
     }
   },
 
@@ -172,7 +191,7 @@ const userEvent = {
           break;
         }
       default:
-        dblClickElement(element, wasAnotherElementFocused && focusedElement);
+        dblClickElement(element, focusedElement);
     }
   },
 
@@ -185,7 +204,7 @@ const userEvent = {
       fireEvent.mouseLeave(focusedElement);
     }
 
-    clickElement(element, wasAnotherElementFocused && focusedElement);
+    clickElement(element, focusedElement);
 
     const valArray = Array.isArray(values) ? values : [values];
     const selectedOptions = Array.from(
@@ -217,7 +236,8 @@ const userEvent = {
     };
     const opts = Object.assign(defaultOpts, userOpts);
 
-    const computedText = text.slice(0, element.maxLength || text.length);
+    const computedText =
+      element.maxLength > 0 ? text.slice(0, element.maxLength) : text;
 
     const previousText = element.value;
 

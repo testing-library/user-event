@@ -408,6 +408,15 @@ describe("userEvent.click", () => {
     expect(onSubmit).not.toHaveBeenCalled();
   });
 
+  it("should not fire blur on current element if is the same as previous", () => {
+    const onBlur = jest.fn();
+    const { getByText } = render(<button onBlur={onBlur}>Blur</button>);
+    userEvent.click(getByText("Blur"));
+    expect(onBlur).not.toHaveBeenCalled();
+    userEvent.click(getByText("Blur"));
+    expect(onBlur).not.toHaveBeenCalled();
+  });
+
   it.each(["input", "textarea"])(
     "should not give focus for <%s> when mouseDown is prevented",
     (type) => {

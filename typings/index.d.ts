@@ -12,7 +12,8 @@ export interface ITabUserOptions {
 export type TargetElement = Element | Window;
 
 declare const userEvent: {
-    click: (element: TargetElement) => void;
+    clear: (element: TargetElement) => void;
+    click: (element: TargetElement, init?: MouseEventInit) => void;
     dblClick: (element: TargetElement) => void;
     selectOptions: (element: TargetElement, values: string | string[]) => void;
     type: (

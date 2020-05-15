@@ -105,6 +105,15 @@ describe("userEvent.dblClick", () => {
     ]);
   });
 
+  it("should not fire blur on current element if is the same as previous", () => {
+    const onBlur = jest.fn();
+    const { getByText } = render(<button onBlur={onBlur}>Blur</button>);
+    userEvent.dblClick(getByText("Blur"));
+    expect(onBlur).not.toHaveBeenCalled();
+    userEvent.dblClick(getByText("Blur"));
+    expect(onBlur).not.toHaveBeenCalled();
+  });
+
   it("should not blur when mousedown prevents default", () => {
     let events = [];
     const eventsHandler = jest.fn((evt) => events.push(evt.type));

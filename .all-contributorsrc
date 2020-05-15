@@ -80,7 +80,8 @@
       "profile": "https://calebeby.ml",
       "contributions": [
         "code",
-        "bug"
+        "bug",
+        "review"
       ]
     },
     {
@@ -234,6 +235,51 @@
       "profile": "https://twitter.com/wachunga",
       "contributions": [
         "code"
+      ]
+    },
+    {
+      "login": "bdh1011",
+      "name": "whiteUnicorn",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/8446067?v=4",
+      "profile": "https://github.com/bdh1011",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "Meemaw",
+      "name": "Matej Šnuderl",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/8524109?v=4",
+      "profile": "https://www.matej.snuderl.si/",
+      "contributions": [
+        "review"
+      ]
+    },
+    {
+      "login": "pomber",
+      "name": "Rodrigo Pombo",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/1911623?v=4",
+      "profile": "https://pomb.us",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "Raynos",
+      "name": "Jake Verbaten",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/479538?v=4",
+      "profile": "http://github.com/Raynos",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "skovy",
+      "name": "Spencer Miskoviak",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/5247455?v=4",
+      "profile": "https://skovy.dev",
+      "contributions": [
+        "doc"
       ]
     }
   ],

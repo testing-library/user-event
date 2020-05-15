@@ -6,13 +6,13 @@ import userEvent from "../../src";
 afterEach(cleanup);
 
 describe("userEvent.clear", () => {
-  it.each(["input", "textarea"])("should clear text in <%s>", type => {
+  it.each(["input", "textarea"])("should clear text in <%s>", (type) => {
     const onChange = jest.fn();
     const { getByTestId } = render(
       React.createElement(type, {
         "data-testid": "input",
         onChange: onChange,
-        value: "Hello, world!"
+        value: "Hello, world!",
       })
     );
 
@@ -23,7 +23,7 @@ describe("userEvent.clear", () => {
 
   it.each(["input", "textarea"])(
     "should not clear when <%s> is disabled",
-    type => {
+    (type) => {
       const text = "Hello, world!";
       const onChange = jest.fn();
       const { getByTestId } = render(
@@ -31,7 +31,7 @@ describe("userEvent.clear", () => {
           "data-testid": "input",
           onChange: onChange,
           value: text,
-          disabled: true
+          disabled: true,
         })
       );
 
@@ -43,7 +43,7 @@ describe("userEvent.clear", () => {
 
   it.each(["input", "textarea"])(
     "should not clear when <%s> is readOnly",
-    type => {
+    (type) => {
       const onChange = jest.fn();
       const onKeyDown = jest.fn();
       const onKeyUp = jest.fn();
@@ -56,7 +56,7 @@ describe("userEvent.clear", () => {
           onKeyDown,
           onKeyUp,
           value: text,
-          readOnly: true
+          readOnly: true,
         })
       );
 
@@ -67,4 +67,28 @@ describe("userEvent.clear", () => {
       expect(input).toHaveProperty("value", text);
     }
   );
+
+  ["email", "password", "number", "text"].forEach((type) => {
+    it.each(["input", "textarea"])(
+      `should clear when <%s> is of type="${type}"`,
+      (inputType) => {
+        const value = "12345";
+        const placeholder = "Enter password";
+
+        const element = React.createElement(inputType, {
+          value,
+          placeholder,
+          type,
+          onChange: jest.fn(),
+        });
+
+        const { getByPlaceholderText } = render(element);
+
+        const input = getByPlaceholderText(placeholder);
+        expect(input.value).toBe(value);
+        userEvent.clear(input);
+        expect(input.value).toBe("");
+      }
+    );
+  });
 });

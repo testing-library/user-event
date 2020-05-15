@@ -1,5 +1,5 @@
 import React from "react";
-import { cleanup, render, wait, fireEvent } from "@testing-library/react";
+import { cleanup, render } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import userEvent from "../../src";
 
@@ -90,5 +90,24 @@ describe("userEvent.clear", () => {
         expect(input.value).toBe("");
       }
     );
+  });
+
+  it(`should remove file`, () => {
+    const file = new File(["hello"], "hello.png", { type: "image/png" });
+    const { getByTestId } = render(<input type="file" data-testid="element" />);
+
+    const input = getByTestId("element");
+
+    userEvent.upload(input, file);
+
+    expect(input.files[0]).toStrictEqual(file);
+    expect(input.files.item(0)).toStrictEqual(file);
+    expect(input.files).toHaveLength(1);
+
+    userEvent.clear(input);
+
+    expect(input.files[0]).toBeUndefined();
+    expect(input.files.item[0]).toBeUndefined();
+    expect(input.files).toHaveLength(0);
   });
 });

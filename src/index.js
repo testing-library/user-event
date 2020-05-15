@@ -223,6 +223,13 @@ const userEvent = {
   clear(element) {
     if (element.disabled) return;
 
+    if (element.type === "file") {
+      fireEvent.change(element, {
+        target: { files: { item: () => {}, length: 0 } },
+      });
+      return;
+    }
+
     selectAll(element);
     backspace(element);
     element.addEventListener("blur", fireChangeEvent);
@@ -292,6 +299,34 @@ const userEvent = {
       }
     }
     element.addEventListener("blur", fireChangeEvent);
+  },
+
+  upload(element, fileOrFiles, init) {
+    if (element.disabled) return;
+    const focusedElement = element.ownerDocument.activeElement;
+
+    let files;
+
+    if (element.tagName === "LABEL") {
+      clickLabel(element);
+      const inputElement = element.htmlFor
+        ? document.getElementById(element.htmlFor)
+        : querySelector("input");
+      files = inputElement.multiple ? fileOrFiles : [fileOrFiles];
+    } else {
+      files = element.multiple ? fileOrFiles : [fileOrFiles];
+      clickElement(element, focusedElement, init);
+    }
+
+    fireEvent.change(element, {
+      target: {
+        files: {
+          length: files.length,
+          item: (index) => files[index],
+          ...{ ...files },
+        },
+      },
+    });
   },
 
   tab({ shift = false, focusTrap = document } = {}) {

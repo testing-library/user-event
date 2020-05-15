@@ -90,10 +90,11 @@ test("click", () => {
 You can also ctrlClick / shiftClick etc with
 
 ```js
-userEvent.click(elem, { ctrlKey: true, shiftKey: true })
+userEvent.click(elem, { ctrlKey: true, shiftKey: true });
 ```
 
-See the [`MouseEvent`](https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/MouseEvent)
+See the
+[`MouseEvent`](https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/MouseEvent)
 constructor documentation for more options.
 
 ### `dblClick(element)`
@@ -140,9 +141,48 @@ one character at the time. `false` is the default value.
 are typed. By default it's 0. You can use this option if your component has a
 different behavior for fast or slow users.
 
+### `upload(element, file)`
+
+Uploads file to an `<input>`. For uploading multiple files use `<input>` with
+`multiple` attribute and the second `upload` argument must be array then.
+
+```jsx
+import React from "react";
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+
+test("upload file", () => {
+  const file = new File(["hello"], "hello.png", { type: "image/png" });
+
+  render(<input type="file" data-testid="upload" />);
+
+  userEvent.upload(screen.getByTestId("upload"), file);
+
+  expect(input.files[0]).toStrictEqual(file);
+  expect(input.files.item(0)).toStrictEqual(file);
+  expect(input.files).toHaveLength(1);
+});
+
+test("upload multiple files", () => {
+  const files = [
+    new File(["hello"], "hello.png", { type: "image/png" }),
+    new File(["there"], "there.png", { type: "image/png" }),
+  ];
+
+  render(<input type="file" multiple data-testid="upload" />);
+
+  userEvent.upload(screen.getByTestId("upload"), files);
+
+  expect(input.files).toHaveLength(2);
+  expect(input.files[0]).toStrictEqual(files[0]);
+  expect(input.files[1]).toStrictEqual(files[1]);
+});
+```
+
 ### `clear(element)`
 
-Selects the text inside an `<input>` or `<textarea>` and deletes it.
+Selects the text inside an `<input>` or `<textarea>` and deletes it. Also
+removes files from `<input type="file">`
 
 ```jsx
 import React from "react";
@@ -299,6 +339,7 @@ Thanks goes to these wonderful people
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the

@@ -11,11 +11,14 @@ export interface ITabUserOptions {
 
 export type TargetElement = Element | Window;
 
+export type FilesArgument = File | File[];
+
 declare const userEvent: {
     clear: (element: TargetElement) => void;
     click: (element: TargetElement, init?: MouseEventInit) => void;
     dblClick: (element: TargetElement) => void;
     selectOptions: (element: TargetElement, values: string | string[]) => void;
+    upload: (element: TargetElement, files: FilesArgument, init?: MouseEventInit) => void;
     type: (
         element: TargetElement,
         text: string,

@@ -137,21 +137,4 @@ describe("userEvent.upload", () => {
     expect(input.files.item[0]).toBeUndefined();
     expect(input.files).toHaveLength(0);
   });
-
-  it("should not fire blur on current element if is the same as previous", () => {
-    const file = new File(["hello"], "hello.png", { type: "image/png" });
-    const onBlur = jest.fn();
-    const { getByTestId } = render(
-      <input type="file" data-testid="element" onBlur={onBlur} />
-    );
-    const input = getByTestId("element");
-
-    userEvent.upload(input, file);
-
-    expect(onBlur).not.toHaveBeenCalled();
-
-    userEvent.upload(input, file);
-
-    expect(onBlur).not.toHaveBeenCalled();
-  });
 });

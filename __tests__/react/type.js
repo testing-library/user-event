@@ -159,7 +159,7 @@ describe("userEvent.type", () => {
   );
 
   it.each(["input", "textarea"])(
-    "should type text in <%s> up to maxLength if provided",
+    "should enter text in <%s> up to maxLength if provided",
     (type) => {
       const onChange = jest.fn();
       const onKeyDown = jest.fn();
@@ -184,6 +184,60 @@ describe("userEvent.type", () => {
       const inputEl = getByTestId("input");
 
       userEvent.type(inputEl, text);
+
+      expect(inputEl).toHaveProperty("value", slicedText);
+      expect(onChange).toHaveBeenCalledTimes(slicedText.length);
+      expect(onKeyPress).toHaveBeenCalledTimes(text.length);
+      expect(onKeyDown).toHaveBeenCalledTimes(text.length);
+      expect(onKeyUp).toHaveBeenCalledTimes(text.length);
+
+      inputEl.value = "";
+      onChange.mockClear();
+      onKeyPress.mockClear();
+      onKeyDown.mockClear();
+      onKeyUp.mockClear();
+
+      userEvent.type(inputEl, text, {
+        allAtOnce: true,
+      });
+
+      expect(inputEl).toHaveProperty("value", slicedText);
+      expect(onChange).toHaveBeenCalledTimes(1);
+      expect(onKeyPress).not.toHaveBeenCalled();
+      expect(onKeyDown).not.toHaveBeenCalled();
+      expect(onKeyUp).not.toHaveBeenCalled();
+    }
+  );
+
+  it.each(["input", "textarea"])(
+    "should append text in <%s> up to maxLength if provided",
+    (type) => {
+      const onChange = jest.fn();
+      const onKeyDown = jest.fn();
+      const onKeyPress = jest.fn();
+      const onKeyUp = jest.fn();
+      const maxLength = 10;
+
+      const { getByTestId } = render(
+        React.createElement(type, {
+          "data-testid": "input",
+          onChange,
+          onKeyDown,
+          onKeyPress,
+          onKeyUp,
+          maxLength,
+        })
+      );
+
+      const text1 = "superlong";
+      const text2 = "text";
+      const text = text1 + text2;
+      const slicedText = text.slice(0, maxLength);
+
+      const inputEl = getByTestId("input");
+
+      userEvent.type(inputEl, text1);
+      userEvent.type(inputEl, text2);
 
       expect(inputEl).toHaveProperty("value", slicedText);
       expect(onChange).toHaveBeenCalledTimes(slicedText.length);

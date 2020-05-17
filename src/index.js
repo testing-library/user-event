@@ -236,10 +236,12 @@ const userEvent = {
     };
     const opts = Object.assign(defaultOpts, userOpts);
 
-    const computedText =
-      element.maxLength > 0 ? text.slice(0, element.maxLength) : text;
-
     const previousText = element.value;
+
+    const computedText =
+      element.maxLength > 0
+        ? text.slice(0, Math.max(element.maxLength - previousText.length, 0))
+        : text;
 
     if (opts.allAtOnce) {
       if (element.readOnly) return;

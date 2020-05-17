@@ -292,6 +292,17 @@
         "code",
         "test"
       ]
+    },
+    {
+      "login": "9still",
+      "name": "Greg Shtilman",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/4924760?v=4",
+      "profile": "https://github.com/9still",
+      "contributions": [
+        "code",
+        "test",
+        "bug"
+      ]
     }
   ],
   "commitConvention": "none",

@@ -3,7 +3,11 @@ import {render, screen} from '@testing-library/react'
 import userEvent from '../../src'
 
 test.each(['input', 'textarea'])('should clear text in <%s>', type => {
-  const onChange = jest.fn()
+  const onChange = jest.fn().mockImplementation(event => {
+    // Verify that `event.target`'s value is correct when the event handler is
+    // fired.
+    expect(event.target).toHaveProperty('value', '')
+  })
   render(
     React.createElement(type, {
       'data-testid': 'input',
@@ -15,13 +19,18 @@ test.each(['input', 'textarea'])('should clear text in <%s>', type => {
   const input = screen.getByTestId('input')
   userEvent.clear(input)
   expect(input.value).toBe('')
+  expect(onChange).toHaveBeenCalledTimes(1)
 })
 
 test.each(['input', 'textarea'])(
   'should not clear when <%s> is disabled',
   type => {
     const text = 'Hello, world!'
-    const onChange = jest.fn()
+    const onChange = jest.fn().mockImplementation(event => {
+      // Verify that `event.target`'s value is correct when the event handler is
+      // fired.
+      expect(event.target).toHaveProperty('value', '')
+    })
     render(
       React.createElement(type, {
         'data-testid': 'input',
@@ -34,6 +43,7 @@ test.each(['input', 'textarea'])(
     const input = screen.getByTestId('input')
     userEvent.clear(input)
     expect(input).toHaveProperty('value', text)
+    expect(onChange).toHaveBeenCalledTimes(0)
   },
 )
 
@@ -60,6 +70,7 @@ test.each(['input', 'textarea'])(
     userEvent.clear(input)
     expect(onKeyDown).toHaveBeenCalledTimes(1)
     expect(onKeyUp).toHaveBeenCalledTimes(1)
+    expect(onChange).toHaveBeenCalledTimes(0)
     expect(input).toHaveProperty('value', text)
   },
 )
@@ -67,6 +78,8 @@ test.each(['input', 'textarea'])(
   test.each(['input', 'textarea'])(
     `should clear when <%s> is of type="${type}"`,
     inputType => {
+      const onChange = jest.fn()
+
       const value = '12345'
       const placeholder = 'Enter password'
 
@@ -74,7 +87,7 @@ test.each(['input', 'textarea'])(
         value,
         placeholder,
         type,
-        onChange: jest.fn(),
+        onChange,
       })
 
       render(element)
@@ -83,6 +96,7 @@ test.each(['input', 'textarea'])(
       expect(input.value).toBe(value)
       userEvent.clear(input)
       expect(input.value).toBe('')
+      expect(onChange).toHaveBeenCalledTimes(1)
     },
   )
 })

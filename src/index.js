@@ -317,7 +317,7 @@ const userEvent = {
       target: {
         files: {
           length: files.length,
-          item: (index) => files[index],
+          item: (index) => files[index] || null,
           ...files,
         },
       },

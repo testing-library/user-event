@@ -1,5 +1,5 @@
 import React from "react";
-import { cleanup, render, fireEvent } from "@testing-library/react";
+import { cleanup, render } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import userEvent from "../../src";
 
@@ -86,14 +86,6 @@ describe("userEvent.upload", () => {
     expect(input.files[0]).toStrictEqual(file);
     expect(input.files.item(0)).toStrictEqual(file);
     expect(input.files).toHaveLength(1);
-
-    fireEvent.change(input, {
-      target: { files: { item: () => {}, length: 0 } },
-    });
-
-    expect(input.files[0]).toBeUndefined();
-    expect(input.files.item[0]).toBeUndefined();
-    expect(input.files).toHaveLength(0);
   });
 
   it("should upload multiple files", () => {
@@ -113,14 +105,6 @@ describe("userEvent.upload", () => {
     expect(input.files[1]).toStrictEqual(files[1]);
     expect(input.files.item(1)).toStrictEqual(files[1]);
     expect(input.files).toHaveLength(2);
-
-    fireEvent.change(input, {
-      target: { files: { item: () => {}, length: 0 } },
-    });
-
-    expect(input.files[0]).toBeUndefined();
-    expect(input.files.item[0]).toBeUndefined();
-    expect(input.files).toHaveLength(0);
   });
 
   it("should not upload when is disabled", () => {
@@ -134,7 +118,7 @@ describe("userEvent.upload", () => {
     userEvent.upload(input, file);
 
     expect(input.files[0]).toBeUndefined();
-    expect(input.files.item[0]).toBeUndefined();
+    expect(input.files.item(0)).toBeNull();
     expect(input.files).toHaveLength(0);
   });
 });

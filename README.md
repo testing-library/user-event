@@ -15,8 +15,6 @@
 <br />
 </div>
 
-<hr />
-
 ---
 
 <!-- prettier-ignore-start -->

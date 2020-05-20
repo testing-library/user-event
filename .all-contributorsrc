@@ -303,6 +303,17 @@
         "test",
         "bug"
       ]
+    },
+    {
+      "login": "rbusquet",
+      "name": "Ricardo Busquet",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/7198302?v=4",
+      "profile": "https://github.com/rbusquet",
+      "contributions": [
+        "bug",
+        "code",
+        "test"
+      ]
     }
   ],
   "commitConvention": "none",

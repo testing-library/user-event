@@ -374,12 +374,12 @@ Thanks goes to these wonderful people
   <tr>
     <td align="center"><a href="https://proling.ru/"><img src="https://avatars2.githubusercontent.com/u/16336572?v=4" width="100px;" alt=""/><br /><sub><b>Vadim Shvetsov</b></sub></a><br /><a href="#ideas-vadimshvetsov" title="Ideas, Planning, & Feedback">🤔</a> <a href="https://github.com/testing-library/user-event/commits?author=vadimshvetsov" title="Code">💻</a> <a href="https://github.com/testing-library/user-event/commits?author=vadimshvetsov" title="Tests">⚠️</a></td>
     <td align="center"><a href="https://github.com/9still"><img src="https://avatars0.githubusercontent.com/u/4924760?v=4" width="100px;" alt=""/><br /><sub><b>Greg Shtilman</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=9still" title="Code">💻</a> <a href="https://github.com/testing-library/user-event/commits?author=9still" title="Tests">⚠️</a> <a href="https://github.com/testing-library/user-event/issues?q=author%3A9still" title="Bug reports">🐛</a></td>
+    <td align="center"><a href="https://github.com/rbusquet"><img src="https://avatars1.githubusercontent.com/u/7198302?v=4" width="100px;" alt=""/><br /><sub><b>Ricardo Busquet</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3Arbusquet" title="Bug reports">🐛</a> <a href="https://github.com/testing-library/user-event/commits?author=rbusquet" title="Code">💻</a> <a href="https://github.com/testing-library/user-event/commits?author=rbusquet" title="Tests">⚠️</a></td>
   </tr>
 </table>
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
-
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the

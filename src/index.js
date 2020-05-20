@@ -1,373 +1,355 @@
-import { fireEvent } from "@testing-library/dom";
+import {fireEvent} from '@testing-library/dom'
 
 function wait(time) {
-  return new Promise(function (resolve) {
-    setTimeout(() => resolve(), time);
-  });
-}
-
-function findTagInParents(element, tagName) {
-  if (element.parentNode == null) return undefined;
-  if (element.parentNode.tagName === tagName) return element.parentNode;
-  return findTagInParents(element.parentNode, tagName);
+  return new Promise(resolve => setTimeout(() => resolve(), time))
 }
 
 function clickLabel(label) {
-  fireEvent.mouseOver(label);
-  fireEvent.mouseMove(label);
-  fireEvent.mouseDown(label);
-  fireEvent.mouseUp(label);
+  fireEvent.mouseOver(label)
+  fireEvent.mouseMove(label)
+  fireEvent.mouseDown(label)
+  fireEvent.mouseUp(label)
+  fireEvent.click(label)
 
-  if (label.htmlFor) {
-    const input = document.getElementById(label.htmlFor);
-    input.focus();
-    fireEvent.click(label);
-  } else {
-    const input = label.querySelector("input,textarea,select");
-    input.focus();
-    label.focus();
-    fireEvent.click(label);
-  }
+  // clicking the label will trigger a click of the label.control
+  // however, it will not focus the label.control so we have to do it
+  // ourselves.
+  if (label.control) label.control.focus()
 }
 
 function clickBooleanElement(element) {
-  if (element.disabled) return;
+  if (element.disabled) return
 
-  fireEvent.mouseOver(element);
-  fireEvent.mouseMove(element);
-  fireEvent.mouseDown(element);
-  fireEvent.focus(element);
-  fireEvent.mouseUp(element);
-  fireEvent.click(element);
+  fireEvent.mouseOver(element)
+  fireEvent.mouseMove(element)
+  fireEvent.mouseDown(element)
+  fireEvent.focus(element)
+  fireEvent.mouseUp(element)
+  fireEvent.click(element)
 }
 
 function clickElement(element, previousElement, init) {
-  fireEvent.mouseOver(element);
-  fireEvent.mouseMove(element);
-  const wasAnotherElementFocused =
-    previousElement !== element.ownerDocument.body &&
-    previousElement !== element;
-  const continueDefaultHandling = fireEvent.mouseDown(element);
+  fireEvent.mouseOver(element)
+  fireEvent.mouseMove(element)
+  const continueDefaultHandling = fireEvent.mouseDown(element)
+  const shouldFocus = element.ownerDocument.activeElement !== element
   if (continueDefaultHandling) {
-    wasAnotherElementFocused && previousElement.blur();
-    previousElement !== element && element.focus();
+    if (previousElement) previousElement.blur()
+    if (shouldFocus) element.focus()
   }
-  fireEvent.mouseUp(element);
-  fireEvent.click(element, init);
-
-  const labelAncestor = findTagInParents(element, "LABEL");
-  labelAncestor && clickLabel(labelAncestor);
+  fireEvent.mouseUp(element)
+  fireEvent.click(element, init)
+  const parentLabel = element.closest('label')
+  if (parentLabel?.control) parentLabel?.control.focus?.()
 }
 
 function dblClickElement(element, previousElement) {
-  fireEvent.mouseOver(element);
-  fireEvent.mouseMove(element);
-  const wasAnotherElementFocused =
-    previousElement !== element.ownerDocument.body &&
-    previousElement !== element;
-  const continueDefaultHandling = fireEvent.mouseDown(element);
+  fireEvent.mouseOver(element)
+  fireEvent.mouseMove(element)
+  const continueDefaultHandling = fireEvent.mouseDown(element)
+  const shouldFocus = element.ownerDocument.activeElement !== element
   if (continueDefaultHandling) {
-    wasAnotherElementFocused && previousElement.blur();
-    previousElement !== element && element.focus();
+    if (previousElement) previousElement.blur()
+    if (shouldFocus) element.focus()
   }
-  fireEvent.mouseUp(element);
-  fireEvent.click(element);
-  fireEvent.mouseDown(element);
-  fireEvent.mouseUp(element);
-  fireEvent.click(element);
-  fireEvent.dblClick(element);
+  fireEvent.mouseUp(element)
+  fireEvent.click(element)
+  const parentLabel = element.closest('label')
+  if (parentLabel?.control) parentLabel?.control.focus?.()
 
-  const labelAncestor = findTagInParents(element, "LABEL");
-  labelAncestor && clickLabel(labelAncestor);
+  fireEvent.mouseDown(element)
+  fireEvent.mouseUp(element)
+  fireEvent.click(element)
+  fireEvent.dblClick(element)
 }
 
 function dblClickCheckbox(checkbox) {
-  fireEvent.mouseOver(checkbox);
-  fireEvent.mouseMove(checkbox);
-  fireEvent.mouseDown(checkbox);
-  fireEvent.focus(checkbox);
-  fireEvent.mouseUp(checkbox);
-  fireEvent.click(checkbox);
-  fireEvent.mouseDown(checkbox);
-  fireEvent.mouseUp(checkbox);
-  fireEvent.click(checkbox);
+  fireEvent.mouseOver(checkbox)
+  fireEvent.mouseMove(checkbox)
+  fireEvent.mouseDown(checkbox)
+  fireEvent.focus(checkbox)
+  fireEvent.mouseUp(checkbox)
+  fireEvent.click(checkbox)
+  fireEvent.mouseDown(checkbox)
+  fireEvent.mouseUp(checkbox)
+  fireEvent.click(checkbox)
 }
 
 function selectOption(select, option) {
-  fireEvent.mouseOver(option);
-  fireEvent.mouseMove(option);
-  fireEvent.mouseDown(option);
-  fireEvent.focus(option);
-  fireEvent.mouseUp(option);
-  fireEvent.click(option);
+  fireEvent.mouseOver(option)
+  fireEvent.mouseMove(option)
+  fireEvent.mouseDown(option)
+  fireEvent.focus(option)
+  fireEvent.mouseUp(option)
+  fireEvent.click(option)
 
-  option.selected = true;
+  option.selected = true
 
-  fireEvent.change(select);
-}
-
-function fireChangeEvent(event) {
-  fireEvent.change(event.target);
-  event.target.removeEventListener("blur", fireChangeEvent);
+  fireEvent.change(select)
 }
 
 const Keys = {
-  Backspace: { keyCode: 8, code: "Backspace", key: "Backspace" },
-};
+  Backspace: {keyCode: 8, code: 'Backspace', key: 'Backspace'},
+}
 
 function backspace(element) {
   const eventOptions = {
     key: Keys.Backspace.key,
     keyCode: Keys.Backspace.keyCode,
     which: Keys.Backspace.keyCode,
-  };
-  fireEvent.keyDown(element, eventOptions);
-  fireEvent.keyUp(element, eventOptions);
+  }
+  fireEvent.keyDown(element, eventOptions)
+  fireEvent.keyUp(element, eventOptions)
 
   if (!element.readOnly) {
     fireEvent.input(element, {
-      inputType: "deleteContentBackward",
-    });
-    element.value = ""; // when we add special keys to API, will need to respect selected range
+      inputType: 'deleteContentBackward',
+    })
+    element.value = '' // when we add special keys to API, will need to respect selected range
   }
 }
 
 function selectAll(element) {
-  userEvent.dblClick(element); // simulate events (will not actually select)
-  const elementType = element.type;
+  dblClick(element) // simulate events (will not actually select)
+  const elementType = element.type
   // type is a readonly property on textarea, so check if element is an input before trying to modify it
   if (isInputElement(element)) {
     // setSelectionRange is not supported on certain types of inputs, e.g. "number" or "email"
-    element.type = "text";
+    element.type = 'text'
   }
-  element.setSelectionRange(0, element.value.length);
+  element.setSelectionRange(0, element.value.length)
   if (isInputElement(element)) {
-    element.type = elementType;
+    element.type = elementType
   }
 }
 
 function isInputElement(element) {
-  return element.tagName.toLowerCase() === "input";
+  return element.tagName.toLowerCase() === 'input'
+}
+
+function getPreviouslyFocusedElement(element) {
+  const focusedElement = element.ownerDocument.activeElement
+  const wasAnotherElementFocused =
+    focusedElement &&
+    focusedElement !== element.ownerDocument.body &&
+    focusedElement !== element
+  return wasAnotherElementFocused ? focusedElement : null
+}
+
+function click(element, init) {
+  const previouslyFocusedElement = getPreviouslyFocusedElement(element)
+  if (previouslyFocusedElement) {
+    fireEvent.mouseMove(previouslyFocusedElement)
+    fireEvent.mouseLeave(previouslyFocusedElement)
+  }
+
+  switch (element.tagName) {
+    case 'LABEL':
+      clickLabel(element)
+      break
+    case 'INPUT':
+      if (element.type === 'checkbox' || element.type === 'radio') {
+        clickBooleanElement(element)
+        break
+      }
+    // eslint-disable-next-line no-fallthrough
+    default:
+      clickElement(element, previouslyFocusedElement, init)
+  }
+}
+
+function dblClick(element) {
+  const previouslyFocusedElement = getPreviouslyFocusedElement(element)
+  if (previouslyFocusedElement) {
+    fireEvent.mouseMove(previouslyFocusedElement)
+    fireEvent.mouseLeave(previouslyFocusedElement)
+  }
+
+  switch (element.tagName) {
+    case 'INPUT':
+      if (element.type === 'checkbox') {
+        dblClickCheckbox(element, previouslyFocusedElement)
+        break
+      }
+    // eslint-disable-next-line no-fallthrough
+    default:
+      dblClickElement(element, previouslyFocusedElement)
+  }
+}
+
+function selectOptions(element, values) {
+  const previouslyFocusedElement = getPreviouslyFocusedElement(element)
+  if (previouslyFocusedElement) {
+    fireEvent.mouseMove(previouslyFocusedElement)
+    fireEvent.mouseLeave(previouslyFocusedElement)
+  }
+
+  clickElement(element, previouslyFocusedElement)
+
+  const valArray = Array.isArray(values) ? values : [values]
+  const selectedOptions = Array.from(
+    element.querySelectorAll('option'),
+  ).filter(opt => valArray.includes(opt.value))
+
+  if (selectedOptions.length > 0) {
+    if (element.multiple) {
+      selectedOptions.forEach(option => selectOption(element, option))
+    } else {
+      selectOption(element, selectedOptions[0])
+    }
+  }
+}
+
+function clear(element) {
+  if (element.disabled) return
+
+  selectAll(element)
+  backspace(element)
+}
+
+async function type(element, text, {allAtOnce = false, delay} = {}) {
+  if (element.disabled) return
+  const previousText = element.value
+
+  const computedText =
+    element.maxLength > 0
+      ? text.slice(0, Math.max(element.maxLength - previousText.length, 0))
+      : text
+
+  if (allAtOnce) {
+    if (!element.readOnly) {
+      fireEvent.input(element, {
+        target: {value: previousText + computedText},
+      })
+    }
+  } else {
+    let actuallyTyped = previousText
+    for (let index = 0; index < text.length; index++) {
+      const char = text[index]
+      const key = char // TODO: check if this also valid for characters with diacritic markers e.g. úé etc
+      const keyCode = char.charCodeAt(0)
+
+      // eslint-disable-next-line no-await-in-loop
+      if (delay > 0) await wait(delay)
+
+      const downEvent = fireEvent.keyDown(element, {
+        key,
+        keyCode,
+        which: keyCode,
+      })
+
+      if (downEvent) {
+        const pressEvent = fireEvent.keyPress(element, {
+          key,
+          keyCode,
+          charCode: keyCode,
+        })
+
+        const isTextPastThreshold =
+          (actuallyTyped + key).length > (previousText + computedText).length
+
+        if (pressEvent && !isTextPastThreshold) {
+          actuallyTyped += key
+          if (!element.readOnly) {
+            fireEvent.input(element, {
+              target: {
+                value: actuallyTyped,
+              },
+              bubbles: true,
+              cancelable: true,
+            })
+          }
+        }
+      }
+
+      fireEvent.keyUp(element, {
+        key,
+        keyCode,
+        which: keyCode,
+      })
+    }
+  }
+}
+
+function upload(element, fileOrFiles, {clickInit, changeInit} = {}) {
+  if (element.disabled) return
+  const focusedElement = element.ownerDocument.activeElement
+
+  let files
+
+  if (element.tagName === 'LABEL') {
+    clickLabel(element)
+    files = element.control.multiple ? fileOrFiles : [fileOrFiles]
+  } else {
+    files = element.multiple ? fileOrFiles : [fileOrFiles]
+    clickElement(element, focusedElement, clickInit)
+  }
+
+  fireEvent.change(element, {
+    target: {
+      files: {
+        length: files.length,
+        item: index => files[index] || null,
+        ...files,
+      },
+    },
+    ...changeInit,
+  })
+}
+
+function tab({shift = false, focusTrap = document} = {}) {
+  const focusableElements = focusTrap.querySelectorAll(
+    'input, button, select, textarea, a[href], [tabindex]',
+  )
+
+  const enabledElements = [...focusableElements].filter(
+    el => el.getAttribute('tabindex') !== '-1' && !el.disabled,
+  )
+
+  if (enabledElements.length === 0) return
+
+  const orderedElements = enabledElements
+    .map((el, idx) => ({el, idx}))
+    .sort((a, b) => {
+      const tabIndexA = a.el.getAttribute('tabindex')
+      const tabIndexB = b.el.getAttribute('tabindex')
+
+      const diff = tabIndexA - tabIndexB
+
+      return diff === 0 ? a.idx - b.idx : diff
+    })
+
+  const index = orderedElements.findIndex(
+    ({el}) => el === el.ownerDocument.activeElement,
+  )
+
+  const nextIndex = shift ? index - 1 : index + 1
+  const defaultIndex = shift ? orderedElements.length - 1 : 0
+
+  const {el: next} = orderedElements[nextIndex] || orderedElements[defaultIndex]
+
+  if (next.getAttribute('tabindex') === null) {
+    next.setAttribute('tabindex', '0') // jsdom requires tabIndex=0 for an item to become 'document.activeElement'
+    next.focus()
+    next.removeAttribute('tabindex') // leave no trace. :)
+  } else {
+    next.focus()
+  }
 }
 
 const userEvent = {
-  click(element, init) {
-    const focusedElement = element.ownerDocument.activeElement;
-    const wasAnotherElementFocused =
-      focusedElement !== element.ownerDocument.body &&
-      focusedElement !== element;
-    if (wasAnotherElementFocused) {
-      fireEvent.mouseMove(focusedElement);
-      fireEvent.mouseLeave(focusedElement);
-    }
+  click,
+  dblClick,
+  selectOptions,
+  clear,
+  type,
+  upload,
+  tab,
+}
 
-    switch (element.tagName) {
-      case "LABEL":
-        clickLabel(element);
-        break;
-      case "INPUT":
-        if (element.type === "checkbox" || element.type === "radio") {
-          clickBooleanElement(element);
-          break;
-        }
-      default:
-        clickElement(element, focusedElement, init);
-    }
-  },
+export default userEvent
 
-  dblClick(element) {
-    const focusedElement = document.activeElement;
-    const wasAnotherElementFocused =
-      focusedElement !== document.body && focusedElement !== element;
-    if (wasAnotherElementFocused) {
-      fireEvent.mouseMove(focusedElement);
-      fireEvent.mouseLeave(focusedElement);
-    }
-
-    switch (element.tagName) {
-      case "INPUT":
-        if (element.type === "checkbox") {
-          dblClickCheckbox(element, wasAnotherElementFocused && focusedElement);
-          break;
-        }
-      default:
-        dblClickElement(element, focusedElement);
-    }
-  },
-
-  selectOptions(element, values) {
-    const focusedElement = document.activeElement;
-    const wasAnotherElementFocused =
-      focusedElement !== document.body && focusedElement !== element;
-    if (wasAnotherElementFocused) {
-      fireEvent.mouseMove(focusedElement);
-      fireEvent.mouseLeave(focusedElement);
-    }
-
-    clickElement(element, focusedElement);
-
-    const valArray = Array.isArray(values) ? values : [values];
-    const selectedOptions = Array.from(
-      element.querySelectorAll("option")
-    ).filter((opt) => valArray.includes(opt.value));
-
-    if (selectedOptions.length > 0) {
-      if (element.multiple) {
-        selectedOptions.forEach((option) => selectOption(element, option));
-      } else {
-        selectOption(element, selectedOptions[0]);
-      }
-    }
-  },
-
-  clear(element) {
-    if (element.disabled) return;
-
-    selectAll(element);
-    backspace(element);
-    element.addEventListener("blur", fireChangeEvent);
-  },
-
-  async type(element, text, userOpts = {}) {
-    if (element.disabled) return;
-    const defaultOpts = {
-      allAtOnce: false,
-      delay: 0,
-    };
-    const opts = Object.assign(defaultOpts, userOpts);
-
-    const previousText = element.value;
-
-    const computedText =
-      element.maxLength > 0
-        ? text.slice(0, Math.max(element.maxLength - previousText.length, 0))
-        : text;
-
-    if (opts.allAtOnce) {
-      if (element.readOnly) return;
-      fireEvent.input(element, {
-        target: { value: previousText + computedText },
-      });
-    } else {
-      let actuallyTyped = previousText;
-      for (let index = 0; index < text.length; index++) {
-        const char = text[index];
-        const key = char; // TODO: check if this also valid for characters with diacritic markers e.g. úé etc
-        const keyCode = char.charCodeAt(0);
-
-        if (opts.delay > 0) await wait(opts.delay);
-
-        const downEvent = fireEvent.keyDown(element, {
-          key: key,
-          keyCode: keyCode,
-          which: keyCode,
-        });
-
-        if (downEvent) {
-          const pressEvent = fireEvent.keyPress(element, {
-            key: key,
-            keyCode,
-            charCode: keyCode,
-          });
-
-          const isTextPastThreshold =
-            (actuallyTyped + key).length > (previousText + computedText).length;
-
-          if (pressEvent && !isTextPastThreshold) {
-            actuallyTyped += key;
-            if (!element.readOnly)
-              fireEvent.input(element, {
-                target: {
-                  value: actuallyTyped,
-                },
-                bubbles: true,
-                cancelable: true,
-              });
-          }
-        }
-
-        fireEvent.keyUp(element, {
-          key: key,
-          keyCode: keyCode,
-          which: keyCode,
-        });
-      }
-    }
-    element.addEventListener("blur", fireChangeEvent);
-  },
-
-  upload(element, fileOrFiles, { clickInit, changeInit } = {}) {
-    if (element.disabled) return;
-    const focusedElement = element.ownerDocument.activeElement;
-
-    let files;
-
-    if (element.tagName === "LABEL") {
-      clickLabel(element);
-      const inputElement = element.htmlFor
-        ? document.getElementById(element.htmlFor)
-        : querySelector("input");
-      files = inputElement.multiple ? fileOrFiles : [fileOrFiles];
-    } else {
-      files = element.multiple ? fileOrFiles : [fileOrFiles];
-      clickElement(element, focusedElement, clickInit);
-    }
-
-    fireEvent.change(element, {
-      target: {
-        files: {
-          length: files.length,
-          item: (index) => files[index] || null,
-          ...files,
-        },
-      },
-      ...changeInit,
-    });
-  },
-
-  tab({ shift = false, focusTrap = document } = {}) {
-    const focusableElements = focusTrap.querySelectorAll(
-      "input, button, select, textarea, a[href], [tabindex]"
-    );
-
-    const enabledElements = Array.prototype.filter.call(
-      focusableElements,
-      function (el) {
-        return el.getAttribute("tabindex") !== "-1" && !el.disabled;
-      }
-    );
-
-    if (enabledElements.length === 0) return;
-
-    const orderedElements = enabledElements
-      .map((el, idx) => ({ el, idx }))
-      .sort((a, b) => {
-        const tabIndexA = a.el.getAttribute("tabindex");
-        const tabIndexB = b.el.getAttribute("tabindex");
-
-        const diff = tabIndexA - tabIndexB;
-
-        return diff !== 0 ? diff : a.idx - b.idx;
-      });
-
-    const index = orderedElements.findIndex(
-      ({ el }) => el === document.activeElement
-    );
-
-    let nextIndex = shift ? index - 1 : index + 1;
-    let defaultIndex = shift ? orderedElements.length - 1 : 0;
-
-    const { el: next } =
-      orderedElements[nextIndex] || orderedElements[defaultIndex];
-
-    if (next.getAttribute("tabindex") === null) {
-      next.setAttribute("tabindex", "0"); // jsdom requires tabIndex=0 for an item to become 'document.activeElement' (the browser does not)
-      next.focus();
-      next.removeAttribute("tabindex"); // leave no trace. :)
-    } else {
-      next.focus();
-    }
-  },
-};
-
-export default userEvent;
+/*
+eslint
+  max-depth: ["error", 6],
+*/

@@ -1,30 +1,24 @@
-env:
-  global:
-    - CC_TEST_REPORTER_ID=432df2a7d2692b54e9c072feb2c8cec8cd943456c14800c18445b6e65f709a3c
-    - CODECOV_TOKEN="a0f80db0-4517-4d00-a6e6-eaf8a7089079"
 language: node_js
-cache:
-  directories:
-    - ~/.npm
+cache: npm
 notifications:
   email: false
 node_js:
-  - '13'
-  - '12'
-  - '10'
-before_script:
-  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-  - chmod +x ./cc-test-reporter
-  - ./cc-test-reporter before-build
-after_script:
-  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
+  - 10
+  - 12
+  - 14
+  - node
+install: npm install
 script:
-  - npm run test:coverage
-after_success:
-  - npm run codecov
-  - npm run build
-  - rm ./cc-test-reporter
-  - npm run travis-deploy-once "npm run semantic-release"
+  - npm run validate
+  - npx codecov@3
 branches:
-  except:
-    - /^v\d+\.\d+\.\d+$/
+  only:
+    - master
+    - beta
+
+jobs:
+  include:
+    - stage: release
+      node_js: 14
+      script: kcd-scripts travis-release
+      if: fork = false

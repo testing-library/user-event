@@ -11,8 +11,6 @@
 </a>
 
 <p>Fire events the same way the user does</p>
-
-<br />
 </div>
 
 ---
@@ -24,29 +22,12 @@
 [![downloads][downloads-badge]][npmtrends]
 [![MIT License][license-badge]][license]
 
-[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+[![All Contributors](https://img.shields.io/badge/all_contributors-31-orange.svg?style=flat-square)](#contributors-)
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
 [![PRs Welcome][prs-badge]][prs]
 [![Code of Conduct][coc-badge]][coc]
 <!-- prettier-ignore-end -->
-
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-
-- [The problem](#the-problem)
-- [The solution](#the-solution)
-- [Installation](#installation)
-- [API](#api)
-  - [`click(element)`](#clickelement)
-  - [`dblClick(element)`](#dblclickelement)
-  - [`async type(element, text, [options])`](#async-typeelement-text-options)
-  - [`upload(element, file, [{ clickInit, changeInit }])`](#uploadelement-file--clickinit-changeinit-)
-  - [`clear(element)`](#clearelement)
-  - [`selectOptions(element, values)`](#selectoptionselement-values)
-  - [`tab({shift, focusTrap})`](#tabshift-focustrap)
-- [Contributors](#contributors)
-- [LICENSE](#license)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## The problem
 
@@ -63,6 +44,28 @@ as the user interacts with it. For example `userEvent.click(checkbox)` would
 change the state of the checkbox.
 
 **The library is still a work in progress and any help is appreciated.**
+
+## Table of Contents
+
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+- [Installation](#installation)
+- [API](#api)
+  - [`click(element)`](#clickelement)
+  - [`dblClick(element)`](#dblclickelement)
+  - [`async type(element, text, [options])`](#async-typeelement-text-options)
+  - [`upload(element, file, [{ clickInit, changeInit }])`](#uploadelement-file--clickinit-changeinit-)
+  - [`clear(element)`](#clearelement)
+  - [`selectOptions(element, values)`](#selectoptionselement-values)
+  - [`tab({shift, focusTrap})`](#tabshift-focustrap)
+- [Issues](#issues)
+  - [🐛 Bugs](#-bugs)
+  - [💡 Feature Requests](#-feature-requests)
+- [Contributors ✨](#contributors-)
+- [LICENSE](#license)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Installation
 
@@ -326,10 +329,27 @@ it('should cycle elements in document tab order', () => {
 })
 ```
 
-## Contributors
+## Issues
 
-Thanks goes to these wonderful people
-([emoji key](https://github.com/all-contributors/all-contributors#emoji-key)):
+_Looking to contribute? Look for the [Good First Issue][good-first-issue]
+label._
+
+### 🐛 Bugs
+
+Please file an issue for bugs, missing documentation, or unexpected behavior.
+
+[**See Bugs**][bugs]
+
+### 💡 Feature Requests
+
+Please file an issue to suggest new features. Vote on feature requests by adding
+a 👍. This helps maintainers prioritize what to work on.
+
+[**See Feature Requests**][requests]
+
+## Contributors ✨
+
+Thanks goes to these people ([emoji key][emojis]):
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore-start -->
@@ -380,11 +400,11 @@ Thanks goes to these wonderful people
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
-This project follows the
-[all-contributors](https://github.com/all-contributors/all-contributors)
-specification. Contributions of any kind welcome!
+This project follows the [all-contributors][all-contributors] specification.
+Contributions of any kind welcome!
 
 ## LICENSE
 

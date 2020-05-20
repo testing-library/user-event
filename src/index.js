@@ -19,7 +19,7 @@ function clickLabel(label) {
   fireEvent.mouseUp(label);
 
   if (label.htmlFor) {
-    const input = document.getElementById(label.htmlFor);
+    const input = label.ownerDocument.getElementById(label.htmlFor);
     input.focus();
     fireEvent.click(label);
   } else {
@@ -45,6 +45,7 @@ function clickElement(element, previousElement, init) {
   fireEvent.mouseOver(element);
   fireEvent.mouseMove(element);
   const wasAnotherElementFocused =
+    previousElement &&
     previousElement !== element.ownerDocument.body &&
     previousElement !== element;
   const continueDefaultHandling = fireEvent.mouseDown(element);
@@ -63,6 +64,7 @@ function dblClickElement(element, previousElement) {
   fireEvent.mouseOver(element);
   fireEvent.mouseMove(element);
   const wasAnotherElementFocused =
+    previousElement &&
     previousElement !== element.ownerDocument.body &&
     previousElement !== element;
   const continueDefaultHandling = fireEvent.mouseDown(element);
@@ -150,15 +152,21 @@ function isInputElement(element) {
   return element.tagName.toLowerCase() === "input";
 }
 
+function getPreviouslyFocusedElement(element) {
+  const focusedElement = element.ownerDocument.activeElement;
+  const wasAnotherElementFocused =
+    focusedElement &&
+    focusedElement !== element.ownerDocument.body &&
+    focusedElement !== element;
+  return wasAnotherElementFocused ? focusedElement : null;
+}
+
 const userEvent = {
   click(element, init) {
-    const focusedElement = element.ownerDocument.activeElement;
-    const wasAnotherElementFocused =
-      focusedElement !== element.ownerDocument.body &&
-      focusedElement !== element;
-    if (wasAnotherElementFocused) {
-      fireEvent.mouseMove(focusedElement);
-      fireEvent.mouseLeave(focusedElement);
+    const previouslyFocusedElement = getPreviouslyFocusedElement(element);
+    if (previouslyFocusedElement) {
+      fireEvent.mouseMove(previouslyFocusedElement);
+      fireEvent.mouseLeave(previouslyFocusedElement);
     }
 
     switch (element.tagName) {
@@ -171,40 +179,36 @@ const userEvent = {
           break;
         }
       default:
-        clickElement(element, focusedElement, init);
+        clickElement(element, previouslyFocusedElement, init);
     }
   },
 
   dblClick(element) {
-    const focusedElement = document.activeElement;
-    const wasAnotherElementFocused =
-      focusedElement !== document.body && focusedElement !== element;
-    if (wasAnotherElementFocused) {
-      fireEvent.mouseMove(focusedElement);
-      fireEvent.mouseLeave(focusedElement);
+    const previouslyFocusedElement = getPreviouslyFocusedElement(element);
+    if (previouslyFocusedElement) {
+      fireEvent.mouseMove(previouslyFocusedElement);
+      fireEvent.mouseLeave(previouslyFocusedElement);
     }
 
     switch (element.tagName) {
       case "INPUT":
         if (element.type === "checkbox") {
-          dblClickCheckbox(element, wasAnotherElementFocused && focusedElement);
+          dblClickCheckbox(element, previouslyFocusedElement);
           break;
         }
       default:
-        dblClickElement(element, focusedElement);
+        dblClickElement(element, previouslyFocusedElement);
     }
   },
 
   selectOptions(element, values) {
-    const focusedElement = document.activeElement;
-    const wasAnotherElementFocused =
-      focusedElement !== document.body && focusedElement !== element;
-    if (wasAnotherElementFocused) {
-      fireEvent.mouseMove(focusedElement);
-      fireEvent.mouseLeave(focusedElement);
+    const previouslyFocusedElement = getPreviouslyFocusedElement(element);
+    if (previouslyFocusedElement) {
+      fireEvent.mouseMove(previouslyFocusedElement);
+      fireEvent.mouseLeave(previouslyFocusedElement);
     }
 
-    clickElement(element, focusedElement);
+    clickElement(element, previouslyFocusedElement);
 
     const valArray = Array.isArray(values) ? values : [values];
     const selectedOptions = Array.from(
@@ -298,19 +302,19 @@ const userEvent = {
 
   upload(element, fileOrFiles, { clickInit, changeInit } = {}) {
     if (element.disabled) return;
-    const focusedElement = element.ownerDocument.activeElement;
+    const previouslyFocusedElement = getPreviouslyFocusedElement(element);
 
     let files;
 
     if (element.tagName === "LABEL") {
       clickLabel(element);
       const inputElement = element.htmlFor
-        ? document.getElementById(element.htmlFor)
+        ? element.ownerDocument.getElementById(element.htmlFor)
         : querySelector("input");
       files = inputElement.multiple ? fileOrFiles : [fileOrFiles];
     } else {
       files = element.multiple ? fileOrFiles : [fileOrFiles];
-      clickElement(element, focusedElement, clickInit);
+      clickElement(element, previouslyFocusedElement, clickInit);
     }
 
     fireEvent.change(element, {
@@ -351,7 +355,7 @@ const userEvent = {
       });
 
     const index = orderedElements.findIndex(
-      ({ el }) => el === document.activeElement
+      ({ el }) => el === el.ownerDocument.activeElement
     );
 
     let nextIndex = shift ? index - 1 : index + 1;

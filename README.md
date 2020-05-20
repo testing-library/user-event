@@ -1,23 +1,3 @@
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-
-- [@testing-library/user-event](#testing-libraryuser-event)
-  - [The problem](#the-problem)
-  - [The solution](#the-solution)
-  - [Installation](#installation)
-  - [API](#api)
-    - [`click(element)`](#clickelement)
-    - [`dblClick(element)`](#dblclickelement)
-    - [`async type(element, text, [options])`](#async-typeelement-text-options)
-    - [`upload(element, file, [{ clickInit, changeInit }])`](#uploadelement-file--clickinit-changeinit-)
-    - [`clear(element)`](#clearelement)
-    - [`selectOptions(element, values)`](#selectoptionselement-values)
-    - [`tab({shift, focusTrap})`](#tabshift-focustrap)
-  - [Contributors](#contributors)
-  - [LICENSE](#license)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 <div align="center">
 <h1>@testing-library/user-event</h1>
 
@@ -50,6 +30,25 @@
 [![PRs Welcome][prs-badge]][prs]
 [![Code of Conduct][coc-badge]][coc]
 <!-- prettier-ignore-end -->
+
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+- [The problem](#the-problem)
+- [The solution](#the-solution)
+- [Installation](#installation)
+- [API](#api)
+  - [`click(element)`](#clickelement)
+  - [`dblClick(element)`](#dblclickelement)
+  - [`async type(element, text, [options])`](#async-typeelement-text-options)
+  - [`upload(element, file, [{ clickInit, changeInit }])`](#uploadelement-file--clickinit-changeinit-)
+  - [`clear(element)`](#clearelement)
+  - [`selectOptions(element, values)`](#selectoptionselement-values)
+  - [`tab({shift, focusTrap})`](#tabshift-focustrap)
+- [Contributors](#contributors)
+- [LICENSE](#license)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## The problem
 

@@ -4,7 +4,12 @@
   "description": "Fire events the same way the user does",
   "main": "dist/index.js",
   "typings": "typings/index.d.ts",
-  "keywords": [],
+  "keywords": [
+    "react-testing-library",
+    "dom-testing-library",
+    "react",
+    "testing"
+  ],
   "author": "Giorgio Polvara <polvara@gmail.com>",
   "license": "MIT",
   "engines": {

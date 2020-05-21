@@ -93,19 +93,38 @@ const Keys = {
 }
 
 function backspace(element) {
-  const eventOptions = {
+  const keyboardEventOptions = {
     key: Keys.Backspace.key,
     keyCode: Keys.Backspace.keyCode,
     which: Keys.Backspace.keyCode,
   }
-  fireEvent.keyDown(element, eventOptions)
-  fireEvent.keyUp(element, eventOptions)
+  fireEvent.keyDown(element, keyboardEventOptions)
+  fireEvent.keyUp(element, keyboardEventOptions)
 
   if (!element.readOnly) {
     fireEvent.input(element, {
       inputType: 'deleteContentBackward',
     })
-    element.value = '' // when we add special keys to API, will need to respect selected range
+
+    // We need to call `fireEvent.change` _before_ we change `element.value`
+    // because `fireEvent.change` will use the element's native value setter
+    // (meaning it will avoid prototype overrides implemented by React). If we
+    // call `input.value = ""` first, React will swallow the change event (this
+    // is checked in the tests). `fireEvent.change` will only call the native
+    // value setter method if the event options include `{ target: { value }}`
+    // (https://github.com/testing-library/dom-testing-library/blob/8846eaf20972f8e41ed11f278948ac38a692c3f1/src/events.js#L29-L32).
+    //
+    // Also, we still must call `element.value = ""` after calling
+    // `fireEvent.change` because `fireEvent.change` will _only_ call the native
+    // `value` setter and not the prototype override defined by React, causing
+    // React's internal represetation of this state to get out of sync with the
+    // value set on `input.value`; calling `element.value` after will also call
+    // React's setter, keeping everything in sync.
+    //
+    // Comment either of these out or re-order them and see what parts of the
+    // tests fail for more context.
+    fireEvent.change(element, {target: {value: ''}})
+    element.value = ''
   }
 }
 

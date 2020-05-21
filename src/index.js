@@ -107,7 +107,7 @@ function backspace(element) {
     })
 
     // We need to call `fireEvent.change` _before_ we change `element.value`
-    // beacuse `fireEvent.change` will use the element's native value setter
+    // because `fireEvent.change` will use the element's native value setter
     // (meaning it will avoid prototype overrides implemented by React). If we
     // call `input.value = ""` first, React will swallow the change event (this
     // is checked in the tests). `fireEvent.change` will only call the native

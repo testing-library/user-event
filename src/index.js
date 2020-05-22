@@ -4,12 +4,69 @@ function wait(time) {
   return new Promise(resolve => setTimeout(() => resolve(), time))
 }
 
-function clickLabel(label) {
-  fireEvent.mouseOver(label)
-  fireEvent.mouseMove(label)
-  fireEvent.mouseDown(label)
-  fireEvent.mouseUp(label)
-  fireEvent.click(label)
+function isMousePressEvent(event) {
+  return event === 'mousedown' || event === 'mouseup' || event === 'click' || event === 'dblclick';
+}
+
+function invert(map) {
+  return Object.fromEntries(Object.entries(map).map(([k, v]) => [v, k]));
+}
+
+// https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/buttons
+const BUTTONS_TO_NAMES = {
+  0: 'none',
+  1: 'primary',
+  2: 'secondary',
+  4: 'auxiliary'
+};
+const NAMES_TO_BUTTONS = invert(BUTTONS_TO_NAMES);
+
+// https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/button
+const BUTTON_TO_NAMES = {
+  0: 'primary',
+  1: 'auxiliary',
+  2: 'secondary'
+};
+
+const NAMES_TO_BUTTON = invert(BUTTON_TO_NAMES);
+
+function convertMouseButtons(event, init, property, mapping) {
+  if (!isMousePressEvent(event)) {
+    return 0;
+  }
+
+  if (init[property] != null) {
+    return init[property];
+  }
+
+  if (init.buttons != null) {
+    return mapping[BUTTONS_TO_NAMES[init.buttons]] || 0;
+  }
+
+  if (init.button != null) {
+    return mapping[BUTTON_TO_NAMES[init.button]] || 0;
+  }
+
+  return property != 'button' && isMousePressEvent(event) ? 1 : 0;
+}
+
+function getMouseEventOptions(event, init, clickCount = 0) {
+  init = init || {};
+  return {
+    ...init,
+    // https://developer.mozilla.org/en-US/docs/Web/API/UIEvent/detail
+    detail: event === 'mousedown' || event === 'mouseup' ? 1 + clickCount : clickCount,
+    buttons: convertMouseButtons(event, init, 'buttons', NAMES_TO_BUTTONS),
+    button: convertMouseButtons(event, init, 'button', NAMES_TO_BUTTON),
+  };
+}
+
+function clickLabel(label, init) {
+  fireEvent.mouseOver(label, getMouseEventOptions('mouseover', init))
+  fireEvent.mouseMove(label, getMouseEventOptions('mousemove', init))
+  fireEvent.mouseDown(label, getMouseEventOptions('mousedown', init))
+  fireEvent.mouseUp(label, getMouseEventOptions('mouseup', init))
+  fireEvent.click(label, getMouseEventOptions('click', init))
 
   // clicking the label will trigger a click of the label.control
   // however, it will not focus the label.control so we have to do it
@@ -17,71 +74,71 @@ function clickLabel(label) {
   if (label.control) label.control.focus()
 }
 
-function clickBooleanElement(element) {
+function clickBooleanElement(element, init) {
   if (element.disabled) return
 
-  fireEvent.mouseOver(element)
-  fireEvent.mouseMove(element)
-  fireEvent.mouseDown(element)
+  fireEvent.mouseOver(element, getMouseEventOptions('mouseover', init))
+  fireEvent.mouseMove(element, getMouseEventOptions('mousemove', init))
+  fireEvent.mouseDown(element, getMouseEventOptions('mousedown', init))
   fireEvent.focus(element)
-  fireEvent.mouseUp(element)
-  fireEvent.click(element)
+  fireEvent.mouseUp(element, getMouseEventOptions('mouseup', init))
+  fireEvent.click(element, getMouseEventOptions('click', init))
 }
 
 function clickElement(element, previousElement, init) {
-  fireEvent.mouseOver(element)
-  fireEvent.mouseMove(element)
-  const continueDefaultHandling = fireEvent.mouseDown(element)
+  fireEvent.mouseOver(element, getMouseEventOptions('mouseover', init))
+  fireEvent.mouseMove(element, getMouseEventOptions('mousemove', init))
+  const continueDefaultHandling = fireEvent.mouseDown(element, getMouseEventOptions('mousedown', init))
   const shouldFocus = element.ownerDocument.activeElement !== element
   if (continueDefaultHandling) {
     if (previousElement) previousElement.blur()
     if (shouldFocus) element.focus()
   }
-  fireEvent.mouseUp(element)
-  fireEvent.click(element, init)
+  fireEvent.mouseUp(element, getMouseEventOptions('mouseup', init))
+  fireEvent.click(element, getMouseEventOptions('click', init, 1))
   const parentLabel = element.closest('label')
   if (parentLabel?.control) parentLabel?.control.focus?.()
 }
 
-function dblClickElement(element, previousElement) {
-  fireEvent.mouseOver(element)
-  fireEvent.mouseMove(element)
-  const continueDefaultHandling = fireEvent.mouseDown(element)
+function dblClickElement(element, previousElement, init) {
+  fireEvent.mouseOver(element, getMouseEventOptions('mouseover', init))
+  fireEvent.mouseMove(element, getMouseEventOptions('mousemove', init))
+  const continueDefaultHandling = fireEvent.mouseDown(element, getMouseEventOptions('mousedown', init))
   const shouldFocus = element.ownerDocument.activeElement !== element
   if (continueDefaultHandling) {
     if (previousElement) previousElement.blur()
     if (shouldFocus) element.focus()
   }
-  fireEvent.mouseUp(element)
-  fireEvent.click(element)
+  fireEvent.mouseUp(element, getMouseEventOptions('mouseup', init))
+  fireEvent.click(element, getMouseEventOptions('click', init, 1))
   const parentLabel = element.closest('label')
   if (parentLabel?.control) parentLabel?.control.focus?.()
 
-  fireEvent.mouseDown(element)
-  fireEvent.mouseUp(element)
-  fireEvent.click(element)
-  fireEvent.dblClick(element)
+  fireEvent.mouseDown(element, getMouseEventOptions('mousedown', init, 1))
+  fireEvent.mouseUp(element, getMouseEventOptions('mouseup', init, 1))
+  fireEvent.click(element, getMouseEventOptions('click', init, 2))
+  fireEvent.dblClick(element, getMouseEventOptions('dblclick', init, 2))
 }
 
-function dblClickCheckbox(checkbox) {
-  fireEvent.mouseOver(checkbox)
-  fireEvent.mouseMove(checkbox)
-  fireEvent.mouseDown(checkbox)
+function dblClickCheckbox(checkbox, init) {
+  fireEvent.mouseOver(checkbox, getMouseEventOptions('mouseover', init))
+  fireEvent.mouseMove(checkbox, getMouseEventOptions('mousemove', init))
+  fireEvent.mouseDown(checkbox, getMouseEventOptions('mousedown', init))
   fireEvent.focus(checkbox)
-  fireEvent.mouseUp(checkbox)
-  fireEvent.click(checkbox)
-  fireEvent.mouseDown(checkbox)
-  fireEvent.mouseUp(checkbox)
-  fireEvent.click(checkbox)
+  fireEvent.mouseUp(checkbox, getMouseEventOptions('mouseup', init))
+  fireEvent.click(checkbox, getMouseEventOptions('click', init, 1))
+  fireEvent.mouseDown(checkbox, getMouseEventOptions('mousedown', init, 1))
+  fireEvent.mouseUp(checkbox, getMouseEventOptions('mouseup', init, 1))
+  fireEvent.click(checkbox, getMouseEventOptions('click', init, 2))
 }
 
-function selectOption(select, option) {
-  fireEvent.mouseOver(option)
-  fireEvent.mouseMove(option)
-  fireEvent.mouseDown(option)
+function selectOption(select, option, init) {
+  fireEvent.mouseOver(option, getMouseEventOptions('mouseover', init))
+  fireEvent.mouseMove(option, getMouseEventOptions('mousemove', init))
+  fireEvent.mouseDown(option, getMouseEventOptions('mousedown', init))
   fireEvent.focus(option)
-  fireEvent.mouseUp(option)
-  fireEvent.click(option)
+  fireEvent.mouseUp(option, getMouseEventOptions('mouseup', init))
+  fireEvent.click(option, getMouseEventOptions('click', init, 1))
 
   option.selected = true
 
@@ -158,17 +215,17 @@ function getPreviouslyFocusedElement(element) {
 function click(element, init) {
   const previouslyFocusedElement = getPreviouslyFocusedElement(element)
   if (previouslyFocusedElement) {
-    fireEvent.mouseMove(previouslyFocusedElement)
-    fireEvent.mouseLeave(previouslyFocusedElement)
+    fireEvent.mouseMove(previouslyFocusedElement, getMouseEventOptions('mousemove', init))
+    fireEvent.mouseLeave(previouslyFocusedElement, getMouseEventOptions('mouseleave', init))
   }
 
   switch (element.tagName) {
     case 'LABEL':
-      clickLabel(element)
+      clickLabel(element, init)
       break
     case 'INPUT':
       if (element.type === 'checkbox' || element.type === 'radio') {
-        clickBooleanElement(element)
+        clickBooleanElement(element, init)
         break
       }
     // eslint-disable-next-line no-fallthrough
@@ -177,33 +234,33 @@ function click(element, init) {
   }
 }
 
-function dblClick(element) {
+function dblClick(element, init) {
   const previouslyFocusedElement = getPreviouslyFocusedElement(element)
   if (previouslyFocusedElement) {
-    fireEvent.mouseMove(previouslyFocusedElement)
-    fireEvent.mouseLeave(previouslyFocusedElement)
+    fireEvent.mouseMove(previouslyFocusedElement, getMouseEventOptions('mousemove', init))
+    fireEvent.mouseLeave(previouslyFocusedElement, getMouseEventOptions('mouseleave', init))
   }
 
   switch (element.tagName) {
     case 'INPUT':
       if (element.type === 'checkbox') {
-        dblClickCheckbox(element, previouslyFocusedElement)
+        dblClickCheckbox(element, previouslyFocusedElement, init)
         break
       }
     // eslint-disable-next-line no-fallthrough
     default:
-      dblClickElement(element, previouslyFocusedElement)
+      dblClickElement(element, previouslyFocusedElement, init)
   }
 }
 
-function selectOptions(element, values) {
+function selectOptions(element, values, init) {
   const previouslyFocusedElement = getPreviouslyFocusedElement(element)
   if (previouslyFocusedElement) {
-    fireEvent.mouseMove(previouslyFocusedElement)
-    fireEvent.mouseLeave(previouslyFocusedElement)
+    fireEvent.mouseMove(previouslyFocusedElement, getMouseEventOptions('mousemove', init))
+    fireEvent.mouseLeave(previouslyFocusedElement, getMouseEventOptions('mouseleave', init))
   }
 
-  clickElement(element, previouslyFocusedElement)
+  clickElement(element, previouslyFocusedElement, init)
 
   const valArray = Array.isArray(values) ? values : [values]
   const selectedOptions = Array.from(

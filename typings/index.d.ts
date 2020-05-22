@@ -21,8 +21,8 @@ export type UploadInitArgument = {
 declare const userEvent: {
   clear: (element: TargetElement) => void
   click: (element: TargetElement, init?: MouseEventInit) => void
-  dblClick: (element: TargetElement) => void
-  selectOptions: (element: TargetElement, values: string | string[]) => void
+  dblClick: (element: TargetElement, init?: MouseEventInit) => void
+  selectOptions: (element: TargetElement, values: string | string[], init?: MouseEventInit) => void
   upload: (
     element: TargetElement,
     files: FilesArgument,

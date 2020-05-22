@@ -431,3 +431,181 @@ test.each(['input', 'textarea'])(
     expect(screen.getByTestId('element')).not.toHaveFocus()
   },
 )
+
+it('should fire mouse events with the correct properties', () => {
+  const events = []
+  const eventsHandler = jest.fn(evt => events.push({
+    type: evt.type,
+    button: evt.button,
+    buttons: evt.buttons,
+    detail: evt.detail
+  }))
+  render(
+    <div
+      data-testid="div"
+      onMouseOver={eventsHandler}
+      onMouseMove={eventsHandler}
+      onMouseDown={eventsHandler}
+      onFocus={eventsHandler}
+      onMouseUp={eventsHandler}
+      onClick={eventsHandler}
+    />,
+  )
+
+  userEvent.click(screen.getByTestId('div'))
+  expect(events).toEqual([
+    {
+      type: 'mouseover',
+      button: 0,
+      buttons: 0,
+      detail: 0
+    },
+    {
+      type: 'mousemove',
+      button: 0,
+      buttons: 0,
+      detail: 0
+    },
+    {
+      type: 'mousedown',
+      button: 0,
+      buttons: 1,
+      detail: 1
+    },
+    {
+      type: 'mouseup',
+      button: 0,
+      buttons: 1,
+      detail: 1
+    },
+    {
+      type: 'click',
+      button: 0,
+      buttons: 1,
+      detail: 1
+    },
+  ])
+})
+
+it('should fire mouse events with custom button property', () => {
+  const events = []
+  const eventsHandler = jest.fn(evt => events.push({
+    type: evt.type,
+    button: evt.button,
+    buttons: evt.buttons,
+    detail: evt.detail,
+    altKey: evt.altKey
+  }))
+  render(
+    <div
+      data-testid="div"
+      onMouseOver={eventsHandler}
+      onMouseMove={eventsHandler}
+      onMouseDown={eventsHandler}
+      onFocus={eventsHandler}
+      onMouseUp={eventsHandler}
+      onClick={eventsHandler}
+    />,
+  )
+
+  userEvent.click(screen.getByTestId('div'), {
+    button: 1,
+    altKey: true
+  })
+
+  expect(events).toEqual([
+    {
+      type: 'mouseover',
+      button: 0,
+      buttons: 0,
+      detail: 0,
+      altKey: true
+    },
+    {
+      type: 'mousemove',
+      button: 0,
+      buttons: 0,
+      detail: 0,
+      altKey: true
+    },
+    {
+      type: 'mousedown',
+      button: 1,
+      buttons: 4,
+      detail: 1,
+      altKey: true
+    },
+    {
+      type: 'mouseup',
+      button: 1,
+      buttons: 4,
+      detail: 1,
+      altKey: true
+    },
+    {
+      type: 'click',
+      button: 1,
+      buttons: 4,
+      detail: 1,
+      altKey: true
+    },
+  ])
+})
+
+it('should fire mouse events with custom buttons property', () => {
+  const events = []
+  const eventsHandler = jest.fn(evt => events.push({
+    type: evt.type,
+    button: evt.button,
+    buttons: evt.buttons,
+    detail: evt.detail
+  }))
+  render(
+    <div
+      data-testid="div"
+      onMouseOver={eventsHandler}
+      onMouseMove={eventsHandler}
+      onMouseDown={eventsHandler}
+      onFocus={eventsHandler}
+      onMouseUp={eventsHandler}
+      onClick={eventsHandler}
+    />,
+  )
+
+  userEvent.click(screen.getByTestId('div'), {
+    buttons: 4
+  })
+
+  expect(events).toEqual([
+    {
+      type: 'mouseover',
+      button: 0,
+      buttons: 0,
+      detail: 0
+    },
+    {
+      type: 'mousemove',
+      button: 0,
+      buttons: 0,
+      detail: 0
+    },
+    {
+      type: 'mousedown',
+      button: 1,
+      buttons: 4,
+      detail: 1
+    },
+    {
+      type: 'mouseup',
+      button: 1,
+      buttons: 4,
+      detail: 1
+    },
+    {
+      type: 'click',
+      button: 1,
+      buttons: 4,
+      detail: 1
+    },
+  ])
+})

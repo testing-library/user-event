@@ -9,7 +9,12 @@ function isMousePressEvent(event) {
 }
 
 function invert(map) {
-  return Object.fromEntries(Object.entries(map).map(([k, v]) => [v, k]));
+  const res = {};
+  for (const key of Object.keys(map)) {
+    res[map[key]] = key;
+  }
+
+  return res;
 }
 
 // https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/buttons

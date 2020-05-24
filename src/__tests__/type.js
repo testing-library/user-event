@@ -2,6 +2,8 @@ import React from 'react'
 import {render, screen} from '@testing-library/react'
 import userEvent from '../../src'
 
+/* eslint-disable max-lines-per-function */
+
 test.each(['input', 'textarea'])('should type text in <%s>', type => {
   const onChange = jest.fn()
   render(
@@ -256,3 +258,318 @@ test.each(['input', 'textarea'])(
     expect(onKeyUp).not.toHaveBeenCalled()
   },
 )
+
+describe('special characters', () => {
+  afterEach(jest.clearAllMocks)
+
+  const onChange = jest.fn()
+  const onKeyDown = jest.fn()
+  const onKeyPress = jest.fn()
+  const onKeyUp = jest.fn()
+
+  it.each(['a{bc', 'a{bc}', 'a{backspacee}c'])(
+    'properly parses %s',
+    async text => {
+      const {getByTestId} = render(
+        React.createElement('input', {
+          'data-testid': 'input',
+        }),
+      )
+
+      const inputEl = getByTestId('input')
+
+      await userEvent.type(inputEl, text)
+
+      expect(inputEl).toHaveProperty('value', text)
+    },
+  )
+
+  describe('{enter}', () => {
+    describe('input', () => {
+      it('should record key up/down/press events from {enter}', async () => {
+        const {getByTestId} = render(
+          React.createElement('input', {
+            'data-testid': 'input',
+            onChange,
+            onKeyDown,
+            onKeyPress,
+            onKeyUp,
+          }),
+        )
+
+        const inputEl = getByTestId('input')
+
+        await userEvent.type(inputEl, 'abc{enter}')
+
+        const expectedText = 'abc'
+
+        expect(inputEl).toHaveProperty('value', expectedText)
+        expect(onChange).toHaveBeenCalledTimes(3)
+        expect(onKeyPress).toHaveBeenCalledTimes(4)
+        expect(onKeyDown).toHaveBeenCalledTimes(4)
+        expect(onKeyUp).toHaveBeenCalledTimes(4)
+      })
+    })
+
+    describe('textarea', () => {
+      it('should be able to type newlines with {enter}', async () => {
+        const {getByTestId} = render(
+          React.createElement('textarea', {
+            'data-testid': 'input',
+            onChange,
+            onKeyDown,
+            onKeyPress,
+            onKeyUp,
+          }),
+        )
+
+        const inputEl = getByTestId('input')
+
+        await userEvent.type(inputEl, 'a{enter}{enter}b{enter}')
+
+        const expectedText = 'a\n\nb\n'
+
+        expect(inputEl).toHaveProperty('value', expectedText)
+        expect(onChange).toHaveBeenCalledTimes(5)
+        expect(onKeyPress).toHaveBeenCalledTimes(5)
+        expect(onKeyDown).toHaveBeenCalledTimes(5)
+        expect(onKeyUp).toHaveBeenCalledTimes(5)
+      })
+    })
+  })
+
+  describe('{esc}', () => {
+    describe.each(['input', 'textarea'])('%s', elementType => {
+      it('should record up/down/press events from {esc}', async () => {
+        const {getByTestId} = render(
+          React.createElement(elementType, {
+            'data-testid': 'input',
+            onChange,
+            onKeyDown,
+            onKeyPress,
+            onKeyUp,
+          }),
+        )
+
+        const inputEl = getByTestId('input')
+
+        await userEvent.type(inputEl, 'a{esc}')
+
+        const expectedText = 'a'
+
+        expect(inputEl).toHaveProperty('value', expectedText)
+        expect(onChange).toHaveBeenCalledTimes(1)
+        expect(onKeyPress).toHaveBeenCalledTimes(1)
+        expect(onKeyDown).toHaveBeenCalledTimes(2)
+        expect(onKeyUp).toHaveBeenCalledTimes(2)
+      })
+    })
+  })
+
+  describe('{backspace}', () => {
+    describe.each(['input', 'textarea'])('%s', elementType => {
+      it.each([
+        [
+          'ab{backspace}c',
+          'ac',
+          {keyDown: 4, keyUp: 4, keyPress: 3, change: 4},
+        ],
+        [
+          'a{backspace}{backspace}bc',
+          'bc',
+          {keyDown: 5, keyUp: 5, keyPress: 3, change: 4},
+        ],
+        [
+          'a{{backspace}}',
+          'a}',
+          {keyDown: 4, keyUp: 4, keyPress: 3, change: 4},
+        ],
+      ])(
+        'input `%s` should output `%s` and have the correct number of fired events',
+        async (
+          typeText,
+          expectedText,
+          {
+            keyDown: numKeyDownEvents,
+            keyUp: numKeyUpEvents,
+            keyPress: numKeyPressEvents,
+            change: numOnChangeEvents,
+          },
+        ) => {
+          const {getByTestId} = render(
+            React.createElement(elementType, {
+              'data-testid': 'input',
+              onChange,
+              onKeyDown,
+              onKeyPress,
+              onKeyUp,
+            }),
+          )
+
+          const inputEl = getByTestId('input')
+
+          await userEvent.type(inputEl, typeText)
+
+          expect(inputEl).toHaveProperty('value', expectedText)
+          expect(onChange).toHaveBeenCalledTimes(numOnChangeEvents)
+          expect(onKeyDown).toHaveBeenCalledTimes(numKeyDownEvents)
+          expect(onKeyUp).toHaveBeenCalledTimes(numKeyUpEvents)
+          expect(onKeyPress).toHaveBeenCalledTimes(numKeyPressEvents)
+        },
+      )
+    })
+  })
+
+  describe('modifiers', () => {
+    describe.each([
+      ['shift', 'Shift', 'shiftKey'],
+      ['ctrl', 'Control', 'ctrlKey'],
+      ['alt', 'Alt', 'altKey'],
+      ['meta', 'OS', 'metaKey'],
+    ])('%s', (modifierText, modifierKey, modifierProperty) => {
+      describe.each(['input', 'textarea'])('%s', elementType => {
+        it('only adds modifier to following keystroke', async () => {
+          const handler = jest.fn().mockImplementation(e => e.persist())
+
+          const {getByTestId} = render(
+            React.createElement(elementType, {
+              'data-testid': 'input',
+              onKeyDown: handler,
+              onKeyPress: handler,
+              onKeyUp: handler,
+            }),
+          )
+
+          const inputEl = getByTestId('input')
+
+          await userEvent.type(inputEl, `{${modifierText}}ab`)
+
+          expect(inputEl).toHaveProperty('value', 'ab')
+
+          expect(handler).toHaveBeenCalledWithEventAtIndex(0, {
+            type: 'keydown',
+            key: modifierKey,
+            [modifierProperty]: false,
+          })
+          expect(handler).toHaveBeenCalledWithEventAtIndex(1, {
+            type: 'keydown',
+            key: 'a',
+            [modifierProperty]: true,
+          })
+          expect(handler).toHaveBeenCalledWithEventAtIndex(2, {
+            type: 'keypress',
+            key: 'a',
+            [modifierProperty]: true,
+          })
+          expect(handler).toHaveBeenCalledWithEventAtIndex(3, {
+            type: 'keyup',
+            key: 'a',
+            [modifierProperty]: true,
+          })
+          expect(handler).toHaveBeenCalledWithEventAtIndex(4, {
+            type: 'keydown',
+            key: 'b',
+            [modifierProperty]: true,
+          })
+          expect(handler).toHaveBeenCalledWithEventAtIndex(5, {
+            type: 'keypress',
+            key: 'b',
+            [modifierProperty]: true,
+          })
+          expect(handler).toHaveBeenCalledWithEventAtIndex(6, {
+            type: 'keyup',
+            key: 'b',
+            [modifierProperty]: true,
+          })
+          expect(handler).toHaveBeenCalledWithEventAtIndex(7, {
+            type: 'keyup',
+            key: modifierKey,
+            [modifierProperty]: false,
+          })
+        })
+      })
+    })
+
+    it('can handle multiple held modifiers', async () => {
+      const handler = jest.fn().mockImplementation(e => e.persist())
+
+      const {getByTestId} = render(
+        React.createElement('input', {
+          'data-testid': 'input',
+          onKeyDown: handler,
+          onKeyPress: handler,
+          onKeyUp: handler,
+        }),
+      )
+
+      const inputEl = getByTestId('input')
+
+      await userEvent.type(inputEl, '{ctrl}{shift}ab')
+
+      expect(inputEl).toHaveProperty('value', 'ab')
+
+      expect(handler).toHaveBeenCalledTimes(10)
+
+      expect(handler).toHaveBeenCalledWithEventAtIndex(0, {
+        type: 'keydown',
+        key: 'Control',
+        ctrlKey: false,
+        shiftKey: false,
+      })
+      expect(handler).toHaveBeenCalledWithEventAtIndex(1, {
+        type: 'keydown',
+        key: 'Shift',
+        ctrlKey: true,
+        shiftKey: false,
+      })
+      expect(handler).toHaveBeenCalledWithEventAtIndex(2, {
+        type: 'keydown',
+        key: 'a',
+        ctrlKey: true,
+        shiftKey: true,
+      })
+      expect(handler).toHaveBeenCalledWithEventAtIndex(3, {
+        type: 'keypress',
+        key: 'a',
+        ctrlKey: true,
+        shiftKey: true,
+      })
+      expect(handler).toHaveBeenCalledWithEventAtIndex(4, {
+        type: 'keyup',
+        key: 'a',
+        ctrlKey: true,
+        shiftKey: true,
+      })
+      expect(handler).toHaveBeenCalledWithEventAtIndex(5, {
+        type: 'keydown',
+        key: 'b',
+        ctrlKey: true,
+        shiftKey: true,
+      })
+      expect(handler).toHaveBeenCalledWithEventAtIndex(6, {
+        type: 'keypress',
+        key: 'b',
+        ctrlKey: true,
+        shiftKey: true,
+      })
+      expect(handler).toHaveBeenCalledWithEventAtIndex(7, {
+        type: 'keyup',
+        key: 'b',
+        ctrlKey: true,
+        shiftKey: true,
+      })
+      expect(handler).toHaveBeenCalledWithEventAtIndex(8, {
+        type: 'keyup',
+        key: 'Control',
+        ctrlKey: false,
+        shiftKey: true,
+      })
+      expect(handler).toHaveBeenCalledWithEventAtIndex(9, {
+        type: 'keyup',
+        key: 'Shift',
+        ctrlKey: false,
+        shiftKey: false,
+      })
+    })
+  })
+})

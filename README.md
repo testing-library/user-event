@@ -158,8 +158,8 @@ import userEvent from '@testing-library/user-event'
 test('type', async () => {
   render(<textarea />)
 
-  await userEvent.type(screen.getByRole('textbox'), 'Hello, World!')
-  expect(screen.getByRole('textbox')).toHaveAttribute('value', 'Hello, World!')
+  await userEvent.type(screen.getByRole('textbox'), 'Hello{enter}World!')
+  expect(screen.getByRole('textbox')).toHaveValue('Hello\nWorld!')
 })
 ```
 
@@ -169,6 +169,25 @@ one character at the time. `false` is the default value.
 `options.delay` is the number of milliseconds that pass between two characters
 are typed. By default it's 0. You can use this option if your component has a
 different behavior for fast or slow users.
+
+#### Special characters
+
+The following special character strings are supported:
+
+| Text string   | Key       | Modifier   | Notes                                                  |
+| ------------- | --------- | ---------- | ------------------------------------------------------ |
+| `{enter}`     | Enter     | N/A        | Will insert a newline character (`<textarea />` only). |
+| `{esc}`       | Escape    | N/A        |                                                        |
+| `{backspace}` | Backspace | N/A        | Will delete the previous character.                    |
+| `{shift}`     | Shift     | `shiftKey` | Does **not** capitalize following characters.          |
+| `{ctrl}`      | Control   | `ctrlKey`  |                                                        |
+| `{alt}`       | Alt       | `altKey`   |                                                        |
+| `{meta}`      | OS        | `metaKey`  |                                                        |
+
+> **A note about modifiers:** Modifier keys (`{shift}`, `{ctrl}`, `{alt}`,
+> `{meta}`) will activate their corresponding event modifiers for the duration
+> of type command. Keys are released in the same sequence that they were invoked
+> at the end of typing.
 
 ### `upload(element, file, [{ clickInit, changeInit }])`
 
@@ -400,6 +419,7 @@ Thanks goes to these people ([emoji key][emojis]):
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors][all-contributors] specification.

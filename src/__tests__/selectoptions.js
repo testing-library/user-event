@@ -168,6 +168,33 @@ test('sets the selected prop on the selected OPTION', () => {
   expect(screen.getByTestId('val3').selected).toBe(true)
 })
 
+test('sets the selected prop on the selected OPTION using nodes', () => {
+  render(
+    <form onSubmit={() => {}}>
+      <select multiple data-testid="element">
+        <option data-testid="val1" value="1">
+          first option
+        </option>
+        <option data-testid="val2" value="2">
+          second option
+        </option>
+        <option data-testid="val3" value="3">
+          third option
+        </option>
+      </select>
+    </form>,
+  )
+
+  userEvent.selectOptions(screen.getByTestId('element'), [
+    screen.getByText('second option'),
+    screen.getByText('third option'),
+  ])
+
+  expect(screen.getByTestId('val1').selected).toBe(false)
+  expect(screen.getByTestId('val2').selected).toBe(true)
+  expect(screen.getByTestId('val3').selected).toBe(true)
+})
+
 test('sets the selected prop on the selected OPTION using htmlFor', () => {
   const onSubmit = jest.fn()
 

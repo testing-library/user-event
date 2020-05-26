@@ -22,7 +22,11 @@ declare const userEvent: {
   clear: (element: TargetElement) => void
   click: (element: TargetElement, init?: MouseEventInit) => void
   dblClick: (element: TargetElement, init?: MouseEventInit) => void
-  selectOptions: (element: TargetElement, values: string | string[], init?: MouseEventInit) => void
+  selectOptions: (
+    element: TargetElement,
+    values: string | string[] | HTMLElement | HTMLElement[],
+    init?: MouseEventInit,
+  ) => void
   upload: (
     element: TargetElement,
     files: FilesArgument,

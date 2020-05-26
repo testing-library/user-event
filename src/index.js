@@ -270,7 +270,7 @@ function selectOptions(element, values, init) {
   const valArray = Array.isArray(values) ? values : [values]
   const selectedOptions = Array.from(
     element.querySelectorAll('option'),
-  ).filter(opt => valArray.includes(opt.value))
+  ).filter(opt => valArray.includes(opt.value) || valArray.includes(opt))
 
   if (selectedOptions.length > 0) {
     if (element.multiple) {

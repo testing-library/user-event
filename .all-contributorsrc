@@ -314,6 +314,16 @@
         "code",
         "test"
       ]
+    },
+    {
+      "login": "dougbacelar",
+      "name": "Doug Bacelar",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/9267678?v=4",
+      "profile": "https://www.linkedin.com/in/dougbacelar/en",
+      "contributions": [
+        "code",
+        "test"
+      ]
     }
   ],
   "commitConvention": "none",

@@ -272,6 +272,15 @@ test('selectOptions', () => {
 The `values` parameter can be either an array of values or a singular scalar
 value.
 
+It also accepts option nodes:
+
+```js
+userEvent.selectOptions(screen.getByTestId('select-multiple'), [
+  screen.getByText('A'),
+  screen.getByText('B'),
+])
+```
+
 ### `tab({shift, focusTrap})`
 
 Fires a tab event changing the document.activeElement in the same way the

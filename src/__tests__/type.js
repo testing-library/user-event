@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {Fragment} from 'react'
 import {render, screen} from '@testing-library/react'
 import userEvent from '../../src'
 
@@ -256,3 +256,63 @@ test.each(['input', 'textarea'])(
     expect(onKeyUp).not.toHaveBeenCalled()
   },
 )
+
+test('should fire events on the currently focussed element', async () => {
+  const changeFocusLimit = 7
+  const onKeyDown = jest.fn(event => {
+    if (event.target.value.length === changeFocusLimit) {
+      screen.getByTestId('input2').focus()
+    }
+  })
+
+  render(
+    <Fragment>
+      <input data-testid="input1" onKeyDown={onKeyDown} />
+      <input data-testid="input2" />
+    </Fragment>,
+  )
+
+  const text = 'Hello, world!'
+
+  const input1 = screen.getByTestId('input1')
+  const input2 = screen.getByTestId('input2')
+
+  await userEvent.type(input1, text)
+
+  expect(input1).toHaveValue(text.slice(0, changeFocusLimit))
+  expect(input2).toHaveValue(text.slice(changeFocusLimit))
+  expect(input2).toHaveFocus()
+})
+
+test('should enter text up to maxLength of the current element if provided', async () => {
+  const changeFocusLimit = 7
+  const input2MaxLength = 2
+
+  const onKeyDown = jest.fn(event => {
+    if (event.target.value.length === changeFocusLimit) {
+      screen.getByTestId('input2').focus()
+    }
+  })
+
+  render(
+    <Fragment>
+      <input data-testid="input" onKeyDown={onKeyDown} />
+      <input data-testid="input2" maxLength={input2MaxLength} />
+    </Fragment>,
+  )
+
+  const text = 'Hello, world!'
+  const input2ExpectedValue = text.slice(
+    changeFocusLimit,
+    changeFocusLimit + input2MaxLength,
+  )
+
+  const input1 = screen.getByTestId('input')
+  const input2 = screen.getByTestId('input2')
+
+  await userEvent.type(input1, text)
+
+  expect(input1).toHaveValue(text.slice(0, changeFocusLimit))
+  expect(input2).toHaveValue(input2ExpectedValue)
+  expect(input2).toHaveFocus()
+})

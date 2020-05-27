@@ -5,16 +5,21 @@ function wait(time) {
 }
 
 function isMousePressEvent(event) {
-  return event === 'mousedown' || event === 'mouseup' || event === 'click' || event === 'dblclick';
+  return (
+    event === 'mousedown' ||
+    event === 'mouseup' ||
+    event === 'click' ||
+    event === 'dblclick'
+  )
 }
 
 function invert(map) {
-  const res = {};
+  const res = {}
   for (const key of Object.keys(map)) {
-    res[map[key]] = key;
+    res[map[key]] = key
   }
 
-  return res;
+  return res
 }
 
 // https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/buttons
@@ -22,48 +27,51 @@ const BUTTONS_TO_NAMES = {
   0: 'none',
   1: 'primary',
   2: 'secondary',
-  4: 'auxiliary'
-};
-const NAMES_TO_BUTTONS = invert(BUTTONS_TO_NAMES);
+  4: 'auxiliary',
+}
+const NAMES_TO_BUTTONS = invert(BUTTONS_TO_NAMES)
 
 // https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/button
 const BUTTON_TO_NAMES = {
   0: 'primary',
   1: 'auxiliary',
-  2: 'secondary'
-};
+  2: 'secondary',
+}
 
-const NAMES_TO_BUTTON = invert(BUTTON_TO_NAMES);
+const NAMES_TO_BUTTON = invert(BUTTON_TO_NAMES)
 
 function convertMouseButtons(event, init, property, mapping) {
   if (!isMousePressEvent(event)) {
-    return 0;
+    return 0
   }
 
   if (init[property] != null) {
-    return init[property];
+    return init[property]
   }
 
   if (init.buttons != null) {
-    return mapping[BUTTONS_TO_NAMES[init.buttons]] || 0;
+    return mapping[BUTTONS_TO_NAMES[init.buttons]] || 0
   }
 
   if (init.button != null) {
-    return mapping[BUTTON_TO_NAMES[init.button]] || 0;
+    return mapping[BUTTON_TO_NAMES[init.button]] || 0
   }
 
-  return property != 'button' && isMousePressEvent(event) ? 1 : 0;
+  return property != 'button' && isMousePressEvent(event) ? 1 : 0
 }
 
 function getMouseEventOptions(event, init, clickCount = 0) {
-  init = init || {};
+  init = init || {}
   return {
     ...init,
     // https://developer.mozilla.org/en-US/docs/Web/API/UIEvent/detail
-    detail: event === 'mousedown' || event === 'mouseup' ? 1 + clickCount : clickCount,
+    detail:
+      event === 'mousedown' || event === 'mouseup'
+        ? 1 + clickCount
+        : clickCount,
     buttons: convertMouseButtons(event, init, 'buttons', NAMES_TO_BUTTONS),
     button: convertMouseButtons(event, init, 'button', NAMES_TO_BUTTON),
-  };
+  }
 }
 
 function clickLabel(label, init) {
@@ -93,7 +101,10 @@ function clickBooleanElement(element, init) {
 function clickElement(element, previousElement, init) {
   fireEvent.mouseOver(element, getMouseEventOptions('mouseover', init))
   fireEvent.mouseMove(element, getMouseEventOptions('mousemove', init))
-  const continueDefaultHandling = fireEvent.mouseDown(element, getMouseEventOptions('mousedown', init))
+  const continueDefaultHandling = fireEvent.mouseDown(
+    element,
+    getMouseEventOptions('mousedown', init),
+  )
   const shouldFocus = element.ownerDocument.activeElement !== element
   if (continueDefaultHandling) {
     if (previousElement) previousElement.blur()
@@ -108,7 +119,10 @@ function clickElement(element, previousElement, init) {
 function dblClickElement(element, previousElement, init) {
   fireEvent.mouseOver(element, getMouseEventOptions('mouseover', init))
   fireEvent.mouseMove(element, getMouseEventOptions('mousemove', init))
-  const continueDefaultHandling = fireEvent.mouseDown(element, getMouseEventOptions('mousedown', init))
+  const continueDefaultHandling = fireEvent.mouseDown(
+    element,
+    getMouseEventOptions('mousedown', init),
+  )
   const shouldFocus = element.ownerDocument.activeElement !== element
   if (continueDefaultHandling) {
     if (previousElement) previousElement.blur()
@@ -220,8 +234,14 @@ function getPreviouslyFocusedElement(element) {
 function click(element, init) {
   const previouslyFocusedElement = getPreviouslyFocusedElement(element)
   if (previouslyFocusedElement) {
-    fireEvent.mouseMove(previouslyFocusedElement, getMouseEventOptions('mousemove', init))
-    fireEvent.mouseLeave(previouslyFocusedElement, getMouseEventOptions('mouseleave', init))
+    fireEvent.mouseMove(
+      previouslyFocusedElement,
+      getMouseEventOptions('mousemove', init),
+    )
+    fireEvent.mouseLeave(
+      previouslyFocusedElement,
+      getMouseEventOptions('mouseleave', init),
+    )
   }
 
   switch (element.tagName) {
@@ -242,8 +262,14 @@ function click(element, init) {
 function dblClick(element, init) {
   const previouslyFocusedElement = getPreviouslyFocusedElement(element)
   if (previouslyFocusedElement) {
-    fireEvent.mouseMove(previouslyFocusedElement, getMouseEventOptions('mousemove', init))
-    fireEvent.mouseLeave(previouslyFocusedElement, getMouseEventOptions('mouseleave', init))
+    fireEvent.mouseMove(
+      previouslyFocusedElement,
+      getMouseEventOptions('mousemove', init),
+    )
+    fireEvent.mouseLeave(
+      previouslyFocusedElement,
+      getMouseEventOptions('mouseleave', init),
+    )
   }
 
   switch (element.tagName) {
@@ -261,16 +287,22 @@ function dblClick(element, init) {
 function selectOptions(element, values, init) {
   const previouslyFocusedElement = getPreviouslyFocusedElement(element)
   if (previouslyFocusedElement) {
-    fireEvent.mouseMove(previouslyFocusedElement, getMouseEventOptions('mousemove', init))
-    fireEvent.mouseLeave(previouslyFocusedElement, getMouseEventOptions('mouseleave', init))
+    fireEvent.mouseMove(
+      previouslyFocusedElement,
+      getMouseEventOptions('mousemove', init),
+    )
+    fireEvent.mouseLeave(
+      previouslyFocusedElement,
+      getMouseEventOptions('mouseleave', init),
+    )
   }
 
   clickElement(element, previouslyFocusedElement, init)
 
   const valArray = Array.isArray(values) ? values : [values]
-  const selectedOptions = Array.from(
-    element.querySelectorAll('option'),
-  ).filter(opt => valArray.includes(opt.value) || valArray.includes(opt))
+  const selectedOptions = Array.from(element.querySelectorAll('option')).filter(
+    opt => valArray.includes(opt.value) || valArray.includes(opt),
+  )
 
   if (selectedOptions.length > 0) {
     if (element.multiple) {
@@ -290,21 +322,27 @@ function clear(element) {
 
 async function type(element, text, {allAtOnce = false, delay} = {}) {
   if (element.disabled) return
-  const previousText = element.value
 
-  const computedText =
-    element.maxLength > 0
-      ? text.slice(0, Math.max(element.maxLength - previousText.length, 0))
-      : text
+  element.focus()
 
   if (allAtOnce) {
     if (!element.readOnly) {
+      const previousText = element.value
+
+      const computedText =
+        element.maxLength > 0
+          ? text.slice(0, Math.max(element.maxLength - previousText.length, 0))
+          : text
+
       fireEvent.input(element, {
         target: {value: previousText + computedText},
       })
     }
   } else {
-    let actuallyTyped = previousText
+    // The focussed element could change between each event, so get the currently active element each time
+    const currentElement = () => document.activeElement
+    const actuallyTyped = () => document.activeElement.value
+
     for (let index = 0; index < text.length; index++) {
       const char = text[index]
       const key = char // TODO: check if this also valid for characters with diacritic markers e.g. úé etc
@@ -313,28 +351,28 @@ async function type(element, text, {allAtOnce = false, delay} = {}) {
       // eslint-disable-next-line no-await-in-loop
       if (delay > 0) await wait(delay)
 
-      const downEvent = fireEvent.keyDown(element, {
+      const downEvent = fireEvent.keyDown(currentElement(), {
         key,
         keyCode,
         which: keyCode,
       })
 
       if (downEvent) {
-        const pressEvent = fireEvent.keyPress(element, {
+        const pressEvent = fireEvent.keyPress(currentElement(), {
           key,
           keyCode,
           charCode: keyCode,
         })
 
         const isTextPastThreshold =
-          (actuallyTyped + key).length > (previousText + computedText).length
+          (actuallyTyped() + key).length >
+          (currentElement().maxLength || text.length)
 
         if (pressEvent && !isTextPastThreshold) {
-          actuallyTyped += key
           if (!element.readOnly) {
-            fireEvent.input(element, {
+            fireEvent.input(currentElement(), {
               target: {
-                value: actuallyTyped,
+                value: actuallyTyped() + key,
               },
               bubbles: true,
               cancelable: true,
@@ -343,7 +381,7 @@ async function type(element, text, {allAtOnce = false, delay} = {}) {
         }
       }
 
-      fireEvent.keyUp(element, {
+      fireEvent.keyUp(currentElement(), {
         key,
         keyCode,
         which: keyCode,

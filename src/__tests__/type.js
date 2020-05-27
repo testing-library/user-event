@@ -295,10 +295,10 @@ test('should enter text up to maxLength of the current element if provided', asy
   })
 
   render(
-    <Fragment>
+    <>
       <input data-testid="input" onKeyDown={onKeyDown} />
       <input data-testid="input2" maxLength={input2MaxLength} />
-    </Fragment>,
+    </>,
   )
 
   const text = 'Hello, world!'

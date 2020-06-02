@@ -1,4 +1,7 @@
-import {fireEvent} from '@testing-library/dom'
+import {
+  getConfig as getDOMTestingLibraryConfig,
+  fireEvent,
+} from '@testing-library/dom'
 
 function wait(time) {
   return new Promise(resolve => setTimeout(() => resolve(), time))
@@ -320,7 +323,16 @@ function clear(element) {
   backspace(element)
 }
 
-async function type(element, text, {allAtOnce = false, delay} = {}) {
+// this needs to be wrapped in the asyncWrapper for React's act and angular's change detection
+async function type(...args) {
+  let result
+  await getDOMTestingLibraryConfig().asyncWrapper(async () => {
+    result = await typeImpl(...args)
+  })
+  return result
+}
+
+async function typeImpl(element, text, {allAtOnce = false, delay} = {}) {
   if (element.disabled) return
 
   element.focus()

@@ -422,8 +422,8 @@ MIT
 <!-- prettier-ignore-start -->
 [npm]: https://www.npmjs.com
 [node]: https://nodejs.org
-[build-badge]: https://img.shields.io/travis/com/testing-library/user-event.svg?style=flat-square
-[build]: https://travis-ci.com/testing-library/user-event
+[build-badge]: https://img.shields.io/travis/testing-library/user-event.svg?style=flat-square
+[build]: https://travis-ci.org/testing-library/user-event
 [coverage-badge]: https://img.shields.io/codecov/c/github/testing-library/user-event.svg?style=flat-square
 [coverage]: https://codecov.io/github/testing-library/user-event
 [version-badge]: https://img.shields.io/npm/v/@testing-library/user-event.svg?style=flat-square

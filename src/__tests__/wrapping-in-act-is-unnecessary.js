@@ -22,3 +22,30 @@ test('act necessitating side effect', () => {
 
   expect(effectCallback).toHaveBeenCalledTimes(1)
 })
+
+test('act necessitating async side effect', async () => {
+  function TestComponent() {
+    const [renderMessage, setRenderMessage] = React.useState(false)
+    function handleChange() {
+      Promise.resolve().then(() => {
+        setRenderMessage(true)
+      })
+    }
+    return (
+      <div>
+        <input type="text" onChange={handleChange} />
+        <div>{renderMessage ? 'MESSAGE' : null}</div>
+      </div>
+    )
+  }
+  render(<TestComponent />)
+
+  // https://github.com/testing-library/dom-testing-library/pull/602
+  // before our fixes in DOM Testing Library, we had to wrap
+  // this next line in act for this test to pass.
+  await userEvent.type(screen.getByRole('textbox'), 'a')
+
+  expect(await screen.findByText('MESSAGE')).toBeInTheDocument()
+
+  expect(console.error).not.toHaveBeenCalled()
+})

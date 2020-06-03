@@ -352,8 +352,8 @@ async function typeImpl(element, text, {allAtOnce = false, delay} = {}) {
     }
   } else {
     // The focussed element could change between each event, so get the currently active element each time
-    const currentElement = () => document.activeElement
-    const actuallyTyped = () => document.activeElement.value
+    const currentElement = () => element.ownerDocument.activeElement
+    const actuallyTyped = () => element.ownerDocument.activeElement.value
 
     for (let index = 0; index < text.length; index++) {
       const char = text[index]

@@ -324,6 +324,17 @@
         "code",
         "test"
       ]
+    },
+    {
+      "login": "kayleighridd",
+      "name": "Kayleigh Ridd",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/36446015?v=4",
+      "profile": "https://github.com/kayleighridd",
+      "contributions": [
+        "bug",
+        "code",
+        "test"
+      ]
     }
   ],
   "commitConvention": "none",

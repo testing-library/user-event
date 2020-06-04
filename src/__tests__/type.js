@@ -316,3 +316,64 @@ test('should enter text up to maxLength of the current element if provided', asy
   expect(input2).toHaveValue(input2ExpectedValue)
   expect(input2).toHaveFocus()
 })
+
+test('should replace selected text one by one', async () => {
+  const onChange = jest.fn()
+  const {
+    container: {firstChild: input},
+  } = render(<input defaultValue="hello world" onChange={onChange} />)
+  const selectionStart = 'hello world'.search('world')
+  const selectionEnd = selectionStart + 'world'.length
+  input.setSelectionRange(selectionStart, selectionEnd)
+  await userEvent.type(input, 'friend')
+  expect(onChange).toHaveBeenCalledTimes('friend'.length)
+  expect(input).toHaveValue('hello friend')
+})
+
+test('should replace selected text one by one up to maxLength if provided', async () => {
+  const maxLength = 10
+  const onChange = jest.fn()
+  const {
+    container: {firstChild: input},
+  } = render(
+    <input
+      defaultValue="hello world"
+      onChange={onChange}
+      maxLength={maxLength}
+    />,
+  )
+  const selectionStart = 'hello world'.search('world')
+  const selectionEnd = selectionStart + 'world'.length
+  input.setSelectionRange(selectionStart, selectionEnd)
+  const resultIfUnlimited = 'hello friend'
+  const slicedText = resultIfUnlimited.slice(0, maxLength)
+  await userEvent.type(input, 'friend')
+  const truncatedCharCount = resultIfUnlimited.length - slicedText.length
+  expect(onChange).toHaveBeenCalledTimes('friend'.length - truncatedCharCount)
+  expect(input).toHaveValue(slicedText)
+})
+
+test('should replace selected text all at once', async () => {
+  const onChange = jest.fn()
+  const {
+    container: {firstChild: input},
+  } = render(<input defaultValue="hello world" onChange={onChange} />)
+  const selectionStart = 'hello world'.search('world')
+  const selectionEnd = selectionStart + 'world'.length
+  input.setSelectionRange(selectionStart, selectionEnd)
+  await userEvent.type(input, 'friend', {allAtOnce: true})
+  expect(onChange).toHaveBeenCalledTimes(1)
+  expect(input).toHaveValue('hello friend')
+})
+
+test('does not continue firing events when disabled during typing', async () => {
+  function TestComp() {
+    const [disabled, setDisabled] = React.useState(false)
+    return <input disabled={disabled} onChange={() => setDisabled(true)} />
+  }
+  const {
+    container: {firstChild: input},
+  } = render(<TestComp />)
+  await userEvent.type(input, 'hi there')
+  expect(input).toHaveValue('h')
+})

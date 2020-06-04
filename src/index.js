@@ -1,11 +1,5 @@
-import {
-  getConfig as getDOMTestingLibraryConfig,
-  fireEvent,
-} from '@testing-library/dom'
-
-function wait(time) {
-  return new Promise(resolve => setTimeout(() => resolve(), time))
-}
+import {fireEvent} from '@testing-library/dom'
+import {type} from './type'
 
 function isMousePressEvent(event) {
   return (
@@ -321,88 +315,6 @@ function clear(element) {
 
   selectAll(element)
   backspace(element)
-}
-
-// this needs to be wrapped in the asyncWrapper for React's act and angular's change detection
-async function type(...args) {
-  let result
-  await getDOMTestingLibraryConfig().asyncWrapper(async () => {
-    result = await typeImpl(...args)
-  })
-  return result
-}
-
-async function typeImpl(element, text, {allAtOnce = false, delay} = {}) {
-  if (element.disabled) return
-
-  element.focus()
-
-  // The focussed element could change between each event, so get the currently active element each time
-  const currentElement = () => element.ownerDocument.activeElement
-  const currentValue = () => element.ownerDocument.activeElement.value
-
-  const computeText = () =>
-    currentElement().maxLength > 0
-      ? text.slice(
-          0,
-          Math.max(currentElement().maxLength - currentValue().length, 0),
-        )
-      : text
-
-  if (allAtOnce) {
-    if (!element.readOnly) {
-      const previousText = element.value
-
-      fireEvent.input(element, {
-        target: {value: previousText + computeText()},
-      })
-    }
-  } else {
-    for (let index = 0; index < text.length; index++) {
-      const char = text[index]
-      const key = char // TODO: check if this also valid for characters with diacritic markers e.g. úé etc
-      const keyCode = char.charCodeAt(0)
-
-      // eslint-disable-next-line no-await-in-loop
-      if (delay > 0) await wait(delay)
-
-      if (currentElement().disabled) return
-
-      const downEvent = fireEvent.keyDown(currentElement(), {
-        key,
-        keyCode,
-        which: keyCode,
-      })
-
-      if (downEvent) {
-        const pressEvent = fireEvent.keyPress(currentElement(), {
-          key,
-          keyCode,
-          charCode: keyCode,
-        })
-
-        const isTextPastThreshold = !computeText().length
-
-        if (pressEvent && !isTextPastThreshold) {
-          if (!element.readOnly) {
-            fireEvent.input(currentElement(), {
-              target: {
-                value: currentValue() + key,
-              },
-              bubbles: true,
-              cancelable: true,
-            })
-          }
-        }
-      }
-
-      fireEvent.keyUp(currentElement(), {
-        key,
-        keyCode,
-        which: keyCode,
-      })
-    }
-  }
 }
 
 function upload(element, fileOrFiles, {clickInit, changeInit} = {}) {

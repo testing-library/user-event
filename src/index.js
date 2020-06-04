@@ -339,13 +339,13 @@ async function typeImpl(element, text, {allAtOnce = false, delay} = {}) {
 
   // The focussed element could change between each event, so get the currently active element each time
   const currentElement = () => element.ownerDocument.activeElement
-  const actuallyTyped = () => element.ownerDocument.activeElement.value
+  const currentValue = () => element.ownerDocument.activeElement.value
 
   const computeText = () =>
     currentElement().maxLength > 0
       ? text.slice(
           0,
-          Math.max(currentElement().maxLength - actuallyTyped().length, 0),
+          Math.max(currentElement().maxLength - currentValue().length, 0),
         )
       : text
 
@@ -382,14 +382,14 @@ async function typeImpl(element, text, {allAtOnce = false, delay} = {}) {
         })
 
         const isTextPastThreshold =
-          (actuallyTyped() + key).length >
-          (actuallyTyped() + computeText()).length
+          (currentValue() + key).length >
+          (currentValue() + computeText()).length
 
         if (pressEvent && !isTextPastThreshold) {
           if (!element.readOnly) {
             fireEvent.input(currentElement(), {
               target: {
-                value: actuallyTyped() + key,
+                value: currentValue() + key,
               },
               bubbles: true,
               cancelable: true,

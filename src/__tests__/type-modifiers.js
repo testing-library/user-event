@@ -18,8 +18,8 @@ import userEvent from '../../src'
 
 test('{esc} triggers typing the escape character', async () => {
   const {element: input, getEventCalls} = setup('input')
-  const text = '{esc}'
-  await userEvent.type(input, text)
+
+  await userEvent.type(input, '{esc}')
 
   expect(getEventCalls()).toMatchInlineSnapshot(`
     focus
@@ -33,8 +33,7 @@ test('{backspace} triggers typing the backspace character and deletes the charac
   input.value = 'yo'
   input.setSelectionRange(1, 1)
 
-  const text = '{backspace}'
-  await userEvent.type(input, text)
+  await userEvent.type(input, '{backspace}')
 
   expect(getEventCalls()).toMatchInlineSnapshot(`
     focus
@@ -50,8 +49,7 @@ test('{backspace} on a readOnly input', async () => {
   input.value = 'yo'
   input.setSelectionRange(1, 1)
 
-  const text = '{backspace}'
-  await userEvent.type(input, text)
+  await userEvent.type(input, '{backspace}')
 
   expect(getEventCalls()).toMatchInlineSnapshot(`
     focus
@@ -65,8 +63,7 @@ test('{backspace} deletes the selected range', async () => {
   input.value = 'Hi there'
   input.setSelectionRange(1, 5)
 
-  const text = '{backspace}'
-  await userEvent.type(input, text)
+  await userEvent.type(input, '{backspace}')
 
   expect(getEventCalls()).toMatchInlineSnapshot(`
     focus
@@ -79,8 +76,7 @@ test('{backspace} deletes the selected range', async () => {
 test('{alt}a{/alt}', async () => {
   const {element: input, getEventCalls} = setup('input')
 
-  const text = '{alt}a{/alt}'
-  await userEvent.type(input, text)
+  await userEvent.type(input, '{alt}a{/alt}')
 
   expect(getEventCalls()).toMatchInlineSnapshot(`
     focus
@@ -96,8 +92,7 @@ test('{alt}a{/alt}', async () => {
 test('{meta}a{/meta}', async () => {
   const {element: input, getEventCalls} = setup('input')
 
-  const text = '{meta}a{/meta}'
-  await userEvent.type(input, text)
+  await userEvent.type(input, '{meta}a{/meta}')
 
   expect(getEventCalls()).toMatchInlineSnapshot(`
     focus
@@ -113,8 +108,7 @@ test('{meta}a{/meta}', async () => {
 test('{ctrl}a{/ctrl}', async () => {
   const {element: input, getEventCalls} = setup('input')
 
-  const text = '{ctrl}a{/ctrl}'
-  await userEvent.type(input, text)
+  await userEvent.type(input, '{ctrl}a{/ctrl}')
 
   expect(getEventCalls()).toMatchInlineSnapshot(`
     focus
@@ -130,8 +124,7 @@ test('{ctrl}a{/ctrl}', async () => {
 test('{shift}a{/shift}', async () => {
   const {element: input, getEventCalls} = setup('input')
 
-  const text = '{shift}a{/shift}'
-  await userEvent.type(input, text)
+  await userEvent.type(input, '{shift}a{/shift}')
 
   expect(getEventCalls()).toMatchInlineSnapshot(`
     focus
@@ -147,8 +140,7 @@ test('{shift}a{/shift}', async () => {
 test('a{enter}', async () => {
   const {element: input, getEventCalls} = setup('input')
 
-  const text = 'a{enter}'
-  await userEvent.type(input, text)
+  await userEvent.type(input, 'a{enter}')
 
   expect(getEventCalls()).toMatchInlineSnapshot(`
     focus
@@ -166,8 +158,7 @@ test('{enter} with preventDefault keydown', async () => {
   const {element: input, getEventCalls} = setup('input')
   addEventListener(input, 'keydown', e => e.preventDefault())
 
-  const text = '{enter}'
-  await userEvent.type(input, text)
+  await userEvent.type(input, '{enter}')
 
   expect(getEventCalls()).toMatchInlineSnapshot(`
     focus
@@ -179,8 +170,7 @@ test('{enter} with preventDefault keydown', async () => {
 test('{enter} on a button', async () => {
   const {element: button, getEventCalls} = setup('button')
 
-  const text = '{enter}'
-  await userEvent.type(button, text)
+  await userEvent.type(button, '{enter}')
 
   expect(getEventCalls()).toMatchInlineSnapshot(`
     focus
@@ -194,8 +184,7 @@ test('{enter} on a button', async () => {
 test('{enter} on a textarea', async () => {
   const {element: textarea, getEventCalls} = setup('textarea')
 
-  const text = '{enter}'
-  await userEvent.type(textarea, text)
+  await userEvent.type(textarea, '{enter}')
 
   expect(getEventCalls()).toMatchInlineSnapshot(`
     focus
@@ -210,8 +199,7 @@ test('{enter} on a textarea', async () => {
 test('{meta}{enter}{/meta} on a button', async () => {
   const {element: button, getEventCalls} = setup('button')
 
-  const text = '{meta}{enter}{/meta}'
-  await userEvent.type(button, text)
+  await userEvent.type(button, '{meta}{enter}{/meta}')
 
   expect(getEventCalls()).toMatchInlineSnapshot(`
     focus

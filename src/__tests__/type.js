@@ -4,7 +4,7 @@ import userEvent from '..'
 import {setup} from './helpers/utils'
 
 it('types text in input', async () => {
-  const {element, getEventCalls} = setup('input')
+  const {element, getEventCalls} = setup(<input />)
   await userEvent.type(element, 'Sup')
   expect(getEventCalls()).toMatchInlineSnapshot(`
     focus
@@ -24,7 +24,7 @@ it('types text in input', async () => {
 })
 
 it('types text in textarea', async () => {
-  const {element, getEventCalls} = setup('textarea')
+  const {element, getEventCalls} = setup(<textarea />)
   await userEvent.type(element, 'Sup')
   expect(getEventCalls()).toMatchInlineSnapshot(`
     focus
@@ -44,7 +44,7 @@ it('types text in textarea', async () => {
 })
 
 test('should append text all at once', async () => {
-  const {element, getEventCalls} = setup('input')
+  const {element, getEventCalls} = setup(<input />)
   await userEvent.type(element, 'Sup', {allAtOnce: true})
   expect(getEventCalls()).toMatchInlineSnapshot(`
     focus

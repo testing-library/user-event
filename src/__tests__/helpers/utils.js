@@ -1,4 +1,3 @@
-import React from 'react'
 import {render} from '@testing-library/react'
 
 // this is pretty helpful:
@@ -38,10 +37,10 @@ function addEventListener(el, type, listener, options) {
   el.addEventListener(type, hijackedListener, options)
 }
 
-function setup(elementType, props, ...children) {
+function setup(ui) {
   const {
     container: {firstChild: element},
-  } = render(React.createElement(elementType, props, ...children))
+  } = render(ui)
   element.previousTestData = getTestData(element)
 
   const getEventCalls = addListeners(element)

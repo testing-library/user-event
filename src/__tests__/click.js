@@ -4,7 +4,7 @@ import userEvent from '..'
 import {setup} from './helpers/utils'
 
 test('click in input', () => {
-  const {element, getEventCalls} = setup('input')
+  const {element, getEventCalls} = setup(<input />)
   userEvent.click(element)
   expect(getEventCalls()).toMatchInlineSnapshot(`
     mouseover: Left (0)
@@ -17,7 +17,7 @@ test('click in input', () => {
 })
 
 test('click in textarea', () => {
-  const {element, getEventCalls} = setup('textarea')
+  const {element, getEventCalls} = setup(<textarea />)
   userEvent.click(element)
   expect(getEventCalls()).toMatchInlineSnapshot(`
     mouseover: Left (0)
@@ -30,7 +30,7 @@ test('click in textarea', () => {
 })
 
 it('should fire the correct events for <input type="checkbox">', () => {
-  const {element, getEventCalls} = setup('input', {type: 'checkbox'})
+  const {element, getEventCalls} = setup(<input type="checkbox" />)
   expect(element).not.toBeChecked()
   userEvent.click(element)
   expect(getEventCalls()).toMatchInlineSnapshot(`
@@ -46,10 +46,7 @@ it('should fire the correct events for <input type="checkbox">', () => {
 })
 
 it('should fire the correct events for <input type="checkbox" disabled>', () => {
-  const {element, getEventCalls} = setup('input', {
-    type: 'checkbox',
-    disabled: true,
-  })
+  const {element, getEventCalls} = setup(<input type="checkbox" disabled />)
   userEvent.click(element)
   expect(element).toBeDisabled()
   // no event calls is expected here:

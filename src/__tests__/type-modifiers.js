@@ -1,3 +1,4 @@
+import React from 'react'
 import userEvent from '..'
 import {setup, addEventListener} from './helpers/utils'
 
@@ -16,7 +17,7 @@ import {setup, addEventListener} from './helpers/utils'
 // but will not capitalize "a".
 
 test('{esc} triggers typing the escape character', async () => {
-  const {element: input, getEventCalls} = setup('input')
+  const {element: input, getEventCalls} = setup(<input />)
 
   await userEvent.type(input, '{esc}')
 
@@ -28,7 +29,7 @@ test('{esc} triggers typing the escape character', async () => {
 })
 
 test('{backspace} triggers typing the backspace character and deletes the character behind the cursor', async () => {
-  const {element: input, getEventCalls} = setup('input')
+  const {element: input, getEventCalls} = setup(<input />)
   input.value = 'yo'
   input.setSelectionRange(1, 1)
 
@@ -43,7 +44,7 @@ test('{backspace} triggers typing the backspace character and deletes the charac
 })
 
 test('{backspace} on a readOnly input', async () => {
-  const {element: input, getEventCalls} = setup('input')
+  const {element: input, getEventCalls} = setup(<input />)
   input.readOnly = true
   input.value = 'yo'
   input.setSelectionRange(1, 1)
@@ -58,7 +59,7 @@ test('{backspace} on a readOnly input', async () => {
 })
 
 test('{backspace} deletes the selected range', async () => {
-  const {element: input, getEventCalls} = setup('input')
+  const {element: input, getEventCalls} = setup(<input />)
   input.value = 'Hi there'
   input.setSelectionRange(1, 5)
 
@@ -73,7 +74,7 @@ test('{backspace} deletes the selected range', async () => {
 })
 
 test('{alt}a{/alt}', async () => {
-  const {element: input, getEventCalls} = setup('input')
+  const {element: input, getEventCalls} = setup(<input />)
 
   await userEvent.type(input, '{alt}a{/alt}')
 
@@ -89,7 +90,7 @@ test('{alt}a{/alt}', async () => {
 })
 
 test('{meta}a{/meta}', async () => {
-  const {element: input, getEventCalls} = setup('input')
+  const {element: input, getEventCalls} = setup(<input />)
 
   await userEvent.type(input, '{meta}a{/meta}')
 
@@ -105,7 +106,7 @@ test('{meta}a{/meta}', async () => {
 })
 
 test('{ctrl}a{/ctrl}', async () => {
-  const {element: input, getEventCalls} = setup('input')
+  const {element: input, getEventCalls} = setup(<input />)
 
   await userEvent.type(input, '{ctrl}a{/ctrl}')
 
@@ -121,7 +122,7 @@ test('{ctrl}a{/ctrl}', async () => {
 })
 
 test('{shift}a{/shift}', async () => {
-  const {element: input, getEventCalls} = setup('input')
+  const {element: input, getEventCalls} = setup(<input />)
 
   await userEvent.type(input, '{shift}a{/shift}')
 
@@ -137,7 +138,7 @@ test('{shift}a{/shift}', async () => {
 })
 
 test('a{enter}', async () => {
-  const {element: input, getEventCalls} = setup('input')
+  const {element: input, getEventCalls} = setup(<input />)
 
   await userEvent.type(input, 'a{enter}')
 
@@ -154,7 +155,7 @@ test('a{enter}', async () => {
 })
 
 test('{enter} with preventDefault keydown', async () => {
-  const {element: input, getEventCalls} = setup('input')
+  const {element: input, getEventCalls} = setup(<input />)
   addEventListener(input, 'keydown', e => e.preventDefault())
 
   await userEvent.type(input, '{enter}')
@@ -167,7 +168,7 @@ test('{enter} with preventDefault keydown', async () => {
 })
 
 test('{enter} on a button', async () => {
-  const {element: button, getEventCalls} = setup('button')
+  const {element: button, getEventCalls} = setup(<button />)
 
   await userEvent.type(button, '{enter}')
 
@@ -181,7 +182,7 @@ test('{enter} on a button', async () => {
 })
 
 test('{enter} on a textarea', async () => {
-  const {element: textarea, getEventCalls} = setup('textarea')
+  const {element: textarea, getEventCalls} = setup(<textarea />)
 
   await userEvent.type(textarea, '{enter}')
 
@@ -196,7 +197,7 @@ test('{enter} on a textarea', async () => {
 })
 
 test('{meta}{enter}{/meta} on a button', async () => {
-  const {element: button, getEventCalls} = setup('button')
+  const {element: button, getEventCalls} = setup(<button />)
 
   await userEvent.type(button, '{meta}{enter}{/meta}')
 
@@ -212,7 +213,7 @@ test('{meta}{enter}{/meta} on a button', async () => {
 })
 
 test('{meta}{alt}{ctrl}a{/ctrl}{/alt}{/meta}', async () => {
-  const {element: input, getEventCalls} = setup('input')
+  const {element: input, getEventCalls} = setup(<input />)
 
   await userEvent.type(input, '{meta}{alt}{ctrl}a{/ctrl}{/alt}{/meta}')
 

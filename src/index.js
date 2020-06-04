@@ -366,7 +366,7 @@ async function typeImpl(element, text, {allAtOnce = false, delay} = {}) {
       // eslint-disable-next-line no-await-in-loop
       if (delay > 0) await wait(delay)
 
-      if (currentElement.disabled) return
+      if (currentElement().disabled) return
 
       const downEvent = fireEvent.keyDown(currentElement(), {
         key,

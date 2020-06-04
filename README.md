@@ -23,7 +23,7 @@
 [![MIT License][license-badge]][license]
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-32-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-33-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 [![PRs Welcome][prs-badge]][prs]
 [![Code of Conduct][coc-badge]][coc]
@@ -405,6 +405,7 @@ Thanks goes to these people ([emoji key][emojis]):
     <td align="center"><a href="https://github.com/9still"><img src="https://avatars0.githubusercontent.com/u/4924760?v=4" width="100px;" alt=""/><br /><sub><b>Greg Shtilman</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=9still" title="Code">💻</a> <a href="https://github.com/testing-library/user-event/commits?author=9still" title="Tests">⚠️</a> <a href="https://github.com/testing-library/user-event/issues?q=author%3A9still" title="Bug reports">🐛</a></td>
     <td align="center"><a href="https://github.com/rbusquet"><img src="https://avatars1.githubusercontent.com/u/7198302?v=4" width="100px;" alt=""/><br /><sub><b>Ricardo Busquet</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3Arbusquet" title="Bug reports">🐛</a> <a href="https://github.com/testing-library/user-event/commits?author=rbusquet" title="Code">💻</a> <a href="https://github.com/testing-library/user-event/commits?author=rbusquet" title="Tests">⚠️</a></td>
     <td align="center"><a href="https://www.linkedin.com/in/dougbacelar/en"><img src="https://avatars3.githubusercontent.com/u/9267678?v=4" width="100px;" alt=""/><br /><sub><b>Doug Bacelar</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=dougbacelar" title="Code">💻</a> <a href="https://github.com/testing-library/user-event/commits?author=dougbacelar" title="Tests">⚠️</a></td>
+    <td align="center"><a href="https://github.com/kayleighridd"><img src="https://avatars3.githubusercontent.com/u/36446015?v=4" width="100px;" alt=""/><br /><sub><b>Kayleigh Ridd</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3Akayleighridd" title="Bug reports">🐛</a> <a href="https://github.com/testing-library/user-event/commits?author=kayleighridd" title="Code">💻</a> <a href="https://github.com/testing-library/user-event/commits?author=kayleighridd" title="Tests">⚠️</a></td>
   </tr>
 </table>
 

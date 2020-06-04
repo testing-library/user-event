@@ -43,8 +43,9 @@ test('should replace selected text one by one', async () => {
       onChange={onChange}
     />,
   )
-  screen.getByTestId('input').selectionStart = 'hello '.length
-  screen.getByTestId('input').selectionEnd = 'hello world'.length
+  screen
+    .getByTestId('input')
+    .setSelectionRange('hello '.length, 'hello world'.length)
   await userEvent.type(screen.getByTestId('input'), 'friend')
   expect(onChange).toHaveBeenCalledTimes('friend'.length)
   expect(screen.getByTestId('input')).toHaveValue('hello friend')
@@ -61,8 +62,9 @@ test('should replace selected text one by one up to maxLength if provided', asyn
       maxLength={maxLength}
     />,
   )
-  screen.getByTestId('input').selectionStart = 'hello '.length
-  screen.getByTestId('input').selectionEnd = 'hello world'.length
+  screen
+    .getByTestId('input')
+    .setSelectionRange('hello '.length, 'hello world'.length)
   const resultIfUnlimited = 'hello friend'
   const slicedText = resultIfUnlimited.slice(0, maxLength)
   await userEvent.type(screen.getByTestId('input'), 'friend')
@@ -80,8 +82,9 @@ test('should replace selected text all at once', async () => {
       onChange={onChange}
     />,
   )
-  screen.getByTestId('input').selectionStart = 'hello '.length
-  screen.getByTestId('input').selectionEnd = 'hello world'.length
+  screen
+    .getByTestId('input')
+    .setSelectionRange('hello '.length, 'hello world'.length)
   await userEvent.type(screen.getByTestId('input'), 'friend', {allAtOnce: true})
   expect(onChange).toHaveBeenCalledTimes(1)
   expect(screen.getByTestId('input')).toHaveValue('hello friend')

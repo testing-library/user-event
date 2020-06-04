@@ -381,9 +381,7 @@ async function typeImpl(element, text, {allAtOnce = false, delay} = {}) {
           charCode: keyCode,
         })
 
-        const isTextPastThreshold =
-          (currentValue() + key).length >
-          (currentValue() + computeText()).length
+        const isTextPastThreshold = !computeText().length
 
         if (pressEvent && !isTextPastThreshold) {
           if (!element.readOnly) {

@@ -334,21 +334,30 @@ async function type(...args) {
 
 async function typeImpl(element, text, {allAtOnce = false, delay} = {}) {
   if (element.disabled) return
-  const previousText = element.value
 
-  const computedText =
-    element.maxLength > 0
-      ? text.slice(0, Math.max(element.maxLength - previousText.length, 0))
+  element.focus()
+
+  // The focussed element could change between each event, so get the currently active element each time
+  const currentElement = () => element.ownerDocument.activeElement
+  const currentValue = () => element.ownerDocument.activeElement.value
+
+  const computeText = () =>
+    currentElement().maxLength > 0
+      ? text.slice(
+          0,
+          Math.max(currentElement().maxLength - currentValue().length, 0),
+        )
       : text
 
   if (allAtOnce) {
     if (!element.readOnly) {
+      const previousText = element.value
+
       fireEvent.input(element, {
-        target: {value: previousText + computedText},
+        target: {value: previousText + computeText()},
       })
     }
   } else {
-    let actuallyTyped = previousText
     for (let index = 0; index < text.length; index++) {
       const char = text[index]
       const key = char // TODO: check if this also valid for characters with diacritic markers e.g. úé etc
@@ -357,28 +366,28 @@ async function typeImpl(element, text, {allAtOnce = false, delay} = {}) {
       // eslint-disable-next-line no-await-in-loop
       if (delay > 0) await wait(delay)
 
-      const downEvent = fireEvent.keyDown(element, {
+      if (currentElement().disabled) return
+
+      const downEvent = fireEvent.keyDown(currentElement(), {
         key,
         keyCode,
         which: keyCode,
       })
 
       if (downEvent) {
-        const pressEvent = fireEvent.keyPress(element, {
+        const pressEvent = fireEvent.keyPress(currentElement(), {
           key,
           keyCode,
           charCode: keyCode,
         })
 
-        const isTextPastThreshold =
-          (actuallyTyped + key).length > (previousText + computedText).length
+        const isTextPastThreshold = !computeText().length
 
         if (pressEvent && !isTextPastThreshold) {
-          actuallyTyped += key
           if (!element.readOnly) {
-            fireEvent.input(element, {
+            fireEvent.input(currentElement(), {
               target: {
-                value: actuallyTyped,
+                value: currentValue() + key,
               },
               bubbles: true,
               cancelable: true,
@@ -387,7 +396,7 @@ async function typeImpl(element, text, {allAtOnce = false, delay} = {}) {
         }
       }
 
-      fireEvent.keyUp(element, {
+      fireEvent.keyUp(currentElement(), {
         key,
         keyCode,
         which: keyCode,

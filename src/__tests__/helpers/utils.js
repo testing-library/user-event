@@ -1,6 +1,9 @@
 import React from 'react'
 import {render} from '@testing-library/react'
 
+// this is pretty helpful:
+// https://jsbin.com/nimelileyo/edit?js,output
+
 // all of the stuff below is complex magic that makes the simpler tests work
 // sorrynotsorry...
 

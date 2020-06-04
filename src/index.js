@@ -337,24 +337,27 @@ async function typeImpl(element, text, {allAtOnce = false, delay} = {}) {
 
   element.focus()
 
+  // The focussed element could change between each event, so get the currently active element each time
+  const currentElement = () => element.ownerDocument.activeElement
+  const actuallyTyped = () => element.ownerDocument.activeElement.value
+
+  const computeText = () =>
+    currentElement().maxLength > 0
+      ? text.slice(
+          0,
+          Math.max(currentElement().maxLength - actuallyTyped().length, 0),
+        )
+      : text
+
   if (allAtOnce) {
     if (!element.readOnly) {
       const previousText = element.value
 
-      const computedText =
-        element.maxLength > 0
-          ? text.slice(0, Math.max(element.maxLength - previousText.length, 0))
-          : text
-
       fireEvent.input(element, {
-        target: {value: previousText + computedText},
+        target: {value: previousText + computeText()},
       })
     }
   } else {
-    // The focussed element could change between each event, so get the currently active element each time
-    const currentElement = () => element.ownerDocument.activeElement
-    const actuallyTyped = () => element.ownerDocument.activeElement.value
-
     for (let index = 0; index < text.length; index++) {
       const char = text[index]
       const key = char // TODO: check if this also valid for characters with diacritic markers e.g. úé etc
@@ -363,7 +366,7 @@ async function typeImpl(element, text, {allAtOnce = false, delay} = {}) {
       // eslint-disable-next-line no-await-in-loop
       if (delay > 0) await wait(delay)
 
-      if(currentElement.disabled) return
+      if (currentElement.disabled) return
 
       const downEvent = fireEvent.keyDown(currentElement(), {
         key,
@@ -380,7 +383,7 @@ async function typeImpl(element, text, {allAtOnce = false, delay} = {}) {
 
         const isTextPastThreshold =
           (actuallyTyped() + key).length >
-          (currentElement().maxLength || text.length)
+          (actuallyTyped() + computeText()).length
 
         if (pressEvent && !isTextPastThreshold) {
           if (!element.readOnly) {

@@ -34,6 +34,59 @@ test('should append text all at once', async () => {
   expect(screen.getByTestId('input')).toHaveProperty('value', 'hello world')
 })
 
+test('should replace selected text one by one', async () => {
+  const onChange = jest.fn()
+  render(
+    <input
+      data-testid="input"
+      defaultValue="hello world"
+      onChange={onChange}
+    />,
+  )
+  screen.getByTestId('input').selectionStart = 'hello '.length
+  screen.getByTestId('input').selectionEnd = 'hello world'.length
+  await userEvent.type(screen.getByTestId('input'), 'friend')
+  expect(onChange).toHaveBeenCalledTimes('friend'.length)
+  expect(screen.getByTestId('input')).toHaveValue('hello friend')
+})
+
+test('should replace selected text one by one up to maxLength if provided', async () => {
+  const maxLength = 10
+  const onChange = jest.fn()
+  render(
+    <input
+      data-testid="input"
+      defaultValue="hello world"
+      onChange={onChange}
+      maxLength={maxLength}
+    />,
+  )
+  screen.getByTestId('input').selectionStart = 'hello '.length
+  screen.getByTestId('input').selectionEnd = 'hello world'.length
+  const resultIfUnlimited = 'hello friend'
+  const slicedText = resultIfUnlimited.slice(0, maxLength)
+  await userEvent.type(screen.getByTestId('input'), 'friend')
+  const truncatedCharCount = resultIfUnlimited.length - slicedText.length
+  expect(onChange).toHaveBeenCalledTimes('friend'.length - truncatedCharCount)
+  expect(screen.getByTestId('input')).toHaveValue(slicedText)
+})
+
+test('should replace selected text all at once', async () => {
+  const onChange = jest.fn()
+  render(
+    <input
+      data-testid="input"
+      defaultValue="hello world"
+      onChange={onChange}
+    />,
+  )
+  screen.getByTestId('input').selectionStart = 'hello '.length
+  screen.getByTestId('input').selectionEnd = 'hello world'.length
+  await userEvent.type(screen.getByTestId('input'), 'friend', {allAtOnce: true})
+  expect(onChange).toHaveBeenCalledTimes(1)
+  expect(screen.getByTestId('input')).toHaveValue('hello friend')
+})
+
 test('should not type when event.preventDefault() is called', async () => {
   const onChange = jest.fn()
   const onKeydown = jest

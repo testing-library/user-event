@@ -332,12 +332,20 @@ async function type(...args) {
   return result
 }
 
+function replaceElementSelection(element, text) {
+  return (
+    element.value.substr(0, element.selectionStart) +
+    text +
+    element.value.substr(element.selectionEnd)
+  )
+}
+
 async function typeImpl(element, text, {allAtOnce = false, delay} = {}) {
   if (element.disabled) return
 
   element.focus()
 
-  // The focussed element could change between each event, so get the currently active element each time
+  // The focused element could change between each event, so get the currently active element each time
   const currentElement = () => element.ownerDocument.activeElement
   const currentValue = () => element.ownerDocument.activeElement.value
 
@@ -349,12 +357,23 @@ async function typeImpl(element, text, {allAtOnce = false, delay} = {}) {
         )
       : text
 
+  const textAfterReplacingSelection = replaceElementSelection(element, text)
+  const slicedTextAfterReplacingSelection = textAfterReplacingSelection.slice(
+    0,
+    element.maxLength || textAfterReplacingSelection.length,
+  )
+
   if (allAtOnce) {
     if (!element.readOnly) {
       const previousText = element.value
 
       fireEvent.input(element, {
-        target: {value: previousText + computeText()},
+        target: {
+          value:
+            element.selectionEnd > element.selectionStart
+              ? slicedTextAfterReplacingSelection
+              : previousText + computeText(),
+        },
       })
     }
   } else {
@@ -381,13 +400,16 @@ async function typeImpl(element, text, {allAtOnce = false, delay} = {}) {
           charCode: keyCode,
         })
 
-        const isTextPastThreshold = !computeText().length
+        const hasSelection = element.selectionEnd > element.selectionStart
+        const isTextPastThreshold = !hasSelection && !computeText().length
 
         if (pressEvent && !isTextPastThreshold) {
           if (!element.readOnly) {
             fireEvent.input(currentElement(), {
               target: {
-                value: currentValue() + key,
+                value: hasSelection
+                  ? replaceElementSelection(element, key)
+                  : currentValue() + key,
               },
               bubbles: true,
               cancelable: true,

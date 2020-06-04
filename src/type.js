@@ -177,12 +177,12 @@ async function typeImpl(element, text, {allAtOnce = false, delay} = {}) {
         remainingString = remainingString.slice(1)
       }
     }
-    let eventOverrides = {}
+    const eventOverrides = {}
     for (const callback of eventCallbacks) {
       if (delay > 0) await wait(delay)
       if (!currentElement().disabled) {
         const returnValue = await callback({eventOverrides})
-        eventOverrides = returnValue?.eventOverrides ?? eventOverrides
+        Object.assign(eventOverrides, returnValue?.eventOverrides)
       }
     }
   }
@@ -267,6 +267,7 @@ async function typeImpl(element, text, {allAtOnce = false, delay} = {}) {
       key,
       keyCode,
       which: keyCode,
+      ...eventOverrides,
     })
   }
 

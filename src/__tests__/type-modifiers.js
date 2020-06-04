@@ -1,6 +1,5 @@
-import React from 'react'
-import {render} from '@testing-library/react'
-import userEvent from '../../src'
+import userEvent from '..'
+import {setup, addEventListener} from './helpers/utils'
 
 // Note, use the setup function at the bottom of the file...
 // but don't hurt yourself trying to read it 😅
@@ -84,7 +83,7 @@ test('{alt}a{/alt}', async () => {
     keydown: a (97) {alt}
     keypress: a (97) {alt}
     input: "{CURSOR}" -> "a"
-    keyup: a (97)
+    keyup: a (97) {alt}
     keyup: Alt (18)
   `)
 })
@@ -100,7 +99,7 @@ test('{meta}a{/meta}', async () => {
     keydown: a (97) {meta}
     keypress: a (97) {meta}
     input: "{CURSOR}" -> "a"
-    keyup: a (97)
+    keyup: a (97) {meta}
     keyup: Meta (93)
   `)
 })
@@ -116,7 +115,7 @@ test('{ctrl}a{/ctrl}', async () => {
     keydown: a (97) {ctrl}
     keypress: a (97) {ctrl}
     input: "{CURSOR}" -> "a"
-    keyup: a (97)
+    keyup: a (97) {ctrl}
     keyup: Control (17)
   `)
 })
@@ -132,7 +131,7 @@ test('{shift}a{/shift}', async () => {
     keydown: a (97) {shift}
     keypress: a (97) {shift}
     input: "{CURSOR}" -> "a"
-    keyup: a (97)
+    keyup: a (97) {shift}
     keyup: Shift (16)
   `)
 })
@@ -176,7 +175,7 @@ test('{enter} on a button', async () => {
     focus
     keydown: Enter (13)
     keypress: Enter (13)
-    click
+    click: Left (0)
     keyup: Enter (13)
   `)
 })
@@ -206,116 +205,28 @@ test('{meta}{enter}{/meta} on a button', async () => {
     keydown: Meta (93) {meta}
     keydown: Enter (13) {meta}
     keypress: Enter (13) {meta}
-    click {meta}
+    click: Left (0) {meta}
     keyup: Enter (13) {meta}
     keyup: Meta (93)
   `)
 })
 
-// all of the stuff below is complex magic that makes the simpler tests above work
-// sorrynotsorry...
+test('{meta}{alt}{ctrl}a{/ctrl}{/alt}{/meta}', async () => {
+  const {element: input, getEventCalls} = setup('input')
 
-const unstringSnapshotSerializer = {
-  test: val => typeof val === 'string',
-  print: val => val,
-}
+  await userEvent.type(input, '{meta}{alt}{ctrl}a{/ctrl}{/alt}{/meta}')
 
-expect.addSnapshotSerializer(unstringSnapshotSerializer)
-
-let eventListeners = []
-
-function addEventListener(el, type, listener, options) {
-  const hijackedListener = e => {
-    e.testData = {
-      previousValue: e.target.previousValue,
-      nextValue: e.target.value,
-      selectionStart: e.target.previousSelectionStart,
-      selectionEnd: e.target.previousSelectionEnd,
-    }
-    e.target.previousValue = e.target.value
-    e.target.previousSelectionStart = e.target.selectionStart
-    e.target.previousSelectionEnd = e.target.selectionEnd
-    return listener(e)
-  }
-  eventListeners.push({el, type, listener: hijackedListener})
-  el.addEventListener(type, hijackedListener, options)
-}
-
-function setup(elementType) {
-  const {
-    container: {firstChild: element},
-  } = render(React.createElement(elementType))
-  const getEventCalls = addListeners(element)
-  return {element, getEventCalls}
-}
-
-function addListeners(element) {
-  const generalListener = jest.fn().mockName('eventListener')
-  const listeners = [
-    'keydown',
-    'keyup',
-    'keypress',
-    'input',
-    'change',
-    'blur',
-    'focus',
-    'click',
-  ]
-
-  for (const name of listeners) {
-    addEventListener(element, name, generalListener)
-  }
-  function getEventCalls() {
-    return generalListener.mock.calls
-      .map(([event]) => {
-        const modifiers = ['altKey', 'shiftKey', 'metaKey', 'ctrlKey']
-          .filter(key => event[key])
-          .map(k => `{${k.replace('Key', '')}}`)
-          .join('')
-        if (event.type === 'input' && event.hasOwnProperty('testData')) {
-          const {
-            previousValue,
-            nextValue,
-            selectionStart,
-            selectionEnd,
-          } = event.testData
-          const prevVal = [
-            previousValue.slice(0, selectionStart),
-            ...(selectionStart === selectionEnd
-              ? ['{CURSOR}']
-              : [
-                  '{SELECTION}',
-                  previousValue.slice(selectionStart, selectionEnd),
-                  '{/SELECTION}',
-                ]),
-            previousValue.slice(selectionEnd),
-          ].join('')
-          return `input: "${prevVal}" -> "${nextValue}"`
-        }
-        if (
-          event instanceof event.target.ownerDocument.defaultView.KeyboardEvent
-        ) {
-          return [
-            `${event.type}:`,
-            event.key,
-            typeof event.keyCode === 'undefined' ? null : `(${event.keyCode})`,
-            modifiers,
-          ]
-            .join(' ')
-            .trim()
-        } else {
-          return [event.type, modifiers].join(' ').trim()
-        }
-      })
-      .join('\n')
-  }
-  return getEventCalls
-}
-
-// eslint-disable-next-line jest/prefer-hooks-on-top
-afterEach(() => {
-  for (const {el, type, listener} of eventListeners) {
-    el.removeEventListener(type, listener)
-  }
-  eventListeners = []
+  expect(getEventCalls()).toMatchInlineSnapshot(`
+    focus
+    keydown: Meta (93) {meta}
+    keydown: Alt (18) {alt}{meta}
+    keydown: Control (17) {alt}{meta}{ctrl}
+    keydown: a (97) {alt}{meta}{ctrl}
+    keypress: a (97) {alt}{meta}{ctrl}
+    input: "{CURSOR}" -> "a"
+    keyup: a (97) {alt}{meta}{ctrl}
+    keyup: Control (17) {alt}{meta}
+    keyup: Alt (18) {meta}
+    keyup: Meta (93)
+  `)
 })

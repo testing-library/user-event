@@ -1,39 +1,58 @@
 import React, {Fragment} from 'react'
 import {render, screen} from '@testing-library/react'
-import userEvent from '../../src'
+import userEvent from '..'
+import {setup} from './helpers/utils'
 
-test.each(['input', 'textarea'])('should type text in <%s>', async type => {
-  const onChange = jest.fn()
-  render(
-    React.createElement(type, {
-      'data-testid': 'input',
-      onChange,
-    }),
-  )
-  const text = 'Hello, world!'
-  await userEvent.type(screen.getByTestId('input'), text)
-  expect(onChange).toHaveBeenCalledTimes(text.length)
-  expect(screen.getByTestId('input')).toHaveProperty('value', text)
+it('types text in input', async () => {
+  const {element, getEventCalls} = setup('input')
+  await userEvent.type(element, 'Sup')
+  expect(getEventCalls()).toMatchInlineSnapshot(`
+    focus
+    keydown: S (83)
+    keypress: S (83)
+    input: "{CURSOR}" -> "S"
+    keyup: S (83)
+    keydown: u (117)
+    keypress: u (117)
+    input: "S{CURSOR}" -> "Su"
+    keyup: u (117)
+    keydown: p (112)
+    keypress: p (112)
+    input: "Su{CURSOR}" -> "Sup"
+    keyup: p (112)
+  `)
 })
 
-test('should append text one by one', async () => {
-  const onChange = jest.fn()
-  render(<input data-testid="input" onChange={onChange} />)
-  await userEvent.type(screen.getByTestId('input'), 'hello')
-  await userEvent.type(screen.getByTestId('input'), ' world')
-  expect(onChange).toHaveBeenCalledTimes('hello world'.length)
-  expect(screen.getByTestId('input')).toHaveProperty('value', 'hello world')
+it('types text in textarea', async () => {
+  const {element, getEventCalls} = setup('textarea')
+  await userEvent.type(element, 'Sup')
+  expect(getEventCalls()).toMatchInlineSnapshot(`
+    focus
+    keydown: S (83)
+    keypress: S (83)
+    input: "{CURSOR}" -> "S"
+    keyup: S (83)
+    keydown: u (117)
+    keypress: u (117)
+    input: "S{CURSOR}" -> "Su"
+    keyup: u (117)
+    keydown: p (112)
+    keypress: p (112)
+    input: "Su{CURSOR}" -> "Sup"
+    keyup: p (112)
+  `)
 })
 
 test('should append text all at once', async () => {
-  const onChange = jest.fn()
-  render(<input data-testid="input" onChange={onChange} />)
-  await userEvent.type(screen.getByTestId('input'), 'hello', {allAtOnce: true})
-  await userEvent.type(screen.getByTestId('input'), ' world', {allAtOnce: true})
-  expect(onChange).toHaveBeenCalledTimes(2)
-  expect(screen.getByTestId('input')).toHaveProperty('value', 'hello world')
+  const {element, getEventCalls} = setup('input')
+  await userEvent.type(element, 'Sup', {allAtOnce: true})
+  expect(getEventCalls()).toMatchInlineSnapshot(`
+    focus
+    input: "{CURSOR}" -> "Sup"
+  `)
 })
 
+// TODO: Let's migrate these tests to use the setup util
 test('should not type when event.preventDefault() is called', async () => {
   const onChange = jest.fn()
   const onKeydown = jest

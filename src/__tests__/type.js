@@ -257,7 +257,7 @@ test.each(['input', 'textarea'])(
   },
 )
 
-test('should fire events on the currently focussed element', async () => {
+test('should fire events on the currently focused element', async () => {
   const changeFocusLimit = 7
   const onKeyDown = jest.fn(event => {
     if (event.target.value.length === changeFocusLimit) {

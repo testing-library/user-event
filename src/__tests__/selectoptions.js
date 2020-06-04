@@ -302,3 +302,19 @@ test('sets the selected prop on the selected OPTION using OPTGROUPS', () => {
   expect(screen.getByTestId('val2').selected).toBe(false)
   expect(screen.getByTestId('val3').selected).toBe(true)
 })
+
+test('does not select anything if no matching options are given', () => {
+  const {
+    container: {firstChild: select},
+  } = render(
+    <select>
+      <option>No value selected</option>
+      <option value="1">1</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+    </select>,
+  )
+
+  userEvent.selectOptions(select, 'Matches nothing')
+  expect(select.selectedIndex).toBe(0)
+})

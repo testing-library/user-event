@@ -33,6 +33,7 @@
     "lint": "kcd-scripts lint",
     "setup": "npm install && npm run validate -s",
     "test": "kcd-scripts test",
+    "test:debug": "kcd-scripts --inspect-brk test --runInBand",
     "test:update": "npm test -- --updateSnapshot --coverage",
     "validate": "kcd-scripts validate"
   },
@@ -42,7 +43,8 @@
   "devDependencies": {
     "@testing-library/dom": "^7.9.0",
     "@testing-library/jest-dom": "^5.9.0",
-    "@testing-library/react": "^10.0.5",
+    "@testing-library/react": "^10.2.0",
+    "is-ci": "^2.0.0",
     "kcd-scripts": "^6.2.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1"

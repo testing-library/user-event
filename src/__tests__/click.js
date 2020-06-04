@@ -1,94 +1,63 @@
 import React from 'react'
 import {render, screen} from '@testing-library/react'
-import '@testing-library/jest-dom/extend-expect'
 import userEvent from '..'
+import {setup} from './helpers/utils'
 
-test.each(['input', 'textarea'])(
-  'should fire the correct events for <%s>',
-  type => {
-    const events = []
-    const eventsHandler = jest.fn(evt => events.push(evt.type))
-    render(
-      React.createElement(type, {
-        'data-testid': 'element',
-        onMouseOver: eventsHandler,
-        onMouseMove: eventsHandler,
-        onMouseDown: eventsHandler,
-        onFocus: eventsHandler,
-        onMouseUp: eventsHandler,
-        onClick: eventsHandler,
-      }),
-    )
+test('click in input', () => {
+  const {element, getEventCalls} = setup('input')
+  userEvent.click(element)
+  expect(getEventCalls()).toMatchInlineSnapshot(`
+    mouseover: Left (0)
+    mousemove: Left (0)
+    mousedown: Left (0)
+    focus
+    mouseup: Left (0)
+    click: Left (0)
+  `)
+})
 
-    userEvent.click(screen.getByTestId('element'))
-
-    expect(events).toEqual([
-      'mouseover',
-      'mousemove',
-      'mousedown',
-      'focus',
-      'mouseup',
-      'click',
-    ])
-  },
-)
+test('click in textarea', () => {
+  const {element, getEventCalls} = setup('textarea')
+  userEvent.click(element)
+  expect(getEventCalls()).toMatchInlineSnapshot(`
+    mouseover: Left (0)
+    mousemove: Left (0)
+    mousedown: Left (0)
+    focus
+    mouseup: Left (0)
+    click: Left (0)
+  `)
+})
 
 it('should fire the correct events for <input type="checkbox">', () => {
-  const events = []
-  const eventsHandler = jest.fn(evt => events.push(evt.type))
-  render(
-    <input
-      data-testid="element"
-      type="checkbox"
-      onMouseOver={eventsHandler}
-      onMouseMove={eventsHandler}
-      onMouseDown={eventsHandler}
-      onFocus={eventsHandler}
-      onMouseUp={eventsHandler}
-      onClick={eventsHandler}
-      onChange={eventsHandler}
-    />,
-  )
-
-  userEvent.click(screen.getByTestId('element'))
-
-  expect(events).toEqual([
-    'mouseover',
-    'mousemove',
-    'mousedown',
-    'focus',
-    'mouseup',
-    'click',
-    'change',
-  ])
-
-  expect(screen.getByTestId('element')).toHaveProperty('checked', true)
+  const {element, getEventCalls} = setup('input', {type: 'checkbox'})
+  expect(element).not.toBeChecked()
+  userEvent.click(element)
+  expect(getEventCalls()).toMatchInlineSnapshot(`
+    mouseover: Left (0)
+    mousemove: Left (0)
+    mousedown: Left (0)
+    focus
+    mouseup: Left (0)
+    click: unchecked -> checked
+    input: checked
+    change
+  `)
 })
 
 it('should fire the correct events for <input type="checkbox" disabled>', () => {
-  const events = []
-  const eventsHandler = jest.fn(evt => events.push(evt.type))
-  render(
-    <input
-      data-testid="element"
-      type="checkbox"
-      onMouseOver={eventsHandler}
-      onMouseMove={eventsHandler}
-      onMouseDown={eventsHandler}
-      onFocus={eventsHandler}
-      onMouseUp={eventsHandler}
-      onClick={eventsHandler}
-      onChange={eventsHandler}
-      disabled
-    />,
-  )
-
-  userEvent.click(screen.getByTestId('element'))
-
-  expect(events).toEqual([])
-
-  expect(screen.getByTestId('element')).toHaveProperty('checked', false)
+  const {element, getEventCalls} = setup('input', {
+    type: 'checkbox',
+    disabled: true,
+  })
+  userEvent.click(element)
+  expect(element).toBeDisabled()
+  // no event calls is expected here:
+  expect(getEventCalls()).toMatchInlineSnapshot(``)
+  expect(element).toBeDisabled()
 })
+
+// TODO: Update all these tests to use the setup util...
 
 it('should fire the correct events for <input type="radio">', () => {
   const events = []
@@ -434,12 +403,14 @@ test.each(['input', 'textarea'])(
 
 it('should fire mouse events with the correct properties', () => {
   const events = []
-  const eventsHandler = jest.fn(evt => events.push({
-    type: evt.type,
-    button: evt.button,
-    buttons: evt.buttons,
-    detail: evt.detail
-  }))
+  const eventsHandler = jest.fn(evt =>
+    events.push({
+      type: evt.type,
+      button: evt.button,
+      buttons: evt.buttons,
+      detail: evt.detail,
+    }),
+  )
   render(
     <div
       data-testid="div"
@@ -458,44 +429,46 @@ it('should fire mouse events with the correct properties', () => {
       type: 'mouseover',
       button: 0,
       buttons: 0,
-      detail: 0
+      detail: 0,
     },
     {
       type: 'mousemove',
       button: 0,
       buttons: 0,
-      detail: 0
+      detail: 0,
     },
     {
       type: 'mousedown',
       button: 0,
       buttons: 1,
-      detail: 1
+      detail: 1,
     },
     {
       type: 'mouseup',
       button: 0,
       buttons: 1,
-      detail: 1
+      detail: 1,
     },
     {
       type: 'click',
       button: 0,
       buttons: 1,
-      detail: 1
+      detail: 1,
     },
   ])
 })
 
 it('should fire mouse events with custom button property', () => {
   const events = []
-  const eventsHandler = jest.fn(evt => events.push({
-    type: evt.type,
-    button: evt.button,
-    buttons: evt.buttons,
-    detail: evt.detail,
-    altKey: evt.altKey
-  }))
+  const eventsHandler = jest.fn(evt =>
+    events.push({
+      type: evt.type,
+      button: evt.button,
+      buttons: evt.buttons,
+      detail: evt.detail,
+      altKey: evt.altKey,
+    }),
+  )
   render(
     <div
       data-testid="div"
@@ -510,7 +483,7 @@ it('should fire mouse events with custom button property', () => {
 
   userEvent.click(screen.getByTestId('div'), {
     button: 1,
-    altKey: true
+    altKey: true,
   })
 
   expect(events).toEqual([
@@ -519,47 +492,49 @@ it('should fire mouse events with custom button property', () => {
       button: 0,
       buttons: 0,
       detail: 0,
-      altKey: true
+      altKey: true,
     },
     {
       type: 'mousemove',
       button: 0,
       buttons: 0,
       detail: 0,
-      altKey: true
+      altKey: true,
     },
     {
       type: 'mousedown',
       button: 1,
       buttons: 4,
       detail: 1,
-      altKey: true
+      altKey: true,
     },
     {
       type: 'mouseup',
       button: 1,
       buttons: 4,
       detail: 1,
-      altKey: true
+      altKey: true,
     },
     {
       type: 'click',
       button: 1,
       buttons: 4,
       detail: 1,
-      altKey: true
+      altKey: true,
     },
   ])
 })
 
 it('should fire mouse events with custom buttons property', () => {
   const events = []
-  const eventsHandler = jest.fn(evt => events.push({
-    type: evt.type,
-    button: evt.button,
-    buttons: evt.buttons,
-    detail: evt.detail
-  }))
+  const eventsHandler = jest.fn(evt =>
+    events.push({
+      type: evt.type,
+      button: evt.button,
+      buttons: evt.buttons,
+      detail: evt.detail,
+    }),
+  )
   render(
     <div
       data-testid="div"
@@ -573,7 +548,7 @@ it('should fire mouse events with custom buttons property', () => {
   )
 
   userEvent.click(screen.getByTestId('div'), {
-    buttons: 4
+    buttons: 4,
   })
 
   expect(events).toEqual([
@@ -581,31 +556,31 @@ it('should fire mouse events with custom buttons property', () => {
       type: 'mouseover',
       button: 0,
       buttons: 0,
-      detail: 0
+      detail: 0,
     },
     {
       type: 'mousemove',
       button: 0,
       buttons: 0,
-      detail: 0
+      detail: 0,
     },
     {
       type: 'mousedown',
       button: 1,
       buttons: 4,
-      detail: 1
+      detail: 1,
     },
     {
       type: 'mouseup',
       button: 1,
       buttons: 4,
-      detail: 1
+      detail: 1,
     },
     {
       type: 'click',
       button: 1,
       buttons: 4,
-      detail: 1
+      detail: 1,
     },
   ])
 })

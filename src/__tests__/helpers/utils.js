@@ -43,8 +43,8 @@ function setup(ui) {
   } = render(ui)
   element.previousTestData = getTestData(element)
 
-  const getEventCalls = addListeners(element)
-  return {element, getEventCalls}
+  const {getEventCalls, clearEventCalls} = addListeners(element)
+  return {element, getEventCalls, clearEventCalls}
 }
 
 function addListeners(element) {
@@ -102,7 +102,8 @@ function addListeners(element) {
       })
       .join('\n')
   }
-  return getEventCalls
+  const clearEventCalls = () => generalListener.mockClear()
+  return {getEventCalls, clearEventCalls}
 }
 
 // https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/button

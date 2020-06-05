@@ -25,12 +25,24 @@ async function typeImpl(element, text, {allAtOnce = false, delay} = {}) {
   // The focused element could change between each event, so get the currently active element each time
   const currentElement = () => element.ownerDocument.activeElement
   const currentValue = () => element.ownerDocument.activeElement.value
+  const setSelectionRange = newSelectionStart => {
+    // if the actual selection start is different from the one we expected
+    // then we set it to the end of the input
+    if (currentElement().selectionStart !== newSelectionStart) {
+      currentElement().setSelectionRange?.(
+        currentValue().length,
+        currentValue().length,
+      )
+    }
+  }
 
   if (allAtOnce) {
     if (!element.readOnly) {
+      const {newValue, newSelectionStart} = calculateNewValue(text)
       fireEvent.input(element, {
-        target: {value: calculateNewValue(text)},
+        target: {value: newValue},
       })
+      setSelectionRange(newSelectionStart)
     }
   } else {
     const eventCallbackMap = {
@@ -89,11 +101,13 @@ async function typeImpl(element, text, {allAtOnce = false, delay} = {}) {
 
         if (currentElement().tagName === 'TEXTAREA') {
           await tick()
+          const {newValue, newSelectionStart} = calculateNewValue('\n')
           fireEvent.input(currentElement(), {
-            target: {value: calculateNewValue('\n')},
+            target: {value: newValue},
             inputType: 'insertLineBreak',
             ...eventOverrides,
           })
+          setSelectionRange(newSelectionStart)
         }
 
         await tick()
@@ -131,25 +145,24 @@ async function typeImpl(element, text, {allAtOnce = false, delay} = {}) {
         const key = 'Backspace'
         const keyCode = 8
 
-        fireEvent.keyDown(currentElement(), {
-          key,
-          keyCode,
-          which: keyCode,
-          ...eventOverrides,
-        })
-
-        if (!currentElement().readOnly) {
-          await tick()
-
-          const {selectionStart} = currentElement()
-
-          fireEvent.input(currentElement(), {
-            target: {value: calculateNewValue('')},
-            inputType: 'deleteContentBackward',
+        const keyPressDefaultNotPrevented = fireEvent.keyDown(
+          currentElement(),
+          {
+            key,
+            keyCode,
+            which: keyCode,
             ...eventOverrides,
-          })
+          },
+        )
 
-          element.setSelectionRange?.(selectionStart, selectionStart)
+        if (keyPressDefaultNotPrevented) {
+          await fireInputEventIfNeeded({
+            ...calculateNewBackspaceValue(),
+            eventOverrides: {
+              inputType: 'deleteContentBackward',
+              ...eventOverrides,
+            },
+          })
         }
 
         await tick()
@@ -187,13 +200,64 @@ async function typeImpl(element, text, {allAtOnce = false, delay} = {}) {
     }
   }
 
+  async function fireInputEventIfNeeded({
+    newValue,
+    newSelectionStart,
+    eventOverrides,
+  }) {
+    if (!currentElement().readOnly && newValue !== currentValue()) {
+      await tick()
+
+      fireEvent.input(currentElement(), {
+        target: {value: newValue},
+        ...eventOverrides,
+      })
+
+      setSelectionRange(newSelectionStart)
+    }
+  }
+
+  // yes, calculateNewBackspaceValue and calculateNewValue look extremely similar
+  // and you may be tempted to create a shared abstraction.
+  // If you, brave soul, decide to so endevor, please increment this count
+  // when you inevitably fail: 1
+  function calculateNewBackspaceValue() {
+    const {selectionStart, selectionEnd} = currentElement()
+    const value = currentValue()
+    let newValue, newSelectionStart
+
+    if (selectionStart === selectionEnd) {
+      if (selectionStart === 0) {
+        // at the beginning of the input
+        newValue = value
+      } else if (selectionStart === value.length) {
+        // at the end of the input
+        newValue = value.slice(0, value.length - 1)
+        newSelectionStart = selectionStart - 1
+      } else {
+        // in the middle of the input
+        newValue =
+          value.slice(0, selectionStart - 1) + value.slice(selectionEnd)
+        newSelectionStart = selectionStart - 1
+      }
+    } else {
+      // we have something selected
+      const firstPart = value.slice(0, selectionStart)
+      newValue = firstPart + value.slice(selectionEnd)
+      newSelectionStart = firstPart.length
+    }
+
+    return {newValue, newSelectionStart}
+  }
+
   function calculateNewValue(newEntry) {
     const {selectionStart, selectionEnd} = currentElement()
     // can't use .maxLength property because of a jsdom bug:
     // https://github.com/jsdom/jsdom/issues/2927
     const maxLength = Number(currentElement().getAttribute('maxlength') ?? -1)
     const value = currentValue()
-    let newValue
+    let newValue, newSelectionStart
+
     if (selectionStart === selectionEnd) {
       if (selectionStart === 0) {
         // at the beginning of the input
@@ -204,20 +268,24 @@ async function typeImpl(element, text, {allAtOnce = false, delay} = {}) {
       } else {
         // in the middle of the input
         newValue =
-          value.slice(0, selectionStart - 1) +
-          newEntry +
-          value.slice(selectionEnd)
+          value.slice(0, selectionStart) + newEntry + value.slice(selectionEnd)
       }
+      newSelectionStart = selectionStart + newEntry.length
     } else {
       // we have something selected
-      newValue =
-        value.slice(0, selectionStart) + newEntry + value.slice(selectionEnd)
+      const firstPart = value.slice(0, selectionStart) + newEntry
+      newValue = firstPart + value.slice(selectionEnd)
+      newSelectionStart = firstPart.length
     }
 
     if (maxLength < 0) {
-      return newValue
+      return {newValue, newSelectionStart}
     } else {
-      return newValue.slice(0, maxLength)
+      return {
+        newValue: newValue.slice(0, maxLength),
+        newSelectionStart:
+          newSelectionStart > maxLength ? maxLength : newSelectionStart,
+      }
     }
   }
 
@@ -242,22 +310,11 @@ async function typeImpl(element, text, {allAtOnce = false, delay} = {}) {
         ...eventOverrides,
       })
 
-      const newValue = calculateNewValue(key)
-
-      if (keyPressDefaultNotPrevented && newValue !== currentValue()) {
-        if (!currentElement().readOnly) {
-          await tick()
-
-          const {selectionStart} = currentElement()
-
-          fireEvent.input(currentElement(), {
-            target: {
-              value: newValue,
-            },
-          })
-
-          element.setSelectionRange?.(selectionStart + 1, selectionStart + 1)
-        }
+      if (keyPressDefaultNotPrevented) {
+        await fireInputEventIfNeeded({
+          ...calculateNewValue(key),
+          eventOverrides,
+        })
       }
     }
 

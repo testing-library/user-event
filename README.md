@@ -58,7 +58,7 @@ change the state of the checkbox.
   - [`upload(element, file, [{ clickInit, changeInit }])`](#uploadelement-file--clickinit-changeinit-)
   - [`clear(element)`](#clearelement)
   - [`selectOptions(element, values)`](#selectoptionselement-values)
-  - [`toggleOptions(element, values)`](#toggleoptionselement-values)
+  - [`toggleSelectOptions(element, values)`](#toggleselectoptionselement-values)
   - [`tab({shift, focusTrap})`](#tabshift-focustrap)
 - [Issues](#issues)
   - [🐛 Bugs](#-bugs)
@@ -308,7 +308,7 @@ userEvent.selectOptions(screen.getByTestId('select-multiple'), [
 ])
 ```
 
-### `toggleOptions(element, values)`
+### `toggleSelectOptions(element, values)`
 
 Toggle the specified option(s) of a `<select multiple>` element.
 
@@ -317,7 +317,7 @@ import * as React from 'react'
 import {render, screen} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
-test('toggleOptions', () => {
+test('toggleSelectOptions', () => {
   render(
     <select multiple value={['1']} data-testid="select-multiple">
       <option data-testid="val1" value="1">
@@ -332,7 +332,10 @@ test('toggleOptions', () => {
     </select>,
   )
 
-  userEvent.toggleOptions(screen.getByTestId('select-multiple'), ['1', '3'])
+  userEvent.toggleSelectOptions(screen.getByTestId('select-multiple'), [
+    '1',
+    '3',
+  ])
 
   expect(screen.getByTestId('val1').selected).toBe(false) // selected becomes unselected
   expect(screen.getByTestId('val2').selected).toBe(false) // unaffected

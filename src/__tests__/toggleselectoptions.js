@@ -1,14 +1,14 @@
 import {render, screen} from '@testing-library/react'
 import React from 'react'
 import userEvent from '..'
-import {setup, addListeners} from './helpers/utils'
+import {addListeners, setup} from './helpers/utils'
 
 test('should fire the correct events for multiple select', () => {
   const {element: select, getEventCalls} = setup(
-    <select data-testid="element" multiple>
-      <option value="1">1</option>
-      <option value="2">2</option>
-      <option value="3">3</option>
+    <select multiple>
+      <option value="1">One</option>
+      <option value="2">Two</option>
+      <option value="3">Three</option>
     </select>,
   )
 
@@ -28,6 +28,8 @@ test('should fire the correct events for multiple select', () => {
     click: Left (0)
     change
   `)
+
+  expect(screen.getByRole('listbox').value).toBe('1')
 })
 
 test('should fire the correct events for multiple select when focus is in other element', () => {
@@ -38,18 +40,24 @@ test('should fire the correct events for multiple select when focus is in other 
         <option value="2">2</option>
         <option value="3">3</option>
       </select>
-      <button data-testid="other" tabIndex={0}>
-        Other
-      </button>
+      <button tabIndex={0}>Other</button>
     </>,
   )
 
-  const getButtonEvents = addListeners(screen.getByTestId('other'))
+  const $otherBtn = screen.getByRole('button')
 
-  screen.getByTestId('other').focus()
+  const getButtonEvents = addListeners($otherBtn)
+
+  $otherBtn.focus()
 
   userEvent.toggleSelectOptions(select, '1')
 
+  expect(getButtonEvents()).toMatchInlineSnapshot(`
+    focus
+    mousemove: Left (0)
+    mouseleave: Left (0)
+    blur
+  `)
   expect(getEventCalls()).toMatchInlineSnapshot(`
     mouseover: Left (0)
     mousemove: Left (0)
@@ -63,12 +71,6 @@ test('should fire the correct events for multiple select when focus is in other 
     mouseup: Left (0)
     click: Left (0)
     change
-  `)
-  expect(getButtonEvents()).toMatchInlineSnapshot(`
-    focus
-    mousemove: Left (0)
-    mouseleave: Left (0)
-    blur
   `)
 })
 
@@ -92,7 +94,6 @@ test('toggle options as expected', () => {
 
             setSelected(result)
           }}
-          data-testid="element"
           multiple
         >
           <option value="1">One</option>
@@ -101,29 +102,29 @@ test('toggle options as expected', () => {
             <option value="3">Three</option>
           </optgroup>
         </select>
-        <span data-testid="selected">{selected.join(', ')}</span>
+        <output>{selected.join(', ')}</output>
       </>
     )
   }
 
-  const {getByTestId} = render(<TestBed />)
+  render(<TestBed />)
 
   // select one
-  userEvent.toggleSelectOptions(getByTestId('element'), ['1'])
-  expect(getByTestId('selected').textContent).toBe('1')
+  userEvent.toggleSelectOptions(screen.getByRole('listbox'), ['1'])
+  expect(screen.getByRole('status')).toHaveTextContent('1')
 
   // unselect one and select two
-  userEvent.toggleSelectOptions(getByTestId('element'), ['1', '2'])
-  expect(getByTestId('selected').textContent).toBe('2')
+  userEvent.toggleSelectOptions(screen.getByRole('listbox'), ['1', '2'])
+  expect(screen.getByRole('status')).toHaveTextContent('2')
 
   // select one
-  userEvent.toggleSelectOptions(getByTestId('element'), ['1'])
-  expect(getByTestId('selected').textContent).toBe('1, 2')
+  userEvent.toggleSelectOptions(screen.getByRole('listbox'), ['1'])
+  expect(screen.getByRole('status')).toHaveTextContent('1, 2')
 })
 
 it('throws error when provided element is not a multiple select', () => {
   const {element: select} = setup(
-    <select data-testid="element">
+    <select>
       <option value="one">1</option>
     </select>,
   )

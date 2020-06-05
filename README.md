@@ -50,6 +50,7 @@ change the state of the checkbox.
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
+
 - [Installation](#installation)
 - [API](#api)
   - [`click(element)`](#clickelement)
@@ -319,27 +320,21 @@ import userEvent from '@testing-library/user-event'
 
 test('toggleSelectOptions', () => {
   render(
-    <select multiple value={['1']} data-testid="select-multiple">
-      <option data-testid="val1" value="1">
-        A
-      </option>
-      <option data-testid="val2" value="2">
-        B
-      </option>
-      <option data-testid="val3" value="3">
-        C
-      </option>
+    <select multiple>
+      <option value="1">A</option>
+      <option value="2">B</option>
+      <option value="3">C</option>
     </select>,
   )
 
-  userEvent.toggleSelectOptions(screen.getByTestId('select-multiple'), [
-    '1',
-    '3',
-  ])
+  userEvent.toggleSelectOptions(screen.getByRole('listbox'), ['1', '3'])
 
-  expect(screen.getByTestId('val1').selected).toBe(false) // selected becomes unselected
-  expect(screen.getByTestId('val2').selected).toBe(false) // unaffected
-  expect(screen.getByTestId('val3').selected).toBe(true) // unselected becomes selected
+  expect(screen.getByText('A').selected).toBe(true)
+  expect(screen.getByText('C').selected).toBe(true)
+
+  userEvent.toggleSelectOptions(screen.getByRole('listbox'), ['1'])
+
+  expect(screen.getByText('A').selected).toBe(false)
 })
 ```
 

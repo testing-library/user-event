@@ -346,6 +346,15 @@
         "doc",
         "test"
       ]
+    },
+    {
+      "login": "kelvinlzhang",
+      "name": "kelvinlzhang",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/8291294?v=4",
+      "profile": "https://github.com/kelvinlzhang",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "commitConvention": "none",

@@ -1,3 +1,1 @@
-module.exports = {
-  proseWrap: "always"
-};
+module.exports = require('kcd-scripts/prettier')

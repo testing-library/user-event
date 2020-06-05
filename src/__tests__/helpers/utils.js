@@ -181,4 +181,4 @@ afterEach(() => {
   eventListeners = []
 })
 
-export {setup, addEventListener}
+export {setup, addEventListener, addListeners}

@@ -59,6 +59,7 @@ change the state of the checkbox.
   - [`upload(element, file, [{ clickInit, changeInit }])`](#uploadelement-file--clickinit-changeinit-)
   - [`clear(element)`](#clearelement)
   - [`selectOptions(element, values)`](#selectoptionselement-values)
+  - [`toggleSelectOptions(element, values)`](#toggleselectoptionselement-values)
   - [`tab({shift, focusTrap})`](#tabshift-focustrap)
 - [Issues](#issues)
   - [🐛 Bugs](#-bugs)
@@ -307,6 +308,38 @@ userEvent.selectOptions(screen.getByTestId('select-multiple'), [
   screen.getByText('B'),
 ])
 ```
+
+### `toggleSelectOptions(element, values)`
+
+Toggle the specified option(s) of a `<select multiple>` element.
+
+```jsx
+import * as React from 'react'
+import {render, screen} from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+
+test('toggleSelectOptions', () => {
+  render(
+    <select multiple>
+      <option value="1">A</option>
+      <option value="2">B</option>
+      <option value="3">C</option>
+    </select>,
+  )
+
+  userEvent.toggleSelectOptions(screen.getByRole('listbox'), ['1', '3'])
+
+  expect(screen.getByText('A').selected).toBe(true)
+  expect(screen.getByText('C').selected).toBe(true)
+
+  userEvent.toggleSelectOptions(screen.getByRole('listbox'), ['1'])
+
+  expect(screen.getByText('A').selected).toBe(false)
+})
+```
+
+The `values` parameter can be either an array of values or a singular scalar
+value.
 
 ### `tab({shift, focusTrap})`
 

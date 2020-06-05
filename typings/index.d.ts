@@ -27,6 +27,11 @@ declare const userEvent: {
     values: string | string[] | HTMLElement | HTMLElement[],
     init?: MouseEventInit,
   ) => void
+  toggleSelectOptions: (
+    element: TargetElement,
+    values: string | string[] | HTMLElement | HTMLElement[],
+    init?: MouseEventInit,
+  ) => void
   upload: (
     element: TargetElement,
     files: FilesArgument,

@@ -161,6 +161,19 @@ function selectOption(select, option, init) {
   fireEvent.change(select)
 }
 
+function toggleSelectOption(select, option, init) {
+  fireEvent.mouseOver(option, getMouseEventOptions('mouseover', init))
+  fireEvent.mouseMove(option, getMouseEventOptions('mousemove', init))
+  fireEvent.mouseDown(option, getMouseEventOptions('mousedown', init))
+  fireEvent.focus(option)
+  fireEvent.mouseUp(option, getMouseEventOptions('mouseup', init))
+  fireEvent.click(option, getMouseEventOptions('click', init, 1))
+
+  option.selected = !option.selected
+
+  fireEvent.change(select)
+}
+
 const Keys = {
   Backspace: {keyCode: 8, code: 'Backspace', key: 'Backspace'},
 }
@@ -310,6 +323,37 @@ function selectOptions(element, values, init) {
   }
 }
 
+function toggleSelectOptions(element, values, init) {
+  if (!element || element.tagName !== 'SELECT' || !element.multiple) {
+    throw new Error(
+      `Unable to toggleSelectOptions - please provide a select element with multiple=true`,
+    )
+  }
+
+  const previouslyFocusedElement = getPreviouslyFocusedElement(element)
+  if (previouslyFocusedElement) {
+    fireEvent.mouseMove(
+      previouslyFocusedElement,
+      getMouseEventOptions('mousemove', init),
+    )
+    fireEvent.mouseLeave(
+      previouslyFocusedElement,
+      getMouseEventOptions('mouseleave', init),
+    )
+  }
+
+  clickElement(element, previouslyFocusedElement, init)
+
+  const valArray = Array.isArray(values) ? values : [values]
+  const selectedOptions = Array.from(element.querySelectorAll('option')).filter(
+    opt => valArray.includes(opt.value) || valArray.includes(opt),
+  )
+
+  if (selectedOptions.length > 0) {
+    selectedOptions.forEach(option => toggleSelectOption(element, option, init))
+  }
+}
+
 function clear(element) {
   if (element.disabled) return
 
@@ -387,6 +431,7 @@ const userEvent = {
   click,
   dblClick,
   selectOptions,
+  toggleSelectOptions,
   clear,
   type,
   upload,

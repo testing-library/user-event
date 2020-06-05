@@ -205,15 +205,16 @@ test('should not blur when mousedown prevents default', () => {
   ])
 })
 
-
 it('should fire mouse events with the correct properties', () => {
   const events = []
-  const eventsHandler = jest.fn(evt => events.push({
-    type: evt.type,
-    button: evt.button,
-    buttons: evt.buttons,
-    detail: evt.detail
-  }))
+  const eventsHandler = jest.fn(evt =>
+    events.push({
+      type: evt.type,
+      button: evt.button,
+      buttons: evt.buttons,
+      detail: evt.detail,
+    }),
+  )
   render(
     <div
       data-testid="div"
@@ -233,68 +234,70 @@ it('should fire mouse events with the correct properties', () => {
       type: 'mouseover',
       button: 0,
       buttons: 0,
-      detail: 0
+      detail: 0,
     },
     {
       type: 'mousemove',
       button: 0,
       buttons: 0,
-      detail: 0
+      detail: 0,
     },
     {
       type: 'mousedown',
       button: 0,
       buttons: 1,
-      detail: 1
+      detail: 1,
     },
     {
       type: 'mouseup',
       button: 0,
       buttons: 1,
-      detail: 1
+      detail: 1,
     },
     {
       type: 'click',
       button: 0,
       buttons: 1,
-      detail: 1
+      detail: 1,
     },
     {
       type: 'mousedown',
       button: 0,
       buttons: 1,
-      detail: 2
+      detail: 2,
     },
     {
       type: 'mouseup',
       button: 0,
       buttons: 1,
-      detail: 2
+      detail: 2,
     },
     {
       type: 'click',
       button: 0,
       buttons: 1,
-      detail: 2
+      detail: 2,
     },
     {
       type: 'dblclick',
       button: 0,
       buttons: 1,
-      detail: 2
+      detail: 2,
     },
   ])
 })
 
 it('should fire mouse events with custom button property', () => {
   const events = []
-  const eventsHandler = jest.fn(evt => events.push({
-    type: evt.type,
-    button: evt.button,
-    buttons: evt.buttons,
-    detail: evt.detail,
-    altKey: evt.altKey
-  }))
+  const eventsHandler = jest.fn(evt =>
+    events.push({
+      type: evt.type,
+      button: evt.button,
+      buttons: evt.buttons,
+      detail: evt.detail,
+      altKey: evt.altKey,
+    }),
+  )
   render(
     <div
       data-testid="div"
@@ -310,7 +313,7 @@ it('should fire mouse events with custom button property', () => {
 
   userEvent.dblClick(screen.getByTestId('div'), {
     button: 1,
-    altKey: true
+    altKey: true,
   })
 
   expect(events).toEqual([
@@ -319,75 +322,77 @@ it('should fire mouse events with custom button property', () => {
       button: 0,
       buttons: 0,
       detail: 0,
-      altKey: true
+      altKey: true,
     },
     {
       type: 'mousemove',
       button: 0,
       buttons: 0,
       detail: 0,
-      altKey: true
+      altKey: true,
     },
     {
       type: 'mousedown',
       button: 1,
       buttons: 4,
       detail: 1,
-      altKey: true
+      altKey: true,
     },
     {
       type: 'mouseup',
       button: 1,
       buttons: 4,
       detail: 1,
-      altKey: true
+      altKey: true,
     },
     {
       type: 'click',
       button: 1,
       buttons: 4,
       detail: 1,
-      altKey: true
+      altKey: true,
     },
     {
       type: 'mousedown',
       button: 1,
       buttons: 4,
       detail: 2,
-      altKey: true
+      altKey: true,
     },
     {
       type: 'mouseup',
       button: 1,
       buttons: 4,
       detail: 2,
-      altKey: true
+      altKey: true,
     },
     {
       type: 'click',
       button: 1,
       buttons: 4,
       detail: 2,
-      altKey: true
+      altKey: true,
     },
     {
       type: 'dblclick',
       button: 1,
       buttons: 4,
       detail: 2,
-      altKey: true
+      altKey: true,
     },
   ])
 })
 
 it('should fire mouse events with custom buttons property', () => {
   const events = []
-  const eventsHandler = jest.fn(evt => events.push({
-    type: evt.type,
-    button: evt.button,
-    buttons: evt.buttons,
-    detail: evt.detail
-  }))
+  const eventsHandler = jest.fn(evt =>
+    events.push({
+      type: evt.type,
+      button: evt.button,
+      buttons: evt.buttons,
+      detail: evt.detail,
+    }),
+  )
   render(
     <div
       data-testid="div"
@@ -402,7 +407,7 @@ it('should fire mouse events with custom buttons property', () => {
   )
 
   userEvent.dblClick(screen.getByTestId('div'), {
-    buttons: 4
+    buttons: 4,
   })
 
   expect(events).toEqual([
@@ -410,55 +415,55 @@ it('should fire mouse events with custom buttons property', () => {
       type: 'mouseover',
       button: 0,
       buttons: 0,
-      detail: 0
+      detail: 0,
     },
     {
       type: 'mousemove',
       button: 0,
       buttons: 0,
-      detail: 0
+      detail: 0,
     },
     {
       type: 'mousedown',
       button: 1,
       buttons: 4,
-      detail: 1
+      detail: 1,
     },
     {
       type: 'mouseup',
       button: 1,
       buttons: 4,
-      detail: 1
+      detail: 1,
     },
     {
       type: 'click',
       button: 1,
       buttons: 4,
-      detail: 1
+      detail: 1,
     },
     {
       type: 'mousedown',
       button: 1,
       buttons: 4,
-      detail: 2
+      detail: 2,
     },
     {
       type: 'mouseup',
       button: 1,
       buttons: 4,
-      detail: 2
+      detail: 2,
     },
     {
       type: 'click',
       button: 1,
       buttons: 4,
-      detail: 2
+      detail: 2,
     },
     {
       type: 'dblclick',
       button: 1,
       buttons: 4,
-      detail: 2
+      detail: 2,
     },
   ])
 })

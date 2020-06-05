@@ -23,7 +23,7 @@
 [![MIT License][license-badge]][license]
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-35-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-36-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 [![PRs Welcome][prs-badge]][prs]
 [![Code of Conduct][coc-badge]][coc]
@@ -468,6 +468,9 @@ Thanks goes to these people ([emoji key][emojis]):
     <td align="center"><a href="https://github.com/kayleighridd"><img src="https://avatars3.githubusercontent.com/u/36446015?v=4" width="100px;" alt=""/><br /><sub><b>Kayleigh Ridd</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3Akayleighridd" title="Bug reports">🐛</a> <a href="https://github.com/testing-library/user-event/commits?author=kayleighridd" title="Code">💻</a> <a href="https://github.com/testing-library/user-event/commits?author=kayleighridd" title="Tests">⚠️</a></td>
     <td align="center"><a href="https://malcolmkee.com"><img src="https://avatars0.githubusercontent.com/u/24528512?v=4" width="100px;" alt=""/><br /><sub><b>Malcolm Kee</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=malcolm-kee" title="Code">💻</a> <a href="https://github.com/testing-library/user-event/commits?author=malcolm-kee" title="Documentation">📖</a> <a href="https://github.com/testing-library/user-event/commits?author=malcolm-kee" title="Tests">⚠️</a></td>
     <td align="center"><a href="https://github.com/kelvinlzhang"><img src="https://avatars3.githubusercontent.com/u/8291294?v=4" width="100px;" alt=""/><br /><sub><b>kelvinlzhang</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3Akelvinlzhang" title="Bug reports">🐛</a></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/krzysztof-hellostudio"><img src="https://avatars3.githubusercontent.com/u/1942664?v=4" width="100px;" alt=""/><br /><sub><b>Krzysztof</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3Akrzysztof-hellostudio" title="Bug reports">🐛</a></td>
   </tr>
 </table>
 

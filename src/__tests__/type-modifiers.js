@@ -28,9 +28,37 @@ test('{esc} triggers typing the escape character', async () => {
   `)
 })
 
+test('a{backspace}', async () => {
+  const {element, getEventCalls} = setup(<input />)
+  await userEvent.type(element, 'a{backspace}')
+  expect(getEventCalls()).toMatchInlineSnapshot(`
+    focus
+    keydown: a (97)
+    keypress: a (97)
+    input: "{CURSOR}" -> "a"
+    keyup: a (97)
+    keydown: Backspace (8)
+    input: "a{CURSOR}" -> ""
+    keyup: Backspace (8)
+  `)
+})
+
+test('{backspace}a', async () => {
+  const {element, getEventCalls} = setup(<input />)
+  await userEvent.type(element, '{backspace}a')
+  expect(getEventCalls()).toMatchInlineSnapshot(`
+    focus
+    keydown: Backspace (8)
+    keyup: Backspace (8)
+    keydown: a (97)
+    keypress: a (97)
+    input: "{CURSOR}" -> "a"
+    keyup: a (97)
+  `)
+})
+
 test('{backspace} triggers typing the backspace character and deletes the character behind the cursor', async () => {
-  const {element: input, getEventCalls} = setup(<input />)
-  input.value = 'yo'
+  const {element: input, getEventCalls} = setup(<input defaultValue="yo" />)
   input.setSelectionRange(1, 1)
 
   await userEvent.type(input, '{backspace}')
@@ -44,9 +72,24 @@ test('{backspace} triggers typing the backspace character and deletes the charac
 })
 
 test('{backspace} on a readOnly input', async () => {
-  const {element: input, getEventCalls} = setup(<input />)
-  input.readOnly = true
-  input.value = 'yo'
+  const {element: input, getEventCalls} = setup(
+    <input readOnly defaultValue="yo" />,
+  )
+  input.setSelectionRange(1, 1)
+
+  await userEvent.type(input, '{backspace}')
+
+  expect(getEventCalls()).toMatchInlineSnapshot(`
+    focus
+    keydown: Backspace (8)
+    keyup: Backspace (8)
+  `)
+})
+
+test('{backspace} does not fire input if keydown prevents default', async () => {
+  const {element: input, getEventCalls} = setup(
+    <input defaultValue="yo" onKeyDown={e => e.preventDefault()} />,
+  )
   input.setSelectionRange(1, 1)
 
   await userEvent.type(input, '{backspace}')
@@ -59,8 +102,9 @@ test('{backspace} on a readOnly input', async () => {
 })
 
 test('{backspace} deletes the selected range', async () => {
-  const {element: input, getEventCalls} = setup(<input />)
-  input.value = 'Hi there'
+  const {element: input, getEventCalls} = setup(
+    <input defaultValue="Hi there" />,
+  )
   input.setSelectionRange(1, 5)
 
   await userEvent.type(input, '{backspace}')

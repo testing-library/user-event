@@ -52,6 +52,31 @@ test('should append text all at once', async () => {
   `)
 })
 
+test('does not fire input event when keypress calls prevent default', async () => {
+  const {element, getEventCalls} = setup(
+    <input onKeyPress={e => e.preventDefault()} />,
+  )
+  await userEvent.type(element, 'a')
+  expect(getEventCalls()).toMatchInlineSnapshot(`
+    focus
+    keydown: a (97)
+    keypress: a (97)
+    keyup: a (97)
+  `)
+})
+
+test('does not fire keypress or input events when keydown calls prevent default', async () => {
+  const {element, getEventCalls} = setup(
+    <input onKeyDown={e => e.preventDefault()} />,
+  )
+  await userEvent.type(element, 'a')
+  expect(getEventCalls()).toMatchInlineSnapshot(`
+    focus
+    keydown: a (97)
+    keyup: a (97)
+  `)
+})
+
 // TODO: Let's migrate these tests to use the setup util
 test('should not type when event.preventDefault() is called', async () => {
   const onChange = jest.fn()
@@ -395,4 +420,78 @@ test('does not continue firing events when disabled during typing', async () => 
   } = render(<TestComp />)
   await userEvent.type(input, 'hi there')
   expect(input).toHaveValue('h')
+})
+
+function DollarInput({initialValue = ''}) {
+  const [value, setValue] = React.useState(initialValue)
+  function handleChange(event) {
+    const val = event.target.value
+    const withoutDollar = val.replace(/\$/g, '')
+    const num = Number(withoutDollar)
+    if (Number.isNaN(num)) return
+    setValue(`$${withoutDollar}`)
+  }
+  return <input value={value} type="text" onChange={handleChange} />
+}
+
+test('typing into a controlled input works', async () => {
+  const {element, getEventCalls} = setup(<DollarInput />)
+  await userEvent.type(element, '23')
+  expect(element.value).toBe('$23')
+  expect(getEventCalls()).toMatchInlineSnapshot(`
+    focus
+    keydown: 2 (50)
+    keypress: 2 (50)
+    input: "{CURSOR}" -> "2"
+    keyup: 2 (50)
+    keydown: 3 (51)
+    keypress: 3 (51)
+    input: "$2{CURSOR}" -> "$23"
+    keyup: 3 (51)
+  `)
+})
+
+test('typing in the middle of a controlled input works', async () => {
+  const {element, getEventCalls} = setup(<DollarInput initialValue="$23" />)
+  element.setSelectionRange(2, 2)
+
+  await userEvent.type(element, '1')
+
+  expect(element.value).toBe('$213')
+  expect(getEventCalls()).toMatchInlineSnapshot(`
+    focus
+    keydown: 1 (49)
+    keypress: 1 (49)
+    input: "$2{CURSOR}3" -> "$213"
+    keyup: 1 (49)
+  `)
+})
+
+test('ignored {backspace} in controlled input', async () => {
+  const {element, getEventCalls} = setup(<DollarInput initialValue="$23" />)
+  element.setSelectionRange(1, 1)
+
+  await userEvent.type(element, '{backspace}')
+  // this is the same behavior in the browser.
+  // in our case, when you try to backspace the "$", our event handler
+  // will ignore that change and React resets the value to what it was
+  // before. When the value is set programmatically to something different
+  // from what was expected based on the input event, the browser sets
+  // the selection start and end to the end of the input
+  expect(element.selectionStart).toBe(element.value.length)
+  expect(element.selectionEnd).toBe(element.value.length)
+  await userEvent.type(element, '4')
+
+  expect(element.value).toBe('$234')
+  // the backslash in the inline snapshot is to escape the $ before {CURSOR}
+  expect(getEventCalls()).toMatchInlineSnapshot(`
+    focus
+    keydown: Backspace (8)
+    input: "\${CURSOR}23" -> "23"
+    keyup: Backspace (8)
+    keydown: 4 (52)
+    keypress: 4 (52)
+    input: "$23{CURSOR}" -> "$234"
+    keyup: 4 (52)
+  `)
 })

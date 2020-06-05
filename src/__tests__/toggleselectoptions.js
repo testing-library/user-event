@@ -46,7 +46,7 @@ test('should fire the correct events for multiple select when focus is in other 
 
   const $otherBtn = screen.getByRole('button')
 
-  const getButtonEvents = addListeners($otherBtn)
+  const {getEventCalls: getButtonEvents} = addListeners($otherBtn)
 
   $otherBtn.focus()
 

@@ -1,5 +1,6 @@
 import {fireEvent} from '@testing-library/dom'
 import {type} from './type'
+import {isInputElement} from './utils'
 
 function isMousePressEvent(event) {
   return (
@@ -226,10 +227,6 @@ function selectAll(element) {
   if (isInputElement(element)) {
     element.type = elementType
   }
-}
-
-function isInputElement(element) {
-  return element.tagName.toLowerCase() === 'input'
 }
 
 function getPreviouslyFocusedElement(element) {

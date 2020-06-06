@@ -3,6 +3,7 @@ import {
   fireEvent,
 } from '@testing-library/dom'
 import {tick} from './tick'
+import {isInputElement} from './utils'
 
 function wait(time) {
   return new Promise(resolve => setTimeout(() => resolve(), time))
@@ -19,6 +20,13 @@ async function type(...args) {
 
 async function typeImpl(element, text, {allAtOnce = false, delay} = {}) {
   if (element.disabled) return
+
+  const elementType = element.type
+  // type is a readonly property on textarea, so check if element is an input before trying to modify it
+  if (isInputElement(element)) {
+    // setSelectionRange is not supported on certain types of inputs, e.g. "number" or "email"
+    element.type = 'text'
+  }
 
   element.focus()
 
@@ -198,6 +206,10 @@ async function typeImpl(element, text, {allAtOnce = false, delay} = {}) {
         Object.assign(eventOverrides, returnValue?.eventOverrides)
       }
     }
+  }
+
+  if (isInputElement(element)) {
+    element.type = elementType
   }
 
   async function fireInputEventIfNeeded({

@@ -495,3 +495,16 @@ test('ignored {backspace} in controlled input', async () => {
     keyup: 4 (52)
   `)
 })
+
+test('typing in an input with validated type works', async () => {
+  const onChange = jest.fn()
+  const {
+    container: {firstChild: input},
+  } = render(
+    <input type="number" onChange={onChange} aria-label="Test input" />,
+  )
+
+  await userEvent.type(input, '5550690')
+  expect(onChange).toHaveBeenCalledTimes(7)
+  expect(input).toHaveValue(5550690)
+})

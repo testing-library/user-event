@@ -496,15 +496,20 @@ test('ignored {backspace} in controlled input', async () => {
   `)
 })
 
-test('typing in an input with validated type works', async () => {
+test.each([
+  ['email', String],
+  ['password', String],
+  ['number', Number],
+  ['text', String],
+])(`typing in an input of type="%s" works`, async (inputType, resultType) => {
   const onChange = jest.fn()
   const {
     container: {firstChild: input},
   } = render(
-    <input type="number" onChange={onChange} aria-label="Test input" />,
+    <input type={inputType} onChange={onChange} aria-label="Test input" />,
   )
 
   await userEvent.type(input, '5550690')
   expect(onChange).toHaveBeenCalledTimes(7)
-  expect(input).toHaveValue(5550690)
+  expect(input).toHaveValue(resultType(5550690))
 })

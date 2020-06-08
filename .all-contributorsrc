@@ -392,6 +392,17 @@
       "contributions": [
         "bug"
       ]
+    },
+    {
+      "login": "tpict",
+      "name": "Tom Picton",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/12588098?v=4",
+      "profile": "http://tompicton.com",
+      "contributions": [
+        "bug",
+        "code",
+        "test"
+      ]
     }
   ],
   "commitConvention": "none",

@@ -17,8 +17,8 @@ async function type(...args) {
   return result
 }
 
-const getActiveElement = element => {
-  const activeElement = element.activeElement
+const getActiveElement = document => {
+  const activeElement = document.activeElement
   if (activeElement.shadowRoot) {
     return getActiveElement(activeElement.shadowRoot) || activeElement
   } else {

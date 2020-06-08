@@ -403,6 +403,15 @@
         "code",
         "test"
       ]
+    },
+    {
+      "login": "nvh95",
+      "name": "Hung Viet Nguyen",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/8603085?v=4",
+      "profile": "https://hung.dev",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "commitConvention": "none",

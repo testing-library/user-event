@@ -37,21 +37,15 @@ function addEventListener(el, type, listener, options) {
   el.addEventListener(type, hijackedListener, options)
 }
 
-function setup(ui, {shadowRootSelector} = {}) {
-  let hostElement
-  let {
+function setup(ui) {
+  const {
     container: {firstChild: element},
   } = render(ui)
-
-  if (shadowRootSelector) {
-    hostElement = element
-    element = element.shadowRoot.querySelector(shadowRootSelector)
-  }
 
   element.previousTestData = getTestData(element)
 
   const {getEventCalls, clearEventCalls} = addListeners(element)
-  return {element, hostElement, getEventCalls, clearEventCalls}
+  return {element, getEventCalls, clearEventCalls}
 }
 
 function addListeners(element) {

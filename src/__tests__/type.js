@@ -1,7 +1,7 @@
 import React, {Fragment} from 'react'
 import {render, screen} from '@testing-library/react'
 import userEvent from '..'
-import {setup} from './helpers/utils'
+import {setup, addListeners} from './helpers/utils'
 import './helpers/customElement'
 
 it('types text in input', async () => {
@@ -25,11 +25,13 @@ it('types text in input', async () => {
 })
 
 it('types text inside custom element', async () => {
-  const {element, hostElement, getEventCalls} = setup(<custom-el />, {
-    shadowRootSelector: 'input',
-  })
+  const {
+    container: {firstChild: customElement},
+  } = render(<custom-el />)
+  const inputEl = customElement.shadowRoot.querySelector('input')
+  const {getEventCalls} = addListeners(inputEl)
 
-  await userEvent.type(element, 'Sup', {hostElement})
+  await userEvent.type(inputEl, 'Sup')
   expect(getEventCalls()).toMatchInlineSnapshot(`
     focus
     keydown: S (83)

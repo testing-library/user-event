@@ -383,6 +383,15 @@
       "contributions": [
         "bug"
       ]
+    },
+    {
+      "login": "nanivijay",
+      "name": "Vijay Kumar Otti",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/5945591?v=4",
+      "profile": "https://github.com/nanivijay",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "commitConvention": "none",

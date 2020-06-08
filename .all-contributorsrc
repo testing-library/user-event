@@ -374,6 +374,15 @@
         "code",
         "test"
       ]
+    },
+    {
+      "login": "hudochenkov",
+      "name": "Aleks Hudochenkov",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/654597?v=4",
+      "profile": "https://hudochenkov.com/",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "commitConvention": "none",

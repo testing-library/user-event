@@ -1,11 +1,37 @@
 import React, {Fragment} from 'react'
 import {render, screen} from '@testing-library/react'
 import userEvent from '..'
-import {setup} from './helpers/utils'
+import {setup, addListeners} from './helpers/utils'
+import './helpers/customElement'
 
 it('types text in input', async () => {
   const {element, getEventCalls} = setup(<input />)
   await userEvent.type(element, 'Sup')
+  expect(getEventCalls()).toMatchInlineSnapshot(`
+    focus
+    keydown: S (83)
+    keypress: S (83)
+    input: "{CURSOR}" -> "S"
+    keyup: S (83)
+    keydown: u (117)
+    keypress: u (117)
+    input: "S{CURSOR}" -> "Su"
+    keyup: u (117)
+    keydown: p (112)
+    keypress: p (112)
+    input: "Su{CURSOR}" -> "Sup"
+    keyup: p (112)
+  `)
+})
+
+it('types text inside custom element', async () => {
+  const {
+    container: {firstChild: customElement},
+  } = render(<custom-el />)
+  const inputEl = customElement.shadowRoot.querySelector('input')
+  const {getEventCalls} = addListeners(inputEl)
+
+  await userEvent.type(inputEl, 'Sup')
   expect(getEventCalls()).toMatchInlineSnapshot(`
     focus
     keydown: S (83)

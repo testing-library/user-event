@@ -17,14 +17,23 @@ async function type(...args) {
   return result
 }
 
+const getActiveElement = document => {
+  const activeElement = document.activeElement
+  if (activeElement.shadowRoot) {
+    return getActiveElement(activeElement.shadowRoot) || activeElement
+  } else {
+    return activeElement
+  }
+}
+
 async function typeImpl(element, text, {allAtOnce = false, delay} = {}) {
   if (element.disabled) return
 
   element.focus()
 
   // The focused element could change between each event, so get the currently active element each time
-  const currentElement = () => element.ownerDocument.activeElement
-  const currentValue = () => element.ownerDocument.activeElement.value
+  const currentElement = () => getActiveElement(element.ownerDocument)
+  const currentValue = () => currentElement().value
   const setSelectionRange = newSelectionStart => {
     // if the actual selection start is different from the one we expected
     // then we set it to the end of the input

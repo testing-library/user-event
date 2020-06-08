@@ -23,7 +23,7 @@
 [![MIT License][license-badge]][license]
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-36-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-37-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 [![PRs Welcome][prs-badge]][prs]
 [![Code of Conduct][coc-badge]][coc]
@@ -471,6 +471,7 @@ Thanks goes to these people ([emoji key][emojis]):
   </tr>
   <tr>
     <td align="center"><a href="https://github.com/krzysztof-hellostudio"><img src="https://avatars3.githubusercontent.com/u/1942664?v=4" width="100px;" alt=""/><br /><sub><b>Krzysztof</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3Akrzysztof-hellostudio" title="Bug reports">🐛</a></td>
+    <td align="center"><a href="https://github.com/hontas"><img src="https://avatars2.githubusercontent.com/u/1521113?v=4" width="100px;" alt=""/><br /><sub><b>Pontus Lundin</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=hontas" title="Code">💻</a> <a href="https://github.com/testing-library/user-event/commits?author=hontas" title="Tests">⚠️</a></td>
   </tr>
 </table>
 

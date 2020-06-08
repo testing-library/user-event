@@ -43,9 +43,9 @@
   "devDependencies": {
     "@testing-library/dom": "^7.9.0",
     "@testing-library/jest-dom": "^5.9.0",
-    "@testing-library/react": "^10.2.0",
+    "@testing-library/react": "^10.2.1",
     "is-ci": "^2.0.0",
-    "kcd-scripts": "^6.2.0",
+    "kcd-scripts": "^6.2.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1"
   },

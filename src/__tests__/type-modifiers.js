@@ -117,6 +117,14 @@ test('{backspace} deletes the selected range', async () => {
   `)
 })
 
+test('{backspace} on an input type that does not support selection ranges', async () => {
+  const {element} = setup(<input type="email" defaultValue="yo@example.com" />)
+  // note: you cannot even call setSelectionRange on these kinds of elements...
+  await userEvent.type(element, '{backspace}')
+  // removed "m"
+  expect(element).toHaveValue('yo@example.co')
+})
+
 test('{alt}a{/alt}', async () => {
   const {element: input, getEventCalls} = setup(<input />)
 

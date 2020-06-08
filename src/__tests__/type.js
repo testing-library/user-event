@@ -521,3 +521,53 @@ test('ignored {backspace} in controlled input', async () => {
     keyup: 4 (52)
   `)
 })
+
+// https://github.com/testing-library/user-event/issues/321
+test('typing in a textarea with existing text', async () => {
+  const {element, getEventCalls} = setup(<textarea defaultValue="Hello, " />)
+
+  await userEvent.type(element, '12')
+  expect(getEventCalls()).toMatchInlineSnapshot(`
+    focus
+    keydown: 1 (49)
+    keypress: 1 (49)
+    input: "Hello, {CURSOR}" -> "Hello, 1"
+    keyup: 1 (49)
+    keydown: 2 (50)
+    keypress: 2 (50)
+    input: "Hello, 1{CURSOR}" -> "Hello, 12"
+    keyup: 2 (50)
+  `)
+  expect(element).toHaveValue('Hello, 12')
+})
+
+// https://github.com/testing-library/user-event/issues/321
+test('accepts an initialSelectionStart and initialSelectionEnd', async () => {
+  const {element, getEventCalls} = setup(<textarea defaultValue="Hello, " />)
+  element.setSelectionRange(0, 0)
+
+  await userEvent.type(element, '12', {
+    initialSelectionStart: element.selectionStart,
+    initialSelectionEnd: element.selectionEnd,
+  })
+  expect(getEventCalls()).toMatchInlineSnapshot(`
+    focus
+    keydown: 1 (49)
+    keypress: 1 (49)
+    input: "{CURSOR}Hello, " -> "1Hello, "
+    keyup: 1 (49)
+    keydown: 2 (50)
+    keypress: 2 (50)
+    input: "1{CURSOR}Hello, " -> "12Hello, "
+    keyup: 2 (50)
+  `)
+  expect(element).toHaveValue('12Hello, ')
+})
+
+// https://github.com/testing-library/user-event/issues/316#issuecomment-640199908
+test('can type into an input with type `email`', async () => {
+  const {element} = setup(<input type="email" />)
+  const email = 'yo@example.com'
+  await userEvent.type(element, email)
+  expect(element).toHaveValue(email)
+})

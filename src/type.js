@@ -26,7 +26,12 @@ const getActiveElement = document => {
   }
 }
 
-async function typeImpl(element, text, {allAtOnce = false, delay} = {}) {
+// eslint-disable-next-line complexity
+async function typeImpl(
+  element,
+  text,
+  {allAtOnce = false, delay, initialSelectionStart, initialSelectionEnd} = {},
+) {
   if (element.disabled) return
 
   element.focus()
@@ -34,15 +39,37 @@ async function typeImpl(element, text, {allAtOnce = false, delay} = {}) {
   // The focused element could change between each event, so get the currently active element each time
   const currentElement = () => getActiveElement(element.ownerDocument)
   const currentValue = () => currentElement().value
-  const setSelectionRange = newSelectionStart => {
-    // if the actual selection start is different from the one we expected
-    // then we set it to the end of the input
-    if (currentElement().selectionStart !== newSelectionStart) {
-      currentElement().setSelectionRange?.(
-        currentValue().length,
-        currentValue().length,
-      )
+  const setSelectionRange = ({newValue, newSelectionStart}) => {
+    // if we *can* change the selection start, then we will if the new value
+    // is the same as the current value (so it wasn't programatically changed
+    // when the fireEvent.input was triggered).
+    // The reason we have to do this at all is because it actually *is*
+    // programmatically changed by fireEvent.input, so we have to simulate the
+    // browser's default behavior
+    if (
+      currentElement().selectionStart !== null &&
+      currentValue() === newValue
+    ) {
+      currentElement().setSelectionRange?.(newSelectionStart, newSelectionStart)
     }
+  }
+
+  // by default, a new element has it's selection start and end at 0
+  // but most of the time when people call "type", they expect it to type
+  // at the end of the current input value. So, if the selection start
+  // and end are both the default of 0, then we'll go ahead and change
+  // them to the length of the current value.
+  // the only time it would make sense to pass the initialSelectionStart or
+  // initialSelectionEnd is if you have an input with a value and want to
+  // explicitely start typing with the cursor at 0. Not super common.
+  if (
+    currentElement().selectionStart === 0 &&
+    currentElement().selectionEnd === 0
+  ) {
+    currentElement().setSelectionRange(
+      initialSelectionStart ?? currentValue()?.length ?? 0,
+      initialSelectionEnd ?? currentValue()?.length ?? 0,
+    )
   }
 
   if (allAtOnce) {
@@ -51,7 +78,7 @@ async function typeImpl(element, text, {allAtOnce = false, delay} = {}) {
       fireEvent.input(element, {
         target: {value: newValue},
       })
-      setSelectionRange(newSelectionStart)
+      setSelectionRange({newValue, newSelectionStart})
     }
   } else {
     const eventCallbackMap = {
@@ -116,7 +143,7 @@ async function typeImpl(element, text, {allAtOnce = false, delay} = {}) {
             inputType: 'insertLineBreak',
             ...eventOverrides,
           })
-          setSelectionRange(newSelectionStart)
+          setSelectionRange({newValue, newSelectionStart})
         }
 
         await tick()
@@ -222,7 +249,7 @@ async function typeImpl(element, text, {allAtOnce = false, delay} = {}) {
         ...eventOverrides,
       })
 
-      setSelectionRange(newSelectionStart)
+      setSelectionRange({newValue, newSelectionStart})
     }
   }
 
@@ -235,7 +262,12 @@ async function typeImpl(element, text, {allAtOnce = false, delay} = {}) {
     const value = currentValue()
     let newValue, newSelectionStart
 
-    if (selectionStart === selectionEnd) {
+    if (selectionStart === null) {
+      // at the end of an input type that does not support selection ranges
+      // https://github.com/testing-library/user-event/issues/316#issuecomment-639744793
+      newValue = value.slice(0, value.length - 1)
+      newSelectionStart = selectionStart - 1
+    } else if (selectionStart === selectionEnd) {
       if (selectionStart === 0) {
         // at the beginning of the input
         newValue = value
@@ -267,7 +299,11 @@ async function typeImpl(element, text, {allAtOnce = false, delay} = {}) {
     const value = currentValue()
     let newValue, newSelectionStart
 
-    if (selectionStart === selectionEnd) {
+    if (selectionStart === null) {
+      // at the end of an input type that does not support selection ranges
+      // https://github.com/testing-library/user-event/issues/316#issuecomment-639744793
+      newValue = value + newEntry
+    } else if (selectionStart === selectionEnd) {
       if (selectionStart === 0) {
         // at the beginning of the input
         newValue = newEntry + value

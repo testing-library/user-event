@@ -41,7 +41,6 @@ function setup(ui) {
   const {
     container: {firstChild: element},
   } = render(ui)
-
   element.previousTestData = getTestData(element)
 
   const {getEventCalls, clearEventCalls} = addListeners(element)

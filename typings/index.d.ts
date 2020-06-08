@@ -1,7 +1,9 @@
 // Definitions by: Wu Haotian <https://github.com/whtsky>
-export interface IUserOptions {
+export interface ITypeOpts {
   allAtOnce?: boolean
   delay?: number
+  initialSelectionStart?: number
+  initialSelectionEnd?: number
 }
 
 export interface ITabUserOptions {
@@ -40,7 +42,7 @@ declare const userEvent: {
   type: (
     element: TargetElement,
     text: string,
-    userOpts?: IUserOptions,
+    userOpts?: ITypeOpts,
   ) => Promise<void>
   tab: (userOpts?: ITabUserOptions) => void
 }

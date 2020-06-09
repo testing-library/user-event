@@ -408,15 +408,39 @@ function tab({shift = false, focusTrap = document} = {}) {
 
       return diff === 0 ? a.idx - b.idx : diff
     })
+    .map(({el}) => el)
 
-  const index = orderedElements.findIndex(
-    ({el}) => el === el.ownerDocument.activeElement,
+  if (shift) orderedElements.reverse()
+
+  // keep only the checked or first element in each radio group
+  const prunedElements = []
+  for (const el of orderedElements) {
+    if (el.type === 'radio' && el.name) {
+      const replacedIndex = prunedElements.findIndex(
+        ({name}) => name === el.name,
+      )
+
+      if (replacedIndex === -1) {
+        prunedElements.push(el)
+      } else if (el.checked) {
+        prunedElements.splice(replacedIndex, 1)
+        prunedElements.push(el)
+      }
+    } else {
+      prunedElements.push(el)
+    }
+  }
+
+  if (shift) prunedElements.reverse()
+
+  const index = prunedElements.findIndex(
+    el => el === el.ownerDocument.activeElement,
   )
 
   const nextIndex = shift ? index - 1 : index + 1
-  const defaultIndex = shift ? orderedElements.length - 1 : 0
+  const defaultIndex = shift ? prunedElements.length - 1 : 0
 
-  const {el: next} = orderedElements[nextIndex] || orderedElements[defaultIndex]
+  const next = prunedElements[nextIndex] || prunedElements[defaultIndex]
 
   if (next.getAttribute('tabindex') === null) {
     next.setAttribute('tabindex', '0') // jsdom requires tabIndex=0 for an item to become 'document.activeElement'

@@ -273,3 +273,51 @@ test('should keep focus on the document if there are no enabled, focusable eleme
   userEvent.tab({shift: true})
   expect(document.body).toHaveFocus()
 })
+
+test('should respect radio groups', () => {
+  render(
+    <>
+      <input
+        data-testid="element"
+        type="radio"
+        name="first"
+        value="first_left"
+      />
+      <input
+        data-testid="element"
+        type="radio"
+        name="first"
+        value="first_right"
+      />
+      <input
+        data-testid="element"
+        type="radio"
+        name="second"
+        value="second_left"
+      />
+      <input
+        data-testid="element"
+        type="radio"
+        name="second"
+        value="second_right"
+        defaultChecked
+      />
+    </>,
+  )
+
+  const [firstLeft, firstRight, , secondRight] = screen.getAllByTestId(
+    'element',
+  )
+
+  userEvent.tab()
+
+  expect(firstLeft).toHaveFocus()
+
+  userEvent.tab()
+
+  expect(secondRight).toHaveFocus()
+
+  userEvent.tab({shift: true})
+
+  expect(firstRight).toHaveFocus()
+})

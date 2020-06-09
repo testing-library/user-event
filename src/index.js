@@ -451,6 +451,14 @@ function tab({shift = false, focusTrap = document} = {}) {
   }
 }
 
+function hover(element, init) {
+  fireEvent.mouseEnter(element, getMouseEventOptions('mouseenter', init))
+  fireEvent.mouseOver(element, getMouseEventOptions('mouseover', init))
+  fireEvent.mouseMove(element, getMouseEventOptions('mousemove', init))
+  fireEvent.mouseOut(element, getMouseEventOptions('mouseout', init))
+  fireEvent.mouseLeave(element, getMouseEventOptions('mouseleave', init))
+}
+
 const userEvent = {
   click,
   dblClick,
@@ -460,6 +468,7 @@ const userEvent = {
   type,
   upload,
   tab,
+  hover,
 }
 
 export default userEvent

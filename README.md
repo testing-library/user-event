@@ -50,7 +50,6 @@ change the state of the checkbox.
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-
 - [Installation](#installation)
 - [API](#api)
   - [`click(element)`](#clickelement)
@@ -61,6 +60,7 @@ change the state of the checkbox.
   - [`selectOptions(element, values)`](#selectoptionselement-values)
   - [`toggleSelectOptions(element, values)`](#toggleselectoptionselement-values)
   - [`tab({shift, focusTrap})`](#tabshift-focustrap)
+  - [`hover(element)`](#hoverelement)
 - [Issues](#issues)
   - [🐛 Bugs](#-bugs)
   - [💡 Feature Requests](#-feature-requests)
@@ -398,6 +398,33 @@ it('should cycle elements in document tab order', () => {
 })
 ```
 
+### `hover(element)`
+
+Hovers over `element`.
+
+```jsx
+import React from 'react'
+import {render, screen} from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+
+test('hover', () => {
+  const handler = jest.fn()
+  render(
+    <button
+      data-testid="button"
+      onMouseEnter={handler}
+      onMouseOver={handler}
+      onMouseMove={handler}
+      onMouseOut={handler}
+      onMouseLeave={handler}
+    />,
+  )
+
+  userEvent.hover(screen.getByTestId('button'))
+  expect(handler).toHaveBeenCalledTimes(5)
+})
+```
+
 ## Issues
 
 _Looking to contribute? Look for the [Good First Issue][good-first-issue]
@@ -482,6 +509,7 @@ Thanks goes to these people ([emoji key][emojis]):
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors][all-contributors] specification.

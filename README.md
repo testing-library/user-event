@@ -23,7 +23,7 @@
 [![MIT License][license-badge]][license]
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-41-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-42-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 [![PRs Welcome][prs-badge]][prs]
 [![Code of Conduct][coc-badge]][coc]
@@ -476,6 +476,7 @@ Thanks goes to these people ([emoji key][emojis]):
     <td align="center"><a href="https://github.com/nanivijay"><img src="https://avatars0.githubusercontent.com/u/5945591?v=4" width="100px;" alt=""/><br /><sub><b>Vijay Kumar Otti</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3Ananivijay" title="Bug reports">🐛</a></td>
     <td align="center"><a href="http://tompicton.com"><img src="https://avatars2.githubusercontent.com/u/12588098?v=4" width="100px;" alt=""/><br /><sub><b>Tom Picton</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3Atpict" title="Bug reports">🐛</a> <a href="https://github.com/testing-library/user-event/commits?author=tpict" title="Code">💻</a> <a href="https://github.com/testing-library/user-event/commits?author=tpict" title="Tests">⚠️</a></td>
     <td align="center"><a href="https://hung.dev"><img src="https://avatars3.githubusercontent.com/u/8603085?v=4" width="100px;" alt=""/><br /><sub><b>Hung Viet Nguyen</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3Anvh95" title="Bug reports">🐛</a></td>
+    <td align="center"><a href="https://nickmccurdy.com/"><img src="https://avatars0.githubusercontent.com/u/927220?v=4" width="100px;" alt=""/><br /><sub><b>Nick McCurdy</b></sub></a><br /><a href="#projectManagement-nickmccurdy" title="Project Management">📆</a> <a href="#question-nickmccurdy" title="Answering Questions">💬</a></td>
   </tr>
 </table>
 

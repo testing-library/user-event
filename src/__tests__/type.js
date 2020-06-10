@@ -571,3 +571,55 @@ test('can type into an input with type `email`', async () => {
   await userEvent.type(element, email)
   expect(element).toHaveValue(email)
 })
+
+// https://github.com/testing-library/user-event/issues/336
+test('can type "-" into number inputs', async () => {
+  const {element, getEventCalls} = setup('<input type="number" />')
+  const negativeNumber = '-3'
+  await userEvent.type(element, negativeNumber)
+  expect(element).toHaveValue(-3)
+
+  // NOTE: the input event here does not actually change the value thanks to
+  // weirdness with browsers. Then the second input event inserts both the
+  // - and the 3. /me rolls eyes
+  expect(getEventCalls()).toMatchInlineSnapshot(`
+    focus
+    keydown: - (45)
+    keypress: - (45)
+    input: "{CURSOR}" -> ""
+    keyup: - (45)
+    keydown: 3 (51)
+    keypress: 3 (51)
+    input: "{CURSOR}" -> "-3"
+    keyup: 3 (51)
+  `)
+})
+
+test('-{backspace}3', async () => {
+  const {element} = setup('<input type="number" />')
+  const negativeNumber = '-{backspace}3'
+  await userEvent.type(element, negativeNumber)
+  expect(element).toHaveValue(3)
+})
+
+test('-a3', async () => {
+  const {element} = setup('<input type="number" />')
+  const negativeNumber = '-a3'
+  await userEvent.type(element, negativeNumber)
+  expect(element).toHaveValue(-3)
+})
+
+test('typing an invalid input value', async () => {
+  const {element} = setup('<input type="number" />')
+  await userEvent.type(element, '3-3')
+
+  // TODO: fix this bug
+  // THIS IS A BUG! It should be expect(element.value).toBe('')
+  expect(element).toHaveValue(-3)
+
+  // THIS IS A LIMITATION OF THE BROWSER
+  // It is impossible to programmatically set an input
+  // value to an invlid value. Not sure how to work around this
+  // but the badInput should actually be "true" if the user types "3-3"
+  expect(element.validity.badInput).toBe(false)
+})

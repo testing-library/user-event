@@ -1,17 +1,17 @@
-import React from 'react'
-import {render, screen} from '@testing-library/react'
-import userEvent from '../../src'
+import userEvent from '..'
+import {setup} from './helpers/utils'
 
 test('should cycle elements in document tab order', () => {
-  render(
+  setup(`
     <div>
       <input data-testid="element" type="checkbox" />
       <input data-testid="element" type="radio" />
       <input data-testid="element" type="number" />
-    </div>,
-  )
+    </div>`)
 
-  const [checkbox, radio, number] = screen.getAllByTestId('element')
+  const [checkbox, radio, number] = document.querySelectorAll(
+    '[data-testid="element"]',
+  )
 
   expect(document.body).toHaveFocus()
 
@@ -34,15 +34,16 @@ test('should cycle elements in document tab order', () => {
 })
 
 test('should go backwards when shift = true', () => {
-  render(
+  setup(`
     <div>
       <input data-testid="element" type="checkbox" />
       <input data-testid="element" type="radio" />
       <input data-testid="element" type="number" />
-    </div>,
-  )
+    </div>`)
 
-  const [checkbox, radio, number] = screen.getAllByTestId('element')
+  const [checkbox, radio, number] = document.querySelectorAll(
+    '[data-testid="element"]',
+  )
 
   radio.focus()
 
@@ -56,15 +57,16 @@ test('should go backwards when shift = true', () => {
 })
 
 test('should respect tabindex, regardless of dom position', () => {
-  render(
+  setup(`
     <div>
-      <input data-testid="element" tabIndex={2} type="checkbox" />
-      <input data-testid="element" tabIndex={1} type="radio" />
-      <input data-testid="element" tabIndex={3} type="number" />
-    </div>,
-  )
+      <input data-testid="element" tabIndex="2" type="checkbox" />
+      <input data-testid="element" tabIndex="1" type="radio" />
+      <input data-testid="element" tabIndex="3" type="number" />
+    </div>`)
 
-  const [checkbox, radio, number] = screen.getAllByTestId('element')
+  const [checkbox, radio, number] = document.querySelectorAll(
+    '[data-testid="element"]',
+  )
 
   userEvent.tab()
 
@@ -84,15 +86,16 @@ test('should respect tabindex, regardless of dom position', () => {
 })
 
 test('should respect dom order when tabindex are all the same', () => {
-  render(
+  setup(`
     <div>
-      <input data-testid="element" tabIndex={0} type="checkbox" />
-      <input data-testid="element" tabIndex={1} type="radio" />
-      <input data-testid="element" tabIndex={0} type="number" />
-    </div>,
-  )
+      <input data-testid="element" tabIndex="0" type="checkbox" />
+      <input data-testid="element" tabIndex="1" type="radio" />
+      <input data-testid="element" tabIndex="0" type="number" />
+    </div>`)
 
-  const [checkbox, radio, number] = screen.getAllByTestId('element')
+  const [checkbox, radio, number] = document.querySelectorAll(
+    '[data-testid="element"]',
+  )
 
   userEvent.tab()
 
@@ -112,15 +115,16 @@ test('should respect dom order when tabindex are all the same', () => {
 })
 
 test('should suport a mix of elements with/without tab index', () => {
-  render(
+  setup(`
     <div>
-      <input data-testid="element" tabIndex={0} type="checkbox" />
-      <input data-testid="element" tabIndex={1} type="radio" />
+      <input data-testid="element" tabIndex="0" type="checkbox" />
+      <input data-testid="element" tabIndex="1" type="radio" />
       <input data-testid="element" type="number" />
-    </div>,
-  )
+    </div>`)
 
-  const [checkbox, radio, number] = screen.getAllByTestId('element')
+  const [checkbox, radio, number] = document.querySelectorAll(
+    '[data-testid="element"]',
+  )
 
   userEvent.tab()
 
@@ -134,18 +138,17 @@ test('should suport a mix of elements with/without tab index', () => {
 })
 
 test('should not tab to <a> with no href', () => {
-  render(
+  setup(`
     <div>
-      <input data-testid="element" tabIndex={0} type="checkbox" />
+      <input data-testid="element" tabIndex="0" type="checkbox" />
       {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
       <a>ignore this</a>
       <a data-testid="element" href="http://www.testingjavascript.com">
         a link
       </a>
-    </div>,
-  )
+    </div>`)
 
-  const [checkbox, link] = screen.getAllByTestId('element')
+  const [checkbox, link] = document.querySelectorAll('[data-testid="element"]')
 
   userEvent.tab()
 
@@ -157,7 +160,7 @@ test('should not tab to <a> with no href', () => {
 })
 
 test('should stay within a focus trap', () => {
-  render(
+  setup(`
     <>
       <div data-testid="div1">
         <input data-testid="element" type="checkbox" />
@@ -169,10 +172,12 @@ test('should stay within a focus trap', () => {
         <input data-testid="element" foo="bar" type="radio" />
         <input data-testid="element" foo="bar" type="number" />
       </div>
-    </>,
-  )
+    </>`)
 
-  const [div1, div2] = [screen.getByTestId('div1'), screen.getByTestId('div2')]
+  const [div1, div2] = [
+    document.querySelector('[data-testid="div1"]'),
+    document.querySelector('[data-testid="div2"]'),
+  ]
   const [
     checkbox1,
     radio1,
@@ -180,7 +185,7 @@ test('should stay within a focus trap', () => {
     checkbox2,
     radio2,
     number2,
-  ] = screen.getAllByTestId('element')
+  ] = document.querySelectorAll('[data-testid="element"]')
 
   expect(document.body).toHaveFocus()
 
@@ -228,34 +233,37 @@ test('should stay within a focus trap', () => {
 test('should support unstable sorting environments like node 10', () => {
   const letters = 'abcdefghijklmnopqrstuvwxyz'
 
-  render(
+  setup(`
     <div>
-      {letters.split('').map(letter => (
-        <input key={letter} type="text" data-testid={letter} />
-      ))}
-    </div>,
-  )
+      ${letters
+        .split('')
+        .map(
+          letter => `<input key=${letter} type="text" data-testid=${letter} />`,
+        )}
+    </div>`)
 
   expect.assertions(26)
 
   letters.split('').forEach(letter => {
     userEvent.tab()
-    expect(screen.getByTestId(letter)).toHaveFocus()
+    expect(document.querySelector(`[data-testid="${letter}"]`)).toHaveFocus()
   })
 })
 
 test('should not focus disabled elements', () => {
-  render(
+  setup(`
     <div>
       <input data-testid="one" />
-      <input tabIndex={-1} />
+      <input tabIndex="-1" />
       <button disabled>click</button>
       <input disabled />
       <input data-testid="five" />
-    </div>,
-  )
+    </div>`)
 
-  const [one, five] = [screen.getByTestId('one'), screen.getByTestId('five')]
+  const [one, five] = [
+    document.querySelector('[data-testid="one"]'),
+    document.querySelector('[data-testid="five"]'),
+  ]
 
   userEvent.tab()
   expect(one).toHaveFocus()
@@ -265,8 +273,7 @@ test('should not focus disabled elements', () => {
 })
 
 test('should keep focus on the document if there are no enabled, focusable elements', () => {
-  render(<button disabled>no clicky</button>)
-
+  setup(`<button disabled>no clicky</button>`)
   userEvent.tab()
   expect(document.body).toHaveFocus()
 
@@ -275,8 +282,8 @@ test('should keep focus on the document if there are no enabled, focusable eleme
 })
 
 test('should respect radio groups', () => {
-  render(
-    <>
+  setup(`
+    <div>
       <input
         data-testid="element"
         type="radio"
@@ -300,13 +307,12 @@ test('should respect radio groups', () => {
         type="radio"
         name="second"
         value="second_right"
-        defaultChecked
+        checked
       />
-    </>,
-  )
+    </div>`)
 
-  const [firstLeft, firstRight, , secondRight] = screen.getAllByTestId(
-    'element',
+  const [firstLeft, firstRight, , secondRight] = document.querySelectorAll(
+    '[data-testid="element"]',
   )
 
   userEvent.tab()

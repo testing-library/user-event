@@ -420,7 +420,9 @@
       "profile": "https://nickmccurdy.com/",
       "contributions": [
         "projectManagement",
-        "question"
+        "question",
+        "code",
+        "test"
       ]
     }
   ],

@@ -46,6 +46,7 @@ declare const userEvent: {
   ) => Promise<void>
   tab: (userOpts?: ITabUserOptions) => void
   hover: (element: TargetElement, init?: MouseEventInit) => void
+  unhover: (element: TargetElement, init?: MouseEventInit) => void
 }
 
 export default userEvent

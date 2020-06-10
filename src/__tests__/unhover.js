@@ -3,29 +3,29 @@ import {render, screen} from '@testing-library/react'
 import userEvent from '..'
 import {setup} from './helpers/utils'
 
-test('hover', () => {
+test('unhover', () => {
   const {element, getEventCalls} = setup(<button />)
 
-  userEvent.hover(element)
+  userEvent.unhover(element)
   expect(getEventCalls()).toMatchInlineSnapshot(`
-    mouseenter: Left (0)
-    mouseover: Left (0)
     mousemove: Left (0)
+    mouseout: Left (0)
+    mouseleave: Left (0)
   `)
 })
 
-test('hover should fire events', () => {
+test('unhover should fire events', () => {
   const handler = jest.fn()
   render(
     // eslint-disable-next-line jsx-a11y/mouse-events-have-key-events
     <button
       data-testid="button"
-      onMouseEnter={handler}
-      onMouseOver={handler}
       onMouseMove={handler}
+      onMouseOut={handler}
+      onMouseLeave={handler}
     />,
   )
 
-  userEvent.hover(screen.getByTestId('button'))
+  userEvent.unhover(screen.getByTestId('button'))
   expect(handler).toHaveBeenCalledTimes(3)
 })

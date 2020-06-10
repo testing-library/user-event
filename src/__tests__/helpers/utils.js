@@ -51,13 +51,13 @@ function setup(ui) {
 
   element.previousTestData = getTestData(element)
 
-  const {getEventCalls, clearEventCalls} = addListeners(element)
-  return {element, getEventCalls, clearEventCalls}
+  return {element, ...addListeners(element)}
 }
 
 function addListeners(element) {
   const generalListener = jest.fn().mockName('eventListener')
   const listeners = [
+    'submit',
     'keydown',
     'keyup',
     'keypress',
@@ -76,6 +76,10 @@ function addListeners(element) {
 
   for (const name of listeners) {
     addEventListener(element, name, generalListener)
+  }
+  // prevent default of submits in tests
+  if (element.tagName === 'FORM') {
+    addEventListener(element, 'submit', e => e.preventDefault())
   }
   function getEventCalls() {
     return generalListener.mock.calls
@@ -111,7 +115,8 @@ function addListeners(element) {
       .join('\n')
   }
   const clearEventCalls = () => generalListener.mockClear()
-  return {getEventCalls, clearEventCalls}
+  const getEvents = () => generalListener.mock.calls.map(([e]) => e)
+  return {getEventCalls, clearEventCalls, getEvents}
 }
 
 // https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/button

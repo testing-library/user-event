@@ -1,10 +1,8 @@
-import React from 'react'
-import {render, screen} from '@testing-library/react'
 import userEvent from '..'
-import {setup} from './helpers/utils'
+import {setup, addEventListener, addListeners} from './helpers/utils'
 
 test('click in input', () => {
-  const {element, getEventCalls} = setup(<input />)
+  const {element, getEventCalls} = setup('<input />')
   userEvent.click(element)
   expect(getEventCalls()).toMatchInlineSnapshot(`
     mouseover: Left (0)
@@ -17,7 +15,7 @@ test('click in input', () => {
 })
 
 test('click in textarea', () => {
-  const {element, getEventCalls} = setup(<textarea />)
+  const {element, getEventCalls} = setup('<textarea></textarea>')
   userEvent.click(element)
   expect(getEventCalls()).toMatchInlineSnapshot(`
     mouseover: Left (0)
@@ -29,8 +27,8 @@ test('click in textarea', () => {
   `)
 })
 
-it('should fire the correct events for <input type="checkbox">', () => {
-  const {element, getEventCalls} = setup(<input type="checkbox" />)
+test('should fire the correct events for <input type="checkbox">', () => {
+  const {element, getEventCalls} = setup('<input type="checkbox" />')
   expect(element).not.toBeChecked()
   userEvent.click(element)
   expect(getEventCalls()).toMatchInlineSnapshot(`
@@ -45,109 +43,62 @@ it('should fire the correct events for <input type="checkbox">', () => {
   `)
 })
 
-it('should fire the correct events for <input type="checkbox" disabled>', () => {
-  const {element, getEventCalls} = setup(<input type="checkbox" disabled />)
+test('should fire the correct events for <input type="checkbox" disabled>', () => {
+  const {element, getEventCalls} = setup('<input type="checkbox" disabled />')
   userEvent.click(element)
   expect(element).toBeDisabled()
   // no event calls is expected here:
   expect(getEventCalls()).toMatchInlineSnapshot(``)
   expect(element).toBeDisabled()
+  expect(element).toHaveProperty('checked', false)
 })
 
-// TODO: Update all these tests to use the setup util...
+test('should fire the correct events for <input type="radio">', () => {
+  const {element, getEventCalls} = setup('<input type="radio" />')
+  expect(element).not.toBeChecked()
+  userEvent.click(element)
+  expect(getEventCalls()).toMatchInlineSnapshot(`
+    mouseover: Left (0)
+    mousemove: Left (0)
+    mousedown: Left (0)
+    focus
+    mouseup: Left (0)
+    click: unchecked -> checked
+    input: checked
+    change
+  `)
 
-it('should fire the correct events for <input type="radio">', () => {
-  const events = []
-  const eventsHandler = jest.fn(evt => events.push(evt.type))
-  render(
-    <input
-      data-testid="element"
-      type="radio"
-      onMouseOver={eventsHandler}
-      onMouseMove={eventsHandler}
-      onMouseDown={eventsHandler}
-      onFocus={eventsHandler}
-      onMouseUp={eventsHandler}
-      onClick={eventsHandler}
-      onChange={eventsHandler}
-    />,
-  )
-
-  userEvent.click(screen.getByTestId('element'))
-
-  expect(events).toEqual([
-    'mouseover',
-    'mousemove',
-    'mousedown',
-    'focus',
-    'mouseup',
-    'click',
-    'change',
-  ])
-
-  expect(screen.getByTestId('element')).toHaveProperty('checked', true)
+  expect(element).toHaveProperty('checked', true)
 })
 
-it('should fire the correct events for <input type="radio" disabled>', () => {
-  const events = []
-  const eventsHandler = jest.fn(evt => events.push(evt.type))
-  render(
-    <input
-      data-testid="element"
-      type="radio"
-      onMouseOver={eventsHandler}
-      onMouseMove={eventsHandler}
-      onMouseDown={eventsHandler}
-      onFocus={eventsHandler}
-      onMouseUp={eventsHandler}
-      onClick={eventsHandler}
-      onChange={eventsHandler}
-      disabled
-    />,
-  )
+test('should fire the correct events for <input type="radio" disabled>', () => {
+  const {element, getEventCalls} = setup('<input type="radio" disabled />')
+  userEvent.click(element)
+  expect(element).toBeDisabled()
+  // no event calls is expected here:
+  expect(getEventCalls()).toMatchInlineSnapshot(``)
+  expect(element).toBeDisabled()
 
-  userEvent.click(screen.getByTestId('element'))
-
-  expect(events).toEqual([])
-
-  expect(screen.getByTestId('element')).toHaveProperty('checked', false)
+  expect(element).toHaveProperty('checked', false)
 })
 
-it('should fire the correct events for <div>', () => {
-  const events = []
-  const eventsHandler = jest.fn(evt => events.push(evt.type))
-  render(
-    <div
-      data-testid="div"
-      onMouseOver={eventsHandler}
-      onMouseMove={eventsHandler}
-      onMouseDown={eventsHandler}
-      onFocus={eventsHandler}
-      onMouseUp={eventsHandler}
-      onClick={eventsHandler}
-    />,
-  )
-
-  userEvent.click(screen.getByTestId('div'))
-  expect(events).toEqual([
-    'mouseover',
-    'mousemove',
-    'mousedown',
-    'mouseup',
-    'click',
-  ])
+test('should fire the correct events for <div>', () => {
+  const {element, getEventCalls} = setup('<div></div>')
+  userEvent.click(element)
+  expect(getEventCalls()).toMatchInlineSnapshot(`
+    mouseover: Left (0)
+    mousemove: Left (0)
+    mousedown: Left (0)
+    mouseup: Left (0)
+    click: Left (0)
+  `)
 })
 
-it('toggles the focus', () => {
-  render(
-    <React.Fragment>
-      <input data-testid="A" />
-      <input data-testid="B" />
-    </React.Fragment>,
-  )
+test('toggles the focus', () => {
+  const {element} = setup(`<div><input /><input /></div>`)
 
-  const a = screen.getByTestId('A')
-  const b = screen.getByTestId('B')
+  const a = element.children[0]
+  const b = element.children[1]
 
   expect(a).not.toHaveFocus()
   expect(b).not.toHaveFocus()
@@ -161,108 +112,49 @@ it('toggles the focus', () => {
   expect(b).toHaveFocus()
 })
 
-it('should not blur when mousedown prevents default', () => {
-  let events = []
-  const eventsHandler = jest.fn(evt => events.push(evt.type))
-  const commonEvents = {
-    onBlur: eventsHandler,
-    onMouseOver: eventsHandler,
-    onMouseMove: eventsHandler,
-    onMouseDown: eventsHandler,
-    onFocus: eventsHandler,
-    onMouseUp: eventsHandler,
-    onClick: eventsHandler,
-    onChange: eventsHandler,
-  }
+test('should blur the previous element', () => {
+  const {element} = setup(`<div><input /><input /></div>`)
 
-  render(
-    <React.Fragment>
-      <input data-testid="A" {...commonEvents} />
-      <input
-        data-testid="B"
-        {...commonEvents}
-        onMouseDown={e => {
-          e.preventDefault()
-          eventsHandler(e)
-        }}
-      />
-      <input data-testid="C" {...commonEvents} />
-    </React.Fragment>,
-  )
+  const a = element.children[0]
+  const b = element.children[1]
 
-  const a = screen.getByTestId('A')
-  const b = screen.getByTestId('B')
-  const c = screen.getByTestId('C')
-
-  expect(a).not.toHaveFocus()
-  expect(b).not.toHaveFocus()
-  expect(c).not.toHaveFocus()
+  const {getEventCalls, clearEventCalls} = addListeners(a)
 
   userEvent.click(a)
-  expect(a).toHaveFocus()
-  expect(b).not.toHaveFocus()
-  expect(c).not.toHaveFocus()
-
-  expect(events).toEqual([
-    'mouseover',
-    'mousemove',
-    'mousedown',
-    'focus',
-    'mouseup',
-    'click',
-  ])
-
-  events = []
-
+  clearEventCalls()
   userEvent.click(b)
-  expect(a).toHaveFocus()
-  expect(b).not.toHaveFocus()
-  expect(c).not.toHaveFocus()
-
-  expect(events).toEqual([
-    'mousemove',
-    'mouseover',
-    'mousemove',
-    'mousedown',
-    'mouseup',
-    'click',
-  ])
-
-  events = []
-
-  userEvent.click(c)
-  expect(a).not.toHaveFocus()
-  expect(b).not.toHaveFocus()
-  expect(c).toHaveFocus()
-
-  expect(events).toEqual([
-    'mousemove',
-    'mouseover',
-    'mousemove',
-    'mousedown',
-    'blur',
-    'focus',
-    'mouseup',
-    'click',
-  ])
+  expect(getEventCalls()).toMatchInlineSnapshot(`
+    mousemove: Left (0)
+    mouseleave: Left (0)
+    blur
+  `)
 })
 
-it('does not lose focus when click updates focus', () => {
-  const FocusComponent = () => {
-    const inputRef = React.useRef()
-    const focusInput = () => inputRef.current.focus()
+test('should not blur the previous element when mousedown prevents default', () => {
+  const {element} = setup(`<div><input /><input /></div>`)
 
-    return (
-      <React.Fragment>
-        <input data-testid="input" ref={inputRef} />
-        <button onClick={focusInput}>Update Focus</button>
-      </React.Fragment>
-    )
-  }
-  render(<FocusComponent />)
+  const a = element.children[0]
+  const b = element.children[1]
 
-  const input = screen.getByTestId('input')
-  const button = screen.getByText('Update Focus')
+  addEventListener(b, 'mousedown', e => e.preventDefault())
+
+  const {getEventCalls, clearEventCalls} = addListeners(a)
+
+  userEvent.click(a)
+  clearEventCalls()
+  userEvent.click(b)
+  expect(getEventCalls()).toMatchInlineSnapshot(`
+    mousemove: Left (0)
+    mouseleave: Left (0)
+  `)
+})
+
+test('does not lose focus when click updates focus', () => {
+  const {element} = setup(`<div><input /><button>focus</button></div>`)
+  const input = element.children[0]
+  const button = element.children[1]
+
+  addEventListener(button, 'click', () => input.focus())
 
   expect(input).not.toHaveFocus()
 
@@ -273,311 +165,217 @@ it('does not lose focus when click updates focus', () => {
   expect(input).toHaveFocus()
 })
 
-test.each(['input', 'textarea'])(
-  'gives focus to <%s> when clicking a <label> with htmlFor',
-  type => {
-    render(
-      <React.Fragment>
-        <label htmlFor="input" data-testid="label">
-          Label
-        </label>
-        {React.createElement(type, {id: 'input', 'data-testid': 'input'})}
-      </React.Fragment>,
-    )
-    userEvent.click(screen.getByTestId('label'))
-    expect(screen.getByTestId('input')).toHaveFocus()
-  },
-)
-
-test.each(['input', 'textarea'])(
-  'gives focus to <%s> when clicking a <label> without htmlFor',
-  type => {
-    render(
-      <div>
-        <label data-testid="label">
-          Label
-          {React.createElement(type, {'data-testid': 'input'})}
-        </label>
-      </div>,
-    )
-    userEvent.click(screen.getByTestId('label'))
-    expect(screen.getByTestId('input')).toHaveFocus()
-  },
-)
-
-test.each(['input', 'textarea'])(
-  'gives focus to <%s> when clicking on an element contained within a <label>',
-  type => {
-    render(
-      <React.Fragment>
-        <label htmlFor="input" data-testid="label">
-          <span>Label</span>
-        </label>
-        {React.createElement(type, {id: 'input', 'data-testid': 'input'})}
-      </React.Fragment>,
-    )
-    userEvent.click(screen.getByText('Label'))
-    expect(screen.getByTestId('input')).toHaveFocus()
-  },
-)
-
-it('checks <input type="checkbox"> when clicking a <label> with htmlFor', () => {
-  render(
-    <React.Fragment>
-      <label htmlFor="input" data-testid="label">
-        Label
-      </label>
-      <input id="input" data-testid="input" type="checkbox" />
-    </React.Fragment>,
-  )
-  expect(screen.getByTestId('input')).toHaveProperty('checked', false)
-  userEvent.click(screen.getByTestId('label'))
-  expect(screen.getByTestId('input')).toHaveProperty('checked', true)
-})
-
-it('checks <input type="checkbox"> when clicking a <label> without htmlFor', () => {
-  render(
+test('gives focus to the form control when clicking the label', () => {
+  const {element} = setup(`
     <div>
-      <label data-testid="label">
-        Label
-        <input id="input" data-testid="input" type="checkbox" />
-      </label>
-    </div>,
-  )
-  expect(screen.getByTestId('input')).toHaveProperty('checked', false)
-  userEvent.click(screen.getByTestId('label'))
-  expect(screen.getByTestId('input')).toHaveProperty('checked', true)
+      <label for="input">label</label>
+      <input id="input" />
+    </div>
+  `)
+  const label = element.children[0]
+  const input = element.children[1]
+
+  userEvent.click(label)
+  expect(input).toHaveFocus()
 })
 
-it('should submit a form when clicking on a <button>', () => {
-  const onSubmit = jest.fn(e => e.preventDefault())
-  const {getByText} = render(
-    <form onSubmit={onSubmit}>
-      <button>Submit</button>
-    </form>,
-  )
-  userEvent.click(getByText('Submit'))
-  expect(onSubmit).toHaveBeenCalledTimes(1)
+test('gives focus to the form control when clicking within a label', () => {
+  const {element} = setup(`
+    <div>
+      <label for="input"><span>label</span></label>
+      <input id="input" />
+    </div>
+  `)
+  const label = element.children[0]
+  const span = label.firstChild
+  const input = element.children[1]
+
+  userEvent.click(span)
+  expect(input).toHaveFocus()
 })
 
-it('should not submit a form when clicking on a <button type="button">', () => {
-  const onSubmit = jest.fn(e => e.preventDefault())
-  const {getByText} = render(
-    <form onSubmit={onSubmit}>
+test('clicking a label checks the checkbox', () => {
+  const {element} = setup(`
+    <div>
+      <label for="input">label</label>
+      <input id="input" type="checkbox" />
+    </div>
+  `)
+  const label = element.children[0]
+  const input = element.children[1]
+
+  userEvent.click(label)
+  expect(input).toHaveFocus()
+  expect(input).toBeChecked()
+})
+
+test('clicking a label checks the radio', () => {
+  const {element} = setup(`
+    <div>
+      <label for="input">label</label>
+      <input id="input" name="radio" type="radio" />
+    </div>
+  `)
+  const label = element.children[0]
+  const input = element.children[1]
+
+  userEvent.click(label)
+  expect(input).toHaveFocus()
+  expect(input).toBeChecked()
+})
+
+test('submits a form when clicking on a <button>', () => {
+  const {element, getEventCalls} = setup(`<form><button>Submit</button></form>`)
+  userEvent.click(element.children[0])
+  expect(getEventCalls()).toContain('submit')
+})
+
+test('does not submit a form when clicking on a <button type="button">', () => {
+  const {element, getEventCalls} = setup(`
+    <form>
       <button type="button">Submit</button>
-    </form>,
-  )
-  userEvent.click(getByText('Submit'))
-  expect(onSubmit).not.toHaveBeenCalled()
+    </form>
+  `)
+  userEvent.click(element.children[0])
+  expect(getEventCalls()).not.toContain('submit')
 })
 
-it('should not fire blur on current element if is the same as previous', () => {
-  const onBlur = jest.fn()
-  const {getByText} = render(<button onBlur={onBlur}>Blur</button>)
-  userEvent.click(getByText('Blur'))
-  expect(onBlur).not.toHaveBeenCalled()
-  userEvent.click(getByText('Blur'))
-  expect(onBlur).not.toHaveBeenCalled()
+test('does not fire blur on current element if is the same as previous', () => {
+  const {element, getEventCalls, clearEventCalls} = setup('<button />')
+
+  userEvent.click(element)
+  expect(getEventCalls()).not.toContain('blur')
+
+  clearEventCalls()
+
+  userEvent.click(element)
+  expect(getEventCalls()).not.toContain('blur')
 })
 
-test.each(['input', 'textarea'])(
-  'should not give focus for <%s> when mouseDown is prevented',
-  type => {
-    render(
-      React.createElement(type, {
-        'data-testid': 'element',
-        onMouseDown: evt => {
-          evt.preventDefault()
-        },
-      }),
-    )
+test('does not give focus when mouseDown is prevented', () => {
+  const {element} = setup('<input />')
+  addEventListener(element, 'mousedown', e => e.preventDefault())
+  userEvent.click(element)
+  expect(element).not.toHaveFocus()
+})
 
-    userEvent.click(screen.getByTestId('element'))
-
-    expect(screen.getByTestId('element')).not.toHaveFocus()
-  },
-)
-
-it('should fire mouse events with the correct properties', () => {
-  const events = []
-  const eventsHandler = jest.fn(evt =>
-    events.push({
-      type: evt.type,
-      button: evt.button,
-      buttons: evt.buttons,
-      detail: evt.detail,
-    }),
-  )
-  render(
-    <div
-      data-testid="div"
-      onMouseOver={eventsHandler}
-      onMouseMove={eventsHandler}
-      onMouseDown={eventsHandler}
-      onFocus={eventsHandler}
-      onMouseUp={eventsHandler}
-      onClick={eventsHandler}
-    />,
-  )
-
-  userEvent.click(screen.getByTestId('div'))
-  expect(events).toEqual([
-    {
+test('fires mouse events with the correct properties', () => {
+  const {element, getEvents} = setup('<div></div>')
+  userEvent.click(element)
+  expect(getEvents()).toEqual([
+    expect.objectContaining({
       type: 'mouseover',
       button: 0,
       buttons: 0,
       detail: 0,
-    },
-    {
+    }),
+    expect.objectContaining({
       type: 'mousemove',
       button: 0,
       buttons: 0,
       detail: 0,
-    },
-    {
+    }),
+    expect.objectContaining({
       type: 'mousedown',
       button: 0,
       buttons: 1,
       detail: 1,
-    },
-    {
+    }),
+    expect.objectContaining({
       type: 'mouseup',
       button: 0,
       buttons: 1,
       detail: 1,
-    },
-    {
+    }),
+    expect.objectContaining({
       type: 'click',
       button: 0,
       buttons: 1,
       detail: 1,
-    },
+    }),
   ])
 })
 
-it('should fire mouse events with custom button property', () => {
-  const events = []
-  const eventsHandler = jest.fn(evt =>
-    events.push({
-      type: evt.type,
-      button: evt.button,
-      buttons: evt.buttons,
-      detail: evt.detail,
-      altKey: evt.altKey,
-    }),
-  )
-  render(
-    <div
-      data-testid="div"
-      onMouseOver={eventsHandler}
-      onMouseMove={eventsHandler}
-      onMouseDown={eventsHandler}
-      onFocus={eventsHandler}
-      onMouseUp={eventsHandler}
-      onClick={eventsHandler}
-    />,
-  )
-
-  userEvent.click(screen.getByTestId('div'), {
+test('fires mouse events with custom button property', () => {
+  const {element, getEvents} = setup('<div></div>')
+  userEvent.click(element, {
     button: 1,
     altKey: true,
   })
-
-  expect(events).toEqual([
-    {
+  expect(getEvents()).toEqual([
+    expect.objectContaining({
       type: 'mouseover',
       button: 0,
       buttons: 0,
       detail: 0,
       altKey: true,
-    },
-    {
+    }),
+    expect.objectContaining({
       type: 'mousemove',
       button: 0,
       buttons: 0,
       detail: 0,
       altKey: true,
-    },
-    {
+    }),
+    expect.objectContaining({
       type: 'mousedown',
       button: 1,
       buttons: 4,
       detail: 1,
       altKey: true,
-    },
-    {
+    }),
+    expect.objectContaining({
       type: 'mouseup',
       button: 1,
       buttons: 4,
       detail: 1,
       altKey: true,
-    },
-    {
+    }),
+    expect.objectContaining({
       type: 'click',
       button: 1,
       buttons: 4,
       detail: 1,
       altKey: true,
-    },
+    }),
   ])
 })
 
-it('should fire mouse events with custom buttons property', () => {
-  const events = []
-  const eventsHandler = jest.fn(evt =>
-    events.push({
-      type: evt.type,
-      button: evt.button,
-      buttons: evt.buttons,
-      detail: evt.detail,
-    }),
-  )
-  render(
-    <div
-      data-testid="div"
-      onMouseOver={eventsHandler}
-      onMouseMove={eventsHandler}
-      onMouseDown={eventsHandler}
-      onFocus={eventsHandler}
-      onMouseUp={eventsHandler}
-      onClick={eventsHandler}
-    />,
-  )
+test('fires mouse events with custom buttons property', () => {
+  const {element, getEvents} = setup('<div></div>')
 
-  userEvent.click(screen.getByTestId('div'), {
-    buttons: 4,
-  })
+  userEvent.click(element, {buttons: 4})
 
-  expect(events).toEqual([
-    {
+  expect(getEvents()).toEqual([
+    expect.objectContaining({
       type: 'mouseover',
       button: 0,
       buttons: 0,
       detail: 0,
-    },
-    {
+    }),
+    expect.objectContaining({
       type: 'mousemove',
       button: 0,
       buttons: 0,
       detail: 0,
-    },
-    {
+    }),
+    expect.objectContaining({
       type: 'mousedown',
       button: 1,
       buttons: 4,
       detail: 1,
-    },
-    {
+    }),
+    expect.objectContaining({
       type: 'mouseup',
       button: 1,
       buttons: 4,
       detail: 1,
-    },
-    {
+    }),
+    expect.objectContaining({
       type: 'click',
       button: 1,
       buttons: 4,
       detail: 1,
-    },
+    }),
   ])
 })

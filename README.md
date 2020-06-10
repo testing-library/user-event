@@ -407,20 +407,20 @@ Hovers over `element`.
 import React from 'react'
 import {render, screen} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import Tooltip from '../tooltip'
 
 test('hover', async () => {
-  const handler = jest.fn()
+  const messageText = 'Hello'
   render(
-    <button
-      data-testid="button"
-      onMouseEnter={handler}
-      onMouseOver={handler}
-      onMouseMove={handler}
-    />,
+    <Tooltip messageText={messageText}>
+      <TrashIcon aria-label="Delete" />
+    </Tooltip>,
   )
 
-  await userEvent.hover(screen.getByTestId('button'))
-  expect(handler).toHaveBeenCalledTimes(3)
+  await userEvent.hover(screen.getByLabelText(/delete/i))
+  expect(screen.getByText(messageText)).toBeInTheDocument()
+  await userEvent.unhover(screen.getByLabelText(/delete/i))
+  expect(screen.queryByText(messageText)).not.toBeInTheDocument()
 })
 ```
 
@@ -428,26 +428,7 @@ test('hover', async () => {
 
 Unhovers out of `element`.
 
-```jsx
-import React from 'react'
-import {render, screen} from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
-
-test('unhover', async () => {
-  const handler = jest.fn()
-  render(
-    <button
-      data-testid="button"
-      onMouseMove={handler}
-      onMouseOut={handler}
-      onMouseLeave={handler}
-    />,
-  )
-
-  await userEvent.unhover(screen.getByTestId('button'))
-  expect(handler).toHaveBeenCalledTimes(3)
-})
-```
+> See [above](#async-hoverelement) for an example
 
 ## Issues
 

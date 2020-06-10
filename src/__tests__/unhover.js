@@ -1,9 +1,8 @@
-import React from 'react'
 import userEvent from '..'
 import {setup} from './helpers/utils'
 
 test('unhover', async () => {
-  const {element, getEventCalls} = setup(<button />)
+  const {element, getEventCalls} = setup('<button />')
 
   await userEvent.unhover(element)
   expect(getEventCalls()).toMatchInlineSnapshot(`

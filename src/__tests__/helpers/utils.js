@@ -38,9 +38,17 @@ function addEventListener(el, type, listener, options) {
 }
 
 function setup(ui) {
-  const {
-    container: {firstChild: element},
-  } = render(ui)
+  let element
+  if (typeof ui === 'string') {
+    const div = document.createElement('div')
+    div.innerHTML = ui
+    element = div.firstChild
+    document.body.append(div)
+  } else {
+    const {container} = render(ui)
+    element = container.firstChild
+  }
+
   element.previousTestData = getTestData(element)
 
   const {getEventCalls, clearEventCalls} = addListeners(element)
@@ -180,6 +188,7 @@ afterEach(() => {
     el.removeEventListener(type, listener)
   }
   eventListeners = []
+  document.body.innerHTML = ''
 })
 
 export {setup, addEventListener, addListeners}

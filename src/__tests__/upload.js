@@ -1,85 +1,62 @@
-import React from 'react'
-import {render, screen} from '@testing-library/react'
-import userEvent from '../../src'
+import userEvent from '..'
+import {setup, addListeners} from './helpers/utils'
 
 test('should fire the correct events for input', () => {
   const file = new File(['hello'], 'hello.png', {type: 'image/png'})
-  const events = []
-  const eventsHandler = jest.fn(evt => events.push(evt.type))
-  const eventHandlers = {
-    onMouseOver: eventsHandler,
-    onMouseMove: eventsHandler,
-    onMouseDown: eventsHandler,
-    onFocus: eventsHandler,
-    onMouseUp: eventsHandler,
-    onClick: eventsHandler,
-  }
+  const {element, getEventCalls} = setup('<input type="file" />')
 
-  render(<input type="file" data-testid="element" {...eventHandlers} />)
+  userEvent.upload(element, file)
 
-  userEvent.upload(screen.getByTestId('element'), file)
-
-  expect(events).toEqual([
-    'mouseover',
-    'mousemove',
-    'mousedown',
-    'focus',
-    'mouseup',
-    'click',
-  ])
+  expect(getEventCalls()).toMatchInlineSnapshot(`
+    mouseover: Left (0)
+    mousemove: Left (0)
+    mousedown: Left (0)
+    focus
+    mouseup: Left (0)
+    click: Left (0)
+    change
+  `)
 })
 
 test('should fire the correct events with label', () => {
   const file = new File(['hello'], 'hello.png', {type: 'image/png'})
 
-  const inputEvents = []
-  const labelEvents = []
-  const eventsHandler = events => jest.fn(evt => events.push(evt.type))
+  const container = document.createElement('div')
+  container.innerHTML = `
+    <label for="element">Element</label>
+    <input type="file" id="element" />
+  `
 
-  const getEventHandlers = events => ({
-    onMouseOver: eventsHandler(events),
-    onMouseMove: eventsHandler(events),
-    onMouseDown: eventsHandler(events),
-    onFocus: eventsHandler(events),
-    onMouseUp: eventsHandler(events),
-    onClick: eventsHandler(events),
-  })
+  const label = container.children[0]
+  const input = container.children[1]
+  const {getEventCalls: getLabelEventCalls} = addListeners(label)
+  const {getEventCalls: getInputEventCalls} = addListeners(input)
 
-  render(
-    <>
-      <label
-        htmlFor="element"
-        data-testid="label"
-        {...getEventHandlers(labelEvents)}
-      >
-        Element
-      </label>
-      <input type="file" id="element" {...getEventHandlers(inputEvents)} />
-    </>,
-  )
+  userEvent.upload(label, file)
 
-  userEvent.upload(screen.getByTestId('label'), file)
-
-  expect(inputEvents).toEqual(['click', 'focus'])
-  expect(labelEvents).toEqual([
-    'mouseover',
-    'mousemove',
-    'mousedown',
-    'mouseup',
-    'click',
-  ])
+  expect(getLabelEventCalls()).toMatchInlineSnapshot(`
+    mouseover: Left (0)
+    mousemove: Left (0)
+    mousedown: Left (0)
+    mouseup: Left (0)
+    click: Left (0)
+    change
+  `)
+  expect(getInputEventCalls()).toMatchInlineSnapshot(`
+    click: Left (0)
+    focus
+  `)
 })
 
 test('should upload the file', () => {
   const file = new File(['hello'], 'hello.png', {type: 'image/png'})
-  render(<input type="file" data-testid="element" />)
-  const input = screen.getByTestId('element')
+  const {element} = setup('<input type="file" />')
 
-  userEvent.upload(input, file)
+  userEvent.upload(element, file)
 
-  expect(input.files[0]).toStrictEqual(file)
-  expect(input.files.item(0)).toStrictEqual(file)
-  expect(input.files).toHaveLength(1)
+  expect(element.files[0]).toStrictEqual(file)
+  expect(element.files.item(0)).toStrictEqual(file)
+  expect(element.files).toHaveLength(1)
 })
 
 test('should upload multiple files', () => {
@@ -87,27 +64,24 @@ test('should upload multiple files', () => {
     new File(['hello'], 'hello.png', {type: 'image/png'}),
     new File(['there'], 'there.png', {type: 'image/png'}),
   ]
-  render(<input type="file" multiple data-testid="element" />)
-  const input = screen.getByTestId('element')
+  const {element} = setup('<input type="file" multiple />')
 
-  userEvent.upload(input, files)
+  userEvent.upload(element, files)
 
-  expect(input.files[0]).toStrictEqual(files[0])
-  expect(input.files.item(0)).toStrictEqual(files[0])
-  expect(input.files[1]).toStrictEqual(files[1])
-  expect(input.files.item(1)).toStrictEqual(files[1])
-  expect(input.files).toHaveLength(2)
+  expect(element.files[0]).toStrictEqual(files[0])
+  expect(element.files.item(0)).toStrictEqual(files[0])
+  expect(element.files[1]).toStrictEqual(files[1])
+  expect(element.files.item(1)).toStrictEqual(files[1])
+  expect(element.files).toHaveLength(2)
 })
 
 test('should not upload when is disabled', () => {
   const file = new File(['hello'], 'hello.png', {type: 'image/png'})
-  render(<input type="file" data-testid="element" disabled />)
+  const {element} = setup('<input type="file" disabled />')
 
-  const input = screen.getByTestId('element')
+  userEvent.upload(element, file)
 
-  userEvent.upload(input, file)
-
-  expect(input.files[0]).toBeUndefined()
-  expect(input.files.item(0)).toBeNull()
-  expect(input.files).toHaveLength(0)
+  expect(element.files[0]).toBeUndefined()
+  expect(element.files.item(0)).toBeNull()
+  expect(element.files).toHaveLength(0)
 })

@@ -17,7 +17,7 @@ import {setup, addEventListener} from './helpers/utils'
 // but will not capitalize "a".
 
 test('{esc} triggers typing the escape character', async () => {
-  const {element: input, getEventCalls} = setup(<input />)
+  const {element: input, getEventCalls} = setup('<input />')
 
   await userEvent.type(input, '{esc}')
 
@@ -29,7 +29,7 @@ test('{esc} triggers typing the escape character', async () => {
 })
 
 test('a{backspace}', async () => {
-  const {element, getEventCalls} = setup(<input />)
+  const {element, getEventCalls} = setup('<input />')
   await userEvent.type(element, 'a{backspace}')
   expect(getEventCalls()).toMatchInlineSnapshot(`
     focus
@@ -44,7 +44,7 @@ test('a{backspace}', async () => {
 })
 
 test('{backspace}a', async () => {
-  const {element, getEventCalls} = setup(<input />)
+  const {element, getEventCalls} = setup('<input />')
   await userEvent.type(element, '{backspace}a')
   expect(getEventCalls()).toMatchInlineSnapshot(`
     focus
@@ -58,7 +58,7 @@ test('{backspace}a', async () => {
 })
 
 test('{backspace} triggers typing the backspace character and deletes the character behind the cursor', async () => {
-  const {element: input, getEventCalls} = setup(<input defaultValue="yo" />)
+  const {element: input, getEventCalls} = setup('<input value="yo" />')
   input.setSelectionRange(1, 1)
 
   await userEvent.type(input, '{backspace}')
@@ -72,9 +72,7 @@ test('{backspace} triggers typing the backspace character and deletes the charac
 })
 
 test('{backspace} on a readOnly input', async () => {
-  const {element: input, getEventCalls} = setup(
-    <input readOnly defaultValue="yo" />,
-  )
+  const {element: input, getEventCalls} = setup('<input readonly value="yo" />')
   input.setSelectionRange(1, 1)
 
   await userEvent.type(input, '{backspace}')
@@ -126,7 +124,7 @@ test('{backspace} on an input type that does not support selection ranges', asyn
 })
 
 test('{alt}a{/alt}', async () => {
-  const {element: input, getEventCalls} = setup(<input />)
+  const {element: input, getEventCalls} = setup('<input />')
 
   await userEvent.type(input, '{alt}a{/alt}')
 
@@ -142,7 +140,7 @@ test('{alt}a{/alt}', async () => {
 })
 
 test('{meta}a{/meta}', async () => {
-  const {element: input, getEventCalls} = setup(<input />)
+  const {element: input, getEventCalls} = setup('<input />')
 
   await userEvent.type(input, '{meta}a{/meta}')
 
@@ -158,7 +156,7 @@ test('{meta}a{/meta}', async () => {
 })
 
 test('{ctrl}a{/ctrl}', async () => {
-  const {element: input, getEventCalls} = setup(<input />)
+  const {element: input, getEventCalls} = setup('<input />')
 
   await userEvent.type(input, '{ctrl}a{/ctrl}')
 
@@ -174,7 +172,7 @@ test('{ctrl}a{/ctrl}', async () => {
 })
 
 test('{shift}a{/shift}', async () => {
-  const {element: input, getEventCalls} = setup(<input />)
+  const {element: input, getEventCalls} = setup('<input />')
 
   await userEvent.type(input, '{shift}a{/shift}')
 
@@ -190,7 +188,7 @@ test('{shift}a{/shift}', async () => {
 })
 
 test('a{enter}', async () => {
-  const {element: input, getEventCalls} = setup(<input />)
+  const {element: input, getEventCalls} = setup('<input />')
 
   await userEvent.type(input, 'a{enter}')
 
@@ -207,7 +205,7 @@ test('a{enter}', async () => {
 })
 
 test('{enter} with preventDefault keydown', async () => {
-  const {element: input, getEventCalls} = setup(<input />)
+  const {element: input, getEventCalls} = setup('<input />')
   addEventListener(input, 'keydown', e => e.preventDefault())
 
   await userEvent.type(input, '{enter}')
@@ -265,7 +263,7 @@ test('{meta}{enter}{/meta} on a button', async () => {
 })
 
 test('{meta}{alt}{ctrl}a{/ctrl}{/alt}{/meta}', async () => {
-  const {element: input, getEventCalls} = setup(<input />)
+  const {element: input, getEventCalls} = setup('<input />')
 
   await userEvent.type(input, '{meta}{alt}{ctrl}a{/ctrl}{/alt}{/meta}')
 

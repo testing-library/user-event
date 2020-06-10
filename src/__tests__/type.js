@@ -1,11 +1,9 @@
-import React, {Fragment} from 'react'
-import {render, screen} from '@testing-library/react'
 import userEvent from '..'
-import {setup, addListeners} from './helpers/utils'
+import {setup, addListeners, addEventListener} from './helpers/utils'
 import './helpers/customElement'
 
-it('types text in input', async () => {
-  const {element, getEventCalls} = setup(<input />)
+test('types text in input', async () => {
+  const {element, getEventCalls} = setup('<input />')
   await userEvent.type(element, 'Sup')
   expect(getEventCalls()).toMatchInlineSnapshot(`
     focus
@@ -24,11 +22,19 @@ it('types text in input', async () => {
   `)
 })
 
-it('types text inside custom element', async () => {
-  const {
-    container: {firstChild: customElement},
-  } = render(<custom-el />)
-  const inputEl = customElement.shadowRoot.querySelector('input')
+test('types text in input with allAtOnce', async () => {
+  const {element, getEventCalls} = setup('<input />')
+  await userEvent.type(element, 'Sup', {allAtOnce: true})
+  expect(getEventCalls()).toMatchInlineSnapshot(`
+    focus
+    input: "{CURSOR}" -> "Sup"
+  `)
+})
+
+test('types text inside custom element', async () => {
+  const element = document.createElement('custom-el')
+  document.body.append(element)
+  const inputEl = element.shadowRoot.querySelector('input')
   const {getEventCalls} = addListeners(inputEl)
 
   await userEvent.type(inputEl, 'Sup')
@@ -49,8 +55,8 @@ it('types text inside custom element', async () => {
   `)
 })
 
-it('types text in textarea', async () => {
-  const {element, getEventCalls} = setup(<textarea />)
+test('types text in textarea', async () => {
+  const {element, getEventCalls} = setup('<textarea></textarea>')
   await userEvent.type(element, 'Sup')
   expect(getEventCalls()).toMatchInlineSnapshot(`
     focus
@@ -70,7 +76,7 @@ it('types text in textarea', async () => {
 })
 
 test('should append text all at once', async () => {
-  const {element, getEventCalls} = setup(<input />)
+  const {element, getEventCalls} = setup('<input />')
   await userEvent.type(element, 'Sup', {allAtOnce: true})
   expect(getEventCalls()).toMatchInlineSnapshot(`
     focus
@@ -79,9 +85,9 @@ test('should append text all at once', async () => {
 })
 
 test('does not fire input event when keypress calls prevent default', async () => {
-  const {element, getEventCalls} = setup(
-    <input onKeyPress={e => e.preventDefault()} />,
-  )
+  const {element, getEventCalls} = setup('<input />')
+  addEventListener(element, 'keypress', e => e.preventDefault())
+
   await userEvent.type(element, 'a')
   expect(getEventCalls()).toMatchInlineSnapshot(`
     focus
@@ -92,9 +98,9 @@ test('does not fire input event when keypress calls prevent default', async () =
 })
 
 test('does not fire keypress or input events when keydown calls prevent default', async () => {
-  const {element, getEventCalls} = setup(
-    <input onKeyDown={e => e.preventDefault()} />,
-  )
+  const {element, getEventCalls} = setup('<input />')
+  addEventListener(element, 'keydown', e => e.preventDefault())
+
   await userEvent.type(element, 'a')
   expect(getEventCalls()).toMatchInlineSnapshot(`
     focus
@@ -103,79 +109,37 @@ test('does not fire keypress or input events when keydown calls prevent default'
   `)
 })
 
-// TODO: Let's migrate these tests to use the setup util
-test('should not type when event.preventDefault() is called', async () => {
-  const onChange = jest.fn()
-  const onKeydown = jest
-    .fn()
-    .mockImplementation(event => event.preventDefault())
-  render(
-    <input data-testid="input" onKeyDown={onKeydown} onChange={onChange} />,
-  )
-  const text = 'Hello, world!'
-  await userEvent.type(screen.getByTestId('input'), text)
-  expect(onKeydown).toHaveBeenCalledTimes(text.length)
-  expect(onChange).toHaveBeenCalledTimes(0)
-  expect(screen.getByTestId('input')).not.toHaveProperty('value', text)
+test('does not fire events when disabled', async () => {
+  const {element, getEventCalls} = setup('<input disabled />')
+
+  await userEvent.type(element, 'a')
+  expect(getEventCalls()).toMatchInlineSnapshot(``)
 })
 
-test.each(['input', 'textarea'])(
-  'should not type when <%s> is disabled',
-  async type => {
-    const onChange = jest.fn()
-    render(
-      React.createElement(type, {
-        'data-testid': 'input',
-        onChange,
-        disabled: true,
-      }),
-    )
-    const text = 'Hello, world!'
-    await userEvent.type(screen.getByTestId('input'), text)
-    expect(onChange).not.toHaveBeenCalled()
-    expect(screen.getByTestId('input')).toHaveProperty('value', '')
-  },
-)
+test('does not fire input when readonly', async () => {
+  const {element, getEventCalls} = setup('<input readonly />')
 
-test.each(['input', 'textarea'])(
-  'should not type when <%s> is readOnly',
-  async type => {
-    const onChange = jest.fn()
-    const onKeyDown = jest.fn()
-    const onKeyPress = jest.fn()
-    const onKeyUp = jest.fn()
-    render(
-      React.createElement(type, {
-        'data-testid': 'input',
-        onChange,
-        onKeyDown,
-        onKeyPress,
-        onKeyUp,
-        readOnly: true,
-      }),
-    )
-    const text = 'Hello, world!'
-    await userEvent.type(screen.getByTestId('input'), text)
-    expect(onKeyDown).toHaveBeenCalledTimes(text.length)
-    expect(onKeyPress).toHaveBeenCalledTimes(text.length)
-    expect(onKeyUp).toHaveBeenCalledTimes(text.length)
-    expect(onChange).not.toHaveBeenCalled()
-    expect(screen.getByTestId('input')).toHaveProperty('value', '')
-  },
-)
-
-test('does not type when readOnly even with allAtOnce', () => {
-  const handleChange = jest.fn()
-  render(<input data-testid="input" readOnly onChange={handleChange} />)
-  userEvent.type(screen.getByTestId('input'), 'hi', {allAtOnce: true})
-  expect(handleChange).not.toHaveBeenCalled()
+  await userEvent.type(element, 'a')
+  expect(getEventCalls()).toMatchInlineSnapshot(`
+    focus
+    keydown: a (97)
+    keypress: a (97)
+    keyup: a (97)
+  `)
 })
 
-test('does not type when disabled even with allAtOnce', () => {
-  const handleChange = jest.fn()
-  render(<input data-testid="input" disabled onChange={handleChange} />)
-  userEvent.type(screen.getByTestId('input'), 'hi', {allAtOnce: true})
-  expect(handleChange).not.toHaveBeenCalled()
+test('does not fire input when readonly (with allAtOnce)', async () => {
+  const {element, getEventCalls} = setup('<input readonly />')
+
+  await userEvent.type(element, 'a', {allAtOnce: true})
+  expect(getEventCalls()).toMatchInlineSnapshot(`focus`)
+})
+
+test('does not fire any events when disabled (with allAtOnce)', async () => {
+  const {element, getEventCalls} = setup('<input disabled />')
+
+  await userEvent.type(element, 'a', {allAtOnce: true})
+  expect(getEventCalls()).toMatchInlineSnapshot(``)
 })
 
 test('should delay the typing when opts.delay is not 0', async () => {
@@ -184,13 +148,12 @@ test('should delay the typing when opts.delay is not 0', async () => {
     inputValues.push({timestamp: Date.now(), value: event.target.value})
   })
 
-  render(<input data-testid="input" onInput={onInput} />)
+  const {element} = setup('<input />')
+  addEventListener(element, 'input', onInput)
 
   const text = 'Hello, world!'
   const delay = 10
-  await userEvent.type(screen.getByTestId('input'), text, {
-    delay,
-  })
+  await userEvent.type(element, text, {delay})
 
   expect(onInput).toHaveBeenCalledTimes(text.length)
   for (let index = 1; index < inputValues.length; index++) {
@@ -202,150 +165,58 @@ test('should delay the typing when opts.delay is not 0', async () => {
   }
 })
 
-test.each(['input', 'textarea'])(
-  'should type text in <%s> all at once',
-  type => {
-    const onChange = jest.fn()
-    render(
-      React.createElement(type, {
-        'data-testid': 'input',
-        onChange,
-      }),
-    )
-    const text = 'Hello, world!'
-    userEvent.type(screen.getByTestId('input'), text, {
-      allAtOnce: true,
-    })
+test('honors maxlength', async () => {
+  const {element, getEventCalls} = setup('<input maxlength="2" />')
+  await userEvent.type(element, '123')
 
-    expect(onChange).toHaveBeenCalledTimes(1)
-    expect(screen.getByTestId('input')).toHaveProperty('value', text)
-  },
-)
+  // NOTE: no input event when typing "3"
+  expect(getEventCalls()).toMatchInlineSnapshot(`
+    focus
+    keydown: 1 (49)
+    keypress: 1 (49)
+    input: "{CURSOR}" -> "1"
+    keyup: 1 (49)
+    keydown: 2 (50)
+    keypress: 2 (50)
+    input: "1{CURSOR}" -> "12"
+    keyup: 2 (50)
+    keydown: 3 (51)
+    keypress: 3 (51)
+    keyup: 3 (51)
+  `)
+})
 
-test.each(['input', 'textarea'])(
-  'should enter text in <%s> up to maxLength if provided',
-  async type => {
-    const onChange = jest.fn()
-    const onKeyDown = jest.fn()
-    const onKeyPress = jest.fn()
-    const onKeyUp = jest.fn()
-    const maxLength = 10
+test('honors maxlength with existing text', async () => {
+  const {element, getEventCalls} = setup('<input value="12" maxlength="2" />')
+  await userEvent.type(element, '3')
 
-    render(
-      React.createElement(type, {
-        'data-testid': 'input',
-        onChange,
-        onKeyDown,
-        onKeyPress,
-        onKeyUp,
-        maxLength,
-      }),
-    )
-
-    const text = 'superlongtext'
-    const slicedText = text.slice(0, maxLength)
-
-    const inputEl = screen.getByTestId('input')
-
-    await userEvent.type(inputEl, text)
-
-    expect(inputEl).toHaveProperty('value', slicedText)
-    expect(onChange).toHaveBeenCalledTimes(slicedText.length)
-    expect(onKeyPress).toHaveBeenCalledTimes(text.length)
-    expect(onKeyDown).toHaveBeenCalledTimes(text.length)
-    expect(onKeyUp).toHaveBeenCalledTimes(text.length)
-
-    inputEl.value = ''
-    onChange.mockClear()
-    onKeyPress.mockClear()
-    onKeyDown.mockClear()
-    onKeyUp.mockClear()
-
-    userEvent.type(inputEl, text, {
-      allAtOnce: true,
-    })
-
-    expect(inputEl).toHaveProperty('value', slicedText)
-    expect(onChange).toHaveBeenCalledTimes(1)
-    expect(onKeyPress).not.toHaveBeenCalled()
-    expect(onKeyDown).not.toHaveBeenCalled()
-    expect(onKeyUp).not.toHaveBeenCalled()
-  },
-)
-
-test.each(['input', 'textarea'])(
-  'should append text in <%s> up to maxLength if provided',
-  async type => {
-    const onChange = jest.fn()
-    const onKeyDown = jest.fn()
-    const onKeyPress = jest.fn()
-    const onKeyUp = jest.fn()
-    const maxLength = 10
-
-    render(
-      React.createElement(type, {
-        'data-testid': 'input',
-        onChange,
-        onKeyDown,
-        onKeyPress,
-        onKeyUp,
-        maxLength,
-      }),
-    )
-
-    const text1 = 'superlong'
-    const text2 = 'text'
-    const text = text1 + text2
-    const slicedText = text.slice(0, maxLength)
-
-    const inputEl = screen.getByTestId('input')
-
-    await userEvent.type(inputEl, text1)
-    await userEvent.type(inputEl, text2)
-
-    expect(inputEl).toHaveProperty('value', slicedText)
-    expect(onChange).toHaveBeenCalledTimes(slicedText.length)
-    expect(onKeyPress).toHaveBeenCalledTimes(text.length)
-    expect(onKeyDown).toHaveBeenCalledTimes(text.length)
-    expect(onKeyUp).toHaveBeenCalledTimes(text.length)
-
-    inputEl.value = ''
-    onChange.mockClear()
-    onKeyPress.mockClear()
-    onKeyDown.mockClear()
-    onKeyUp.mockClear()
-
-    userEvent.type(inputEl, text, {
-      allAtOnce: true,
-    })
-
-    expect(inputEl).toHaveProperty('value', slicedText)
-    expect(onChange).toHaveBeenCalledTimes(1)
-    expect(onKeyPress).not.toHaveBeenCalled()
-    expect(onKeyDown).not.toHaveBeenCalled()
-    expect(onKeyUp).not.toHaveBeenCalled()
-  },
-)
+  // NOTE: no input event when typing "3"
+  expect(getEventCalls()).toMatchInlineSnapshot(`
+    focus
+    keydown: 3 (51)
+    keypress: 3 (51)
+    keyup: 3 (51)
+  `)
+})
 
 test('should fire events on the currently focused element', async () => {
-  const changeFocusLimit = 7
-  const onKeyDown = jest.fn(event => {
-    if (event.target.value.length === changeFocusLimit) {
-      screen.getByTestId('input2').focus()
-    }
-  })
+  const {element} = setup(`
+    <div>
+      <input />
+      <input />
+    </div>
+  `)
 
-  render(
-    <Fragment>
-      <input data-testid="input1" onKeyDown={onKeyDown} />
-      <input data-testid="input2" />
-    </Fragment>,
-  )
+  const input1 = element.children[0]
+  const input2 = element.children[1]
 
   const text = 'Hello, world!'
-
-  const input1 = screen.getByTestId('input1')
-  const input2 = screen.getByTestId('input2')
+  const changeFocusLimit = 7
+  addEventListener(input1, 'keydown', event => {
+    if (event.target.value.length === changeFocusLimit) {
+      input2.focus()
+    }
+  })
 
   await userEvent.type(input1, text)
 
@@ -354,131 +225,60 @@ test('should fire events on the currently focused element', async () => {
   expect(input2).toHaveFocus()
 })
 
-test('should enter text up to maxLength of the current element if provided', async () => {
-  const changeFocusLimit = 7
-  const input2MaxLength = 2
-
-  const onKeyDown = jest.fn(event => {
-    if (event.target.value.length === changeFocusLimit) {
-      screen.getByTestId('input2').focus()
-    }
-  })
-
-  render(
-    <>
-      <input data-testid="input" onKeyDown={onKeyDown} />
-      <input data-testid="input2" maxLength={input2MaxLength} />
-    </>,
-  )
-
-  const text = 'Hello, world!'
-  const input2ExpectedValue = text.slice(
-    changeFocusLimit,
-    changeFocusLimit + input2MaxLength,
-  )
-
-  const input1 = screen.getByTestId('input')
-  const input2 = screen.getByTestId('input2')
-
-  await userEvent.type(input1, text)
-
-  expect(input1).toHaveValue(text.slice(0, changeFocusLimit))
-  expect(input2).toHaveValue(input2ExpectedValue)
-  expect(input2).toHaveFocus()
-})
-
-test('should replace selected text one by one', async () => {
-  const onChange = jest.fn()
-  const {
-    container: {firstChild: input},
-  } = render(<input defaultValue="hello world" onChange={onChange} />)
+test('should replace selected text', async () => {
+  const {element} = setup('<input value="hello world" />')
   const selectionStart = 'hello world'.search('world')
   const selectionEnd = selectionStart + 'world'.length
-  input.setSelectionRange(selectionStart, selectionEnd)
-  await userEvent.type(input, 'friend')
-  expect(onChange).toHaveBeenCalledTimes('friend'.length)
-  expect(input).toHaveValue('hello friend')
-})
-
-test('should replace selected text one by one up to maxLength if provided', async () => {
-  const maxLength = 10
-  const onChange = jest.fn()
-  const {
-    container: {firstChild: input},
-  } = render(
-    <input
-      defaultValue="hello world"
-      onChange={onChange}
-      maxLength={maxLength}
-    />,
-  )
-  const selectionStart = 'hello world'.search('world')
-  const selectionEnd = selectionStart + 'world'.length
-  input.setSelectionRange(selectionStart, selectionEnd)
-  const resultIfUnlimited = 'hello friend'
-  const slicedText = resultIfUnlimited.slice(0, maxLength)
-  await userEvent.type(input, 'friend')
-  const truncatedCharCount = resultIfUnlimited.length - slicedText.length
-  expect(onChange).toHaveBeenCalledTimes('friend'.length - truncatedCharCount)
-  expect(input).toHaveValue(slicedText)
-})
-
-test('should replace selected text all at once', async () => {
-  const onChange = jest.fn()
-  const {
-    container: {firstChild: input},
-  } = render(<input defaultValue="hello world" onChange={onChange} />)
-  const selectionStart = 'hello world'.search('world')
-  const selectionEnd = selectionStart + 'world'.length
-  input.setSelectionRange(selectionStart, selectionEnd)
-  await userEvent.type(input, 'friend', {allAtOnce: true})
-  expect(onChange).toHaveBeenCalledTimes(1)
-  expect(input).toHaveValue('hello friend')
+  element.setSelectionRange(selectionStart, selectionEnd)
+  await userEvent.type(element, 'friend')
+  expect(element).toHaveValue('hello friend')
 })
 
 test('does not continue firing events when disabled during typing', async () => {
-  function TestComp() {
-    const [disabled, setDisabled] = React.useState(false)
-    return <input disabled={disabled} onChange={() => setDisabled(true)} />
-  }
-  const {
-    container: {firstChild: input},
-  } = render(<TestComp />)
-  await userEvent.type(input, 'hi there')
-  expect(input).toHaveValue('h')
+  const {element} = setup('<input />')
+  addEventListener(element, 'input', e => (e.target.disabled = true))
+  await userEvent.type(element, 'hi')
+  expect(element).toHaveValue('h')
 })
 
-function DollarInput({initialValue = ''}) {
-  const [value, setValue] = React.useState(initialValue)
-  function handleChange(event) {
+function setupDollarInput({initialValue = ''} = {}) {
+  const returnValue = setup(`<input value="${initialValue}" type="text" />`)
+  let previousValue = returnValue.element.value
+  addEventListener(returnValue.element, 'input', event => {
     const val = event.target.value
     const withoutDollar = val.replace(/\$/g, '')
     const num = Number(withoutDollar)
-    if (Number.isNaN(num)) return
-    setValue(`$${withoutDollar}`)
-  }
-  return <input value={value} type="text" onChange={handleChange} />
+    if (Number.isNaN(num)) {
+      event.target.value = previousValue
+    } else {
+      event.target.value = `$${withoutDollar}`
+    }
+    previousValue = event.target.value
+  })
+  return returnValue
 }
 
 test('typing into a controlled input works', async () => {
-  const {element, getEventCalls} = setup(<DollarInput />)
+  const {element, getEventCalls} = setupDollarInput()
+
   await userEvent.type(element, '23')
+
   expect(element.value).toBe('$23')
   expect(getEventCalls()).toMatchInlineSnapshot(`
     focus
     keydown: 2 (50)
     keypress: 2 (50)
-    input: "{CURSOR}" -> "2"
+    input: "2{CURSOR}" -> "$2"
     keyup: 2 (50)
     keydown: 3 (51)
     keypress: 3 (51)
-    input: "$2{CURSOR}" -> "$23"
+    input: "$23{CURSOR}" -> "$23"
     keyup: 3 (51)
   `)
 })
 
 test('typing in the middle of a controlled input works', async () => {
-  const {element, getEventCalls} = setup(<DollarInput initialValue="$23" />)
+  const {element, getEventCalls} = setupDollarInput({initialValue: '$23'})
   element.setSelectionRange(2, 2)
 
   await userEvent.type(element, '1')
@@ -488,13 +288,13 @@ test('typing in the middle of a controlled input works', async () => {
     focus
     keydown: 1 (49)
     keypress: 1 (49)
-    input: "$2{CURSOR}3" -> "$213"
+    input: "$213{CURSOR}" -> "$213"
     keyup: 1 (49)
   `)
 })
 
 test('ignored {backspace} in controlled input', async () => {
-  const {element, getEventCalls} = setup(<DollarInput initialValue="$23" />)
+  const {element, getEventCalls} = setupDollarInput({initialValue: '$23'})
   element.setSelectionRange(1, 1)
 
   await userEvent.type(element, '{backspace}')
@@ -513,18 +313,18 @@ test('ignored {backspace} in controlled input', async () => {
   expect(getEventCalls()).toMatchInlineSnapshot(`
     focus
     keydown: Backspace (8)
-    input: "\${CURSOR}23" -> "23"
+    input: "23{CURSOR}" -> "$23"
     keyup: Backspace (8)
     keydown: 4 (52)
     keypress: 4 (52)
-    input: "$23{CURSOR}" -> "$234"
+    input: "$234{CURSOR}" -> "$234"
     keyup: 4 (52)
   `)
 })
 
 // https://github.com/testing-library/user-event/issues/321
 test('typing in a textarea with existing text', async () => {
-  const {element, getEventCalls} = setup(<textarea defaultValue="Hello, " />)
+  const {element, getEventCalls} = setup('<textarea>Hello, </textarea>')
 
   await userEvent.type(element, '12')
   expect(getEventCalls()).toMatchInlineSnapshot(`
@@ -543,7 +343,7 @@ test('typing in a textarea with existing text', async () => {
 
 // https://github.com/testing-library/user-event/issues/321
 test('accepts an initialSelectionStart and initialSelectionEnd', async () => {
-  const {element, getEventCalls} = setup(<textarea defaultValue="Hello, " />)
+  const {element, getEventCalls} = setup('<textarea>Hello, </textarea>')
   element.setSelectionRange(0, 0)
 
   await userEvent.type(element, '12', {
@@ -566,7 +366,7 @@ test('accepts an initialSelectionStart and initialSelectionEnd', async () => {
 
 // https://github.com/testing-library/user-event/issues/316#issuecomment-640199908
 test('can type into an input with type `email`', async () => {
-  const {element} = setup(<input type="email" />)
+  const {element} = setup('<input type="email" />')
   const email = 'yo@example.com'
   await userEvent.type(element, email)
   expect(element).toHaveValue(email)

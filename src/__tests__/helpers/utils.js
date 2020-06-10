@@ -41,7 +41,7 @@ function setup(ui) {
   let element
   if (typeof ui === 'string') {
     const div = document.createElement('div')
-    div.innerHTML = ui
+    div.innerHTML = ui.trim()
     element = div.firstChild
     document.body.append(div)
   } else {

@@ -60,8 +60,8 @@ change the state of the checkbox.
   - [`selectOptions(element, values)`](#selectoptionselement-values)
   - [`toggleSelectOptions(element, values)`](#toggleselectoptionselement-values)
   - [`tab({shift, focusTrap})`](#tabshift-focustrap)
-  - [`hover(element)`](#hoverelement)
-  - [`unhover(element)`](#unhoverelement)
+  - [`async hover(element)`](#async-hoverelement)
+  - [`async unhover(element)`](#async-unhoverelement)
 - [Issues](#issues)
   - [🐛 Bugs](#-bugs)
   - [💡 Feature Requests](#-feature-requests)
@@ -399,7 +399,7 @@ it('should cycle elements in document tab order', () => {
 })
 ```
 
-### `hover(element)`
+### `async hover(element)`
 
 Hovers over `element`.
 
@@ -408,7 +408,7 @@ import React from 'react'
 import {render, screen} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
-test('hover', () => {
+test('hover', async () => {
   const handler = jest.fn()
   render(
     <button
@@ -419,12 +419,12 @@ test('hover', () => {
     />,
   )
 
-  userEvent.hover(screen.getByTestId('button'))
+  await userEvent.hover(screen.getByTestId('button'))
   expect(handler).toHaveBeenCalledTimes(3)
 })
 ```
 
-### `unhover(element)`
+### `async unhover(element)`
 
 Unhovers out of `element`.
 
@@ -433,7 +433,7 @@ import React from 'react'
 import {render, screen} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
-test('unhover', () => {
+test('unhover', async () => {
   const handler = jest.fn()
   render(
     <button
@@ -444,7 +444,7 @@ test('unhover', () => {
     />,
   )
 
-  userEvent.unhover(screen.getByTestId('button'))
+  await userEvent.unhover(screen.getByTestId('button'))
   expect(handler).toHaveBeenCalledTimes(3)
 })
 ```

@@ -3,10 +3,10 @@ import {render, screen} from '@testing-library/react'
 import userEvent from '..'
 import {setup} from './helpers/utils'
 
-test('hover', () => {
+test('hover', async () => {
   const {element, getEventCalls} = setup(<button />)
 
-  userEvent.hover(element)
+  await userEvent.hover(element)
   expect(getEventCalls()).toMatchInlineSnapshot(`
     mouseenter: Left (0)
     mouseover: Left (0)
@@ -14,7 +14,7 @@ test('hover', () => {
   `)
 })
 
-test('hover should fire events', () => {
+test('hover should fire events', async () => {
   const handler = jest.fn()
   render(
     // eslint-disable-next-line jsx-a11y/mouse-events-have-key-events
@@ -26,6 +26,6 @@ test('hover should fire events', () => {
     />,
   )
 
-  userEvent.hover(screen.getByTestId('button'))
+  await userEvent.hover(screen.getByTestId('button'))
   expect(handler).toHaveBeenCalledTimes(3)
 })

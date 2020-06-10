@@ -25,6 +25,7 @@ function getTestData(element) {
 }
 
 function addEventListener(el, type, listener, options) {
+  el.previousTestData = getTestData(el)
   const hijackedListener = e => {
     e.testData = {previous: e.target.previousTestData}
     const retVal = listener(e)
@@ -48,8 +49,6 @@ function setup(ui) {
     const {container} = render(ui)
     element = container.firstChild
   }
-
-  element.previousTestData = getTestData(element)
 
   return {element, ...addListeners(element)}
 }

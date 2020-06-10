@@ -454,9 +454,9 @@ function tab({shift = false, focusTrap = document} = {}) {
 
 async function hover(element, init) {
   await tick()
-  fireEvent.mouseEnter(element, getMouseEventOptions('mouseenter', init))
-  await tick()
   fireEvent.mouseOver(element, getMouseEventOptions('mouseover', init))
+  await tick()
+  fireEvent.mouseEnter(element, getMouseEventOptions('mouseenter', init))
   await tick()
   fireEvent.mouseMove(element, getMouseEventOptions('mousemove', init))
 }

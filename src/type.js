@@ -227,11 +227,13 @@ async function typeImpl(
       }
     }
     const eventOverrides = {}
+    let prevWasMinus
     for (const callback of eventCallbacks) {
       if (delay > 0) await wait(delay)
       if (!currentElement().disabled) {
-        const returnValue = await callback({eventOverrides})
+        const returnValue = await callback({prevWasMinus, eventOverrides})
         Object.assign(eventOverrides, returnValue?.eventOverrides)
+        prevWasMinus = returnValue?.prevWasMinus
       }
     }
   }
@@ -241,7 +243,8 @@ async function typeImpl(
     newSelectionStart,
     eventOverrides,
   }) {
-    if (!currentElement().readOnly && newValue !== currentValue()) {
+    const prevValue = currentValue()
+    if (!currentElement().readOnly && newValue !== prevValue) {
       await tick()
 
       fireEvent.input(currentElement(), {
@@ -251,6 +254,8 @@ async function typeImpl(
 
       setSelectionRange({newValue, newSelectionStart})
     }
+
+    return {prevValue}
   }
 
   // yes, calculateNewBackspaceValue and calculateNewValue look extremely similar
@@ -334,9 +339,10 @@ async function typeImpl(
     }
   }
 
-  async function typeCharacter(char, {eventOverrides}) {
+  async function typeCharacter(char, {prevWasMinus = false, eventOverrides}) {
     const key = char // TODO: check if this also valid for characters with diacritic markers e.g. úé etc
     const keyCode = char.charCodeAt(0)
+    let nextPrevWasMinus
 
     const keyDownDefaultNotPrevented = fireEvent.keyDown(currentElement(), {
       key,
@@ -356,10 +362,30 @@ async function typeImpl(
       })
 
       if (keyPressDefaultNotPrevented) {
-        await fireInputEventIfNeeded({
-          ...calculateNewValue(key),
-          eventOverrides,
+        const newEntry = prevWasMinus ? `-${char}` : char
+
+        const {prevValue} = await fireInputEventIfNeeded({
+          ...calculateNewValue(newEntry),
+          eventOverrides: {
+            data: key,
+            inputType: 'insertText',
+            ...eventOverrides,
+          },
         })
+
+        // typing "-" into a number input will not actually update the value
+        // so for the next character we type, the value should be set to
+        // `-${newEntry}`
+        // we also preserve the prevWasMinus when the value is unchanged due
+        // to typing an invalid character (typing "-a3" results in "-3")
+        if (currentElement().type === 'number') {
+          const newValue = currentValue()
+          if (newValue === prevValue && newEntry !== '-') {
+            nextPrevWasMinus = prevWasMinus
+          } else {
+            nextPrevWasMinus = newEntry === '-'
+          }
+        }
       }
     }
 
@@ -371,6 +397,8 @@ async function typeImpl(
       which: keyCode,
       ...eventOverrides,
     })
+
+    return {prevWasMinus: nextPrevWasMinus}
   }
 
   function modifier({name, key, keyCode, modifierProperty}) {

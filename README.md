@@ -50,7 +50,6 @@ change the state of the checkbox.
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-
 - [Installation](#installation)
 - [API](#api)
   - [`click(element)`](#clickelement)
@@ -61,6 +60,8 @@ change the state of the checkbox.
   - [`selectOptions(element, values)`](#selectoptionselement-values)
   - [`toggleSelectOptions(element, values)`](#toggleselectoptionselement-values)
   - [`tab({shift, focusTrap})`](#tabshift-focustrap)
+  - [`async hover(element)`](#async-hoverelement)
+  - [`async unhover(element)`](#async-unhoverelement)
 - [Issues](#issues)
   - [🐛 Bugs](#-bugs)
   - [💡 Feature Requests](#-feature-requests)
@@ -398,6 +399,37 @@ it('should cycle elements in document tab order', () => {
 })
 ```
 
+### `async hover(element)`
+
+Hovers over `element`.
+
+```jsx
+import React from 'react'
+import {render, screen} from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import Tooltip from '../tooltip'
+
+test('hover', async () => {
+  const messageText = 'Hello'
+  render(
+    <Tooltip messageText={messageText}>
+      <TrashIcon aria-label="Delete" />
+    </Tooltip>,
+  )
+
+  await userEvent.hover(screen.getByLabelText(/delete/i))
+  expect(screen.getByText(messageText)).toBeInTheDocument()
+  await userEvent.unhover(screen.getByLabelText(/delete/i))
+  expect(screen.queryByText(messageText)).not.toBeInTheDocument()
+})
+```
+
+### `async unhover(element)`
+
+Unhovers out of `element`.
+
+> See [above](#async-hoverelement) for an example
+
 ## Issues
 
 _Looking to contribute? Look for the [Good First Issue][good-first-issue]
@@ -482,6 +514,7 @@ Thanks goes to these people ([emoji key][emojis]):
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors][all-contributors] specification.

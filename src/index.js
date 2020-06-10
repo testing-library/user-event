@@ -1,5 +1,6 @@
 import {fireEvent} from '@testing-library/dom'
 import {type} from './type'
+import {tick} from './tick'
 
 function isMousePressEvent(event) {
   return (
@@ -451,6 +452,24 @@ function tab({shift = false, focusTrap = document} = {}) {
   }
 }
 
+async function hover(element, init) {
+  await tick()
+  fireEvent.mouseOver(element, getMouseEventOptions('mouseover', init))
+  await tick()
+  fireEvent.mouseEnter(element, getMouseEventOptions('mouseenter', init))
+  await tick()
+  fireEvent.mouseMove(element, getMouseEventOptions('mousemove', init))
+}
+
+async function unhover(element, init) {
+  await tick()
+  fireEvent.mouseMove(element, getMouseEventOptions('mousemove', init))
+  await tick()
+  fireEvent.mouseOut(element, getMouseEventOptions('mouseout', init))
+  await tick()
+  fireEvent.mouseLeave(element, getMouseEventOptions('mouseleave', init))
+}
+
 const userEvent = {
   click,
   dblClick,
@@ -460,6 +479,8 @@ const userEvent = {
   type,
   upload,
   tab,
+  hover,
+  unhover,
 }
 
 export default userEvent

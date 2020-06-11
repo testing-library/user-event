@@ -1,5 +1,3 @@
-import {render} from '@testing-library/react'
-
 // this is pretty helpful:
 // https://jsbin.com/nimelileyo/edit?js,output
 
@@ -43,16 +41,11 @@ function addEventListener(el, type, listener, options) {
 }
 
 function setup(ui, {eventHandlers} = {}) {
-  let element
-  if (typeof ui === 'string') {
-    const div = document.createElement('div')
-    div.innerHTML = ui.trim()
-    element = div.firstChild
-    document.body.append(div)
-  } else {
-    const {container} = render(ui)
-    element = container.firstChild
-  }
+  const div = document.createElement('div')
+  div.innerHTML = ui.trim()
+  document.body.append(div)
+
+  const element = div.firstChild
 
   return {element, ...addListeners(element, {eventHandlers})}
 }

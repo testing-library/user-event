@@ -1,16 +1,20 @@
-import {render, screen} from '@testing-library/react'
-import React from 'react'
 import userEvent from '..'
 import {addListeners, setup} from './helpers/utils'
 
+function setupSelect(ui) {
+  const utils = setup(`<form>${ui}</form>`)
+  const select = utils.element.querySelector('select')
+  return {...utils, form: utils.element, select, ...addListeners(select)}
+}
+
 test('should fire the correct events for multiple select', () => {
-  const {element: select, getEventCalls} = setup(
-    <select multiple>
+  const {form, select, getEventCalls} = setupSelect(`
+    <select name="select" multiple>
       <option value="1">One</option>
       <option value="2">Two</option>
       <option value="3">Three</option>
-    </select>,
-  )
+    </select>
+  `)
 
   userEvent.toggleSelectOptions(select, '1')
 
@@ -29,36 +33,35 @@ test('should fire the correct events for multiple select', () => {
     change
   `)
 
-  expect(screen.getByRole('listbox').value).toBe('1')
+  expect(form).toHaveFormValues({select: ['1']})
 })
 
 test('should fire the correct events for multiple select when focus is in other element', () => {
-  const {element: select, getEventCalls} = setup(
-    <>
-      <select multiple>
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-      </select>
-      <button tabIndex={0}>Other</button>
-    </>,
-  )
+  const {form, select} = setupSelect(`
+    <select name="select" multiple>
+      <option value="1">1</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+    </select>
+    <button>Other</button>
+  `)
 
-  const $otherBtn = screen.getByRole('button')
+  const button = form.querySelector('button')
 
-  const {getEventCalls: getButtonEvents} = addListeners($otherBtn)
+  const {getEventCalls: getSelectEventCalls} = addListeners(select)
+  const {getEventCalls: getButtonEventCalls} = addListeners(button)
 
-  $otherBtn.focus()
+  button.focus()
 
   userEvent.toggleSelectOptions(select, '1')
 
-  expect(getButtonEvents()).toMatchInlineSnapshot(`
+  expect(getButtonEventCalls()).toMatchInlineSnapshot(`
     focus
     mousemove: Left (0)
     mouseleave: Left (0)
     blur
   `)
-  expect(getEventCalls()).toMatchInlineSnapshot(`
+  expect(getSelectEventCalls()).toMatchInlineSnapshot(`
     mouseover: Left (0)
     mousemove: Left (0)
     mousedown: Left (0)
@@ -75,62 +78,38 @@ test('should fire the correct events for multiple select when focus is in other 
 })
 
 test('toggle options as expected', () => {
-  const TestBed = () => {
-    const [selected, setSelected] = React.useState([])
+  const {element} = setup(`
+    <form>
+      <select name="select" multiple>
+        <option value="1">One</option>
+        <optgroup label="Group Name">
+          <option value="2">Two</option>
+          <option value="3">Three</option>
+        </optgroup>
+      </select>
+    </form>
+  `)
 
-    return (
-      <>
-        <select
-          value={selected}
-          onChange={ev => {
-            const options = ev.target.options
-            const result = []
-
-            for (let i = 0; i < options.length; i++) {
-              if (options[i].selected) {
-                result.push(options[i].value)
-              }
-            }
-
-            setSelected(result)
-          }}
-          multiple
-        >
-          <option value="1">One</option>
-          <optgroup label="Group Name">
-            <option value="2">Two</option>
-            <option value="3">Three</option>
-          </optgroup>
-        </select>
-        <output>{selected.join(', ')}</output>
-      </>
-    )
-  }
-
-  render(<TestBed />)
+  const select = element.querySelector('select')
 
   // select one
-  userEvent.toggleSelectOptions(screen.getByRole('listbox'), ['1'])
-  expect(screen.getByRole('status')).toHaveTextContent('1')
+  userEvent.toggleSelectOptions(select, ['1'])
+  expect(element).toHaveFormValues({select: ['1']})
 
   // unselect one and select two
-  userEvent.toggleSelectOptions(screen.getByRole('listbox'), ['1', '2'])
-  expect(screen.getByRole('status')).toHaveTextContent('2')
+  userEvent.toggleSelectOptions(select, ['1', '2'])
+  expect(element).toHaveFormValues({select: ['2']})
 
-  // select one
-  userEvent.toggleSelectOptions(screen.getByRole('listbox'), ['1'])
-  expect(screen.getByRole('status')).toHaveTextContent('1, 2')
+  // // select one
+  userEvent.toggleSelectOptions(select, ['1'])
+  expect(element).toHaveFormValues({select: ['1', '2']})
 })
 
 it('throws error when provided element is not a multiple select', () => {
-  const {element: select} = setup(
-    <select>
-      <option value="one">1</option>
-    </select>,
-  )
+  const {element} = setup(`<select />`)
 
   expect(() => {
-    userEvent.toggleSelectOptions(select)
+    userEvent.toggleSelectOptions(element)
   }).toThrowErrorMatchingInlineSnapshot(
     `Unable to toggleSelectOptions - please provide a select element with multiple=true`,
   )

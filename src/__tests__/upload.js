@@ -8,6 +8,8 @@ test('should fire the correct events for input', () => {
   userEvent.upload(element, file)
 
   expect(getEventCalls()).toMatchInlineSnapshot(`
+    Events fired on: input[value=""]
+
     mouseover: Left (0)
     mousemove: Left (0)
     mousedown: Left (0)
@@ -35,6 +37,8 @@ test('should fire the correct events with label', () => {
   userEvent.upload(label, file)
 
   expect(getLabelEventCalls()).toMatchInlineSnapshot(`
+    Events fired on: label[for="element"]
+
     mouseover: Left (0)
     mousemove: Left (0)
     mousedown: Left (0)
@@ -43,6 +47,8 @@ test('should fire the correct events with label', () => {
     change
   `)
   expect(getInputEventCalls()).toMatchInlineSnapshot(`
+    Events fired on: input#element[value=""]
+
     click: Left (0)
     focus
   `)

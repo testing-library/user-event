@@ -21,6 +21,8 @@ test('{esc} triggers typing the escape character', async () => {
   await userEvent.type(element, '{esc}')
 
   expect(getEventCalls()).toMatchInlineSnapshot(`
+    Events fired on: input[value=""]
+
     focus
     keydown: Escape (27)
     keyup: Escape (27)
@@ -31,6 +33,8 @@ test('a{backspace}', async () => {
   const {element, getEventCalls} = setup('<input />')
   await userEvent.type(element, 'a{backspace}')
   expect(getEventCalls()).toMatchInlineSnapshot(`
+    Events fired on: input[value=""]
+
     focus
     keydown: a (97)
     keypress: a (97)
@@ -46,6 +50,8 @@ test('{backspace}a', async () => {
   const {element, getEventCalls} = setup('<input />')
   await userEvent.type(element, '{backspace}a')
   expect(getEventCalls()).toMatchInlineSnapshot(`
+    Events fired on: input[value="a"]
+
     focus
     keydown: Backspace (8)
     keyup: Backspace (8)
@@ -63,6 +69,8 @@ test('{backspace} triggers typing the backspace character and deletes the charac
   await userEvent.type(element, '{backspace}')
 
   expect(getEventCalls()).toMatchInlineSnapshot(`
+    Events fired on: input[value="o"]
+
     focus
     keydown: Backspace (8)
     input: "y{CURSOR}o" -> "o"
@@ -77,6 +85,8 @@ test('{backspace} on a readOnly input', async () => {
   await userEvent.type(element, '{backspace}')
 
   expect(getEventCalls()).toMatchInlineSnapshot(`
+    Events fired on: input[value="yo"]
+
     focus
     keydown: Backspace (8)
     keyup: Backspace (8)
@@ -92,6 +102,8 @@ test('{backspace} does not fire input if keydown prevents default', async () => 
   await userEvent.type(element, '{backspace}')
 
   expect(getEventCalls()).toMatchInlineSnapshot(`
+    Events fired on: input[value="yo"]
+
     focus
     keydown: Backspace (8)
     keyup: Backspace (8)
@@ -105,6 +117,8 @@ test('{backspace} deletes the selected range', async () => {
   await userEvent.type(element, '{backspace}')
 
   expect(getEventCalls()).toMatchInlineSnapshot(`
+    Events fired on: input[value="Here"]
+
     focus
     keydown: Backspace (8)
     input: "H{SELECTION}i th{/SELECTION}ere" -> "Here"
@@ -126,6 +140,8 @@ test('{alt}a{/alt}', async () => {
   await userEvent.type(element, '{alt}a{/alt}')
 
   expect(getEventCalls()).toMatchInlineSnapshot(`
+    Events fired on: input[value="a"]
+
     focus
     keydown: Alt (18) {alt}
     keydown: a (97) {alt}
@@ -142,6 +158,8 @@ test('{meta}a{/meta}', async () => {
   await userEvent.type(element, '{meta}a{/meta}')
 
   expect(getEventCalls()).toMatchInlineSnapshot(`
+    Events fired on: input[value="a"]
+
     focus
     keydown: Meta (93) {meta}
     keydown: a (97) {meta}
@@ -158,6 +176,8 @@ test('{ctrl}a{/ctrl}', async () => {
   await userEvent.type(element, '{ctrl}a{/ctrl}')
 
   expect(getEventCalls()).toMatchInlineSnapshot(`
+    Events fired on: input[value="a"]
+
     focus
     keydown: Control (17) {ctrl}
     keydown: a (97) {ctrl}
@@ -174,6 +194,8 @@ test('{shift}a{/shift}', async () => {
   await userEvent.type(element, '{shift}a{/shift}')
 
   expect(getEventCalls()).toMatchInlineSnapshot(`
+    Events fired on: input[value="a"]
+
     focus
     keydown: Shift (16) {shift}
     keydown: a (97) {shift}
@@ -190,6 +212,8 @@ test('a{enter}', async () => {
   await userEvent.type(element, 'a{enter}')
 
   expect(getEventCalls()).toMatchInlineSnapshot(`
+    Events fired on: input[value="a"]
+
     focus
     keydown: a (97)
     keypress: a (97)
@@ -211,6 +235,8 @@ test('{enter} with preventDefault keydown', async () => {
   await userEvent.type(element, '{enter}')
 
   expect(getEventCalls()).toMatchInlineSnapshot(`
+    Events fired on: input[value=""]
+
     focus
     keydown: Enter (13)
     keyup: Enter (13)
@@ -223,6 +249,8 @@ test('{enter} on a button', async () => {
   await userEvent.type(element, '{enter}')
 
   expect(getEventCalls()).toMatchInlineSnapshot(`
+    Events fired on: button[value=""]
+
     focus
     keydown: Enter (13)
     keypress: Enter (13)
@@ -237,6 +265,8 @@ test('{enter} on a textarea', async () => {
   await userEvent.type(element, '{enter}')
 
   expect(getEventCalls()).toMatchInlineSnapshot(`
+    Events fired on: textarea[value="\\n"]
+
     focus
     keydown: Enter (13)
     keypress: Enter (13)
@@ -252,6 +282,8 @@ test('{meta}{enter}{/meta} on a button', async () => {
   await userEvent.type(element, '{meta}{enter}{/meta}')
 
   expect(getEventCalls()).toMatchInlineSnapshot(`
+    Events fired on: button[value=""]
+
     focus
     keydown: Meta (93) {meta}
     keydown: Enter (13) {meta}
@@ -268,6 +300,8 @@ test('{meta}{alt}{ctrl}a{/ctrl}{/alt}{/meta}', async () => {
   await userEvent.type(element, '{meta}{alt}{ctrl}a{/ctrl}{/alt}{/meta}')
 
   expect(getEventCalls()).toMatchInlineSnapshot(`
+    Events fired on: input[value="a"]
+
     focus
     keydown: Meta (93) {meta}
     keydown: Alt (18) {alt}{meta}

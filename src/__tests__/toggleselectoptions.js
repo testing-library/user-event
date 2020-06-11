@@ -1,35 +1,25 @@
 import userEvent from '..'
-import {addListeners, setup} from './helpers/utils'
-
-function setupSelect(ui) {
-  const utils = setup(`<form>${ui}</form>`)
-  const select = utils.element.querySelector('select')
-  return {...utils, form: utils.element, select, ...addListeners(select)}
-}
+import {addListeners, setupSelect, setup} from './helpers/utils'
 
 test('should fire the correct events for multiple select', () => {
-  const {form, select, getEventCalls} = setupSelect(`
-    <select name="select" multiple>
-      <option value="1">One</option>
-      <option value="2">Two</option>
-      <option value="3">Three</option>
-    </select>
-  `)
+  const {form, select, getEventCalls} = setupSelect({multiple: true})
 
   userEvent.toggleSelectOptions(select, '1')
 
   expect(getEventCalls()).toMatchInlineSnapshot(`
+    Events fired on: select[name="select"][value=["1"]]
+
     mouseover: Left (0)
     mousemove: Left (0)
     mousedown: Left (0)
     focus
     mouseup: Left (0)
     click: Left (0)
-    mouseover: Left (0)
-    mousemove: Left (0)
-    mousedown: Left (0)
-    mouseup: Left (0)
-    click: Left (0)
+    mouseover: Left (0) (bubbled from option[value="1"])
+    mousemove: Left (0) (bubbled from option[value="1"])
+    mousedown: Left (0) (bubbled from option[value="1"])
+    mouseup: Left (0) (bubbled from option[value="1"])
+    click: Left (0) (bubbled from option[value="1"])
     change
   `)
 
@@ -37,16 +27,9 @@ test('should fire the correct events for multiple select', () => {
 })
 
 test('should fire the correct events for multiple select when focus is in other element', () => {
-  const {form, select} = setupSelect(`
-    <select name="select" multiple>
-      <option value="1">1</option>
-      <option value="2">2</option>
-      <option value="3">3</option>
-    </select>
-    <button>Other</button>
-  `)
-
-  const button = form.querySelector('button')
+  const {select} = setupSelect({multiple: true})
+  const button = document.createElement('button')
+  document.body.append(button)
 
   const {getEventCalls: getSelectEventCalls} = addListeners(select)
   const {getEventCalls: getButtonEventCalls} = addListeners(button)
@@ -56,23 +39,27 @@ test('should fire the correct events for multiple select when focus is in other 
   userEvent.toggleSelectOptions(select, '1')
 
   expect(getButtonEventCalls()).toMatchInlineSnapshot(`
+    Events fired on: button[value=""]
+
     focus
     mousemove: Left (0)
     mouseleave: Left (0)
     blur
   `)
   expect(getSelectEventCalls()).toMatchInlineSnapshot(`
+    Events fired on: select[name="select"][value=["1"]]
+
     mouseover: Left (0)
     mousemove: Left (0)
     mousedown: Left (0)
     focus
     mouseup: Left (0)
     click: Left (0)
-    mouseover: Left (0)
-    mousemove: Left (0)
-    mousedown: Left (0)
-    mouseup: Left (0)
-    click: Left (0)
+    mouseover: Left (0) (bubbled from option[value="1"])
+    mousemove: Left (0) (bubbled from option[value="1"])
+    mousedown: Left (0) (bubbled from option[value="1"])
+    mouseup: Left (0) (bubbled from option[value="1"])
+    click: Left (0) (bubbled from option[value="1"])
     change
   `)
 })

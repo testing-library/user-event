@@ -11,10 +11,44 @@ const unstringSnapshotSerializer = {
 
 expect.addSnapshotSerializer(unstringSnapshotSerializer)
 
+function setup(ui, {eventHandlers} = {}) {
+  const div = document.createElement('div')
+  div.innerHTML = ui.trim()
+  document.body.append(div)
+
+  const element = div.firstChild
+
+  return {element, ...addListeners(element, {eventHandlers})}
+}
+
+function setupSelect({multiple = false} = {}) {
+  const form = document.createElement('form')
+  form.innerHTML = `
+    <select name="select" ${multiple ? 'multiple' : ''}>
+      <option value="1">1</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+    </select>
+  `
+  document.body.append(form)
+  const select = form.querySelector('select')
+  const options = Array.from(form.querySelectorAll('option'))
+  return {
+    ...addListeners(select),
+    form,
+    select,
+    options,
+  }
+}
+
 let eventListeners = []
 
-function getTestData(element) {
+function getTestData(element, event) {
   return {
+    bubbledFrom:
+      event && event.eventPhase === event.BUBBLING_PHASE
+        ? getElementDisplayName(event.target)
+        : null,
     value: element.value,
     selectionStart: element.selectionStart,
     selectionEnd: element.selectionEnd,
@@ -31,7 +65,7 @@ function addEventListener(el, type, listener, options) {
   const hijackedListener = e => {
     e.testData = {previous: e.target.previousTestData}
     const retVal = listener(e)
-    const next = getTestData(e.target)
+    const next = getTestData(e.target, e)
     e.testData.next = next
     e.target.previousTestData = next
     return retVal
@@ -40,14 +74,29 @@ function addEventListener(el, type, listener, options) {
   el.addEventListener(type, hijackedListener, options)
 }
 
-function setup(ui, {eventHandlers} = {}) {
-  const div = document.createElement('div')
-  div.innerHTML = ui.trim()
-  document.body.append(div)
+function getElementValue(element) {
+  if (element.tagName === 'SELECT' && element.multiple) {
+    return JSON.stringify(Array.from(element.selectedOptions).map(o => o.value))
+  } else if (element.type === 'checkbox' || element.type === 'radio') {
+    // handled separately
+    return null
+  }
+  return JSON.stringify(element.value)
+}
 
-  const element = div.firstChild
-
-  return {element, ...addListeners(element, {eventHandlers})}
+function getElementDisplayName(element) {
+  const value = getElementValue(element)
+  const hasChecked = element.type === 'checkbox' || element.type === 'radio'
+  return [
+    element.tagName.toLowerCase(),
+    element.id ? `#${element.id}` : null,
+    element.name ? `[name="${element.name}"]` : null,
+    element.htmlFor ? `[for="${element.htmlFor}"]` : null,
+    value ? `[value=${value}]` : null,
+    hasChecked ? `[checked=${element.checked}]` : null,
+  ]
+    .filter(Boolean)
+    .join('')
 }
 
 function addListeners(element, {eventHandlers = {}} = {}) {
@@ -61,6 +110,8 @@ function addListeners(element, {eventHandlers = {}} = {}) {
     'change',
     'blur',
     'focus',
+    'focusin',
+    'focusout',
     'click',
     'mouseover',
     'mousemove',
@@ -88,7 +139,7 @@ function addListeners(element, {eventHandlers = {}} = {}) {
     addEventListener(element, 'submit', e => e.preventDefault())
   }
   function getEventCalls() {
-    return generalListener.mock.calls
+    const eventCalls = generalListener.mock.calls
       .map(([event]) => {
         const window = event.target.ownerDocument.defaultView
         const modifiers = ['altKey', 'shiftKey', 'metaKey', 'ctrlKey']
@@ -96,29 +147,42 @@ function addListeners(element, {eventHandlers = {}} = {}) {
           .map(k => `{${k.replace('Key', '')}}`)
           .join('')
 
+        let log = event.type
         if (
           event.type === 'click' &&
           event.hasOwnProperty('testData') &&
           (element.type === 'checkbox' || element.type === 'radio')
         ) {
-          return getCheckboxOrRadioClickedLine(event)
+          log = getCheckboxOrRadioClickedLine(event)
+        } else if (event.type === 'input' && event.hasOwnProperty('testData')) {
+          log = getInputLine(element, event)
+        } else if (event instanceof window.KeyboardEvent) {
+          log = getKeyboardEventLine(event)
+        } else if (event instanceof window.MouseEvent) {
+          log = getMouseEventLine(event)
         }
 
-        if (event.type === 'input' && event.hasOwnProperty('testData')) {
-          return getInputLine(element, event)
-        }
-
-        if (event instanceof window.KeyboardEvent) {
-          return getKeyboardEventLine(event, modifiers)
-        }
-
-        if (event instanceof window.MouseEvent) {
-          return getMouseEventLine(event, modifiers)
-        }
-
-        return [event.type, modifiers].join(' ').trim()
+        return [
+          log,
+          event.testData && event.testData.next.bubbledFrom
+            ? `(bubbled from ${event.testData.next.bubbledFrom})`
+            : null,
+          modifiers,
+        ]
+          .filter(Boolean)
+          .join(' ')
+          .trim()
       })
       .join('\n')
+      .trim()
+    if (eventCalls.length) {
+      return [
+        `Events fired on: ${getElementDisplayName(element)}`,
+        eventCalls,
+      ].join('\n\n')
+    } else {
+      return `No events were fired on: ${getElementDisplayName(element)}`
+    }
   }
   const clearEventCalls = () => generalListener.mockClear()
   const getEvents = () => generalListener.mock.calls.map(([e]) => e)
@@ -133,23 +197,17 @@ const mouseButtonMap = {
   3: 'Browser Back',
   4: 'Browser Forward',
 }
-function getMouseEventLine(event, modifiers) {
-  return [
-    `${event.type}:`,
-    mouseButtonMap[event.button],
-    `(${event.button})`,
-    modifiers,
-  ]
+function getMouseEventLine(event) {
+  return [`${event.type}:`, mouseButtonMap[event.button], `(${event.button})`]
     .join(' ')
     .trim()
 }
 
-function getKeyboardEventLine(event, modifiers) {
+function getKeyboardEventLine(event) {
   return [
     `${event.type}:`,
     event.key,
     typeof event.keyCode === 'undefined' ? null : `(${event.keyCode})`,
-    modifiers,
   ]
     .join(' ')
     .trim()
@@ -202,4 +260,4 @@ afterEach(() => {
   document.body.innerHTML = ''
 })
 
-export {setup, addEventListener, addListeners}
+export {setup, setupSelect, addEventListener, addListeners}

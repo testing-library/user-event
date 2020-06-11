@@ -6,6 +6,8 @@ test('clears text', () => {
   userEvent.clear(element)
   expect(element).toHaveValue('')
   expect(getEventCalls()).toMatchInlineSnapshot(`
+    Events fired on: input[value=""]
+
     mouseover: Left (0)
     mousemove: Left (0)
     mousedown: Left (0)
@@ -26,7 +28,9 @@ test('does not clear text on disabled inputs', () => {
   const {element, getEventCalls} = setup('<input value="hello" disabled />')
   userEvent.clear(element)
   expect(element).toHaveValue('hello')
-  expect(getEventCalls()).toMatchInlineSnapshot(``)
+  expect(getEventCalls()).toMatchInlineSnapshot(
+    `No events were fired on: input[value="hello"]`,
+  )
 })
 
 test('does not clear text on readonly inputs', () => {
@@ -34,6 +38,8 @@ test('does not clear text on readonly inputs', () => {
   userEvent.clear(element)
   expect(element).toHaveValue('hello')
   expect(getEventCalls()).toMatchInlineSnapshot(`
+    Events fired on: input[value="hello"]
+
     mouseover: Left (0)
     mousemove: Left (0)
     mousedown: Left (0)

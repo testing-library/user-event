@@ -6,6 +6,8 @@ test('hover', async () => {
 
   await userEvent.hover(element)
   expect(getEventCalls()).toMatchInlineSnapshot(`
+    Events fired on: button[value=""]
+
     mouseover: Left (0)
     mouseenter: Left (0)
     mousemove: Left (0)

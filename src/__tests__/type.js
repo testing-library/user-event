@@ -6,6 +6,8 @@ test('types text in input', async () => {
   const {element, getEventCalls} = setup('<input />')
   await userEvent.type(element, 'Sup')
   expect(getEventCalls()).toMatchInlineSnapshot(`
+    Events fired on: input[value="Sup"]
+
     focus
     keydown: S (83)
     keypress: S (83)
@@ -26,6 +28,8 @@ test('types text in input with allAtOnce', async () => {
   const {element, getEventCalls} = setup('<input />')
   await userEvent.type(element, 'Sup', {allAtOnce: true})
   expect(getEventCalls()).toMatchInlineSnapshot(`
+    Events fired on: input[value="Sup"]
+
     focus
     input: "{CURSOR}" -> "Sup"
   `)
@@ -39,6 +43,8 @@ test('types text inside custom element', async () => {
 
   await userEvent.type(inputEl, 'Sup')
   expect(getEventCalls()).toMatchInlineSnapshot(`
+    Events fired on: input[value="Sup"]
+
     focus
     keydown: S (83)
     keypress: S (83)
@@ -59,6 +65,8 @@ test('types text in textarea', async () => {
   const {element, getEventCalls} = setup('<textarea></textarea>')
   await userEvent.type(element, 'Sup')
   expect(getEventCalls()).toMatchInlineSnapshot(`
+    Events fired on: textarea[value="Sup"]
+
     focus
     keydown: S (83)
     keypress: S (83)
@@ -79,6 +87,8 @@ test('should append text all at once', async () => {
   const {element, getEventCalls} = setup('<input />')
   await userEvent.type(element, 'Sup', {allAtOnce: true})
   expect(getEventCalls()).toMatchInlineSnapshot(`
+    Events fired on: input[value="Sup"]
+
     focus
     input: "{CURSOR}" -> "Sup"
   `)
@@ -91,6 +101,8 @@ test('does not fire input event when keypress calls prevent default', async () =
 
   await userEvent.type(element, 'a')
   expect(getEventCalls()).toMatchInlineSnapshot(`
+    Events fired on: input[value=""]
+
     focus
     keydown: a (97)
     keypress: a (97)
@@ -105,6 +117,8 @@ test('does not fire keypress or input events when keydown calls prevent default'
 
   await userEvent.type(element, 'a')
   expect(getEventCalls()).toMatchInlineSnapshot(`
+    Events fired on: input[value=""]
+
     focus
     keydown: a (97)
     keyup: a (97)
@@ -115,7 +129,9 @@ test('does not fire events when disabled', async () => {
   const {element, getEventCalls} = setup('<input disabled />')
 
   await userEvent.type(element, 'a')
-  expect(getEventCalls()).toMatchInlineSnapshot(``)
+  expect(getEventCalls()).toMatchInlineSnapshot(
+    `No events were fired on: input[value=""]`,
+  )
 })
 
 test('does not fire input when readonly', async () => {
@@ -123,6 +139,8 @@ test('does not fire input when readonly', async () => {
 
   await userEvent.type(element, 'a')
   expect(getEventCalls()).toMatchInlineSnapshot(`
+    Events fired on: input[value=""]
+
     focus
     keydown: a (97)
     keypress: a (97)
@@ -134,14 +152,20 @@ test('does not fire input when readonly (with allAtOnce)', async () => {
   const {element, getEventCalls} = setup('<input readonly />')
 
   await userEvent.type(element, 'a', {allAtOnce: true})
-  expect(getEventCalls()).toMatchInlineSnapshot(`focus`)
+  expect(getEventCalls()).toMatchInlineSnapshot(`
+    Events fired on: input[value=""]
+
+    focus
+  `)
 })
 
 test('does not fire any events when disabled (with allAtOnce)', async () => {
   const {element, getEventCalls} = setup('<input disabled />')
 
   await userEvent.type(element, 'a', {allAtOnce: true})
-  expect(getEventCalls()).toMatchInlineSnapshot(``)
+  expect(getEventCalls()).toMatchInlineSnapshot(
+    `No events were fired on: input[value=""]`,
+  )
 })
 
 test('should delay the typing when opts.delay is not 0', async () => {
@@ -172,6 +196,8 @@ test('honors maxlength', async () => {
 
   // NOTE: no input event when typing "3"
   expect(getEventCalls()).toMatchInlineSnapshot(`
+    Events fired on: input[value="12"]
+
     focus
     keydown: 1 (49)
     keypress: 1 (49)
@@ -193,6 +219,8 @@ test('honors maxlength with existing text', async () => {
 
   // NOTE: no input event when typing "3"
   expect(getEventCalls()).toMatchInlineSnapshot(`
+    Events fired on: input[value="12"]
+
     focus
     keydown: 3 (51)
     keypress: 3 (51)
@@ -266,6 +294,8 @@ test('typing into a controlled input works', async () => {
 
   expect(element.value).toBe('$23')
   expect(getEventCalls()).toMatchInlineSnapshot(`
+    Events fired on: input[value="$23"]
+
     focus
     keydown: 2 (50)
     keypress: 2 (50)
@@ -286,6 +316,8 @@ test('typing in the middle of a controlled input works', async () => {
 
   expect(element.value).toBe('$213')
   expect(getEventCalls()).toMatchInlineSnapshot(`
+    Events fired on: input[value="$213"]
+
     focus
     keydown: 1 (49)
     keypress: 1 (49)
@@ -312,6 +344,8 @@ test('ignored {backspace} in controlled input', async () => {
   expect(element.value).toBe('$234')
   // the backslash in the inline snapshot is to escape the $ before {CURSOR}
   expect(getEventCalls()).toMatchInlineSnapshot(`
+    Events fired on: input[value="$234"]
+
     focus
     keydown: Backspace (8)
     input: "\${CURSOR}23" -> "$23"
@@ -329,6 +363,8 @@ test('typing in a textarea with existing text', async () => {
 
   await userEvent.type(element, '12')
   expect(getEventCalls()).toMatchInlineSnapshot(`
+    Events fired on: textarea[value="Hello, 12"]
+
     focus
     keydown: 1 (49)
     keypress: 1 (49)
@@ -352,6 +388,8 @@ test('accepts an initialSelectionStart and initialSelectionEnd', async () => {
     initialSelectionEnd: element.selectionEnd,
   })
   expect(getEventCalls()).toMatchInlineSnapshot(`
+    Events fired on: textarea[value="12Hello, "]
+
     focus
     keydown: 1 (49)
     keypress: 1 (49)
@@ -384,6 +422,8 @@ test('can type "-" into number inputs', async () => {
   // weirdness with browsers. Then the second input event inserts both the
   // - and the 3. /me rolls eyes
   expect(getEventCalls()).toMatchInlineSnapshot(`
+    Events fired on: input[value="-3"]
+
     focus
     keydown: - (45)
     keypress: - (45)

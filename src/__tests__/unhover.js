@@ -6,6 +6,8 @@ test('unhover', async () => {
 
   await userEvent.unhover(element)
   expect(getEventCalls()).toMatchInlineSnapshot(`
+    Events fired on: button[value=""]
+
     mousemove: Left (0)
     mouseleave: Left (0)
   `)

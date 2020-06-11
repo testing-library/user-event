@@ -5,6 +5,8 @@ test('click in input', () => {
   const {element, getEventCalls} = setup('<input />')
   userEvent.click(element)
   expect(getEventCalls()).toMatchInlineSnapshot(`
+    Events fired on: input[value=""]
+
     mouseover: Left (0)
     mousemove: Left (0)
     mousedown: Left (0)
@@ -18,6 +20,8 @@ test('click in textarea', () => {
   const {element, getEventCalls} = setup('<textarea></textarea>')
   userEvent.click(element)
   expect(getEventCalls()).toMatchInlineSnapshot(`
+    Events fired on: textarea[value=""]
+
     mouseover: Left (0)
     mousemove: Left (0)
     mousedown: Left (0)
@@ -32,6 +36,8 @@ test('should fire the correct events for <input type="checkbox">', () => {
   expect(element).not.toBeChecked()
   userEvent.click(element)
   expect(getEventCalls()).toMatchInlineSnapshot(`
+    Events fired on: input[checked=true]
+
     mouseover: Left (0)
     mousemove: Left (0)
     mousedown: Left (0)
@@ -48,7 +54,9 @@ test('should fire the correct events for <input type="checkbox" disabled>', () =
   userEvent.click(element)
   expect(element).toBeDisabled()
   // no event calls is expected here:
-  expect(getEventCalls()).toMatchInlineSnapshot(``)
+  expect(getEventCalls()).toMatchInlineSnapshot(
+    `No events were fired on: input[checked=false]`,
+  )
   expect(element).toBeDisabled()
   expect(element).toHaveProperty('checked', false)
 })
@@ -58,6 +66,8 @@ test('should fire the correct events for <input type="radio">', () => {
   expect(element).not.toBeChecked()
   userEvent.click(element)
   expect(getEventCalls()).toMatchInlineSnapshot(`
+    Events fired on: input[checked=true]
+
     mouseover: Left (0)
     mousemove: Left (0)
     mousedown: Left (0)
@@ -76,7 +86,9 @@ test('should fire the correct events for <input type="radio" disabled>', () => {
   userEvent.click(element)
   expect(element).toBeDisabled()
   // no event calls is expected here:
-  expect(getEventCalls()).toMatchInlineSnapshot(``)
+  expect(getEventCalls()).toMatchInlineSnapshot(
+    `No events were fired on: input[checked=false]`,
+  )
   expect(element).toBeDisabled()
 
   expect(element).toHaveProperty('checked', false)
@@ -86,6 +98,8 @@ test('should fire the correct events for <div>', () => {
   const {element, getEventCalls} = setup('<div></div>')
   userEvent.click(element)
   expect(getEventCalls()).toMatchInlineSnapshot(`
+    Events fired on: div
+
     mouseover: Left (0)
     mousemove: Left (0)
     mousedown: Left (0)
@@ -124,7 +138,9 @@ test('should blur the previous element', () => {
   clearEventCalls()
   userEvent.click(b)
   expect(getEventCalls()).toMatchInlineSnapshot(`
-    mousemove: Left (0)
+    Events fired on: input[value=""]
+
+    mousemove: Left (0) (bubbled from input[value=""])
     mouseleave: Left (0)
     blur
   `)
@@ -144,7 +160,9 @@ test('should not blur the previous element when mousedown prevents default', () 
   clearEventCalls()
   userEvent.click(b)
   expect(getEventCalls()).toMatchInlineSnapshot(`
-    mousemove: Left (0)
+    Events fired on: input[value=""]
+
+    mousemove: Left (0) (bubbled from input[value=""])
     mouseleave: Left (0)
   `)
 })

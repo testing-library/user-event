@@ -1,5 +1,5 @@
 import userEvent from '..'
-import {setup, addListeners, addEventListener} from './helpers/utils'
+import {setup, addListeners} from './helpers/utils'
 import './helpers/customElement'
 
 test('types text in input', async () => {
@@ -85,8 +85,9 @@ test('should append text all at once', async () => {
 })
 
 test('does not fire input event when keypress calls prevent default', async () => {
-  const {element, getEventCalls} = setup('<input />')
-  addEventListener(element, 'keypress', e => e.preventDefault())
+  const {element, getEventCalls} = setup('<input />', {
+    eventHandlers: {keyPress: e => e.preventDefault()},
+  })
 
   await userEvent.type(element, 'a')
   expect(getEventCalls()).toMatchInlineSnapshot(`
@@ -98,8 +99,9 @@ test('does not fire input event when keypress calls prevent default', async () =
 })
 
 test('does not fire keypress or input events when keydown calls prevent default', async () => {
-  const {element, getEventCalls} = setup('<input />')
-  addEventListener(element, 'keydown', e => e.preventDefault())
+  const {element, getEventCalls} = setup('<input />', {
+    eventHandlers: {keyDown: e => e.preventDefault()},
+  })
 
   await userEvent.type(element, 'a')
   expect(getEventCalls()).toMatchInlineSnapshot(`
@@ -148,8 +150,7 @@ test('should delay the typing when opts.delay is not 0', async () => {
     inputValues.push({timestamp: Date.now(), value: event.target.value})
   })
 
-  const {element} = setup('<input />')
-  addEventListener(element, 'input', onInput)
+  const {element} = setup('<input />', {eventHandlers: {input: onInput}})
 
   const text = 'Hello, world!'
   const delay = 10
@@ -200,23 +201,20 @@ test('honors maxlength with existing text', async () => {
 })
 
 test('should fire events on the currently focused element', async () => {
-  const {element} = setup(`
-    <div>
-      <input />
-      <input />
-    </div>
-  `)
+  const {element} = setup(`<div><input /><input /></div>`, {
+    eventHandlers: {keyDown: handleKeyDown},
+  })
 
   const input1 = element.children[0]
   const input2 = element.children[1]
 
   const text = 'Hello, world!'
   const changeFocusLimit = 7
-  addEventListener(input1, 'keydown', event => {
-    if (event.target.value.length === changeFocusLimit) {
+  function handleKeyDown() {
+    if (input1.value.length === 7) {
       input2.focus()
     }
-  })
+  }
 
   await userEvent.type(input1, text)
 
@@ -235,16 +233,19 @@ test('should replace selected text', async () => {
 })
 
 test('does not continue firing events when disabled during typing', async () => {
-  const {element} = setup('<input />')
-  addEventListener(element, 'input', e => (e.target.disabled = true))
+  const {element} = setup('<input />', {
+    eventHandlers: {input: e => (e.target.disabled = true)},
+  })
   await userEvent.type(element, 'hi')
   expect(element).toHaveValue('h')
 })
 
 function setupDollarInput({initialValue = ''} = {}) {
-  const returnValue = setup(`<input value="${initialValue}" type="text" />`)
+  const returnValue = setup(`<input value="${initialValue}" type="text" />`, {
+    eventHandlers: {input: handleInput},
+  })
   let previousValue = returnValue.element.value
-  addEventListener(returnValue.element, 'input', event => {
+  function handleInput(event) {
     const val = event.target.value
     const withoutDollar = val.replace(/\$/g, '')
     const num = Number(withoutDollar)
@@ -254,7 +255,7 @@ function setupDollarInput({initialValue = ''} = {}) {
       event.target.value = `$${withoutDollar}`
     }
     previousValue = event.target.value
-  })
+  }
   return returnValue
 }
 
@@ -268,11 +269,11 @@ test('typing into a controlled input works', async () => {
     focus
     keydown: 2 (50)
     keypress: 2 (50)
-    input: "2{CURSOR}" -> "$2"
+    input: "{CURSOR}" -> "$2"
     keyup: 2 (50)
     keydown: 3 (51)
     keypress: 3 (51)
-    input: "$23{CURSOR}" -> "$23"
+    input: "$2{CURSOR}" -> "$23"
     keyup: 3 (51)
   `)
 })
@@ -288,7 +289,7 @@ test('typing in the middle of a controlled input works', async () => {
     focus
     keydown: 1 (49)
     keypress: 1 (49)
-    input: "$213{CURSOR}" -> "$213"
+    input: "$2{CURSOR}3" -> "$213"
     keyup: 1 (49)
   `)
 })
@@ -313,11 +314,11 @@ test('ignored {backspace} in controlled input', async () => {
   expect(getEventCalls()).toMatchInlineSnapshot(`
     focus
     keydown: Backspace (8)
-    input: "23{CURSOR}" -> "$23"
+    input: "\${CURSOR}23" -> "$23"
     keyup: Backspace (8)
     keydown: 4 (52)
     keypress: 4 (52)
-    input: "$234{CURSOR}" -> "$234"
+    input: "$23{CURSOR}" -> "$234"
     keyup: 4 (52)
   `)
 })

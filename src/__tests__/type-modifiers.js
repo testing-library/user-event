@@ -1,6 +1,6 @@
 import React from 'react'
 import userEvent from '..'
-import {setup, addEventListener} from './helpers/utils'
+import {setup} from './helpers/utils'
 
 // Note, use the setup function at the bottom of the file...
 // but don't hurt yourself trying to read it 😅
@@ -205,8 +205,11 @@ test('a{enter}', async () => {
 })
 
 test('{enter} with preventDefault keydown', async () => {
-  const {element: input, getEventCalls} = setup('<input />')
-  addEventListener(input, 'keydown', e => e.preventDefault())
+  const {element: input, getEventCalls} = setup('<input />', {
+    eventHandlers: {
+      keyDown: e => e.preventDefault(),
+    },
+  })
 
   await userEvent.type(input, '{enter}')
 

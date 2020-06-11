@@ -253,8 +253,9 @@ test('does not fire blur on current element if is the same as previous', () => {
 })
 
 test('does not give focus when mouseDown is prevented', () => {
-  const {element} = setup('<input />')
-  addEventListener(element, 'mousedown', e => e.preventDefault())
+  const {element} = setup('<input />', {
+    eventHandlers: {mouseDown: e => e.preventDefault()},
+  })
   userEvent.click(element)
   expect(element).not.toHaveFocus()
 })

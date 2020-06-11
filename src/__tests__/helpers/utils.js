@@ -24,6 +24,10 @@ function getTestData(element) {
   }
 }
 
+// asside from the hijacked listener stuff here, it's also important to call
+// this function rather than simply calling addEventListener yourself
+// because it adds your listener to an eventListeners array which is cleaned
+// up automatically which will help use avoid memory leaks.
 function addEventListener(el, type, listener, options) {
   el.previousTestData = getTestData(el)
   const hijackedListener = e => {
@@ -38,7 +42,7 @@ function addEventListener(el, type, listener, options) {
   el.addEventListener(type, hijackedListener, options)
 }
 
-function setup(ui) {
+function setup(ui, {eventHandlers} = {}) {
   let element
   if (typeof ui === 'string') {
     const div = document.createElement('div')
@@ -50,10 +54,10 @@ function setup(ui) {
     element = container.firstChild
   }
 
-  return {element, ...addListeners(element)}
+  return {element, ...addListeners(element, {eventHandlers})}
 }
 
-function addListeners(element) {
+function addListeners(element, {eventHandlers = {}} = {}) {
   const generalListener = jest.fn().mockName('eventListener')
   const listeners = [
     'submit',
@@ -74,7 +78,17 @@ function addListeners(element) {
   ]
 
   for (const name of listeners) {
-    addEventListener(element, name, generalListener)
+    addEventListener(element, name, (...args) => {
+      const [, handler] =
+        Object.entries(eventHandlers).find(
+          ([key]) => key.toLowerCase() === name,
+        ) ?? []
+      if (handler) {
+        generalListener(...args)
+        return handler(...args)
+      }
+      return generalListener(...args)
+    })
   }
   // prevent default of submits in tests
   if (element.tagName === 'FORM') {

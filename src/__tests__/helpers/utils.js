@@ -77,7 +77,11 @@ function addEventListener(el, type, listener, options) {
 function getElementValue(element) {
   if (element.tagName === 'SELECT' && element.multiple) {
     return JSON.stringify(Array.from(element.selectedOptions).map(o => o.value))
-  } else if (element.type === 'checkbox' || element.type === 'radio') {
+  } else if (
+    element.type === 'checkbox' ||
+    element.type === 'radio' ||
+    element.tagName === 'BUTTON'
+  ) {
     // handled separately
     return null
   }
@@ -113,6 +117,7 @@ function addListeners(element, {eventHandlers = {}} = {}) {
     'focusin',
     'focusout',
     'click',
+    'dblclick',
     'mouseover',
     'mousemove',
     'mouseenter',
@@ -186,7 +191,8 @@ function addListeners(element, {eventHandlers = {}} = {}) {
   }
   const clearEventCalls = () => generalListener.mockClear()
   const getEvents = () => generalListener.mock.calls.map(([e]) => e)
-  return {getEventCalls, clearEventCalls, getEvents}
+  const eventWasFired = eventType => getEvents().some(e => e.type === eventType)
+  return {getEventCalls, clearEventCalls, getEvents, eventWasFired}
 }
 
 // https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/button

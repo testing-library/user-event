@@ -17,6 +17,7 @@ test('clears text', () => {
     mousedown: Left (0)
     mouseup: Left (0)
     click: Left (0)
+    dblclick: Left (0)
     keydown: Backspace (8)
     keyup: Backspace (8)
     input: "{SELECTION}hello{/SELECTION}" -> "hello"
@@ -49,6 +50,7 @@ test('does not clear text on readonly inputs', () => {
     mousedown: Left (0)
     mouseup: Left (0)
     click: Left (0)
+    dblclick: Left (0)
     keydown: Backspace (8)
     keyup: Backspace (8)
   `)

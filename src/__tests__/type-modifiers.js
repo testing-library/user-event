@@ -249,7 +249,7 @@ test('{enter} on a button', async () => {
   await userEvent.type(element, '{enter}')
 
   expect(getEventCalls()).toMatchInlineSnapshot(`
-    Events fired on: button[value=""]
+    Events fired on: button
 
     focus
     keydown: Enter (13)
@@ -282,7 +282,7 @@ test('{meta}{enter}{/meta} on a button', async () => {
   await userEvent.type(element, '{meta}{enter}{/meta}')
 
   expect(getEventCalls()).toMatchInlineSnapshot(`
-    Events fired on: button[value=""]
+    Events fired on: button
 
     focus
     keydown: Meta (93) {meta}

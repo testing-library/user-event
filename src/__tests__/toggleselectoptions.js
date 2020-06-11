@@ -39,7 +39,7 @@ test('should fire the correct events for multiple select when focus is in other 
   userEvent.toggleSelectOptions(select, '1')
 
   expect(getButtonEventCalls()).toMatchInlineSnapshot(`
-    Events fired on: button[value=""]
+    Events fired on: button
 
     focus
     mousemove: Left (0)

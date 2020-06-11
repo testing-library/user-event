@@ -227,13 +227,18 @@ async function typeImpl(
       }
     }
     const eventOverrides = {}
-    let prevWasMinus
+    let prevWasMinus, prevWasPeriod
     for (const callback of eventCallbacks) {
       if (delay > 0) await wait(delay)
       if (!currentElement().disabled) {
-        const returnValue = await callback({prevWasMinus, eventOverrides})
+        const returnValue = await callback({
+          prevWasMinus,
+          prevWasPeriod,
+          eventOverrides,
+        })
         Object.assign(eventOverrides, returnValue?.eventOverrides)
         prevWasMinus = returnValue?.prevWasMinus
+        prevWasPeriod = returnValue?.prevWasPeriod
       }
     }
   }
@@ -339,10 +344,13 @@ async function typeImpl(
     }
   }
 
-  async function typeCharacter(char, {prevWasMinus = false, eventOverrides}) {
+  async function typeCharacter(
+    char,
+    {prevWasMinus = false, prevWasPeriod = false, eventOverrides},
+  ) {
     const key = char // TODO: check if this also valid for characters with diacritic markers e.g. úé etc
     const keyCode = char.charCodeAt(0)
-    let nextPrevWasMinus
+    let nextPrevWasMinus, nextPrevWasPeriod
 
     const keyDownDefaultNotPrevented = fireEvent.keyDown(currentElement(), {
       key,
@@ -362,7 +370,12 @@ async function typeImpl(
       })
 
       if (keyPressDefaultNotPrevented) {
-        const newEntry = prevWasMinus ? `-${char}` : char
+        let newEntry = char
+        if (prevWasMinus) {
+          newEntry = `-${char}`
+        } else if (prevWasPeriod) {
+          newEntry = `.${char}`
+        }
 
         const {prevValue} = await fireInputEventIfNeeded({
           ...calculateNewValue(newEntry),
@@ -385,6 +398,11 @@ async function typeImpl(
           } else {
             nextPrevWasMinus = newEntry === '-'
           }
+          if (newValue === prevValue && newEntry !== '.') {
+            nextPrevWasPeriod = prevWasPeriod
+          } else {
+            nextPrevWasPeriod = newEntry === '.'
+          }
         }
       }
     }
@@ -398,7 +416,7 @@ async function typeImpl(
       ...eventOverrides,
     })
 
-    return {prevWasMinus: nextPrevWasMinus}
+    return {prevWasMinus: nextPrevWasMinus, prevWasPeriod: nextPrevWasPeriod}
   }
 
   function modifier({name, key, keyCode, modifierProperty}) {

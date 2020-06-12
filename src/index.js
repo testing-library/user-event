@@ -150,6 +150,8 @@ function dblClickCheckbox(checkbox, init) {
 }
 
 function selectOption(select, option, init) {
+  if (select.disabled) return
+
   fireEvent.mouseOver(option, getMouseEventOptions('mouseover', init))
   fireEvent.mouseMove(option, getMouseEventOptions('mousemove', init))
   fireEvent.mouseDown(option, getMouseEventOptions('mousedown', init))

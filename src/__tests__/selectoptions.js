@@ -318,3 +318,19 @@ test('does not select anything if no matching options are given', () => {
   userEvent.selectOptions(select, 'Matches nothing')
   expect(select.selectedIndex).toBe(0)
 })
+
+test('does not select anything if select is disabled', () => {
+  const {
+    container: {firstChild: select},
+  } = render(
+    <select disabled>
+      <option>No value selected</option>
+      <option value="1">1</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+    </select>,
+  )
+
+  userEvent.selectOptions(select, '1')
+  expect(select.selectedIndex).toBe(0)
+})

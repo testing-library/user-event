@@ -69,15 +69,6 @@ it('types text in textarea', async () => {
   `)
 })
 
-test('should append text all at once', async () => {
-  const {element, getEventCalls} = setup(<input />)
-  await userEvent.type(element, 'Sup', {allAtOnce: true})
-  expect(getEventCalls()).toMatchInlineSnapshot(`
-    focus
-    input: "{CURSOR}" -> "Sup"
-  `)
-})
-
 test('does not fire input event when keypress calls prevent default', async () => {
   const {element, getEventCalls} = setup(
     <input onKeyPress={e => e.preventDefault()} />,
@@ -164,20 +155,6 @@ test.each(['input', 'textarea'])(
   },
 )
 
-test('does not type when readOnly even with allAtOnce', () => {
-  const handleChange = jest.fn()
-  render(<input data-testid="input" readOnly onChange={handleChange} />)
-  userEvent.type(screen.getByTestId('input'), 'hi', {allAtOnce: true})
-  expect(handleChange).not.toHaveBeenCalled()
-})
-
-test('does not type when disabled even with allAtOnce', () => {
-  const handleChange = jest.fn()
-  render(<input data-testid="input" disabled onChange={handleChange} />)
-  userEvent.type(screen.getByTestId('input'), 'hi', {allAtOnce: true})
-  expect(handleChange).not.toHaveBeenCalled()
-})
-
 test('should delay the typing when opts.delay is not 0', async () => {
   const inputValues = [{timestamp: Date.now(), value: ''}]
   const onInput = jest.fn(event => {
@@ -201,131 +178,6 @@ test('should delay the typing when opts.delay is not 0', async () => {
     expect(value).toBe(text.slice(0, index))
   }
 })
-
-test.each(['input', 'textarea'])(
-  'should type text in <%s> all at once',
-  type => {
-    const onChange = jest.fn()
-    render(
-      React.createElement(type, {
-        'data-testid': 'input',
-        onChange,
-      }),
-    )
-    const text = 'Hello, world!'
-    userEvent.type(screen.getByTestId('input'), text, {
-      allAtOnce: true,
-    })
-
-    expect(onChange).toHaveBeenCalledTimes(1)
-    expect(screen.getByTestId('input')).toHaveProperty('value', text)
-  },
-)
-
-test.each(['input', 'textarea'])(
-  'should enter text in <%s> up to maxLength if provided',
-  async type => {
-    const onChange = jest.fn()
-    const onKeyDown = jest.fn()
-    const onKeyPress = jest.fn()
-    const onKeyUp = jest.fn()
-    const maxLength = 10
-
-    render(
-      React.createElement(type, {
-        'data-testid': 'input',
-        onChange,
-        onKeyDown,
-        onKeyPress,
-        onKeyUp,
-        maxLength,
-      }),
-    )
-
-    const text = 'superlongtext'
-    const slicedText = text.slice(0, maxLength)
-
-    const inputEl = screen.getByTestId('input')
-
-    await userEvent.type(inputEl, text)
-
-    expect(inputEl).toHaveProperty('value', slicedText)
-    expect(onChange).toHaveBeenCalledTimes(slicedText.length)
-    expect(onKeyPress).toHaveBeenCalledTimes(text.length)
-    expect(onKeyDown).toHaveBeenCalledTimes(text.length)
-    expect(onKeyUp).toHaveBeenCalledTimes(text.length)
-
-    inputEl.value = ''
-    onChange.mockClear()
-    onKeyPress.mockClear()
-    onKeyDown.mockClear()
-    onKeyUp.mockClear()
-
-    userEvent.type(inputEl, text, {
-      allAtOnce: true,
-    })
-
-    expect(inputEl).toHaveProperty('value', slicedText)
-    expect(onChange).toHaveBeenCalledTimes(1)
-    expect(onKeyPress).not.toHaveBeenCalled()
-    expect(onKeyDown).not.toHaveBeenCalled()
-    expect(onKeyUp).not.toHaveBeenCalled()
-  },
-)
-
-test.each(['input', 'textarea'])(
-  'should append text in <%s> up to maxLength if provided',
-  async type => {
-    const onChange = jest.fn()
-    const onKeyDown = jest.fn()
-    const onKeyPress = jest.fn()
-    const onKeyUp = jest.fn()
-    const maxLength = 10
-
-    render(
-      React.createElement(type, {
-        'data-testid': 'input',
-        onChange,
-        onKeyDown,
-        onKeyPress,
-        onKeyUp,
-        maxLength,
-      }),
-    )
-
-    const text1 = 'superlong'
-    const text2 = 'text'
-    const text = text1 + text2
-    const slicedText = text.slice(0, maxLength)
-
-    const inputEl = screen.getByTestId('input')
-
-    await userEvent.type(inputEl, text1)
-    await userEvent.type(inputEl, text2)
-
-    expect(inputEl).toHaveProperty('value', slicedText)
-    expect(onChange).toHaveBeenCalledTimes(slicedText.length)
-    expect(onKeyPress).toHaveBeenCalledTimes(text.length)
-    expect(onKeyDown).toHaveBeenCalledTimes(text.length)
-    expect(onKeyUp).toHaveBeenCalledTimes(text.length)
-
-    inputEl.value = ''
-    onChange.mockClear()
-    onKeyPress.mockClear()
-    onKeyDown.mockClear()
-    onKeyUp.mockClear()
-
-    userEvent.type(inputEl, text, {
-      allAtOnce: true,
-    })
-
-    expect(inputEl).toHaveProperty('value', slicedText)
-    expect(onChange).toHaveBeenCalledTimes(1)
-    expect(onKeyPress).not.toHaveBeenCalled()
-    expect(onKeyDown).not.toHaveBeenCalled()
-    expect(onKeyUp).not.toHaveBeenCalled()
-  },
-)
 
 test('should fire events on the currently focused element', async () => {
   const changeFocusLimit = 7
@@ -421,19 +273,6 @@ test('should replace selected text one by one up to maxLength if provided', asyn
   const truncatedCharCount = resultIfUnlimited.length - slicedText.length
   expect(onChange).toHaveBeenCalledTimes('friend'.length - truncatedCharCount)
   expect(input).toHaveValue(slicedText)
-})
-
-test('should replace selected text all at once', async () => {
-  const onChange = jest.fn()
-  const {
-    container: {firstChild: input},
-  } = render(<input defaultValue="hello world" onChange={onChange} />)
-  const selectionStart = 'hello world'.search('world')
-  const selectionEnd = selectionStart + 'world'.length
-  input.setSelectionRange(selectionStart, selectionEnd)
-  await userEvent.type(input, 'friend', {allAtOnce: true})
-  expect(onChange).toHaveBeenCalledTimes(1)
-  expect(input).toHaveValue('hello friend')
 })
 
 test('does not continue firing events when disabled during typing', async () => {

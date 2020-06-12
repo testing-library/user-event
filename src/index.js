@@ -1,5 +1,6 @@
 import {fireEvent} from '@testing-library/dom'
 import {type} from './type'
+import {paste} from './paste'
 import {tick} from './tick'
 
 function isMousePressEvent(event) {
@@ -477,6 +478,7 @@ const userEvent = {
   toggleSelectOptions,
   clear,
   type,
+  paste,
   upload,
   tab,
   hover,

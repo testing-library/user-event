@@ -55,6 +55,7 @@ change the state of the checkbox.
   - [`click(element)`](#clickelement)
   - [`dblClick(element)`](#dblclickelement)
   - [`async type(element, text, [options])`](#async-typeelement-text-options)
+  - [`async paste(element, text, [options])`](#async-pasteelement-text-options)
   - [`upload(element, file, [{ clickInit, changeInit }])`](#uploadelement-file--clickinit-changeinit-)
   - [`clear(element)`](#clearelement)
   - [`selectOptions(element, values)`](#selectoptionselement-values)
@@ -166,9 +167,6 @@ test('type', async () => {
 })
 ```
 
-If `options.allAtOnce` is `true`, `type` will write `text` at once rather than
-one character at the time. `false` is the default value.
-
 `options.delay` is the number of milliseconds that pass between two characters
 are typed. By default it's 0. You can use this option if your component has a
 different behavior for fast or slow users.
@@ -198,6 +196,23 @@ The following special character strings are supported:
 > in that we do not simulate the behavior that happens with modifier key
 > combinations as different operating systems function differently in this
 > regard.
+
+### `async paste(element, text, [options])`
+
+Pastes `text` inside an `<input>` or a `<textarea>`.
+
+```jsx
+import React from 'react'
+import {render, screen} from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+
+test('paste', async () => {
+  render(<textarea />)
+
+  await userEvent.paste(screen.getByRole('textbox'), 'Hello,{enter}World!')
+  expect(screen.getByRole('textbox')).toHaveValue('Hello,\nWorld!')
+})
+```
 
 ### `upload(element, file, [{ clickInit, changeInit }])`
 
@@ -517,6 +532,7 @@ Thanks goes to these people ([emoji key][emojis]):
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors][all-contributors] specification.

@@ -30,7 +30,7 @@ const getActiveElement = document => {
 async function typeImpl(
   element,
   text,
-  {allAtOnce = false, delay, initialSelectionStart, initialSelectionEnd} = {},
+  {delay, initialSelectionStart, initialSelectionEnd} = {},
 ) {
   if (element.disabled) return
 
@@ -72,15 +72,7 @@ async function typeImpl(
     )
   }
 
-  if (allAtOnce) {
-    if (!element.readOnly) {
-      const {newValue, newSelectionStart} = calculateNewValue(text)
-      fireEvent.input(element, {
-        target: {value: newValue},
-      })
-      setSelectionRange({newValue, newSelectionStart})
-    }
-  } else {
+  {
     const eventCallbackMap = {
       ...modifier({
         name: 'shift',

@@ -1,7 +1,11 @@
 // Definitions by: Wu Haotian <https://github.com/whtsky>
 export interface ITypeOpts {
-  allAtOnce?: boolean
   delay?: number
+  initialSelectionStart?: number
+  initialSelectionEnd?: number
+}
+
+export interface IPasteOpts {
   initialSelectionStart?: number
   initialSelectionEnd?: number
 }
@@ -43,6 +47,11 @@ declare const userEvent: {
     element: TargetElement,
     text: string,
     userOpts?: ITypeOpts,
+  ) => Promise<void>
+  paste: (
+    element: TargetElement,
+    text: string,
+    userOpts?: IPasteOpts,
   ) => Promise<void>
   tab: (userOpts?: ITabUserOptions) => void
   hover: (element: TargetElement, init?: MouseEventInit) => Promise<void>

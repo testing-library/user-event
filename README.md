@@ -173,15 +173,17 @@ different behavior for fast or slow users.
 
 The following special character strings are supported:
 
-| Text string   | Key       | Modifier   | Notes                                                                              |
-| ------------- | --------- | ---------- | ---------------------------------------------------------------------------------- |
-| `{enter}`     | Enter     | N/A        | Will insert a newline character (`<textarea />` only).                             |
-| `{esc}`       | Escape    | N/A        |                                                                                    |
-| `{backspace}` | Backspace | N/A        | Will delete the previous character (or the characters within the `selectedRange`). |
-| `{shift}`     | Shift     | `shiftKey` | Does **not** capitalize following characters.                                      |
-| `{ctrl}`      | Control   | `ctrlKey`  |                                                                                    |
-| `{alt}`       | Alt       | `altKey`   |                                                                                    |
-| `{meta}`      | OS        | `metaKey`  |                                                                                    |
+| Text string   | Key       | Modifier   | Notes                                                                                                                                                               |
+| ------------- | --------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `{enter}`     | Enter     | N/A        | Will insert a newline character (`<textarea />` only).                                                                                                              |
+| `{esc}`       | Escape    | N/A        |                                                                                                                                                                     |
+| `{backspace}` | Backspace | N/A        | Will delete the previous character (or the characters within the `selectedRange`).                                                                                  |
+| `{del}`       | Delete    | N/A        | Will delete the next character (or the characters within the `selectedRange`)                                                                                       |
+| `{selectall}` | N/A       | N/A        | Selects all the text of the element. Note that this will only work for elements that support selection ranges (so, not `email`, `password`, `number`, among others) |
+| `{shift}`     | Shift     | `shiftKey` | Does **not** capitalize following characters.                                                                                                                       |
+| `{ctrl}`      | Control   | `ctrlKey`  |                                                                                                                                                                     |
+| `{alt}`       | Alt       | `altKey`   |                                                                                                                                                                     |
+| `{meta}`      | OS        | `metaKey`  |                                                                                                                                                                     |
 
 > **A note about modifiers:** Modifier keys (`{shift}`, `{ctrl}`, `{alt}`,
 > `{meta}`) will activate their corresponding event modifiers for the duration

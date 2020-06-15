@@ -23,7 +23,7 @@
 [![MIT License][license-badge]][license]
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-43-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-44-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 [![PRs Welcome][prs-badge]][prs]
 [![Code of Conduct][coc-badge]][coc]
@@ -497,12 +497,12 @@ Thanks goes to these people ([emoji key][emojis]):
   </tr>
   <tr>
     <td align="center"><a href="http://timdeschryver.dev"><img src="https://avatars1.githubusercontent.com/u/28659384?v=4" width="100px;" alt=""/><br /><sub><b>Tim Deschryver</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=timdeschryver" title="Tests">⚠️</a></td>
+    <td align="center"><a href="https://github.com/ben-dyer"><img src="https://avatars2.githubusercontent.com/u/43922444?v=4" width="100px;" alt=""/><br /><sub><b>Ben Dyer</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=ben-dyer" title="Code">💻</a> <a href="https://github.com/testing-library/user-event/commits?author=ben-dyer" title="Tests">⚠️</a></td>
   </tr>
 </table>
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
-
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors][all-contributors] specification.

@@ -52,8 +52,8 @@ change the state of the checkbox.
 
 - [Installation](#installation)
 - [API](#api)
-  - [`click(element)`](#clickelement)
-  - [`dblClick(element)`](#dblclickelement)
+  - [`click(element, eventInit, options)`](#clickelement-eventinit-options)
+  - [`dblClick(element, eventInit, options)`](#dblclickelement-eventinit-options)
   - [`async type(element, text, [options])`](#async-typeelement-text-options)
   - [`upload(element, file, [{ clickInit, changeInit }])`](#uploadelement-file--clickinit-changeinit-)
   - [`clear(element)`](#clearelement)
@@ -95,7 +95,7 @@ var userEvent = require('@testing-library/user-event')
 
 ## API
 
-### `click(element)`
+### `click(element, eventInit, options)`
 
 Clicks `element`, depending on what `element` is it can have different side
 effects.
@@ -128,7 +128,10 @@ See the
 [`MouseEvent`](https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/MouseEvent)
 constructor documentation for more options.
 
-### `dblClick(element)`
+Note that `click` will trigger hover events before clicking. To disable this,
+set the `skipHover` option to `true`.
+
+### `dblClick(element, eventInit, options)`
 
 Clicks `element` twice, depending on what `element` is it can have different
 side effects.
@@ -169,6 +172,9 @@ test('type', async () => {
 are typed. By default it's 0. You can use this option if your component has a
 different behavior for fast or slow users.
 
+`type` will click the element before typing. To disable this, set the
+`skipClick` option to `true`.
+
 #### Special characters
 
 The following special character strings are supported:
@@ -187,7 +193,9 @@ The following special character strings are supported:
 
 > **A note about modifiers:** Modifier keys (`{shift}`, `{ctrl}`, `{alt}`,
 > `{meta}`) will activate their corresponding event modifiers for the duration
-> of type command or until they are closed (via `{/shift}`, `{/ctrl}`, etc.).
+> of type command or until they are closed (via `{/shift}`, `{/ctrl}`, etc.). If
+> they are not closed explicitly, then events will be fired to close them
+> automatically (to disable this, set the `skipAutoClose` option to `true`).
 
 <!-- space out these notes -->
 

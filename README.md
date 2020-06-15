@@ -58,10 +58,11 @@ change the state of the checkbox.
   - [`upload(element, file, [{ clickInit, changeInit }])`](#uploadelement-file--clickinit-changeinit-)
   - [`clear(element)`](#clearelement)
   - [`selectOptions(element, values)`](#selectoptionselement-values)
-  - [`toggleSelectOptions(element, values)`](#toggleselectoptionselement-values)
+  - [`deselectOptions(element, values)`](#deselectoptionselement-values)
   - [`tab({shift, focusTrap})`](#tabshift-focustrap)
-  - [`async hover(element)`](#async-hoverelement)
-  - [`async unhover(element)`](#async-unhoverelement)
+  - [`hover(element)`](#hoverelement)
+  - [`unhover(element)`](#unhoverelement)
+  - [`paste(element, text, eventInit, options)`](#pasteelement-text-eventinit-options)
 - [Issues](#issues)
 - [Contributors ✨](#contributors-)
 - [LICENSE](#license)
@@ -163,9 +164,6 @@ test('type', async () => {
   expect(screen.getByRole('textbox')).toHaveValue('Hello,\nWorld!')
 })
 ```
-
-If `options.allAtOnce` is `true`, `type` will write `text` at once rather than
-one character at the time. `false` is the default value.
 
 `options.delay` is the number of milliseconds that pass between two characters
 are typed. By default it's 0. You can use this option if your component has a
@@ -308,16 +306,17 @@ userEvent.selectOptions(screen.getByTestId('select-multiple'), [
 ])
 ```
 
-### `toggleSelectOptions(element, values)`
+### `deselectOptions(element, values)`
 
-Toggle the specified option(s) of a `<select multiple>` element.
+Remove the selection for the specified option(s) of a `<select multiple>`
+element.
 
 ```jsx
 import * as React from 'react'
 import {render, screen} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
-test('toggleSelectOptions', () => {
+test('deselectOptions', () => {
   render(
     <select multiple>
       <option value="1">A</option>
@@ -326,14 +325,12 @@ test('toggleSelectOptions', () => {
     </select>,
   )
 
-  userEvent.toggleSelectOptions(screen.getByRole('listbox'), ['1', '3'])
-
-  expect(screen.getByText('A').selected).toBe(true)
-  expect(screen.getByText('C').selected).toBe(true)
-
-  userEvent.toggleSelectOptions(screen.getByRole('listbox'), ['1'])
-
-  expect(screen.getByText('A').selected).toBe(false)
+  userEvent.selectOptions(screen.getByRole('listbox'), '2')
+  expect(screen.getByText('B').selected).toBe(true)
+  userEvent.deselectOptions(screen.getByRole('listbox'), '2')
+  expect(screen.getByText('B').selected).toBe(false)
+  // can do multiple at once as well:
+  // userEvent.deselectOptions(screen.getByRole('listbox'), ['1', '2'])
 })
 ```
 
@@ -397,7 +394,7 @@ it('should cycle elements in document tab order', () => {
 })
 ```
 
-### `async hover(element)`
+### `hover(element)`
 
 Hovers over `element`.
 
@@ -407,7 +404,7 @@ import {render, screen} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import Tooltip from '../tooltip'
 
-test('hover', async () => {
+test('hover', () => {
   const messageText = 'Hello'
   render(
     <Tooltip messageText={messageText}>
@@ -415,18 +412,35 @@ test('hover', async () => {
     </Tooltip>,
   )
 
-  await userEvent.hover(screen.getByLabelText(/delete/i))
+  userEvent.hover(screen.getByLabelText(/delete/i))
   expect(screen.getByText(messageText)).toBeInTheDocument()
-  await userEvent.unhover(screen.getByLabelText(/delete/i))
+  userEvent.unhover(screen.getByLabelText(/delete/i))
   expect(screen.queryByText(messageText)).not.toBeInTheDocument()
 })
 ```
 
-### `async unhover(element)`
+### `unhover(element)`
 
 Unhovers out of `element`.
 
 > See [above](#async-hoverelement) for an example
+
+### `paste(element, text, eventInit, options)`
+
+Allows you to simulate the user pasting some text into an input.
+
+```javascript
+test('should paste text in input', () => {
+  render(<MyInput />)
+
+  const text = 'Hello, world!'
+  userEvent.paste(getByRole('textbox', {name: /paste your greeting/i}), text)
+  expect(element).toHaveValue(text)
+})
+```
+
+You can use the `eventInit` if what you're pasting should have `clipboardData`
+(like `files`).
 
 ## Issues
 
@@ -503,6 +517,7 @@ Thanks goes to these people ([emoji key][emojis]):
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors][all-contributors] specification.

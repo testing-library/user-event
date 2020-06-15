@@ -1,5 +1,86 @@
-import userEvent from '..'
-import {setup} from './helpers/utils'
+import userEvent from '../'
+import {focus} from '../focus'
+import {setup, addListeners} from './helpers/utils'
+
+test('fires events when tabbing between two elements', () => {
+  const {element, getEventSnapshot, clearEventCalls} = setup(
+    `<div><input id="a" /><input id="b" /></div>`,
+  )
+  const a = element.children[0]
+  const b = element.children[1]
+  focus(a)
+  clearEventCalls()
+
+  const aListeners = addListeners(a)
+  const bListeners = addListeners(b)
+
+  userEvent.tab()
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
+    Events fired on: div
+    
+    input#a[value=""] - keydown: Tab (9)
+    input#a[value=""] - focusout
+    input#b[value=""] - focusin
+    input#b[value=""] - keyup: Tab (9)
+  `)
+  // blur/focus do not bubble
+  expect(aListeners.eventWasFired('blur')).toBe(true)
+  expect(bListeners.eventWasFired('focus')).toBe(true)
+})
+
+test('does not change focus if default prevented on keydown', () => {
+  const {element, getEventSnapshot, clearEventCalls} = setup(
+    `<div><input id="a" /><input id="b" /></div>`,
+  )
+  const a = element.children[0]
+  const b = element.children[1]
+  focus(a)
+  clearEventCalls()
+
+  const aListeners = addListeners(a, {
+    eventHandlers: {keyDown: e => e.preventDefault()},
+  })
+  const bListeners = addListeners(b)
+
+  userEvent.tab()
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
+    Events fired on: div
+    
+    input#a[value=""] - keydown: Tab (9)
+    input#a[value=""] - keyup: Tab (9)
+  `)
+  // blur/focus do not bubble
+  expect(aListeners.eventWasFired('blur')).toBe(false)
+  expect(bListeners.eventWasFired('focus')).toBe(false)
+})
+
+test('fires correct events with shift key', () => {
+  const {element, getEventSnapshot, clearEventCalls} = setup(
+    `<div><input id="a" /><input id="b" /></div>`,
+  )
+  const a = element.children[0]
+  const b = element.children[1]
+  focus(b)
+  clearEventCalls()
+
+  const aListeners = addListeners(a)
+  const bListeners = addListeners(b)
+
+  userEvent.tab({shift: true})
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
+    Events fired on: div
+
+    input#b[value=""] - keydown: Shift (16) {shift}
+    input#b[value=""] - keydown: Tab (9) {shift}
+    input#b[value=""] - focusout
+    input#a[value=""] - focusin
+    input#a[value=""] - keyup: Tab (9) {shift}
+    input#a[value=""] - keyup: Shift (16)
+  `)
+  // blur/focus do not bubble
+  expect(aListeners.eventWasFired('focus')).toBe(true)
+  expect(bListeners.eventWasFired('blur')).toBe(true)
+})
 
 test('should cycle elements in document tab order', () => {
   setup(`
@@ -7,7 +88,8 @@ test('should cycle elements in document tab order', () => {
       <input data-testid="element" type="checkbox" />
       <input data-testid="element" type="radio" />
       <input data-testid="element" type="number" />
-    </div>`)
+    </div>
+  `)
 
   const [checkbox, radio, number] = document.querySelectorAll(
     '[data-testid="element"]',
@@ -85,7 +167,7 @@ test('should respect tabindex, regardless of dom position', () => {
   expect(radio).toHaveFocus()
 })
 
-test('should respect dom order when tabindex are all the same', () => {
+test('should respect tab index order, then DOM order', () => {
   setup(`
     <div>
       <input data-testid="element" tabIndex="0" type="checkbox" />
@@ -244,10 +326,10 @@ test('should support unstable sorting environments like node 10', () => {
 
   expect.assertions(26)
 
-  letters.split('').forEach(letter => {
+  for (const letter of letters.split('')) {
     userEvent.tab()
     expect(document.querySelector(`[data-testid="${letter}"]`)).toHaveFocus()
-  })
+  }
 })
 
 test('should not focus disabled elements', () => {

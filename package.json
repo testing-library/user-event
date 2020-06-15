@@ -41,9 +41,10 @@
     "@babel/runtime": "^7.10.2"
   },
   "devDependencies": {
-    "@testing-library/dom": "^7.9.0",
-    "@testing-library/jest-dom": "^5.9.0",
+    "@testing-library/dom": "^7.16.0",
+    "@testing-library/jest-dom": "^5.10.1",
     "is-ci": "^2.0.0",
+    "jest-serializer-ansi": "^1.0.3",
     "kcd-scripts": "^6.2.3"
   },
   "peerDependencies": {

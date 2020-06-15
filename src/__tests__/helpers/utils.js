@@ -1,12 +1,14 @@
+import {eventMap} from '@testing-library/dom/dist/event-map'
+
 // this is pretty helpful:
-// https://jsbin.com/nimelileyo/edit?js,output
+// https://codesandbox.io/s/quizzical-worker-eo909
 
 // all of the stuff below is complex magic that makes the simpler tests work
 // sorrynotsorry...
 
 const unstringSnapshotSerializer = {
-  test: val => typeof val === 'string',
-  print: val => val,
+  test: val => val && val.hasOwnProperty('snapshot'),
+  print: val => val.snapshot,
 }
 
 expect.addSnapshotSerializer(unstringSnapshotSerializer)
@@ -21,13 +23,21 @@ function setup(ui, {eventHandlers} = {}) {
   return {element, ...addListeners(element, {eventHandlers})}
 }
 
-function setupSelect({multiple = false} = {}) {
+function setupSelect({
+  disabled = false,
+  disabledOptions = false,
+  multiple = false,
+} = {}) {
   const form = document.createElement('form')
   form.innerHTML = `
-    <select name="select" ${multiple ? 'multiple' : ''}>
-      <option value="1">1</option>
-      <option value="2">2</option>
-      <option value="3">3</option>
+    <select
+      name="select"
+      ${disabled ? 'disabled' : ''}
+      ${multiple ? 'multiple' : ''}
+    >
+      <option value="1" ${disabledOptions ? 'disabled' : ''}>1</option>
+      <option value="2" ${disabledOptions ? 'disabled' : ''}>2</option>
+      <option value="3" ${disabledOptions ? 'disabled' : ''}>3</option>
     </select>
   `
   document.body.append(form)
@@ -41,37 +51,37 @@ function setupSelect({multiple = false} = {}) {
   }
 }
 
-let eventListeners = []
-
-function getTestData(element, event) {
-  return {
-    bubbledFrom:
-      event && event.eventPhase === event.BUBBLING_PHASE
-        ? getElementDisplayName(event.target)
-        : null,
-    value: element.value,
-    selectionStart: element.selectionStart,
-    selectionEnd: element.selectionEnd,
-    checked: element.checked,
-  }
+const eventLabelGetters = {
+  KeyboardEvent(event) {
+    return [
+      event.key,
+      typeof event.keyCode === 'undefined' ? null : `(${event.keyCode})`,
+    ]
+      .join(' ')
+      .trim()
+  },
+  MouseEvent(event) {
+    // https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/button
+    const mouseButtonMap = {
+      0: 'Left',
+      1: 'Middle',
+      2: 'Right',
+      3: 'Browser Back',
+      4: 'Browser Forward',
+    }
+    return `${mouseButtonMap[event.button]} (${event.button})`
+  },
 }
+
+let eventListeners = []
 
 // asside from the hijacked listener stuff here, it's also important to call
 // this function rather than simply calling addEventListener yourself
 // because it adds your listener to an eventListeners array which is cleaned
 // up automatically which will help use avoid memory leaks.
 function addEventListener(el, type, listener, options) {
-  el.previousTestData = getTestData(el)
-  const hijackedListener = e => {
-    e.testData = {previous: e.target.previousTestData}
-    const retVal = listener(e)
-    const next = getTestData(e.target, e)
-    e.testData.next = next
-    e.target.previousTestData = next
-    return retVal
-  }
-  eventListeners.push({el, type, listener: hijackedListener})
-  el.addEventListener(type, hijackedListener, options)
+  eventListeners.push({el, type, listener})
+  el.addEventListener(type, listener, options)
 }
 
 function getElementValue(element) {
@@ -98,40 +108,36 @@ function getElementDisplayName(element) {
     element.htmlFor ? `[for="${element.htmlFor}"]` : null,
     value ? `[value=${value}]` : null,
     hasChecked ? `[checked=${element.checked}]` : null,
+    element.tagName === 'OPTION' ? `[selected=${element.selected}]` : null,
   ]
     .filter(Boolean)
     .join('')
 }
 
 function addListeners(element, {eventHandlers = {}} = {}) {
-  const generalListener = jest.fn().mockName('eventListener')
-  const listeners = [
-    'submit',
-    'keydown',
-    'keyup',
-    'keypress',
-    'input',
-    'change',
-    'blur',
-    'focus',
-    'focusin',
-    'focusout',
-    'click',
-    'dblclick',
-    'mouseover',
-    'mousemove',
-    'mouseenter',
-    'mouseleave',
-    'mouseup',
-    'mousedown',
-  ]
+  const eventHandlerCalls = {current: []}
+  const generalListener = jest
+    .fn(event => {
+      const callData = {
+        event,
+        elementDisplayName: getElementDisplayName(event.target),
+      }
+      if (element.testData && !element.testData.handled) {
+        callData.testData = element.testData
+        // sometimes firing a single event (like click on a checkbox) will
+        // automatically fire more events (line input and change).
+        // and we don't want the test data applied to those, so we'll store
+        // this and not add the testData to our call if that was already handled
+        element.testData.handled = true
+      }
+      eventHandlerCalls.current.push(callData)
+    })
+    .mockName('eventListener')
+  const listeners = Object.keys(eventMap)
 
   for (const name of listeners) {
-    addEventListener(element, name, (...args) => {
-      const [, handler] =
-        Object.entries(eventHandlers).find(
-          ([key]) => key.toLowerCase() === name,
-        ) ?? []
+    addEventListener(element, name.toLowerCase(), (...args) => {
+      const handler = eventHandlers[name]
       if (handler) {
         generalListener(...args)
         return handler(...args)
@@ -143,118 +149,119 @@ function addListeners(element, {eventHandlers = {}} = {}) {
   if (element.tagName === 'FORM') {
     addEventListener(element, 'submit', e => e.preventDefault())
   }
-  function getEventCalls() {
-    const eventCalls = generalListener.mock.calls
-      .map(([event]) => {
-        const window = event.target.ownerDocument.defaultView
+
+  function getEventSnapshot() {
+    const eventCalls = eventHandlerCalls.current
+      .map(({event, testData, elementDisplayName}) => {
+        const eventLabel =
+          eventLabelGetters[event.constructor.name]?.(event) ?? ''
         const modifiers = ['altKey', 'shiftKey', 'metaKey', 'ctrlKey']
           .filter(key => event[key])
           .map(k => `{${k.replace('Key', '')}}`)
           .join('')
 
-        let log = event.type
-        if (
-          event.type === 'click' &&
-          event.hasOwnProperty('testData') &&
-          (element.type === 'checkbox' || element.type === 'radio')
-        ) {
-          log = getCheckboxOrRadioClickedLine(event)
-        } else if (event.type === 'input' && event.hasOwnProperty('testData')) {
-          log = getInputLine(element, event)
-        } else if (event instanceof window.KeyboardEvent) {
-          log = getKeyboardEventLine(event)
-        } else if (event instanceof window.MouseEvent) {
-          log = getMouseEventLine(event)
-        }
-
-        return [
-          log,
-          event.testData && event.testData.next.bubbledFrom
-            ? `(bubbled from ${event.testData.next.bubbledFrom})`
-            : null,
-          modifiers,
+        const firstLine = [
+          `${elementDisplayName} - ${event.type}`,
+          [eventLabel, modifiers].filter(Boolean).join(' '),
         ]
           .filter(Boolean)
-          .join(' ')
-          .trim()
+          .join(': ')
+
+        return [firstLine, testData?.before ? getChanges(testData) : null]
+          .filter(Boolean)
+          .join('\n')
       })
       .join('\n')
       .trim()
     if (eventCalls.length) {
-      return [
-        `Events fired on: ${getElementDisplayName(element)}`,
-        eventCalls,
-      ].join('\n\n')
+      return {
+        snapshot: [
+          `Events fired on: ${getElementDisplayName(element)}`,
+          eventCalls,
+        ].join('\n\n'),
+      }
     } else {
-      return `No events were fired on: ${getElementDisplayName(element)}`
+      return {
+        snapshot: `No events were fired on: ${getElementDisplayName(element)}`,
+      }
     }
   }
-  const clearEventCalls = () => generalListener.mockClear()
+  const clearEventCalls = () => {
+    generalListener.mockClear()
+    eventHandlerCalls.current = []
+  }
   const getEvents = () => generalListener.mock.calls.map(([e]) => e)
   const eventWasFired = eventType => getEvents().some(e => e.type === eventType)
-  return {getEventCalls, clearEventCalls, getEvents, eventWasFired}
-}
 
-// https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/button
-const mouseButtonMap = {
-  0: 'Left',
-  1: 'Middle',
-  2: 'Right',
-  3: 'Browser Back',
-  4: 'Browser Forward',
-}
-function getMouseEventLine(event) {
-  return [`${event.type}:`, mouseButtonMap[event.button], `(${event.button})`]
-    .join(' ')
-    .trim()
-}
-
-function getKeyboardEventLine(event) {
-  return [
-    `${event.type}:`,
-    event.key,
-    typeof event.keyCode === 'undefined' ? null : `(${event.keyCode})`,
-  ]
-    .join(' ')
-    .trim()
-}
-
-function getCheckboxOrRadioClickedLine(event) {
-  const {previous, next} = event.testData
-
-  return `${event.type}: ${previous.checked ? '' : 'un'}checked -> ${
-    next.checked ? '' : 'un'
-  }checked`
-}
-
-function getInputLine(element, event) {
-  if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
-    const {previous, next} = event.testData
-
-    if (element.type === 'checkbox' || element.type === 'radio') {
-      return `${event.type}: ${next.checked ? '' : 'un'}checked`
-    } else {
-      const prevVal = [
-        previous.value.slice(0, previous.selectionStart),
-        ...(previous.selectionStart === previous.selectionEnd
-          ? ['{CURSOR}']
-          : [
-              '{SELECTION}',
-              previous.value.slice(
-                previous.selectionStart,
-                previous.selectionEnd,
-              ),
-              '{/SELECTION}',
-            ]),
-        previous.value.slice(previous.selectionEnd),
-      ].join('')
-      return `${event.type}: "${prevVal}" -> "${next.value}"`
-    }
-  } else {
-    throw new Error(
-      `fired ${event.type} event on a ${element.tagName} which probably doesn't make sense. Fix that, or handle it in the setup function`,
+  function getClickEventsSnapshot() {
+    const lines = getEvents().map(
+      ({constructor, type, button, buttons, detail}) =>
+        constructor.name === 'MouseEvent'
+          ? `${type} - button=${button}; buttons=${buttons}; detail=${detail}`
+          : type,
     )
+    return {snapshot: lines.join('\n')}
   }
+
+  return {
+    getEventSnapshot,
+    getClickEventsSnapshot,
+    clearEventCalls,
+    getEvents,
+    eventWasFired,
+  }
+}
+
+function getValueWithSelection({value, selectionStart, selectionEnd}) {
+  return [
+    value.slice(0, selectionStart),
+    ...(selectionStart === selectionEnd
+      ? ['{CURSOR}']
+      : [
+          '{SELECTION}',
+          value.slice(selectionStart, selectionEnd),
+          '{/SELECTION}',
+        ]),
+    value.slice(selectionEnd),
+  ].join('')
+}
+
+const changeLabelGetter = {
+  value: ({before, after}) =>
+    [
+      JSON.stringify(getValueWithSelection(before)),
+      JSON.stringify(getValueWithSelection(after)),
+    ].join(' -> '),
+  checked: ({before, after}) =>
+    [
+      before.checked ? 'checked' : 'unchecked',
+      after.checked ? 'checked' : 'unchecked',
+    ].join(' -> '),
+
+  // unfortunately, changing a select option doesn't happen within fireEvent
+  // but rather imperatively via `options.selected = newValue`
+  // because of this we don't (currently) have a way to track before/after
+  // in a given fireEvent call.
+}
+changeLabelGetter.selectionStart = changeLabelGetter.value
+changeLabelGetter.selectionEnd = changeLabelGetter.value
+const getDefaultLabel = ({key, before, after}) =>
+  `${key}: ${JSON.stringify(before[key])} -> ${JSON.stringify(after[key])}`
+
+function getChanges({before, after}) {
+  const changes = new Set()
+  for (const key of Object.keys(before)) {
+    if (after[key] !== before[key]) {
+      changes.add(
+        (changeLabelGetter[key] ?? getDefaultLabel)({key, before, after}),
+      )
+    }
+  }
+
+  return Array.from(changes)
+    .filter(Boolean)
+    .map(line => `  ${line}`)
+    .join('\n')
 }
 
 // eslint-disable-next-line jest/prefer-hooks-on-top

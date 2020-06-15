@@ -1,15 +1,40 @@
-import userEvent from '..'
+import userEvent from '../'
 import {setup} from './helpers/utils'
 
-test('hover', async () => {
-  const {element, getEventCalls} = setup('<button />')
+test('hover', () => {
+  const {element, getEventSnapshot} = setup('<button />')
 
-  await userEvent.hover(element)
-  expect(getEventCalls()).toMatchInlineSnapshot(`
+  userEvent.hover(element)
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: button
 
-    mouseover: Left (0)
-    mouseenter: Left (0)
-    mousemove: Left (0)
+    button - pointerover
+    button - pointerenter
+    button - mouseover: Left (0)
+    button - mouseenter: Left (0)
+    button - pointermove
+    button - mousemove: Left (0)
   `)
+})
+
+test('hover on disabled element', () => {
+  const {element, getEventSnapshot} = setup('<button disabled />')
+
+  userEvent.hover(element)
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
+    Events fired on: button
+
+    button - pointerover
+    button - pointerenter
+    button - pointermove
+  `)
+})
+
+test('no events fired on labels that contain disabled controls', () => {
+  const {element, getEventSnapshot} = setup('<label><input disabled /></label>')
+
+  userEvent.hover(element)
+  expect(getEventSnapshot()).toMatchInlineSnapshot(
+    `No events were fired on: label`,
+  )
 })

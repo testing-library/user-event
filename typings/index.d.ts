@@ -1,6 +1,5 @@
 // Definitions by: Wu Haotian <https://github.com/whtsky>
 export interface ITypeOpts {
-  allAtOnce?: boolean
   delay?: number
   initialSelectionStart?: number
   initialSelectionEnd?: number

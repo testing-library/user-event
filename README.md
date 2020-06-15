@@ -52,16 +52,17 @@ change the state of the checkbox.
 
 - [Installation](#installation)
 - [API](#api)
-  - [`click(element)`](#clickelement)
-  - [`dblClick(element)`](#dblclickelement)
-  - [`async type(element, text, [options])`](#async-typeelement-text-options)
+  - [`click(element, eventInit, options)`](#clickelement-eventinit-options)
+  - [`dblClick(element, eventInit, options)`](#dblclickelement-eventinit-options)
+  - [`type(element, text, [options])`](#typeelement-text-options)
   - [`upload(element, file, [{ clickInit, changeInit }])`](#uploadelement-file--clickinit-changeinit-)
   - [`clear(element)`](#clearelement)
   - [`selectOptions(element, values)`](#selectoptionselement-values)
-  - [`toggleSelectOptions(element, values)`](#toggleselectoptionselement-values)
+  - [`deselectOptions(element, values)`](#deselectoptionselement-values)
   - [`tab({shift, focusTrap})`](#tabshift-focustrap)
-  - [`async hover(element)`](#async-hoverelement)
-  - [`async unhover(element)`](#async-unhoverelement)
+  - [`hover(element)`](#hoverelement)
+  - [`unhover(element)`](#unhoverelement)
+  - [`paste(element, text, eventInit, options)`](#pasteelement-text-eventinit-options)
 - [Issues](#issues)
 - [Contributors ✨](#contributors-)
 - [LICENSE](#license)
@@ -94,7 +95,7 @@ var userEvent = require('@testing-library/user-event')
 
 ## API
 
-### `click(element)`
+### `click(element, eventInit, options)`
 
 Clicks `element`, depending on what `element` is it can have different side
 effects.
@@ -127,7 +128,10 @@ See the
 [`MouseEvent`](https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/MouseEvent)
 constructor documentation for more options.
 
-### `dblClick(element)`
+Note that `click` will trigger hover events before clicking. To disable this,
+set the `skipHover` option to `true`.
+
+### `dblClick(element, eventInit, options)`
 
 Clicks `element` twice, depending on what `element` is it can have different
 side effects.
@@ -147,7 +151,7 @@ test('double click', () => {
 })
 ```
 
-### `async type(element, text, [options])`
+### `type(element, text, [options])`
 
 Writes `text` inside an `<input>` or a `<textarea>`.
 
@@ -156,38 +160,43 @@ import React from 'react'
 import {render, screen} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
-test('type', async () => {
+test('type', () => {
   render(<textarea />)
 
-  await userEvent.type(screen.getByRole('textbox'), 'Hello,{enter}World!')
+  userEvent.type(screen.getByRole('textbox'), 'Hello,{enter}World!')
   expect(screen.getByRole('textbox')).toHaveValue('Hello,\nWorld!')
 })
 ```
 
-If `options.allAtOnce` is `true`, `type` will write `text` at once rather than
-one character at the time. `false` is the default value.
-
 `options.delay` is the number of milliseconds that pass between two characters
 are typed. By default it's 0. You can use this option if your component has a
-different behavior for fast or slow users.
+different behavior for fast or slow users. If you do this, you need to make sure
+to `await`!
+
+`type` will click the element before typing. To disable this, set the
+`skipClick` option to `true`.
 
 #### Special characters
 
 The following special character strings are supported:
 
-| Text string   | Key       | Modifier   | Notes                                                                              |
-| ------------- | --------- | ---------- | ---------------------------------------------------------------------------------- |
-| `{enter}`     | Enter     | N/A        | Will insert a newline character (`<textarea />` only).                             |
-| `{esc}`       | Escape    | N/A        |                                                                                    |
-| `{backspace}` | Backspace | N/A        | Will delete the previous character (or the characters within the `selectedRange`). |
-| `{shift}`     | Shift     | `shiftKey` | Does **not** capitalize following characters.                                      |
-| `{ctrl}`      | Control   | `ctrlKey`  |                                                                                    |
-| `{alt}`       | Alt       | `altKey`   |                                                                                    |
-| `{meta}`      | OS        | `metaKey`  |                                                                                    |
+| Text string   | Key       | Modifier   | Notes                                                                                                                                                               |
+| ------------- | --------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `{enter}`     | Enter     | N/A        | Will insert a newline character (`<textarea />` only).                                                                                                              |
+| `{esc}`       | Escape    | N/A        |                                                                                                                                                                     |
+| `{backspace}` | Backspace | N/A        | Will delete the previous character (or the characters within the `selectedRange`).                                                                                  |
+| `{del}`       | Delete    | N/A        | Will delete the next character (or the characters within the `selectedRange`)                                                                                       |
+| `{selectall}` | N/A       | N/A        | Selects all the text of the element. Note that this will only work for elements that support selection ranges (so, not `email`, `password`, `number`, among others) |
+| `{shift}`     | Shift     | `shiftKey` | Does **not** capitalize following characters.                                                                                                                       |
+| `{ctrl}`      | Control   | `ctrlKey`  |                                                                                                                                                                     |
+| `{alt}`       | Alt       | `altKey`   |                                                                                                                                                                     |
+| `{meta}`      | OS        | `metaKey`  |                                                                                                                                                                     |
 
 > **A note about modifiers:** Modifier keys (`{shift}`, `{ctrl}`, `{alt}`,
 > `{meta}`) will activate their corresponding event modifiers for the duration
-> of type command or until they are closed (via `{/shift}`, `{/ctrl}`, etc.).
+> of type command or until they are closed (via `{/shift}`, `{/ctrl}`, etc.). If
+> they are not closed explicitly, then events will be fired to close them
+> automatically (to disable this, set the `skipAutoClose` option to `true`).
 
 <!-- space out these notes -->
 
@@ -308,16 +317,17 @@ userEvent.selectOptions(screen.getByTestId('select-multiple'), [
 ])
 ```
 
-### `toggleSelectOptions(element, values)`
+### `deselectOptions(element, values)`
 
-Toggle the specified option(s) of a `<select multiple>` element.
+Remove the selection for the specified option(s) of a `<select multiple>`
+element.
 
 ```jsx
 import * as React from 'react'
 import {render, screen} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
-test('toggleSelectOptions', () => {
+test('deselectOptions', () => {
   render(
     <select multiple>
       <option value="1">A</option>
@@ -326,14 +336,12 @@ test('toggleSelectOptions', () => {
     </select>,
   )
 
-  userEvent.toggleSelectOptions(screen.getByRole('listbox'), ['1', '3'])
-
-  expect(screen.getByText('A').selected).toBe(true)
-  expect(screen.getByText('C').selected).toBe(true)
-
-  userEvent.toggleSelectOptions(screen.getByRole('listbox'), ['1'])
-
-  expect(screen.getByText('A').selected).toBe(false)
+  userEvent.selectOptions(screen.getByRole('listbox'), '2')
+  expect(screen.getByText('B').selected).toBe(true)
+  userEvent.deselectOptions(screen.getByRole('listbox'), '2')
+  expect(screen.getByText('B').selected).toBe(false)
+  // can do multiple at once as well:
+  // userEvent.deselectOptions(screen.getByRole('listbox'), ['1', '2'])
 })
 ```
 
@@ -397,7 +405,7 @@ it('should cycle elements in document tab order', () => {
 })
 ```
 
-### `async hover(element)`
+### `hover(element)`
 
 Hovers over `element`.
 
@@ -407,7 +415,7 @@ import {render, screen} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import Tooltip from '../tooltip'
 
-test('hover', async () => {
+test('hover', () => {
   const messageText = 'Hello'
   render(
     <Tooltip messageText={messageText}>
@@ -415,18 +423,35 @@ test('hover', async () => {
     </Tooltip>,
   )
 
-  await userEvent.hover(screen.getByLabelText(/delete/i))
+  userEvent.hover(screen.getByLabelText(/delete/i))
   expect(screen.getByText(messageText)).toBeInTheDocument()
-  await userEvent.unhover(screen.getByLabelText(/delete/i))
+  userEvent.unhover(screen.getByLabelText(/delete/i))
   expect(screen.queryByText(messageText)).not.toBeInTheDocument()
 })
 ```
 
-### `async unhover(element)`
+### `unhover(element)`
 
 Unhovers out of `element`.
 
-> See [above](#async-hoverelement) for an example
+> See [above](#hoverelement) for an example
+
+### `paste(element, text, eventInit, options)`
+
+Allows you to simulate the user pasting some text into an input.
+
+```javascript
+test('should paste text in input', () => {
+  render(<MyInput />)
+
+  const text = 'Hello, world!'
+  userEvent.paste(getByRole('textbox', {name: /paste your greeting/i}), text)
+  expect(element).toHaveValue(text)
+})
+```
+
+You can use the `eventInit` if what you're pasting should have `clipboardData`
+(like `files`).
 
 ## Issues
 
@@ -503,6 +528,7 @@ Thanks goes to these people ([emoji key][emojis]):
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors][all-contributors] specification.

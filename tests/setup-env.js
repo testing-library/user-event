@@ -1,5 +1,8 @@
 import '@testing-library/jest-dom/extend-expect'
 import isCI from 'is-ci'
+import jestSerializerAnsi from 'jest-serializer-ansi'
+
+expect.addSnapshotSerializer(jestSerializerAnsi)
 
 // prevent console calls from making it out into the wild
 beforeEach(() => {

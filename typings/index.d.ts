@@ -1,6 +1,7 @@
 // Definitions by: Wu Haotian <https://github.com/whtsky>
 export interface ITypeOpts {
-  allAtOnce?: boolean
+  skipClick?: boolean
+  skipAutoClose?: boolean
   delay?: number
   initialSelectionStart?: number
   initialSelectionEnd?: number
@@ -20,16 +21,29 @@ export type UploadInitArgument = {
   changeInit?: Event
 }
 
+export interface IClickOptions {
+  skipHover?: boolean
+  clickCount?: number
+}
+
 declare const userEvent: {
   clear: (element: TargetElement) => void
-  click: (element: TargetElement, init?: MouseEventInit) => void
-  dblClick: (element: TargetElement, init?: MouseEventInit) => void
+  click: (
+    element: TargetElement,
+    init?: MouseEventInit,
+    options?: IClickOptions,
+  ) => void
+  dblClick: (
+    element: TargetElement,
+    init?: MouseEventInit,
+    options?: IClickOptions,
+  ) => void
   selectOptions: (
     element: TargetElement,
     values: string | string[] | HTMLElement | HTMLElement[],
     init?: MouseEventInit,
   ) => void
-  toggleSelectOptions: (
+  deselectOptions: (
     element: TargetElement,
     values: string | string[] | HTMLElement | HTMLElement[],
     init?: MouseEventInit,
@@ -45,8 +59,16 @@ declare const userEvent: {
     userOpts?: ITypeOpts,
   ) => Promise<void>
   tab: (userOpts?: ITabUserOptions) => void
-  hover: (element: TargetElement, init?: MouseEventInit) => Promise<void>
-  unhover: (element: TargetElement, init?: MouseEventInit) => Promise<void>
+  paste: (
+    element: TargetElement,
+    init?: {},
+    pasteOptions?: {
+      initialSelectionStart?: number
+      initialSelectionEnd?: number
+    },
+  ) => void
+  hover: (element: TargetElement, init?: MouseEventInit) => void
+  unhover: (element: TargetElement, init?: MouseEventInit) => void
 }
 
 export default userEvent

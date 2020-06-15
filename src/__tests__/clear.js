@@ -1,58 +1,72 @@
-import userEvent from '..'
+import userEvent from '../'
 import {setup} from './helpers/utils'
 
 test('clears text', () => {
-  const {element, getEventCalls} = setup('<input value="hello" />')
+  const {element, getEventSnapshot} = setup('<input value="hello" />')
   userEvent.clear(element)
   expect(element).toHaveValue('')
-  expect(getEventCalls()).toMatchInlineSnapshot(`
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value=""]
 
-    mouseover: Left (0)
-    mousemove: Left (0)
-    mousedown: Left (0)
-    focus
-    mouseup: Left (0)
-    click: Left (0)
-    mousedown: Left (0)
-    mouseup: Left (0)
-    click: Left (0)
-    dblclick: Left (0)
-    keydown: Backspace (8)
-    keyup: Backspace (8)
-    input: "{SELECTION}hello{/SELECTION}" -> "hello"
-    change
+    input[value="hello"] - pointerover
+    input[value="hello"] - pointerenter
+    input[value="hello"] - mouseover: Left (0)
+    input[value="hello"] - mouseenter: Left (0)
+    input[value="hello"] - pointermove
+    input[value="hello"] - mousemove: Left (0)
+    input[value="hello"] - pointerdown
+    input[value="hello"] - mousedown: Left (0)
+    input[value="hello"] - focus
+    input[value="hello"] - focusin
+    input[value="hello"] - pointerup
+    input[value="hello"] - mouseup: Left (0)
+    input[value="hello"] - click: Left (0)
+    input[value="hello"] - select
+    input[value="hello"] - keydown: Delete (46)
+    input[value=""] - input
+      "{SELECTION}hello{/SELECTION}" -> "{CURSOR}"
+    input[value=""] - keyup: Delete (46)
   `)
 })
 
+test('works with textarea', () => {
+  const {element} = setup('<textarea>hello</textarea>')
+  userEvent.clear(element)
+  expect(element).toHaveValue('')
+})
+
 test('does not clear text on disabled inputs', () => {
-  const {element, getEventCalls} = setup('<input value="hello" disabled />')
+  const {element, getEventSnapshot} = setup('<input value="hello" disabled />')
   userEvent.clear(element)
   expect(element).toHaveValue('hello')
-  expect(getEventCalls()).toMatchInlineSnapshot(
+  expect(getEventSnapshot()).toMatchInlineSnapshot(
     `No events were fired on: input[value="hello"]`,
   )
 })
 
 test('does not clear text on readonly inputs', () => {
-  const {element, getEventCalls} = setup('<input value="hello" readonly />')
+  const {element, getEventSnapshot} = setup('<input value="hello" readonly />')
   userEvent.clear(element)
   expect(element).toHaveValue('hello')
-  expect(getEventCalls()).toMatchInlineSnapshot(`
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value="hello"]
 
-    mouseover: Left (0)
-    mousemove: Left (0)
-    mousedown: Left (0)
-    focus
-    mouseup: Left (0)
-    click: Left (0)
-    mousedown: Left (0)
-    mouseup: Left (0)
-    click: Left (0)
-    dblclick: Left (0)
-    keydown: Backspace (8)
-    keyup: Backspace (8)
+    input[value="hello"] - pointerover
+    input[value="hello"] - pointerenter
+    input[value="hello"] - mouseover: Left (0)
+    input[value="hello"] - mouseenter: Left (0)
+    input[value="hello"] - pointermove
+    input[value="hello"] - mousemove: Left (0)
+    input[value="hello"] - pointerdown
+    input[value="hello"] - mousedown: Left (0)
+    input[value="hello"] - focus
+    input[value="hello"] - focusin
+    input[value="hello"] - pointerup
+    input[value="hello"] - mouseup: Left (0)
+    input[value="hello"] - click: Left (0)
+    input[value="hello"] - select
+    input[value="hello"] - keydown: Delete (46)
+    input[value="hello"] - keyup: Delete (46)
   `)
 })
 
@@ -69,4 +83,12 @@ test('clears even on inputs that cannot (programmatically) have a selection', ()
   userEvent.clear(number)
   // jest-dom does funny stuff with toHaveValue on number inputs
   expect(number.value).toBe('')
+})
+
+test('non-inputs/textareas are currently unsupported', () => {
+  const {element} = setup('<div />')
+
+  expect(() => userEvent.clear(element)).toThrowErrorMatchingInlineSnapshot(
+    `"clear currently only supports input and textarea elements."`,
+  )
 })

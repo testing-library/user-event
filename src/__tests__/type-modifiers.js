@@ -1,4 +1,4 @@
-import userEvent from '..'
+import userEvent from '../'
 import {setup} from './helpers/utils'
 
 // Note, use the setup function at the bottom of the file...
@@ -15,303 +15,781 @@ import {setup} from './helpers/utils'
 // This also means that '{shift}a' will fire an input event with the shiftKey,
 // but will not capitalize "a".
 
-test('{esc} triggers typing the escape character', async () => {
-  const {element, getEventCalls} = setup('<input />')
+test('{esc} triggers typing the escape character', () => {
+  const {element, getEventSnapshot} = setup('<input />')
 
-  await userEvent.type(element, '{esc}')
+  userEvent.type(element, '{esc}')
 
-  expect(getEventCalls()).toMatchInlineSnapshot(`
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value=""]
 
-    focus
-    keydown: Escape (27)
-    keyup: Escape (27)
+    input[value=""] - pointerover
+    input[value=""] - pointerenter
+    input[value=""] - mouseover: Left (0)
+    input[value=""] - mouseenter: Left (0)
+    input[value=""] - pointermove
+    input[value=""] - mousemove: Left (0)
+    input[value=""] - pointerdown
+    input[value=""] - mousedown: Left (0)
+    input[value=""] - focus
+    input[value=""] - focusin
+    input[value=""] - pointerup
+    input[value=""] - mouseup: Left (0)
+    input[value=""] - click: Left (0)
+    input[value=""] - keydown: Escape (27)
+    input[value=""] - keyup: Escape (27)
   `)
 })
 
-test('a{backspace}', async () => {
-  const {element, getEventCalls} = setup('<input />')
-  await userEvent.type(element, 'a{backspace}')
-  expect(getEventCalls()).toMatchInlineSnapshot(`
+test('a{backspace}', () => {
+  const {element, getEventSnapshot} = setup('<input />')
+  userEvent.type(element, 'a{backspace}')
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value=""]
 
-    focus
-    keydown: a (97)
-    keypress: a (97)
-    input: "{CURSOR}" -> "a"
-    keyup: a (97)
-    keydown: Backspace (8)
-    input: "a{CURSOR}" -> ""
-    keyup: Backspace (8)
+    input[value=""] - pointerover
+    input[value=""] - pointerenter
+    input[value=""] - mouseover: Left (0)
+    input[value=""] - mouseenter: Left (0)
+    input[value=""] - pointermove
+    input[value=""] - mousemove: Left (0)
+    input[value=""] - pointerdown
+    input[value=""] - mousedown: Left (0)
+    input[value=""] - focus
+    input[value=""] - focusin
+    input[value=""] - pointerup
+    input[value=""] - mouseup: Left (0)
+    input[value=""] - click: Left (0)
+    input[value=""] - keydown: a (97)
+    input[value=""] - keypress: a (97)
+    input[value="a"] - input
+      "{CURSOR}" -> "a{CURSOR}"
+    input[value="a"] - keyup: a (97)
+    input[value="a"] - keydown: Backspace (8)
+    input[value=""] - input
+      "a{CURSOR}" -> "{CURSOR}"
+    input[value=""] - keyup: Backspace (8)
   `)
 })
 
-test('{backspace}a', async () => {
-  const {element, getEventCalls} = setup('<input />')
-  await userEvent.type(element, '{backspace}a')
-  expect(getEventCalls()).toMatchInlineSnapshot(`
+test('{backspace}a', () => {
+  const {element, getEventSnapshot} = setup('<input />')
+  userEvent.type(element, '{backspace}a')
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value="a"]
 
-    focus
-    keydown: Backspace (8)
-    keyup: Backspace (8)
-    keydown: a (97)
-    keypress: a (97)
-    input: "{CURSOR}" -> "a"
-    keyup: a (97)
+    input[value=""] - pointerover
+    input[value=""] - pointerenter
+    input[value=""] - mouseover: Left (0)
+    input[value=""] - mouseenter: Left (0)
+    input[value=""] - pointermove
+    input[value=""] - mousemove: Left (0)
+    input[value=""] - pointerdown
+    input[value=""] - mousedown: Left (0)
+    input[value=""] - focus
+    input[value=""] - focusin
+    input[value=""] - pointerup
+    input[value=""] - mouseup: Left (0)
+    input[value=""] - click: Left (0)
+    input[value=""] - keydown: Backspace (8)
+    input[value=""] - keyup: Backspace (8)
+    input[value=""] - keydown: a (97)
+    input[value=""] - keypress: a (97)
+    input[value="a"] - input
+      "{CURSOR}" -> "a{CURSOR}"
+    input[value="a"] - keyup: a (97)
   `)
 })
 
-test('{backspace} triggers typing the backspace character and deletes the character behind the cursor', async () => {
-  const {element, getEventCalls} = setup('<input value="yo" />')
+test('{backspace} triggers typing the backspace character and deletes the character behind the cursor', () => {
+  const {element, getEventSnapshot} = setup('<input value="yo" />')
   element.setSelectionRange(1, 1)
 
-  await userEvent.type(element, '{backspace}')
+  userEvent.type(element, '{backspace}')
 
-  expect(getEventCalls()).toMatchInlineSnapshot(`
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value="o"]
 
-    focus
-    keydown: Backspace (8)
-    input: "y{CURSOR}o" -> "o"
-    keyup: Backspace (8)
+    input[value="yo"] - select
+    input[value="yo"] - pointerover
+    input[value="yo"] - pointerenter
+    input[value="yo"] - mouseover: Left (0)
+    input[value="yo"] - mouseenter: Left (0)
+    input[value="yo"] - pointermove
+    input[value="yo"] - mousemove: Left (0)
+    input[value="yo"] - pointerdown
+    input[value="yo"] - mousedown: Left (0)
+    input[value="yo"] - focus
+    input[value="yo"] - focusin
+    input[value="yo"] - pointerup
+    input[value="yo"] - mouseup: Left (0)
+    input[value="yo"] - click: Left (0)
+    input[value="yo"] - keydown: Backspace (8)
+    input[value="o"] - input
+      "y{CURSOR}o" -> "o{CURSOR}"
+    input[value="o"] - select
+    input[value="o"] - keyup: Backspace (8)
   `)
 })
 
-test('{backspace} on a readOnly input', async () => {
-  const {element, getEventCalls} = setup('<input readonly value="yo" />')
+test('{backspace} on a readOnly input', () => {
+  const {element, getEventSnapshot} = setup('<input readonly value="yo" />')
   element.setSelectionRange(1, 1)
 
-  await userEvent.type(element, '{backspace}')
+  userEvent.type(element, '{backspace}')
 
-  expect(getEventCalls()).toMatchInlineSnapshot(`
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value="yo"]
 
-    focus
-    keydown: Backspace (8)
-    keyup: Backspace (8)
+    input[value="yo"] - select
+    input[value="yo"] - pointerover
+    input[value="yo"] - pointerenter
+    input[value="yo"] - mouseover: Left (0)
+    input[value="yo"] - mouseenter: Left (0)
+    input[value="yo"] - pointermove
+    input[value="yo"] - mousemove: Left (0)
+    input[value="yo"] - pointerdown
+    input[value="yo"] - mousedown: Left (0)
+    input[value="yo"] - focus
+    input[value="yo"] - focusin
+    input[value="yo"] - pointerup
+    input[value="yo"] - mouseup: Left (0)
+    input[value="yo"] - click: Left (0)
+    input[value="yo"] - keydown: Backspace (8)
+    input[value="yo"] - keyup: Backspace (8)
   `)
 })
 
-test('{backspace} does not fire input if keydown prevents default', async () => {
-  const {element, getEventCalls} = setup('<input value="yo" />', {
+test('{backspace} does not fire input if keydown prevents default', () => {
+  const {element, getEventSnapshot} = setup('<input value="yo" />', {
     eventHandlers: {keyDown: e => e.preventDefault()},
   })
   element.setSelectionRange(1, 1)
 
-  await userEvent.type(element, '{backspace}')
+  userEvent.type(element, '{backspace}')
 
-  expect(getEventCalls()).toMatchInlineSnapshot(`
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value="yo"]
 
-    focus
-    keydown: Backspace (8)
-    keyup: Backspace (8)
+    input[value="yo"] - select
+    input[value="yo"] - pointerover
+    input[value="yo"] - pointerenter
+    input[value="yo"] - mouseover: Left (0)
+    input[value="yo"] - mouseenter: Left (0)
+    input[value="yo"] - pointermove
+    input[value="yo"] - mousemove: Left (0)
+    input[value="yo"] - pointerdown
+    input[value="yo"] - mousedown: Left (0)
+    input[value="yo"] - focus
+    input[value="yo"] - focusin
+    input[value="yo"] - pointerup
+    input[value="yo"] - mouseup: Left (0)
+    input[value="yo"] - click: Left (0)
+    input[value="yo"] - keydown: Backspace (8)
+    input[value="yo"] - keyup: Backspace (8)
   `)
 })
 
-test('{backspace} deletes the selected range', async () => {
-  const {element, getEventCalls} = setup('<input value="Hi there" />')
+test('{backspace} deletes the selected range', () => {
+  const {element, getEventSnapshot} = setup('<input value="Hi there" />')
   element.setSelectionRange(1, 5)
 
-  await userEvent.type(element, '{backspace}')
+  userEvent.type(element, '{backspace}')
 
-  expect(getEventCalls()).toMatchInlineSnapshot(`
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value="Here"]
 
-    focus
-    keydown: Backspace (8)
-    input: "H{SELECTION}i th{/SELECTION}ere" -> "Here"
-    keyup: Backspace (8)
+    input[value="Hi there"] - select
+    input[value="Hi there"] - pointerover
+    input[value="Hi there"] - pointerenter
+    input[value="Hi there"] - mouseover: Left (0)
+    input[value="Hi there"] - mouseenter: Left (0)
+    input[value="Hi there"] - pointermove
+    input[value="Hi there"] - mousemove: Left (0)
+    input[value="Hi there"] - pointerdown
+    input[value="Hi there"] - mousedown: Left (0)
+    input[value="Hi there"] - focus
+    input[value="Hi there"] - focusin
+    input[value="Hi there"] - pointerup
+    input[value="Hi there"] - mouseup: Left (0)
+    input[value="Hi there"] - click: Left (0)
+    input[value="Hi there"] - keydown: Backspace (8)
+    input[value="Here"] - input
+      "H{SELECTION}i th{/SELECTION}ere" -> "Here{CURSOR}"
+    input[value="Here"] - select
+    input[value="Here"] - keyup: Backspace (8)
   `)
 })
 
-test('{backspace} on an input type that does not support selection ranges', async () => {
+test('{backspace} on an input type that does not support selection ranges', () => {
   const {element} = setup('<input type="email" value="yo@example.com" />')
   // note: you cannot even call setSelectionRange on these kinds of elements...
-  await userEvent.type(element, '{backspace}{backspace}a')
+  userEvent.type(element, '{backspace}{backspace}a')
   // removed "m" then "o" then add "a"
   expect(element).toHaveValue('yo@example.ca')
 })
 
-test('{alt}a{/alt}', async () => {
-  const {element, getEventCalls} = setup('<input />')
+test('{alt}a{/alt}', () => {
+  const {element, getEventSnapshot} = setup('<input />')
 
-  await userEvent.type(element, '{alt}a{/alt}')
+  userEvent.type(element, '{alt}a{/alt}')
 
-  expect(getEventCalls()).toMatchInlineSnapshot(`
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value="a"]
 
-    focus
-    keydown: Alt (18) {alt}
-    keydown: a (97) {alt}
-    keypress: a (97) {alt}
-    input: "{CURSOR}" -> "a"
-    keyup: a (97) {alt}
-    keyup: Alt (18)
+    input[value=""] - pointerover
+    input[value=""] - pointerenter
+    input[value=""] - mouseover: Left (0)
+    input[value=""] - mouseenter: Left (0)
+    input[value=""] - pointermove
+    input[value=""] - mousemove: Left (0)
+    input[value=""] - pointerdown
+    input[value=""] - mousedown: Left (0)
+    input[value=""] - focus
+    input[value=""] - focusin
+    input[value=""] - pointerup
+    input[value=""] - mouseup: Left (0)
+    input[value=""] - click: Left (0)
+    input[value=""] - keydown: Alt (18) {alt}
+    input[value=""] - keydown: a (97) {alt}
+    input[value=""] - keypress: a (97) {alt}
+    input[value="a"] - input
+      "{CURSOR}" -> "a{CURSOR}"
+    input[value="a"] - keyup: a (97) {alt}
+    input[value="a"] - keyup: Alt (18)
   `)
 })
 
-test('{meta}a{/meta}', async () => {
-  const {element, getEventCalls} = setup('<input />')
+test('{meta}a{/meta}', () => {
+  const {element, getEventSnapshot} = setup('<input />')
 
-  await userEvent.type(element, '{meta}a{/meta}')
+  userEvent.type(element, '{meta}a{/meta}')
 
-  expect(getEventCalls()).toMatchInlineSnapshot(`
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value="a"]
 
-    focus
-    keydown: Meta (93) {meta}
-    keydown: a (97) {meta}
-    keypress: a (97) {meta}
-    input: "{CURSOR}" -> "a"
-    keyup: a (97) {meta}
-    keyup: Meta (93)
+    input[value=""] - pointerover
+    input[value=""] - pointerenter
+    input[value=""] - mouseover: Left (0)
+    input[value=""] - mouseenter: Left (0)
+    input[value=""] - pointermove
+    input[value=""] - mousemove: Left (0)
+    input[value=""] - pointerdown
+    input[value=""] - mousedown: Left (0)
+    input[value=""] - focus
+    input[value=""] - focusin
+    input[value=""] - pointerup
+    input[value=""] - mouseup: Left (0)
+    input[value=""] - click: Left (0)
+    input[value=""] - keydown: Meta (93) {meta}
+    input[value=""] - keydown: a (97) {meta}
+    input[value=""] - keypress: a (97) {meta}
+    input[value="a"] - input
+      "{CURSOR}" -> "a{CURSOR}"
+    input[value="a"] - keyup: a (97) {meta}
+    input[value="a"] - keyup: Meta (93)
   `)
 })
 
-test('{ctrl}a{/ctrl}', async () => {
-  const {element, getEventCalls} = setup('<input />')
+test('{ctrl}a{/ctrl}', () => {
+  const {element, getEventSnapshot} = setup('<input />')
 
-  await userEvent.type(element, '{ctrl}a{/ctrl}')
+  userEvent.type(element, '{ctrl}a{/ctrl}')
 
-  expect(getEventCalls()).toMatchInlineSnapshot(`
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value="a"]
 
-    focus
-    keydown: Control (17) {ctrl}
-    keydown: a (97) {ctrl}
-    keypress: a (97) {ctrl}
-    input: "{CURSOR}" -> "a"
-    keyup: a (97) {ctrl}
-    keyup: Control (17)
+    input[value=""] - pointerover
+    input[value=""] - pointerenter
+    input[value=""] - mouseover: Left (0)
+    input[value=""] - mouseenter: Left (0)
+    input[value=""] - pointermove
+    input[value=""] - mousemove: Left (0)
+    input[value=""] - pointerdown
+    input[value=""] - mousedown: Left (0)
+    input[value=""] - focus
+    input[value=""] - focusin
+    input[value=""] - pointerup
+    input[value=""] - mouseup: Left (0)
+    input[value=""] - click: Left (0)
+    input[value=""] - keydown: Control (17) {ctrl}
+    input[value=""] - keydown: a (97) {ctrl}
+    input[value=""] - keypress: a (97) {ctrl}
+    input[value="a"] - input
+      "{CURSOR}" -> "a{CURSOR}"
+    input[value="a"] - keyup: a (97) {ctrl}
+    input[value="a"] - keyup: Control (17)
   `)
 })
 
-test('{shift}a{/shift}', async () => {
-  const {element, getEventCalls} = setup('<input />')
+test('{shift}a{/shift}', () => {
+  const {element, getEventSnapshot} = setup('<input />')
 
-  await userEvent.type(element, '{shift}a{/shift}')
+  userEvent.type(element, '{shift}a{/shift}')
 
-  expect(getEventCalls()).toMatchInlineSnapshot(`
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value="a"]
 
-    focus
-    keydown: Shift (16) {shift}
-    keydown: a (97) {shift}
-    keypress: a (97) {shift}
-    input: "{CURSOR}" -> "a"
-    keyup: a (97) {shift}
-    keyup: Shift (16)
+    input[value=""] - pointerover
+    input[value=""] - pointerenter
+    input[value=""] - mouseover: Left (0)
+    input[value=""] - mouseenter: Left (0)
+    input[value=""] - pointermove
+    input[value=""] - mousemove: Left (0)
+    input[value=""] - pointerdown
+    input[value=""] - mousedown: Left (0)
+    input[value=""] - focus
+    input[value=""] - focusin
+    input[value=""] - pointerup
+    input[value=""] - mouseup: Left (0)
+    input[value=""] - click: Left (0)
+    input[value=""] - keydown: Shift (16) {shift}
+    input[value=""] - keydown: a (97) {shift}
+    input[value=""] - keypress: a (97) {shift}
+    input[value="a"] - input
+      "{CURSOR}" -> "a{CURSOR}"
+    input[value="a"] - keyup: a (97) {shift}
+    input[value="a"] - keyup: Shift (16)
   `)
 })
 
-test('a{enter}', async () => {
-  const {element, getEventCalls} = setup('<input />')
+test('a{enter}', () => {
+  const {element, getEventSnapshot} = setup('<input />')
 
-  await userEvent.type(element, 'a{enter}')
+  userEvent.type(element, 'a{enter}')
 
-  expect(getEventCalls()).toMatchInlineSnapshot(`
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value="a"]
 
-    focus
-    keydown: a (97)
-    keypress: a (97)
-    input: "{CURSOR}" -> "a"
-    keyup: a (97)
-    keydown: Enter (13)
-    keypress: Enter (13)
-    keyup: Enter (13)
+    input[value=""] - pointerover
+    input[value=""] - pointerenter
+    input[value=""] - mouseover: Left (0)
+    input[value=""] - mouseenter: Left (0)
+    input[value=""] - pointermove
+    input[value=""] - mousemove: Left (0)
+    input[value=""] - pointerdown
+    input[value=""] - mousedown: Left (0)
+    input[value=""] - focus
+    input[value=""] - focusin
+    input[value=""] - pointerup
+    input[value=""] - mouseup: Left (0)
+    input[value=""] - click: Left (0)
+    input[value=""] - keydown: a (97)
+    input[value=""] - keypress: a (97)
+    input[value="a"] - input
+      "{CURSOR}" -> "a{CURSOR}"
+    input[value="a"] - keyup: a (97)
+    input[value="a"] - keydown: Enter (13)
+    input[value="a"] - keypress: Enter (13)
+    input[value="a"] - keyup: Enter (13)
   `)
 })
 
-test('{enter} with preventDefault keydown', async () => {
-  const {element, getEventCalls} = setup('<input />', {
+test('{enter} with preventDefault keydown', () => {
+  const {element, getEventSnapshot} = setup('<input />', {
     eventHandlers: {
       keyDown: e => e.preventDefault(),
     },
   })
 
-  await userEvent.type(element, '{enter}')
+  userEvent.type(element, '{enter}')
 
-  expect(getEventCalls()).toMatchInlineSnapshot(`
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value=""]
 
-    focus
-    keydown: Enter (13)
-    keyup: Enter (13)
+    input[value=""] - pointerover
+    input[value=""] - pointerenter
+    input[value=""] - mouseover: Left (0)
+    input[value=""] - mouseenter: Left (0)
+    input[value=""] - pointermove
+    input[value=""] - mousemove: Left (0)
+    input[value=""] - pointerdown
+    input[value=""] - mousedown: Left (0)
+    input[value=""] - focus
+    input[value=""] - focusin
+    input[value=""] - pointerup
+    input[value=""] - mouseup: Left (0)
+    input[value=""] - click: Left (0)
+    input[value=""] - keydown: Enter (13)
+    input[value=""] - keyup: Enter (13)
   `)
 })
 
-test('{enter} on a button', async () => {
-  const {element, getEventCalls} = setup('<button />')
+test('{enter} on a button', () => {
+  const {element, getEventSnapshot} = setup('<button />')
 
-  await userEvent.type(element, '{enter}')
+  userEvent.type(element, '{enter}')
 
-  expect(getEventCalls()).toMatchInlineSnapshot(`
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: button
 
-    focus
-    keydown: Enter (13)
-    keypress: Enter (13)
-    click: Left (0)
-    keyup: Enter (13)
+    button - pointerover
+    button - pointerenter
+    button - mouseover: Left (0)
+    button - mouseenter: Left (0)
+    button - pointermove
+    button - mousemove: Left (0)
+    button - pointerdown
+    button - mousedown: Left (0)
+    button - focus
+    button - focusin
+    button - pointerup
+    button - mouseup: Left (0)
+    button - click: Left (0)
+    button - keydown: Enter (13)
+    button - keypress: Enter (13)
+    button - click: Left (0)
+    button - keyup: Enter (13)
   `)
 })
 
-test('{enter} on a textarea', async () => {
-  const {element, getEventCalls} = setup('<textarea></textarea>')
+test('{enter} on a textarea', () => {
+  const {element, getEventSnapshot} = setup('<textarea></textarea>')
 
-  await userEvent.type(element, '{enter}')
+  userEvent.type(element, '{enter}')
 
-  expect(getEventCalls()).toMatchInlineSnapshot(`
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: textarea[value="\\n"]
 
-    focus
-    keydown: Enter (13)
-    keypress: Enter (13)
-    input: "{CURSOR}" -> "
-    "
-    keyup: Enter (13)
+    textarea[value=""] - pointerover
+    textarea[value=""] - pointerenter
+    textarea[value=""] - mouseover: Left (0)
+    textarea[value=""] - mouseenter: Left (0)
+    textarea[value=""] - pointermove
+    textarea[value=""] - mousemove: Left (0)
+    textarea[value=""] - pointerdown
+    textarea[value=""] - mousedown: Left (0)
+    textarea[value=""] - focus
+    textarea[value=""] - focusin
+    textarea[value=""] - pointerup
+    textarea[value=""] - mouseup: Left (0)
+    textarea[value=""] - click: Left (0)
+    textarea[value=""] - keydown: Enter (13)
+    textarea[value=""] - keypress: Enter (13)
+    textarea[value="\\n"] - input
+      "{CURSOR}" -> "\\n{CURSOR}"
+    textarea[value="\\n"] - keyup: Enter (13)
   `)
 })
 
-test('{meta}{enter}{/meta} on a button', async () => {
-  const {element, getEventCalls} = setup('<button />')
+test('{meta}{enter}{/meta} on a button', () => {
+  const {element, getEventSnapshot} = setup('<button />')
 
-  await userEvent.type(element, '{meta}{enter}{/meta}')
+  userEvent.type(element, '{meta}{enter}{/meta}')
 
-  expect(getEventCalls()).toMatchInlineSnapshot(`
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: button
 
-    focus
-    keydown: Meta (93) {meta}
-    keydown: Enter (13) {meta}
-    keypress: Enter (13) {meta}
-    click: Left (0) {meta}
-    keyup: Enter (13) {meta}
-    keyup: Meta (93)
+    button - pointerover
+    button - pointerenter
+    button - mouseover: Left (0)
+    button - mouseenter: Left (0)
+    button - pointermove
+    button - mousemove: Left (0)
+    button - pointerdown
+    button - mousedown: Left (0)
+    button - focus
+    button - focusin
+    button - pointerup
+    button - mouseup: Left (0)
+    button - click: Left (0)
+    button - keydown: Meta (93) {meta}
+    button - keydown: Enter (13) {meta}
+    button - keypress: Enter (13) {meta}
+    button - click: Left (0) {meta}
+    button - keyup: Enter (13) {meta}
+    button - keyup: Meta (93)
   `)
 })
 
-test('{meta}{alt}{ctrl}a{/ctrl}{/alt}{/meta}', async () => {
-  const {element, getEventCalls} = setup('<input />')
+test('{meta}{alt}{ctrl}a{/ctrl}{/alt}{/meta}', () => {
+  const {element, getEventSnapshot} = setup('<input />')
 
-  await userEvent.type(element, '{meta}{alt}{ctrl}a{/ctrl}{/alt}{/meta}')
+  userEvent.type(element, '{meta}{alt}{ctrl}a{/ctrl}{/alt}{/meta}')
 
-  expect(getEventCalls()).toMatchInlineSnapshot(`
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value="a"]
 
-    focus
-    keydown: Meta (93) {meta}
-    keydown: Alt (18) {alt}{meta}
-    keydown: Control (17) {alt}{meta}{ctrl}
-    keydown: a (97) {alt}{meta}{ctrl}
-    keypress: a (97) {alt}{meta}{ctrl}
-    input: "{CURSOR}" -> "a"
-    keyup: a (97) {alt}{meta}{ctrl}
-    keyup: Control (17) {alt}{meta}
-    keyup: Alt (18) {meta}
-    keyup: Meta (93)
+    input[value=""] - pointerover
+    input[value=""] - pointerenter
+    input[value=""] - mouseover: Left (0)
+    input[value=""] - mouseenter: Left (0)
+    input[value=""] - pointermove
+    input[value=""] - mousemove: Left (0)
+    input[value=""] - pointerdown
+    input[value=""] - mousedown: Left (0)
+    input[value=""] - focus
+    input[value=""] - focusin
+    input[value=""] - pointerup
+    input[value=""] - mouseup: Left (0)
+    input[value=""] - click: Left (0)
+    input[value=""] - keydown: Meta (93) {meta}
+    input[value=""] - keydown: Alt (18) {alt}{meta}
+    input[value=""] - keydown: Control (17) {alt}{meta}{ctrl}
+    input[value=""] - keydown: a (97) {alt}{meta}{ctrl}
+    input[value=""] - keypress: a (97) {alt}{meta}{ctrl}
+    input[value="a"] - input
+      "{CURSOR}" -> "a{CURSOR}"
+    input[value="a"] - keyup: a (97) {alt}{meta}{ctrl}
+    input[value="a"] - keyup: Control (17) {alt}{meta}
+    input[value="a"] - keyup: Alt (18) {meta}
+    input[value="a"] - keyup: Meta (93)
+  `)
+})
+
+test('{selectall} selects all the text', () => {
+  const value = 'abcdefg'
+  const {element, clearEventCalls, getEventSnapshot} = setup(
+    `<input value="${value}" />`,
+  )
+  element.setSelectionRange(2, 6)
+
+  clearEventCalls()
+
+  userEvent.type(element, '{selectall}')
+
+  expect(element.selectionStart).toBe(0)
+  expect(element.selectionEnd).toBe(value.length)
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
+    Events fired on: input[value="abcdefg"]
+
+    input[value="abcdefg"] - pointerover
+    input[value="abcdefg"] - pointerenter
+    input[value="abcdefg"] - mouseover: Left (0)
+    input[value="abcdefg"] - mouseenter: Left (0)
+    input[value="abcdefg"] - pointermove
+    input[value="abcdefg"] - mousemove: Left (0)
+    input[value="abcdefg"] - pointerdown
+    input[value="abcdefg"] - mousedown: Left (0)
+    input[value="abcdefg"] - focus
+    input[value="abcdefg"] - focusin
+    input[value="abcdefg"] - pointerup
+    input[value="abcdefg"] - mouseup: Left (0)
+    input[value="abcdefg"] - click: Left (0)
+    input[value="abcdefg"] - select
+  `)
+})
+
+test('{del} at the start of the input', () => {
+  const {element, getEventSnapshot} = setup(`<input value="hello" />`)
+
+  userEvent.type(element, '{del}', {
+    initialSelectionStart: 0,
+    initialSelectionEnd: 0,
+  })
+
+  expect(element.selectionStart).toBe(0)
+  expect(element.selectionEnd).toBe(0)
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
+    Events fired on: input[value="ello"]
+
+    input[value="hello"] - pointerover
+    input[value="hello"] - pointerenter
+    input[value="hello"] - mouseover: Left (0)
+    input[value="hello"] - mouseenter: Left (0)
+    input[value="hello"] - pointermove
+    input[value="hello"] - mousemove: Left (0)
+    input[value="hello"] - pointerdown
+    input[value="hello"] - mousedown: Left (0)
+    input[value="hello"] - focus
+    input[value="hello"] - focusin
+    input[value="hello"] - pointerup
+    input[value="hello"] - mouseup: Left (0)
+    input[value="hello"] - click: Left (0)
+    input[value="hello"] - keydown: Delete (46)
+    input[value="ello"] - input
+      "{CURSOR}hello" -> "ello{CURSOR}"
+    input[value="ello"] - select
+    input[value="ello"] - keyup: Delete (46)
+  `)
+})
+
+test('{del} at end of the input', () => {
+  const {element, getEventSnapshot} = setup(`<input value="hello" />`)
+
+  userEvent.type(element, '{del}')
+
+  expect(element.selectionStart).toBe(element.value.length)
+  expect(element.selectionEnd).toBe(element.value.length)
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
+    Events fired on: input[value="hello"]
+
+    input[value="hello"] - pointerover
+    input[value="hello"] - pointerenter
+    input[value="hello"] - mouseover: Left (0)
+    input[value="hello"] - mouseenter: Left (0)
+    input[value="hello"] - pointermove
+    input[value="hello"] - mousemove: Left (0)
+    input[value="hello"] - pointerdown
+    input[value="hello"] - mousedown: Left (0)
+    input[value="hello"] - focus
+    input[value="hello"] - focusin
+    input[value="hello"] - pointerup
+    input[value="hello"] - mouseup: Left (0)
+    input[value="hello"] - click: Left (0)
+    input[value="hello"] - select
+    input[value="hello"] - keydown: Delete (46)
+    input[value="hello"] - keyup: Delete (46)
+  `)
+})
+
+test('{del} in the middle of the input', () => {
+  const {element, getEventSnapshot} = setup(`<input value="hello" />`)
+
+  userEvent.type(element, '{del}', {
+    initialSelectionStart: 2,
+    initialSelectionEnd: 2,
+  })
+
+  expect(element.selectionStart).toBe(2)
+  expect(element.selectionEnd).toBe(2)
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
+    Events fired on: input[value="helo"]
+
+    input[value="hello"] - pointerover
+    input[value="hello"] - pointerenter
+    input[value="hello"] - mouseover: Left (0)
+    input[value="hello"] - mouseenter: Left (0)
+    input[value="hello"] - pointermove
+    input[value="hello"] - mousemove: Left (0)
+    input[value="hello"] - pointerdown
+    input[value="hello"] - mousedown: Left (0)
+    input[value="hello"] - focus
+    input[value="hello"] - focusin
+    input[value="hello"] - pointerup
+    input[value="hello"] - mouseup: Left (0)
+    input[value="hello"] - click: Left (0)
+    input[value="hello"] - select
+    input[value="hello"] - keydown: Delete (46)
+    input[value="helo"] - input
+      "he{CURSOR}llo" -> "helo{CURSOR}"
+    input[value="helo"] - select
+    input[value="helo"] - keyup: Delete (46)
+  `)
+})
+
+test('{del} with a selection range', () => {
+  const {element, getEventSnapshot} = setup(`<input value="hello" />`)
+
+  userEvent.type(element, '{del}', {
+    initialSelectionStart: 1,
+    initialSelectionEnd: 3,
+  })
+
+  expect(element.selectionStart).toBe(1)
+  expect(element.selectionEnd).toBe(1)
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
+    Events fired on: input[value="hlo"]
+
+    input[value="hello"] - pointerover
+    input[value="hello"] - pointerenter
+    input[value="hello"] - mouseover: Left (0)
+    input[value="hello"] - mouseenter: Left (0)
+    input[value="hello"] - pointermove
+    input[value="hello"] - mousemove: Left (0)
+    input[value="hello"] - pointerdown
+    input[value="hello"] - mousedown: Left (0)
+    input[value="hello"] - focus
+    input[value="hello"] - focusin
+    input[value="hello"] - pointerup
+    input[value="hello"] - mouseup: Left (0)
+    input[value="hello"] - click: Left (0)
+    input[value="hello"] - select
+    input[value="hello"] - keydown: Delete (46)
+    input[value="hlo"] - input
+      "h{SELECTION}el{/SELECTION}lo" -> "hlo{CURSOR}"
+    input[value="hlo"] - select
+    input[value="hlo"] - keyup: Delete (46)
+  `)
+})
+
+// TODO: eventually we'll want to support this, but currently we cannot
+// because selection ranges are (intentially) unsupported in certain input types
+// per the spec.
+test('{del} on an input that does not support selection range does not change the value', () => {
+  const {element, eventWasFired} = setup(`<input type="email" value="a@b.c" />`)
+
+  userEvent.type(element, '{del}')
+  expect(element).toHaveValue('a@b.c')
+  expect(eventWasFired('input')).not.toBe(true)
+})
+
+test('{del} does not delete if keydown is prevented', () => {
+  const {element, eventWasFired} = setup(`<input value="hello" />`, {
+    eventHandlers: {keyDown: e => e.preventDefault()},
+  })
+
+  userEvent.type(element, '{del}', {
+    initialSelectionStart: 2,
+    initialSelectionEnd: 2,
+  })
+  expect(element).toHaveValue('hello')
+  expect(element.selectionStart).toBe(2)
+  expect(element.selectionEnd).toBe(2)
+  expect(eventWasFired('input')).not.toBe(true)
+})
+
+test('any remaining type modifiers are automatically released at the end', () => {
+  const {element, getEventSnapshot} = setup('<input />')
+
+  userEvent.type(element, '{meta}{alt}{ctrl}a{/alt}')
+
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
+    Events fired on: input[value="a"]
+
+    input[value=""] - pointerover
+    input[value=""] - pointerenter
+    input[value=""] - mouseover: Left (0)
+    input[value=""] - mouseenter: Left (0)
+    input[value=""] - pointermove
+    input[value=""] - mousemove: Left (0)
+    input[value=""] - pointerdown
+    input[value=""] - mousedown: Left (0)
+    input[value=""] - focus
+    input[value=""] - focusin
+    input[value=""] - pointerup
+    input[value=""] - mouseup: Left (0)
+    input[value=""] - click: Left (0)
+    input[value=""] - keydown: Meta (93) {meta}
+    input[value=""] - keydown: Alt (18) {alt}{meta}
+    input[value=""] - keydown: Control (17) {alt}{meta}{ctrl}
+    input[value=""] - keydown: a (97) {alt}{meta}{ctrl}
+    input[value=""] - keypress: a (97) {alt}{meta}{ctrl}
+    input[value="a"] - input
+      "{CURSOR}" -> "a{CURSOR}"
+    input[value="a"] - keyup: a (97) {alt}{meta}{ctrl}
+    input[value="a"] - keyup: Alt (18) {meta}{ctrl}
+    input[value="a"] - keyup: Meta (93) {ctrl}
+    input[value="a"] - keyup: Control (17)
+  `)
+})
+
+test('modifiers will not be closed if skipAutoClose is enabled', () => {
+  const {element, getEventSnapshot} = setup('<input />')
+
+  userEvent.type(element, '{meta}a', {skipAutoClose: true})
+
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
+    Events fired on: input[value="a"]
+
+    input[value=""] - pointerover
+    input[value=""] - pointerenter
+    input[value=""] - mouseover: Left (0)
+    input[value=""] - mouseenter: Left (0)
+    input[value=""] - pointermove
+    input[value=""] - mousemove: Left (0)
+    input[value=""] - pointerdown
+    input[value=""] - mousedown: Left (0)
+    input[value=""] - focus
+    input[value=""] - focusin
+    input[value=""] - pointerup
+    input[value=""] - mouseup: Left (0)
+    input[value=""] - click: Left (0)
+    input[value=""] - keydown: Meta (93) {meta}
+    input[value=""] - keydown: a (97) {meta}
+    input[value=""] - keypress: a (97) {meta}
+    input[value="a"] - input
+      "{CURSOR}" -> "a{CURSOR}"
+    input[value="a"] - keyup: a (97) {meta}
   `)
 })

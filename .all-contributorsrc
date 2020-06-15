@@ -433,6 +433,16 @@
       "contributions": [
         "test"
       ]
+    },
+    {
+      "login": "ben-dyer",
+      "name": "Ben Dyer",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/43922444?v=4",
+      "profile": "https://github.com/ben-dyer",
+      "contributions": [
+        "code",
+        "test"
+      ]
     }
   ],
   "commitConvention": "none",

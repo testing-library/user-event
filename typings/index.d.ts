@@ -29,7 +29,7 @@ declare const userEvent: {
     values: string | string[] | HTMLElement | HTMLElement[],
     init?: MouseEventInit,
   ) => void
-  toggleSelectOptions: (
+  deselectOptions: (
     element: TargetElement,
     values: string | string[] | HTMLElement | HTMLElement[],
     init?: MouseEventInit,
@@ -45,8 +45,16 @@ declare const userEvent: {
     userOpts?: ITypeOpts,
   ) => Promise<void>
   tab: (userOpts?: ITabUserOptions) => void
-  hover: (element: TargetElement, init?: MouseEventInit) => Promise<void>
-  unhover: (element: TargetElement, init?: MouseEventInit) => Promise<void>
+  paste: (
+    element: TargetElement,
+    init?: {},
+    pasteOptions?: {
+      initialSelectionStart?: number
+      initialSelectionEnd?: number
+    },
+  ) => void
+  hover: (element: TargetElement, init?: MouseEventInit) => void
+  unhover: (element: TargetElement, init?: MouseEventInit) => void
 }
 
 export default userEvent

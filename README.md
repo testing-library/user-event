@@ -54,7 +54,7 @@ change the state of the checkbox.
 - [API](#api)
   - [`click(element, eventInit, options)`](#clickelement-eventinit-options)
   - [`dblClick(element, eventInit, options)`](#dblclickelement-eventinit-options)
-  - [`async type(element, text, [options])`](#async-typeelement-text-options)
+  - [`type(element, text, [options])`](#typeelement-text-options)
   - [`upload(element, file, [{ clickInit, changeInit }])`](#uploadelement-file--clickinit-changeinit-)
   - [`clear(element)`](#clearelement)
   - [`selectOptions(element, values)`](#selectoptionselement-values)
@@ -151,7 +151,7 @@ test('double click', () => {
 })
 ```
 
-### `async type(element, text, [options])`
+### `type(element, text, [options])`
 
 Writes `text` inside an `<input>` or a `<textarea>`.
 
@@ -160,17 +160,18 @@ import React from 'react'
 import {render, screen} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
-test('type', async () => {
+test('type', () => {
   render(<textarea />)
 
-  await userEvent.type(screen.getByRole('textbox'), 'Hello,{enter}World!')
+  userEvent.type(screen.getByRole('textbox'), 'Hello,{enter}World!')
   expect(screen.getByRole('textbox')).toHaveValue('Hello,\nWorld!')
 })
 ```
 
 `options.delay` is the number of milliseconds that pass between two characters
 are typed. By default it's 0. You can use this option if your component has a
-different behavior for fast or slow users.
+different behavior for fast or slow users. If you do this, you need to make sure
+to `await`!
 
 `type` will click the element before typing. To disable this, set the
 `skipClick` option to `true`.
@@ -433,7 +434,7 @@ test('hover', () => {
 
 Unhovers out of `element`.
 
-> See [above](#async-hoverelement) for an example
+> See [above](#hoverelement) for an example
 
 ### `paste(element, text, eventInit, options)`
 

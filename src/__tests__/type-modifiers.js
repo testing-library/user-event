@@ -15,10 +15,10 @@ import {setup} from './helpers/utils'
 // This also means that '{shift}a' will fire an input event with the shiftKey,
 // but will not capitalize "a".
 
-test('{esc} triggers typing the escape character', async () => {
+test('{esc} triggers typing the escape character', () => {
   const {element, getEventSnapshot} = setup('<input />')
 
-  await userEvent.type(element, '{esc}')
+  userEvent.type(element, '{esc}')
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value=""]
@@ -41,9 +41,9 @@ test('{esc} triggers typing the escape character', async () => {
   `)
 })
 
-test('a{backspace}', async () => {
+test('a{backspace}', () => {
   const {element, getEventSnapshot} = setup('<input />')
-  await userEvent.type(element, 'a{backspace}')
+  userEvent.type(element, 'a{backspace}')
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value=""]
 
@@ -72,9 +72,9 @@ test('a{backspace}', async () => {
   `)
 })
 
-test('{backspace}a', async () => {
+test('{backspace}a', () => {
   const {element, getEventSnapshot} = setup('<input />')
-  await userEvent.type(element, '{backspace}a')
+  userEvent.type(element, '{backspace}a')
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value="a"]
 
@@ -101,11 +101,11 @@ test('{backspace}a', async () => {
   `)
 })
 
-test('{backspace} triggers typing the backspace character and deletes the character behind the cursor', async () => {
+test('{backspace} triggers typing the backspace character and deletes the character behind the cursor', () => {
   const {element, getEventSnapshot} = setup('<input value="yo" />')
   element.setSelectionRange(1, 1)
 
-  await userEvent.type(element, '{backspace}')
+  userEvent.type(element, '{backspace}')
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value="o"]
@@ -132,11 +132,11 @@ test('{backspace} triggers typing the backspace character and deletes the charac
   `)
 })
 
-test('{backspace} on a readOnly input', async () => {
+test('{backspace} on a readOnly input', () => {
   const {element, getEventSnapshot} = setup('<input readonly value="yo" />')
   element.setSelectionRange(1, 1)
 
-  await userEvent.type(element, '{backspace}')
+  userEvent.type(element, '{backspace}')
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value="yo"]
@@ -160,13 +160,13 @@ test('{backspace} on a readOnly input', async () => {
   `)
 })
 
-test('{backspace} does not fire input if keydown prevents default', async () => {
+test('{backspace} does not fire input if keydown prevents default', () => {
   const {element, getEventSnapshot} = setup('<input value="yo" />', {
     eventHandlers: {keyDown: e => e.preventDefault()},
   })
   element.setSelectionRange(1, 1)
 
-  await userEvent.type(element, '{backspace}')
+  userEvent.type(element, '{backspace}')
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value="yo"]
@@ -190,11 +190,11 @@ test('{backspace} does not fire input if keydown prevents default', async () => 
   `)
 })
 
-test('{backspace} deletes the selected range', async () => {
+test('{backspace} deletes the selected range', () => {
   const {element, getEventSnapshot} = setup('<input value="Hi there" />')
   element.setSelectionRange(1, 5)
 
-  await userEvent.type(element, '{backspace}')
+  userEvent.type(element, '{backspace}')
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value="Here"]
@@ -221,18 +221,18 @@ test('{backspace} deletes the selected range', async () => {
   `)
 })
 
-test('{backspace} on an input type that does not support selection ranges', async () => {
+test('{backspace} on an input type that does not support selection ranges', () => {
   const {element} = setup('<input type="email" value="yo@example.com" />')
   // note: you cannot even call setSelectionRange on these kinds of elements...
-  await userEvent.type(element, '{backspace}{backspace}a')
+  userEvent.type(element, '{backspace}{backspace}a')
   // removed "m" then "o" then add "a"
   expect(element).toHaveValue('yo@example.ca')
 })
 
-test('{alt}a{/alt}', async () => {
+test('{alt}a{/alt}', () => {
   const {element, getEventSnapshot} = setup('<input />')
 
-  await userEvent.type(element, '{alt}a{/alt}')
+  userEvent.type(element, '{alt}a{/alt}')
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value="a"]
@@ -260,10 +260,10 @@ test('{alt}a{/alt}', async () => {
   `)
 })
 
-test('{meta}a{/meta}', async () => {
+test('{meta}a{/meta}', () => {
   const {element, getEventSnapshot} = setup('<input />')
 
-  await userEvent.type(element, '{meta}a{/meta}')
+  userEvent.type(element, '{meta}a{/meta}')
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value="a"]
@@ -291,10 +291,10 @@ test('{meta}a{/meta}', async () => {
   `)
 })
 
-test('{ctrl}a{/ctrl}', async () => {
+test('{ctrl}a{/ctrl}', () => {
   const {element, getEventSnapshot} = setup('<input />')
 
-  await userEvent.type(element, '{ctrl}a{/ctrl}')
+  userEvent.type(element, '{ctrl}a{/ctrl}')
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value="a"]
@@ -322,10 +322,10 @@ test('{ctrl}a{/ctrl}', async () => {
   `)
 })
 
-test('{shift}a{/shift}', async () => {
+test('{shift}a{/shift}', () => {
   const {element, getEventSnapshot} = setup('<input />')
 
-  await userEvent.type(element, '{shift}a{/shift}')
+  userEvent.type(element, '{shift}a{/shift}')
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value="a"]
@@ -353,10 +353,10 @@ test('{shift}a{/shift}', async () => {
   `)
 })
 
-test('a{enter}', async () => {
+test('a{enter}', () => {
   const {element, getEventSnapshot} = setup('<input />')
 
-  await userEvent.type(element, 'a{enter}')
+  userEvent.type(element, 'a{enter}')
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value="a"]
@@ -385,14 +385,14 @@ test('a{enter}', async () => {
   `)
 })
 
-test('{enter} with preventDefault keydown', async () => {
+test('{enter} with preventDefault keydown', () => {
   const {element, getEventSnapshot} = setup('<input />', {
     eventHandlers: {
       keyDown: e => e.preventDefault(),
     },
   })
 
-  await userEvent.type(element, '{enter}')
+  userEvent.type(element, '{enter}')
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value=""]
@@ -415,10 +415,10 @@ test('{enter} with preventDefault keydown', async () => {
   `)
 })
 
-test('{enter} on a button', async () => {
+test('{enter} on a button', () => {
   const {element, getEventSnapshot} = setup('<button />')
 
-  await userEvent.type(element, '{enter}')
+  userEvent.type(element, '{enter}')
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: button
@@ -443,10 +443,10 @@ test('{enter} on a button', async () => {
   `)
 })
 
-test('{enter} on a textarea', async () => {
+test('{enter} on a textarea', () => {
   const {element, getEventSnapshot} = setup('<textarea></textarea>')
 
-  await userEvent.type(element, '{enter}')
+  userEvent.type(element, '{enter}')
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: textarea[value="\\n"]
@@ -472,10 +472,10 @@ test('{enter} on a textarea', async () => {
   `)
 })
 
-test('{meta}{enter}{/meta} on a button', async () => {
+test('{meta}{enter}{/meta} on a button', () => {
   const {element, getEventSnapshot} = setup('<button />')
 
-  await userEvent.type(element, '{meta}{enter}{/meta}')
+  userEvent.type(element, '{meta}{enter}{/meta}')
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: button
@@ -502,10 +502,10 @@ test('{meta}{enter}{/meta} on a button', async () => {
   `)
 })
 
-test('{meta}{alt}{ctrl}a{/ctrl}{/alt}{/meta}', async () => {
+test('{meta}{alt}{ctrl}a{/ctrl}{/alt}{/meta}', () => {
   const {element, getEventSnapshot} = setup('<input />')
 
-  await userEvent.type(element, '{meta}{alt}{ctrl}a{/ctrl}{/alt}{/meta}')
+  userEvent.type(element, '{meta}{alt}{ctrl}a{/ctrl}{/alt}{/meta}')
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value="a"]
@@ -537,7 +537,7 @@ test('{meta}{alt}{ctrl}a{/ctrl}{/alt}{/meta}', async () => {
   `)
 })
 
-test('{selectall} selects all the text', async () => {
+test('{selectall} selects all the text', () => {
   const value = 'abcdefg'
   const {element, clearEventCalls, getEventSnapshot} = setup(
     `<input value="${value}" />`,
@@ -546,7 +546,7 @@ test('{selectall} selects all the text', async () => {
 
   clearEventCalls()
 
-  await userEvent.type(element, '{selectall}')
+  userEvent.type(element, '{selectall}')
 
   expect(element.selectionStart).toBe(0)
   expect(element.selectionEnd).toBe(value.length)
@@ -570,10 +570,10 @@ test('{selectall} selects all the text', async () => {
   `)
 })
 
-test('{del} at the start of the input', async () => {
+test('{del} at the start of the input', () => {
   const {element, getEventSnapshot} = setup(`<input value="hello" />`)
 
-  await userEvent.type(element, '{del}', {
+  userEvent.type(element, '{del}', {
     initialSelectionStart: 0,
     initialSelectionEnd: 0,
   })
@@ -604,10 +604,10 @@ test('{del} at the start of the input', async () => {
   `)
 })
 
-test('{del} at end of the input', async () => {
+test('{del} at end of the input', () => {
   const {element, getEventSnapshot} = setup(`<input value="hello" />`)
 
-  await userEvent.type(element, '{del}')
+  userEvent.type(element, '{del}')
 
   expect(element.selectionStart).toBe(element.value.length)
   expect(element.selectionEnd).toBe(element.value.length)
@@ -633,10 +633,10 @@ test('{del} at end of the input', async () => {
   `)
 })
 
-test('{del} in the middle of the input', async () => {
+test('{del} in the middle of the input', () => {
   const {element, getEventSnapshot} = setup(`<input value="hello" />`)
 
-  await userEvent.type(element, '{del}', {
+  userEvent.type(element, '{del}', {
     initialSelectionStart: 2,
     initialSelectionEnd: 2,
   })
@@ -668,10 +668,10 @@ test('{del} in the middle of the input', async () => {
   `)
 })
 
-test('{del} with a selection range', async () => {
+test('{del} with a selection range', () => {
   const {element, getEventSnapshot} = setup(`<input value="hello" />`)
 
-  await userEvent.type(element, '{del}', {
+  userEvent.type(element, '{del}', {
     initialSelectionStart: 1,
     initialSelectionEnd: 3,
   })
@@ -706,20 +706,20 @@ test('{del} with a selection range', async () => {
 // TODO: eventually we'll want to support this, but currently we cannot
 // because selection ranges are (intentially) unsupported in certain input types
 // per the spec.
-test('{del} on an input that does not support selection range does not change the value', async () => {
+test('{del} on an input that does not support selection range does not change the value', () => {
   const {element, eventWasFired} = setup(`<input type="email" value="a@b.c" />`)
 
-  await userEvent.type(element, '{del}')
+  userEvent.type(element, '{del}')
   expect(element).toHaveValue('a@b.c')
   expect(eventWasFired('input')).not.toBe(true)
 })
 
-test('{del} does not delete if keydown is prevented', async () => {
+test('{del} does not delete if keydown is prevented', () => {
   const {element, eventWasFired} = setup(`<input value="hello" />`, {
     eventHandlers: {keyDown: e => e.preventDefault()},
   })
 
-  await userEvent.type(element, '{del}', {
+  userEvent.type(element, '{del}', {
     initialSelectionStart: 2,
     initialSelectionEnd: 2,
   })
@@ -729,10 +729,10 @@ test('{del} does not delete if keydown is prevented', async () => {
   expect(eventWasFired('input')).not.toBe(true)
 })
 
-test('any remaining type modifiers are automatically released at the end', async () => {
+test('any remaining type modifiers are automatically released at the end', () => {
   const {element, getEventSnapshot} = setup('<input />')
 
-  await userEvent.type(element, '{meta}{alt}{ctrl}a{/alt}')
+  userEvent.type(element, '{meta}{alt}{ctrl}a{/alt}')
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value="a"]
@@ -764,10 +764,10 @@ test('any remaining type modifiers are automatically released at the end', async
   `)
 })
 
-test('modifiers will not be closed if skipAutoClose is enabled', async () => {
+test('modifiers will not be closed if skipAutoClose is enabled', () => {
   const {element, getEventSnapshot} = setup('<input />')
 
-  await userEvent.type(element, '{meta}a', {skipAutoClose: true})
+  userEvent.type(element, '{meta}a', {skipAutoClose: true})
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value="a"]

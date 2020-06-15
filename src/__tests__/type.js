@@ -2,9 +2,9 @@ import userEvent from '../'
 import {setup, addListeners} from './helpers/utils'
 import './helpers/custom-element'
 
-test('types text in input', async () => {
+test('types text in input', () => {
   const {element, getEventSnapshot} = setup('<input />')
-  await userEvent.type(element, 'Sup')
+  userEvent.type(element, 'Sup')
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value="Sup"]
 
@@ -39,11 +39,11 @@ test('types text in input', async () => {
   `)
 })
 
-test('can skip the initial click', async () => {
+test('can skip the initial click', () => {
   const {element, getEventSnapshot, clearEventCalls} = setup('<input />')
   element.focus() // users MUST focus themselves if they wish to skip the click
   clearEventCalls()
-  await userEvent.type(element, 'Sup', {skipClick: true})
+  userEvent.type(element, 'Sup', {skipClick: true})
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value="Sup"]
 
@@ -65,13 +65,13 @@ test('can skip the initial click', async () => {
   `)
 })
 
-test('types text inside custom element', async () => {
+test('types text inside custom element', () => {
   const element = document.createElement('custom-el')
   document.body.append(element)
   const inputEl = element.shadowRoot.querySelector('input')
   const {getEventSnapshot} = addListeners(inputEl)
 
-  await userEvent.type(inputEl, 'Sup')
+  userEvent.type(inputEl, 'Sup')
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value="Sup"]
 
@@ -106,9 +106,9 @@ test('types text inside custom element', async () => {
   `)
 })
 
-test('types text in textarea', async () => {
+test('types text in textarea', () => {
   const {element, getEventSnapshot} = setup('<textarea></textarea>')
-  await userEvent.type(element, 'Sup')
+  userEvent.type(element, 'Sup')
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: textarea[value="Sup"]
 
@@ -143,12 +143,12 @@ test('types text in textarea', async () => {
   `)
 })
 
-test('does not fire input event when keypress calls prevent default', async () => {
+test('does not fire input event when keypress calls prevent default', () => {
   const {element, getEventSnapshot} = setup('<input />', {
     eventHandlers: {keyPress: e => e.preventDefault()},
   })
 
-  await userEvent.type(element, 'a')
+  userEvent.type(element, 'a')
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value=""]
 
@@ -171,12 +171,12 @@ test('does not fire input event when keypress calls prevent default', async () =
   `)
 })
 
-test('does not fire keypress or input events when keydown calls prevent default', async () => {
+test('does not fire keypress or input events when keydown calls prevent default', () => {
   const {element, getEventSnapshot} = setup('<input />', {
     eventHandlers: {keyDown: e => e.preventDefault()},
   })
 
-  await userEvent.type(element, 'a')
+  userEvent.type(element, 'a')
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value=""]
 
@@ -198,19 +198,19 @@ test('does not fire keypress or input events when keydown calls prevent default'
   `)
 })
 
-test('does not fire events when disabled', async () => {
+test('does not fire events when disabled', () => {
   const {element, getEventSnapshot} = setup('<input disabled />')
 
-  await userEvent.type(element, 'a')
+  userEvent.type(element, 'a')
   expect(getEventSnapshot()).toMatchInlineSnapshot(
     `No events were fired on: input[value=""]`,
   )
 })
 
-test('does not fire input when readonly', async () => {
+test('does not fire input when readonly', () => {
   const {element, getEventSnapshot} = setup('<input readonly />')
 
-  await userEvent.type(element, 'a')
+  userEvent.type(element, 'a')
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value=""]
 
@@ -255,9 +255,9 @@ test('should delay the typing when opts.delay is not 0', async () => {
   }
 })
 
-test('honors maxlength', async () => {
+test('honors maxlength', () => {
   const {element, getEventSnapshot} = setup('<input maxlength="2" />')
-  await userEvent.type(element, '123')
+  userEvent.type(element, '123')
 
   // NOTE: no input event when typing "3"
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
@@ -292,11 +292,11 @@ test('honors maxlength', async () => {
   `)
 })
 
-test('honors maxlength with existing text', async () => {
+test('honors maxlength with existing text', () => {
   const {element, getEventSnapshot} = setup(
     '<input value="12" maxlength="2" />',
   )
-  await userEvent.type(element, '3')
+  userEvent.type(element, '3')
 
   // NOTE: no input event when typing "3"
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
@@ -322,7 +322,7 @@ test('honors maxlength with existing text', async () => {
   `)
 })
 
-test('should fire events on the currently focused element', async () => {
+test('should fire events on the currently focused element', () => {
   const {element} = setup(`<div><input /><input /></div>`, {
     eventHandlers: {keyDown: handleKeyDown},
   })
@@ -338,27 +338,27 @@ test('should fire events on the currently focused element', async () => {
     }
   }
 
-  await userEvent.type(input1, text)
+  userEvent.type(input1, text)
 
   expect(input1).toHaveValue(text.slice(0, changeFocusLimit))
   expect(input2).toHaveValue(text.slice(changeFocusLimit))
   expect(input2).toHaveFocus()
 })
 
-test('should replace selected text', async () => {
+test('should replace selected text', () => {
   const {element} = setup('<input value="hello world" />')
   const selectionStart = 'hello world'.search('world')
   const selectionEnd = selectionStart + 'world'.length
   element.setSelectionRange(selectionStart, selectionEnd)
-  await userEvent.type(element, 'friend')
+  userEvent.type(element, 'friend')
   expect(element).toHaveValue('hello friend')
 })
 
-test('does not continue firing events when disabled during typing', async () => {
+test('does not continue firing events when disabled during typing', () => {
   const {element} = setup('<input />', {
     eventHandlers: {input: e => (e.target.disabled = true)},
   })
-  await userEvent.type(element, 'hi')
+  userEvent.type(element, 'hi')
   expect(element).toHaveValue('h')
 })
 
@@ -381,10 +381,10 @@ function setupDollarInput({initialValue = ''} = {}) {
   return returnValue
 }
 
-test('typing into a controlled input works', async () => {
+test('typing into a controlled input works', () => {
   const {element, getEventSnapshot} = setupDollarInput()
 
-  await userEvent.type(element, '23')
+  userEvent.type(element, '23')
 
   expect(element.value).toBe('$23')
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
@@ -416,11 +416,11 @@ test('typing into a controlled input works', async () => {
   `)
 })
 
-test('typing in the middle of a controlled input works', async () => {
+test('typing in the middle of a controlled input works', () => {
   const {element, getEventSnapshot} = setupDollarInput({initialValue: '$23'})
   element.setSelectionRange(2, 2)
 
-  await userEvent.type(element, '1')
+  userEvent.type(element, '1')
 
   expect(element.value).toBe('$213')
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
@@ -449,11 +449,11 @@ test('typing in the middle of a controlled input works', async () => {
   `)
 })
 
-test('ignored {backspace} in controlled input', async () => {
+test('ignored {backspace} in controlled input', () => {
   const {element, getEventSnapshot} = setupDollarInput({initialValue: '$23'})
   element.setSelectionRange(1, 1)
 
-  await userEvent.type(element, '{backspace}')
+  userEvent.type(element, '{backspace}')
   // this is the same behavior in the browser.
   // in our case, when you try to backspace the "$", our event handler
   // will ignore that change and React resets the value to what it was
@@ -462,7 +462,7 @@ test('ignored {backspace} in controlled input', async () => {
   // the selection start and end to the end of the input
   expect(element.selectionStart).toBe(element.value.length)
   expect(element.selectionEnd).toBe(element.value.length)
-  await userEvent.type(element, '4')
+  userEvent.type(element, '4')
 
   expect(element.value).toBe('$234')
   // the backslash in the inline snapshot is to escape the $ before {CURSOR}
@@ -507,18 +507,18 @@ test('ignored {backspace} in controlled input', async () => {
 })
 
 // https://github.com/testing-library/user-event/issues/346
-test('typing in an empty textarea', async () => {
+test('typing in an empty textarea', () => {
   const {element} = setup('<textarea></textarea>')
 
-  await userEvent.type(element, '1234')
+  userEvent.type(element, '1234')
   expect(element).toHaveValue('1234')
 })
 
 // https://github.com/testing-library/user-event/issues/321
-test('typing in a textarea with existing text', async () => {
+test('typing in a textarea with existing text', () => {
   const {element, getEventSnapshot} = setup('<textarea>Hello, </textarea>')
 
-  await userEvent.type(element, '12')
+  userEvent.type(element, '12')
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: textarea[value="Hello, 12"]
 
@@ -551,11 +551,11 @@ test('typing in a textarea with existing text', async () => {
 })
 
 // https://github.com/testing-library/user-event/issues/321
-test('accepts an initialSelectionStart and initialSelectionEnd', async () => {
+test('accepts an initialSelectionStart and initialSelectionEnd', () => {
   const {element, getEventSnapshot} = setup('<textarea>Hello, </textarea>')
   element.setSelectionRange(0, 0)
 
-  await userEvent.type(element, '12', {
+  userEvent.type(element, '12', {
     initialSelectionStart: element.selectionStart,
     initialSelectionEnd: element.selectionEnd,
   })
@@ -593,18 +593,18 @@ test('accepts an initialSelectionStart and initialSelectionEnd', async () => {
 })
 
 // https://github.com/testing-library/user-event/issues/316#issuecomment-640199908
-test('can type into an input with type `email`', async () => {
+test('can type into an input with type `email`', () => {
   const {element} = setup('<input type="email" />')
   const email = 'yo@example.com'
-  await userEvent.type(element, email)
+  userEvent.type(element, email)
   expect(element).toHaveValue(email)
 })
 
 // https://github.com/testing-library/user-event/issues/336
-test('can type "-" into number inputs', async () => {
+test('can type "-" into number inputs', () => {
   const {element, getEventSnapshot} = setup('<input type="number" />')
   const negativeNumber = '-3'
-  await userEvent.type(element, negativeNumber)
+  userEvent.type(element, negativeNumber)
   expect(element).toHaveValue(-3)
 
   // NOTE: the input event here does not actually change the value thanks to
@@ -639,9 +639,9 @@ test('can type "-" into number inputs', async () => {
 })
 
 // https://github.com/testing-library/user-event/issues/336
-test('can type "." into number inputs', async () => {
+test('can type "." into number inputs', () => {
   const {element, getEventSnapshot} = setup('<input type="number" />')
-  await userEvent.type(element, '0.3')
+  userEvent.type(element, '0.3')
   expect(element).toHaveValue(0.3)
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
@@ -678,23 +678,23 @@ test('can type "." into number inputs', async () => {
   `)
 })
 
-test('-{backspace}3', async () => {
+test('-{backspace}3', () => {
   const {element} = setup('<input type="number" />')
   const negativeNumber = '-{backspace}3'
-  await userEvent.type(element, negativeNumber)
+  userEvent.type(element, negativeNumber)
   expect(element).toHaveValue(3)
 })
 
-test('-a3', async () => {
+test('-a3', () => {
   const {element} = setup('<input type="number" />')
   const negativeNumber = '-a3'
-  await userEvent.type(element, negativeNumber)
+  userEvent.type(element, negativeNumber)
   expect(element).toHaveValue(-3)
 })
 
-test('typing an invalid input value', async () => {
+test('typing an invalid input value', () => {
   const {element} = setup('<input type="number" />')
-  await userEvent.type(element, '3-3')
+  userEvent.type(element, '3-3')
 
   // TODO: fix this bug
   // THIS IS A BUG! It should be expect(element.value).toBe('')

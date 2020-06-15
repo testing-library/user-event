@@ -29,7 +29,7 @@ async function typeImpl(
   {
     skipClick = false,
     skipAutoClose = false,
-    delay,
+    delay = 0,
     initialSelectionStart,
     initialSelectionEnd,
   } = {},

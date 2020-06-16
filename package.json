@@ -48,7 +48,7 @@
     "kcd-scripts": "^6.2.3"
   },
   "peerDependencies": {
-    "@testing-library/dom": ">=7.9.0"
+    "@testing-library/dom": ">=7.16.0"
   },
   "eslintConfig": {
     "extends": "./node_modules/kcd-scripts/eslint.js",

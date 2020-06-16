@@ -1,6 +1,3 @@
-**`user-event` is moving. Please create new issues in
-[`dom-testing-library`](https://github.com/testing-library/dom-testing-library).**
-
 # Contributing
 
 Thanks for being willing to contribute!

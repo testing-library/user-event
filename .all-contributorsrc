@@ -443,6 +443,15 @@
         "code",
         "test"
       ]
+    },
+    {
+      "login": "herecydev",
+      "name": "Dan Kirkham",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/11328618?v=4",
+      "profile": "https://twitter.com/herecydev",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "commitConvention": "none",

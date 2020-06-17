@@ -228,8 +228,8 @@ test('upload file', () => {
       <input id="file-uploader" type="file" />
     </div>,
   )
-
-  userEvent.upload(screen.getByLabelText(/upload file/i), file)
+  const input = screen.getByLabelText(/upload file/i)
+  userEvent.upload(input, file)
 
   expect(input.files[0]).toStrictEqual(file)
   expect(input.files.item(0)).toStrictEqual(file)
@@ -248,8 +248,8 @@ test('upload multiple files', () => {
       <input id="file-uploader" type="file" multiple />
     </div>,
   )
-
-  userEvent.upload(screen.getByLabelText(/upload file/i), files)
+  const input = screen.getByLabelText(/upload file/i)
+  userEvent.upload(input, file)
 
   expect(input.files).toHaveLength(2)
   expect(input.files[0]).toStrictEqual(files[0])
@@ -544,6 +544,7 @@ Thanks goes to these people ([emoji key][emojis]):
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors][all-contributors] specification.

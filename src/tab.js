@@ -3,6 +3,22 @@ import {getActiveElement, FOCUSABLE_SELECTOR} from './utils'
 import {focus} from './focus'
 import {blur} from './blur'
 
+function getNextElement(currentIndex, shift, elements, focusTrap) {
+  if (focusTrap === document && currentIndex === 0 && shift) {
+    return document.body
+  } else if (
+    focusTrap === document &&
+    currentIndex === elements.length - 1 &&
+    !shift
+  ) {
+    return document.body
+  } else {
+    const nextIndex = shift ? currentIndex - 1 : currentIndex + 1
+    const defaultIndex = shift ? elements.length - 1 : 0
+    return elements[nextIndex] || elements[defaultIndex]
+  }
+}
+
 function tab({shift = false, focusTrap} = {}) {
   const previousElement = getActiveElement(focusTrap?.ownerDocument ?? document)
 
@@ -57,10 +73,7 @@ function tab({shift = false, focusTrap} = {}) {
     el => el === el.ownerDocument.activeElement,
   )
 
-  const nextIndex = shift ? index - 1 : index + 1
-  const defaultIndex = shift ? prunedElements.length - 1 : 0
-
-  const nextElement = prunedElements[nextIndex] || prunedElements[defaultIndex]
+  const nextElement = getNextElement(index, shift, prunedElements, focusTrap)
 
   const shiftKeyInit = {
     key: 'Shift',

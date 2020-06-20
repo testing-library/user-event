@@ -134,18 +134,26 @@ test('does not select anything if options are disabled', () => {
   expect(o3.selected).toBe(false)
 })
 
-test('should call onChange bubbling up the event when a new option is selected', () => {
+test('should call onChange/input bubbling up the event when a new option is selected', () => {
   const {select, form} = setupSelect({multiple: true})
   const onChangeSelect = jest.fn()
   const onChangeForm = jest.fn()
+  const onInputSelect = jest.fn()
+  const onInputForm = jest.fn()
   select.addEventListener('change', onChangeSelect)
+  select.addEventListener('input', onInputSelect)
   form.addEventListener('change', onChangeForm)
+  form.addEventListener('input', onInputForm)
 
   expect(onChangeSelect.mock.calls).toHaveLength(0)
   expect(onChangeForm.mock.calls).toHaveLength(0)
+  expect(onInputSelect.mock.calls).toHaveLength(0)
+  expect(onInputForm.mock.calls).toHaveLength(0)
 
   userEvent.selectOptions(select, ['1'])
 
   expect(onChangeForm.mock.calls).toHaveLength(1)
   expect(onChangeSelect.mock.calls).toHaveLength(1)
+  expect(onInputSelect.mock.calls).toHaveLength(1)
+  expect(onInputForm.mock.calls).toHaveLength(1)
 })

@@ -94,3 +94,12 @@ test('should replace selected text all at once', () => {
   userEvent.paste(element, 'friend')
   expect(element).toHaveValue('hello friend')
 })
+
+test('should give error if we are trying to call paste on an invalid element', () => {
+  const {element} = setup('<div  />')
+  expect(() =>
+    userEvent.paste(element, "I'm only a div :("),
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"the current element is of type DIV and doesn't have a valid value"`,
+  )
+})

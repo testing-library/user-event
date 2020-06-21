@@ -53,7 +53,16 @@ async function typeImpl(
   // and not just the element if the active element could change while the function
   // is being run (for example, functions that are and/or fire events).
   const currentElement = () => getActiveElement(element.ownerDocument)
-  const currentValue = () => currentElement().value
+  const currentValue = () => {
+    const activeElement = currentElement()
+    const value = activeElement.value
+    if (typeof value === 'undefined') {
+      throw new TypeError(
+        `the current element is of type ${activeElement.tagName} and doesn't have a valid value`,
+      )
+    }
+    return value
+  }
   const setSelectionRange = ({newValue, newSelectionStart}) => {
     // if we *can* change the selection start, then we will if the new value
     // is the same as the current value (so it wasn't programatically changed
@@ -98,6 +107,7 @@ async function typeImpl(
 
   const eventCallbackMap = getEventCallbackMap({
     currentElement,
+    currentValue,
     fireInputEventIfNeeded,
     setSelectionRange,
   })
@@ -205,7 +215,7 @@ async function typeImpl(
         }
 
         const {prevValue} = fireInputEventIfNeeded({
-          ...calculateNewValue(newEntry, currentElement()),
+          ...calculateNewValue(newEntry, currentElement(), currentValue()),
           eventOverrides: {
             data: key,
             inputType: 'insertText',
@@ -250,8 +260,8 @@ async function typeImpl(
 // and you may be tempted to create a shared abstraction.
 // If you, brave soul, decide to so endevor, please increment this count
 // when you inevitably fail: 1
-function calculateNewBackspaceValue(element) {
-  const {selectionStart, selectionEnd, value} = element
+function calculateNewBackspaceValue(element, value) {
+  const {selectionStart, selectionEnd} = element
   let newValue, newSelectionStart
 
   if (selectionStart === null) {
@@ -283,8 +293,8 @@ function calculateNewBackspaceValue(element) {
   return {newValue, newSelectionStart}
 }
 
-function calculateNewDeleteValue(element) {
-  const {selectionStart, selectionEnd, value} = element
+function calculateNewDeleteValue(element, value) {
+  const {selectionStart, selectionEnd} = element
   let newValue
 
   if (selectionStart === null) {
@@ -313,6 +323,7 @@ function calculateNewDeleteValue(element) {
 
 function getEventCallbackMap({
   currentElement,
+  currentValue,
   fireInputEventIfNeeded,
   setSelectionRange,
 }) {
@@ -371,6 +382,7 @@ function getEventCallbackMap({
         const {newValue, newSelectionStart} = calculateNewValue(
           '\n',
           currentElement(),
+          currentValue(),
         )
         fireEvent.input(currentElement(), {
           target: {value: newValue},
@@ -420,7 +432,7 @@ function getEventCallbackMap({
 
       if (keyPressDefaultNotPrevented) {
         fireInputEventIfNeeded({
-          ...calculateNewDeleteValue(currentElement()),
+          ...calculateNewDeleteValue(currentElement(), currentValue()),
           eventOverrides: {
             inputType: 'deleteContentForward',
             ...eventOverrides,
@@ -448,7 +460,7 @@ function getEventCallbackMap({
 
       if (keyPressDefaultNotPrevented) {
         fireInputEventIfNeeded({
-          ...calculateNewBackspaceValue(currentElement()),
+          ...calculateNewBackspaceValue(currentElement(), currentValue()),
           eventOverrides: {
             inputType: 'deleteContentBackward',
             ...eventOverrides,
@@ -466,7 +478,7 @@ function getEventCallbackMap({
     // the user can actually select in several different ways
     // we're not going to choose, so we'll *only* set the selection range
     '{selectall}': () => {
-      currentElement().setSelectionRange(0, currentElement().value.length)
+      currentElement().setSelectionRange(0, currentValue().length)
     },
   }
 

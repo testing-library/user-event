@@ -461,6 +461,16 @@
       "contributions": [
         "doc"
       ]
+    },
+    {
+      "login": "juanca",
+      "name": "Juan Carlos Medina",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/841084?v=4",
+      "profile": "https://github.com/juanca",
+      "contributions": [
+        "code",
+        "test"
+      ]
     }
   ],
   "commitConvention": "none",

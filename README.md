@@ -23,7 +23,7 @@
 [![MIT License][license-badge]][license]
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-49-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-50-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 [![PRs Welcome][prs-badge]][prs]
 [![Code of Conduct][coc-badge]][coc]
@@ -548,11 +548,13 @@ Thanks goes to these people ([emoji key][emojis]):
     <td align="center"><a href="https://github.com/WretchedDade"><img src="https://avatars0.githubusercontent.com/u/17183431?v=4" width="100px;" alt=""/><br /><sub><b>Dade Cook</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=WretchedDade" title="Code">💻</a> <a href="https://github.com/testing-library/user-event/commits?author=WretchedDade" title="Tests">⚠️</a></td>
     <td align="center"><a href="https://blog.lourenci.com/"><img src="https://avatars3.githubusercontent.com/u/2339362?v=4" width="100px;" alt=""/><br /><sub><b>Leandro Lourenci</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=lourenci" title="Code">💻</a> <a href="https://github.com/testing-library/user-event/commits?author=lourenci" title="Tests">⚠️</a></td>
   </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/marcosvega91"><img src="https://avatars2.githubusercontent.com/u/5365582?v=4" width="100px;" alt=""/><br /><sub><b>Marco Moretti</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=marcosvega91" title="Code">💻</a> <a href="https://github.com/testing-library/user-event/commits?author=marcosvega91" title="Tests">⚠️</a></td>
+  </tr>
 </table>
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
-
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors][all-contributors] specification.

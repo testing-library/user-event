@@ -641,11 +641,11 @@ test('can type "-" into number inputs', () => {
 // https://github.com/testing-library/user-event/issues/336
 test('can type "." into number inputs', () => {
   const {element, getEventSnapshot} = setup('<input type="number" />')
-  userEvent.type(element, '0.3')
-  expect(element).toHaveValue(0.3)
+  userEvent.type(element, '3.3')
+  expect(element).toHaveValue(3.3)
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
-    Events fired on: input[value=".3"]
+    Events fired on: input[value="3.3"]
 
     input[value=""] - pointerover
     input[value=""] - pointerenter
@@ -660,21 +660,21 @@ test('can type "." into number inputs', () => {
     input[value=""] - pointerup
     input[value=""] - mouseup: Left (0)
     input[value=""] - click: Left (0)
-    input[value=""] - keydown: 0 (48)
-    input[value=""] - keypress: 0 (48)
-    input[value="0"] - input
-      "{CURSOR}" -> "{CURSOR}0"
-    input[value="0"] - keyup: 0 (48)
-    input[value="0"] - keydown: . (46)
-    input[value="0"] - keypress: . (46)
+    input[value=""] - keydown: 3 (51)
+    input[value=""] - keypress: 3 (51)
+    input[value="3"] - input
+      "{CURSOR}" -> "{CURSOR}3"
+    input[value="3"] - keyup: 3 (51)
+    input[value="3"] - keydown: . (46)
+    input[value="3"] - keypress: . (46)
     input[value=""] - input
-      "{CURSOR}0" -> "{CURSOR}"
+      "{CURSOR}3" -> "{CURSOR}"
     input[value=""] - keyup: . (46)
     input[value=""] - keydown: 3 (51)
     input[value=""] - keypress: 3 (51)
-    input[value=".3"] - input
-      "{CURSOR}" -> "{CURSOR}.3"
-    input[value=".3"] - keyup: 3 (51)
+    input[value="3.3"] - input
+      "{CURSOR}" -> "{CURSOR}3.3"
+    input[value="3.3"] - keyup: 3 (51)
   `)
 })
 

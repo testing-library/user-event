@@ -402,7 +402,11 @@ it('should cycle elements in document tab order', () => {
 
   userEvent.tab()
 
-  // cycle goes back to first element
+  // cycle goes back to the body element
+  expect(document.body).toHaveFocus()
+
+  userEvent.tab()
+
   expect(checkbox).toHaveFocus()
 })
 ```
@@ -545,6 +549,7 @@ Thanks goes to these people ([emoji key][emojis]):
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors][all-contributors] specification.

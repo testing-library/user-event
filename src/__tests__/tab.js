@@ -111,7 +111,11 @@ test('should cycle elements in document tab order', () => {
 
   userEvent.tab()
 
-  // cycle goes back to first element
+  // cycle goes back to the body
+  expect(document.body).toHaveFocus()
+
+  userEvent.tab()
+
   expect(checkbox).toHaveFocus()
 })
 
@@ -127,11 +131,24 @@ test('should go backwards when shift = true', () => {
     '[data-testid="element"]',
   )
 
-  radio.focus()
+  expect(document.body).toHaveFocus()
+
+  userEvent.tab({shift: true})
+
+  expect(number).toHaveFocus()
+
+  userEvent.tab({shift: true})
+
+  expect(radio).toHaveFocus()
 
   userEvent.tab({shift: true})
 
   expect(checkbox).toHaveFocus()
+
+  userEvent.tab({shift: true})
+
+  // cycle goes back to the body
+  expect(document.body).toHaveFocus()
 
   userEvent.tab({shift: true})
 
@@ -164,6 +181,10 @@ test('should respect tabindex, regardless of dom position', () => {
 
   userEvent.tab()
 
+  expect(document.body).toHaveFocus()
+
+  userEvent.tab()
+
   expect(radio).toHaveFocus()
 })
 
@@ -190,6 +211,10 @@ test('should respect tab index order, then DOM order', () => {
   userEvent.tab()
 
   expect(radio).toHaveFocus()
+
+  userEvent.tab()
+
+  expect(document.body).toHaveFocus()
 
   userEvent.tab()
 

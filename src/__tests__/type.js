@@ -706,3 +706,12 @@ test('typing an invalid input value', () => {
   // but the badInput should actually be "true" if the user types "3-3"
   expect(element.validity.badInput).toBe(false)
 })
+
+test('should give error if we are trying to call type on an invalid element', async () => {
+  const {element} = setup('<div  />')
+  await expect(() =>
+    userEvent.type(element, "I'm only a div :("),
+  ).rejects.toThrowErrorMatchingInlineSnapshot(
+    `"the current element is of type BODY and doesn't have a valid value"`,
+  )
+})

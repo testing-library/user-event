@@ -23,7 +23,7 @@
 [![MIT License][license-badge]][license]
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-48-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-49-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 [![PRs Welcome][prs-badge]][prs]
 [![Code of Conduct][coc-badge]][coc]
@@ -546,11 +546,13 @@ Thanks goes to these people ([emoji key][emojis]):
     <td align="center"><a href="https://github.com/Johannesklint"><img src="https://avatars3.githubusercontent.com/u/16774845?v=4" width="100px;" alt=""/><br /><sub><b>Johannesklint</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=Johannesklint" title="Documentation">📖</a></td>
     <td align="center"><a href="https://github.com/juanca"><img src="https://avatars0.githubusercontent.com/u/841084?v=4" width="100px;" alt=""/><br /><sub><b>Juan Carlos Medina</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=juanca" title="Code">💻</a> <a href="https://github.com/testing-library/user-event/commits?author=juanca" title="Tests">⚠️</a></td>
     <td align="center"><a href="https://github.com/WretchedDade"><img src="https://avatars0.githubusercontent.com/u/17183431?v=4" width="100px;" alt=""/><br /><sub><b>Dade Cook</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=WretchedDade" title="Code">💻</a> <a href="https://github.com/testing-library/user-event/commits?author=WretchedDade" title="Tests">⚠️</a></td>
+    <td align="center"><a href="https://blog.lourenci.com/"><img src="https://avatars3.githubusercontent.com/u/2339362?v=4" width="100px;" alt=""/><br /><sub><b>Leandro Lourenci</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=lourenci" title="Code">💻</a> <a href="https://github.com/testing-library/user-event/commits?author=lourenci" title="Tests">⚠️</a></td>
   </tr>
 </table>
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors][all-contributors] specification.

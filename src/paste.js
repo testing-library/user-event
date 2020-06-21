@@ -8,7 +8,11 @@ function paste(
   {initialSelectionStart, initialSelectionEnd} = {},
 ) {
   if (element.disabled) return
-
+  if (typeof element.value === 'undefined') {
+    throw new TypeError(
+      `the current element is of type ${element.tagName} and doesn't have a valid value`,
+    )
+  }
   element.focus()
 
   // by default, a new element has it's selection start and end at 0
@@ -30,7 +34,11 @@ function paste(
   fireEvent.paste(element, init)
 
   if (!element.readOnly) {
-    const {newValue, newSelectionStart} = calculateNewValue(text, element)
+    const {newValue, newSelectionStart} = calculateNewValue(
+      text,
+      element,
+      element.value,
+    )
     fireEvent.input(element, {
       inputType: 'insertFromPaste',
       target: {value: newValue},

@@ -94,6 +94,7 @@ function getActiveElement(document) {
 
 function calculateNewValue(newEntry, element) {
   const {selectionStart, selectionEnd, value} = element
+
   // can't use .maxLength property because of a jsdom bug:
   // https://github.com/jsdom/jsdom/issues/2927
   const maxLength = Number(element.getAttribute('maxlength') ?? -1)

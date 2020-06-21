@@ -140,20 +140,22 @@ test('should call onChange/input bubbling up the event when a new option is sele
   const onChangeForm = jest.fn()
   const onInputSelect = jest.fn()
   const onInputForm = jest.fn()
-  select.addEventListener('change', onChangeSelect)
-  select.addEventListener('input', onInputSelect)
-  form.addEventListener('change', onChangeForm)
-  form.addEventListener('input', onInputForm)
+  addListeners(select, {
+    eventHandlers: {change: onChangeSelect, input: onInputSelect},
+  })
+  addListeners(form, {
+    eventHandlers: {change: onChangeForm, input: onInputForm},
+  })
 
-  expect(onChangeSelect.mock.calls).toHaveLength(0)
-  expect(onChangeForm.mock.calls).toHaveLength(0)
-  expect(onInputSelect.mock.calls).toHaveLength(0)
-  expect(onInputForm.mock.calls).toHaveLength(0)
+  expect(onChangeSelect).toHaveBeenCalledTimes(0)
+  expect(onChangeForm).toHaveBeenCalledTimes(0)
+  expect(onInputSelect).toHaveBeenCalledTimes(0)
+  expect(onInputForm).toHaveBeenCalledTimes(0)
 
   userEvent.selectOptions(select, ['1'])
 
-  expect(onChangeForm.mock.calls).toHaveLength(1)
-  expect(onChangeSelect.mock.calls).toHaveLength(1)
-  expect(onInputSelect.mock.calls).toHaveLength(1)
-  expect(onInputForm.mock.calls).toHaveLength(1)
+  expect(onChangeForm).toHaveBeenCalledTimes(1)
+  expect(onChangeSelect).toHaveBeenCalledTimes(1)
+  expect(onInputSelect).toHaveBeenCalledTimes(1)
+  expect(onInputForm).toHaveBeenCalledTimes(1)
 })

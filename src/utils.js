@@ -94,6 +94,11 @@ function getActiveElement(document) {
 
 function calculateNewValue(newEntry, element) {
   const {selectionStart, selectionEnd, value} = element
+  if (typeof value === 'undefined') {
+    throw new Error(
+      `the current element is of type ${element.tagName} and doesn't have a valid value`,
+    )
+  }
   // can't use .maxLength property because of a jsdom bug:
   // https://github.com/jsdom/jsdom/issues/2927
   const maxLength = Number(element.getAttribute('maxlength') ?? -1)

@@ -139,18 +139,20 @@ async function typeImpl(
 
   async function runCallbacks(callbacks) {
     const eventOverrides = {}
-    let prevWasMinus, prevWasPeriod
+    let prevWasMinus, prevWasPeriod, prevValue
     for (const callback of callbacks) {
       if (delay > 0) await wait(delay)
       if (!currentElement().disabled) {
         const returnValue = callback({
           prevWasMinus,
           prevWasPeriod,
+          prevValue,
           eventOverrides,
         })
         Object.assign(eventOverrides, returnValue?.eventOverrides)
         prevWasMinus = returnValue?.prevWasMinus
         prevWasPeriod = returnValue?.prevWasPeriod
+        prevValue = returnValue?.prevValue
       }
     }
   }
@@ -175,7 +177,12 @@ async function typeImpl(
 
   function typeCharacter(
     char,
-    {prevWasMinus = false, prevWasPeriod = false, eventOverrides},
+    {
+      prevWasMinus = false,
+      prevWasPeriod = false,
+      prevValue = '',
+      eventOverrides,
+    },
   ) {
     const key = char // TODO: check if this also valid for characters with diacritic markers e.g. úé etc
     const keyCode = char.charCodeAt(0)
@@ -201,10 +208,10 @@ async function typeImpl(
         if (prevWasMinus) {
           newEntry = `-${char}`
         } else if (prevWasPeriod) {
-          newEntry = `.${char}`
+          newEntry = `${prevValue}.${char}`
         }
 
-        const {prevValue} = fireInputEventIfNeeded({
+        const inputEvent = fireInputEventIfNeeded({
           ...calculateNewValue(newEntry, currentElement()),
           eventOverrides: {
             data: key,
@@ -212,6 +219,7 @@ async function typeImpl(
             ...eventOverrides,
           },
         })
+        prevValue = inputEvent.prevValue
 
         // typing "-" into a number input will not actually update the value
         // so for the next character we type, the value should be set to
@@ -242,7 +250,11 @@ async function typeImpl(
       ...eventOverrides,
     })
 
-    return {prevWasMinus: nextPrevWasMinus, prevWasPeriod: nextPrevWasPeriod}
+    return {
+      prevWasMinus: nextPrevWasMinus,
+      prevWasPeriod: nextPrevWasPeriod,
+      prevValue,
+    }
   }
 }
 

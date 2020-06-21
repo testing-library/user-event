@@ -471,6 +471,16 @@
         "code",
         "test"
       ]
+    },
+    {
+      "login": "WretchedDade",
+      "name": "Dade Cook",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/17183431?v=4",
+      "profile": "https://github.com/WretchedDade",
+      "contributions": [
+        "code",
+        "test"
+      ]
     }
   ],
   "commitConvention": "none",

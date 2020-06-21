@@ -61,12 +61,19 @@ async function typeImpl(
     // The reason we have to do this at all is because it actually *is*
     // programmatically changed by fireEvent.input, so we have to simulate the
     // browser's default behavior
-    if (currentValue() === newValue) {
+    const value = currentValue()
+
+    if (value === newValue) {
       setSelectionRangeIfNecessary(
         currentElement(),
         newSelectionStart,
         newSelectionStart,
       )
+    } else {
+      // If the currentValue is different than the expected newValue and we *can*
+      // change the selection range, than we should set it to the length of the
+      // currentValue to ensure that the browser behavior is mimicked.
+      setSelectionRangeIfNecessary(currentElement(), value.length, value.length)
     }
   }
 

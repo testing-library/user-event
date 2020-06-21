@@ -95,7 +95,7 @@ function getActiveElement(document) {
 function calculateNewValue(newEntry, element) {
   const {selectionStart, selectionEnd, value} = element
   if (typeof value === 'undefined') {
-    throw new Error(
+    throw new TypeError(
       `the current element is of type ${element.tagName} and doesn't have a valid value`,
     )
   }

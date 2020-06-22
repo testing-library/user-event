@@ -103,16 +103,7 @@ function tab({shift = false, focusTrap} = {}) {
     !continueToTab && previousElement ? previousElement : nextElement
 
   if (continueToTab) {
-    const hasTabIndex = nextElement.getAttribute('tabindex') !== null
-    if (!hasTabIndex) {
-      nextElement.setAttribute('tabindex', '0') // jsdom requires tabIndex=0 for an item to become 'document.activeElement'
-    }
-
     focus(nextElement)
-
-    if (!hasTabIndex) {
-      nextElement.removeAttribute('tabindex') // leave no trace. :)
-    }
   }
 
   fireEvent.keyUp(keyUpTarget, {...tabKeyInit})

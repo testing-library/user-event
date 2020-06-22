@@ -55,6 +55,8 @@ test('blurs previously focused element', () => {
     select[name="select"][value=[]] - focusin
     option[value="1"][selected=false] - pointerup
     option[value="1"][selected=false] - mouseup: Left (0)
+    select[name="select"][value=[]] - input
+    select[name="select"][value=[]] - change
     option[value="1"][selected=false] - click: Left (0)
   `)
 })

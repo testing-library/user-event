@@ -60,8 +60,16 @@ function selectOptionsBase(newValue, select, values, init) {
 
   function selectOption(option) {
     option.selected = newValue
-    fireEvent(select, createEvent('input', select, init))
-    fireEvent(select, createEvent('change', select, init))
+    fireEvent(
+      select,
+      createEvent('input', select, {
+        bubbles: true,
+        cancelable: false,
+        composed: true,
+        ...init,
+      }),
+    )
+    fireEvent.change(select, init)
   }
 }
 

@@ -1,5 +1,5 @@
 import userEvent from '../'
-import {setup} from './helpers/utils'
+import {setup, addListeners} from './helpers/utils'
 
 test('should fire the correct events for input', () => {
   const file = new File(['hello'], 'hello.png', {type: 'image/png'})
@@ -61,6 +61,8 @@ test('should fire the correct events with label', () => {
     label[for="element"] - click: Left (0)
     input#element[value=""] - click: Left (0)
     input#element[value=""] - focusin
+    input#element[value=""] - input
+    input#element[value=""] - change
   `)
 })
 
@@ -124,4 +126,38 @@ test('should not upload when is disabled', () => {
   expect(element.files[0]).toBeUndefined()
   expect(element.files.item(0)).toBeNull()
   expect(element.files).toHaveLength(0)
+})
+
+test('should call onChange/input bubbling up the event when a file is selected', () => {
+  const file = new File(['hello'], 'hello.png', {type: 'image/png'})
+
+  const {element: form} = setup(`
+    <form>
+      <input type="file" />
+    </form>
+  `)
+  const input = form.querySelector('input')
+
+  const onChangeInput = jest.fn()
+  const onChangeForm = jest.fn()
+  const onInputInput = jest.fn()
+  const onInputForm = jest.fn()
+  addListeners(input, {
+    eventHandlers: {change: onChangeInput, input: onInputInput},
+  })
+  addListeners(form, {
+    eventHandlers: {change: onChangeForm, input: onInputForm},
+  })
+
+  expect(onChangeInput).toHaveBeenCalledTimes(0)
+  expect(onChangeForm).toHaveBeenCalledTimes(0)
+  expect(onInputInput).toHaveBeenCalledTimes(0)
+  expect(onInputForm).toHaveBeenCalledTimes(0)
+
+  userEvent.upload(input, file)
+
+  expect(onChangeForm).toHaveBeenCalledTimes(1)
+  expect(onChangeInput).toHaveBeenCalledTimes(1)
+  expect(onInputInput).toHaveBeenCalledTimes(1)
+  expect(onInputForm).toHaveBeenCalledTimes(1)
 })

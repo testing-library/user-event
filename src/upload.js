@@ -35,17 +35,17 @@ function upload(element, fileOrFiles, init) {
     input,
     createEvent('input', input, {
       target: {files: inputFiles},
+      bubbles: true,
+      cancelable: false,
+      composed: true,
       ...init,
     }),
   )
 
-  fireEvent(
-    input,
-    createEvent('change', input, {
-      target: {files: inputFiles},
-      ...init,
-    }),
-  )
+  fireEvent.change(input, {
+    target: {files: inputFiles},
+    ...init,
+  })
 }
 
 export {upload}

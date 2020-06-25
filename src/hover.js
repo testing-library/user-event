@@ -2,7 +2,6 @@ import {fireEvent} from '@testing-library/dom'
 import {
   isLabelWithInternallyDisabledControl,
   getMouseEventOptions,
-  wrapInEventWrapper,
 } from './utils'
 
 function hover(element, init) {
@@ -34,8 +33,5 @@ function unhover(element, init) {
     fireEvent.mouseLeave(element, getMouseEventOptions('mouseleave', init))
   }
 }
-
-hover = wrapInEventWrapper(hover)
-unhover = wrapInEventWrapper(unhover)
 
 export {hover, unhover}

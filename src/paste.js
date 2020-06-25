@@ -2,7 +2,7 @@ import {fireEvent} from '@testing-library/dom'
 import {
   setSelectionRangeIfNecessary,
   calculateNewValue,
-  wrapInEventWrapper,
+  eventWrapper,
 } from './utils'
 
 function paste(
@@ -17,7 +17,7 @@ function paste(
       `the current element is of type ${element.tagName} and doesn't have a valid value`,
     )
   }
-  element.focus()
+  eventWrapper(() => element.focus())
 
   // by default, a new element has it's selection start and end at 0
   // but most of the time when people call "paste", they expect it to paste
@@ -53,6 +53,5 @@ function paste(
     })
   }
 }
-paste = wrapInEventWrapper(paste)
 
 export {paste}

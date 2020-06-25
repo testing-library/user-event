@@ -1,5 +1,5 @@
 import {fireEvent} from '@testing-library/dom'
-import {getActiveElement, FOCUSABLE_SELECTOR, wrapInEventWrapper} from './utils'
+import {getActiveElement, FOCUSABLE_SELECTOR} from './utils'
 import {focus} from './focus'
 import {blur} from './blur'
 
@@ -112,7 +112,6 @@ function tab({shift = false, focusTrap} = {}) {
     fireEvent.keyUp(keyUpTarget, {...shiftKeyInit, shiftKey: false})
   }
 }
-tab = wrapInEventWrapper(tab)
 
 export {tab}
 

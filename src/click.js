@@ -2,7 +2,6 @@ import {fireEvent} from '@testing-library/dom'
 import {
   getMouseEventOptions,
   isLabelWithInternallyDisabledControl,
-  wrapInEventWrapper,
 } from './utils'
 import {hover} from './hover'
 import {blur} from './blur'
@@ -103,8 +102,5 @@ function dblClick(element, init) {
   click(element, init, {skipHover: true, clickCount: 1})
   fireEvent.dblClick(element, getMouseEventOptions('dblclick', init, 2))
 }
-
-click = wrapInEventWrapper(click)
-dblClick = wrapInEventWrapper(dblClick)
 
 export {click, dblClick}

@@ -1,5 +1,4 @@
 import {type} from './type'
-import {wrapInEventWrapper} from './utils'
 
 function clear(element) {
   if (element.tagName !== 'INPUT' && element.tagName !== 'TEXTAREA') {
@@ -27,7 +26,5 @@ function clear(element) {
     element.type = elementType
   }
 }
-
-clear = wrapInEventWrapper(clear)
 
 export {clear}

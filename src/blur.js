@@ -1,5 +1,5 @@
 import {fireEvent} from '@testing-library/dom'
-import {getActiveElement, isFocusable, wrapInEventWrapper} from './utils'
+import {getActiveElement, isFocusable, eventWrapper} from './utils'
 
 function blur(element, init) {
   if (!isFocusable(element)) return
@@ -7,10 +7,8 @@ function blur(element, init) {
   const wasActive = getActiveElement(element.ownerDocument) === element
   if (!wasActive) return
 
-  element.blur()
+  eventWrapper(() => element.blur())
   fireEvent.focusOut(element, init)
 }
-
-blur = wrapInEventWrapper(blur)
 
 export {blur}

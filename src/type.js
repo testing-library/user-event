@@ -27,9 +27,7 @@ async function type(element, text, {delay = 0, ...options} = {}) {
       result = await typeImpl(element, text, {delay, ...options})
     })
   } else {
-    getDOMTestingLibraryConfig().eventWrapper(() => {
-      result = typeImpl(element, text, {delay, ...options})
-    })
+    result = typeImpl(element, text, {delay, ...options})
   }
   return result
 }

@@ -1,5 +1,5 @@
 import {fireEvent} from '@testing-library/dom'
-import {getActiveElement, isFocusable, wrapInEventWrapper} from './utils'
+import {getActiveElement, isFocusable, eventWrapper} from './utils'
 
 function focus(element, init) {
   if (!isFocusable(element)) return
@@ -7,9 +7,8 @@ function focus(element, init) {
   const isAlreadyActive = getActiveElement(element.ownerDocument) === element
   if (isAlreadyActive) return
 
-  element.focus()
+  eventWrapper(() => element.focus())
   fireEvent.focusIn(element, init)
 }
-focus = wrapInEventWrapper(focus)
 
 export {focus}

@@ -8,7 +8,6 @@ import {
   getActiveElement,
   calculateNewValue,
   setSelectionRangeIfNecessary,
-  wrapInEventWrapper,
 } from './utils'
 import {click} from './click'
 
@@ -16,21 +15,23 @@ function wait(time) {
   return new Promise(resolve => setTimeout(() => resolve(), time))
 }
 
-// this needs to be wrapped in the asyncWrapper for React's act and angular's change detection
-// but only if it's actually going to be async.
+// this needs to be wrapped in the event/asyncWrapper for React's act and angular's change detection
+// depending on whether it will be async.
 async function type(element, text, {delay = 0, ...options} = {}) {
   // we do not want to wrap in the asyncWrapper if we're not
   // going to actually be doing anything async, so we only wrap
   // if the delay is greater than 0
+  let result
   if (delay > 0) {
-    let result
     await getDOMTestingLibraryConfig().asyncWrapper(async () => {
       result = await typeImpl(element, text, {delay, ...options})
     })
-    return result
   } else {
-    return typeImpl(element, text, {delay, ...options})
+    getDOMTestingLibraryConfig().eventWrapper(() => {
+      result = typeImpl(element, text, {delay, ...options})
+    })
   }
+  return result
 }
 
 async function typeImpl(
@@ -530,7 +531,6 @@ function getEventCallbackMap({
     }
   }
 }
-type = wrapInEventWrapper(type)
 
 export {type}
 

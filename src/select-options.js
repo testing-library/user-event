@@ -1,4 +1,5 @@
 import {createEvent, getConfig, fireEvent} from '@testing-library/dom'
+import {wrapInEventWrapper} from './utils'
 import {click} from './click'
 import {focus} from './focus'
 
@@ -73,7 +74,7 @@ function selectOptionsBase(newValue, select, values, init) {
   }
 }
 
-const selectOptions = selectOptionsBase.bind(null, true)
-const deselectOptions = selectOptionsBase.bind(null, false)
+const selectOptions = wrapInEventWrapper(selectOptionsBase.bind(null, true))
+const deselectOptions = wrapInEventWrapper(selectOptionsBase.bind(null, false))
 
 export {selectOptions, deselectOptions}

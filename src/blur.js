@@ -1,5 +1,5 @@
 import {fireEvent} from '@testing-library/dom'
-import {getActiveElement, isFocusable} from './utils'
+import {getActiveElement, isFocusable, wrapInEventWrapper} from './utils'
 
 function blur(element, init) {
   if (!isFocusable(element)) return
@@ -10,5 +10,7 @@ function blur(element, init) {
   element.blur()
   fireEvent.focusOut(element, init)
 }
+
+blur = wrapInEventWrapper(blur)
 
 export {blur}

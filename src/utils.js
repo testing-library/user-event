@@ -1,3 +1,5 @@
+import {getConfig} from '@testing-library/dom'
+
 function isMousePressEvent(event) {
   return (
     event === 'mousedown' ||
@@ -169,6 +171,19 @@ function isFocusable(element) {
   )
 }
 
+function wrapInEventWrapper(fn) {
+  function wrapper(...args) {
+    let result
+    getConfig().eventWrapper(() => {
+      result = fn(...args)
+    })
+    return result
+  }
+  // give it a helpful name for debugging
+  Object.defineProperty(wrapper, 'name', {value: `${fn.name}Wrapper`})
+  return wrapper
+}
+
 export {
   FOCUSABLE_SELECTOR,
   isFocusable,
@@ -177,4 +192,5 @@ export {
   getActiveElement,
   calculateNewValue,
   setSelectionRangeIfNecessary,
+  wrapInEventWrapper,
 }

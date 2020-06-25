@@ -1,5 +1,5 @@
 import {fireEvent} from '@testing-library/dom'
-import {getActiveElement, isFocusable} from './utils'
+import {getActiveElement, isFocusable, wrapInEventWrapper} from './utils'
 
 function focus(element, init) {
   if (!isFocusable(element)) return
@@ -10,5 +10,6 @@ function focus(element, init) {
   element.focus()
   fireEvent.focusIn(element, init)
 }
+focus = wrapInEventWrapper(focus)
 
 export {focus}

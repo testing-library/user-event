@@ -501,6 +501,16 @@
         "code",
         "test"
       ]
+    },
+    {
+      "login": "ybentz",
+      "name": "ybentz",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/14811577?v=4",
+      "profile": "https://github.com/ybentz",
+      "contributions": [
+        "code",
+        "test"
+      ]
     }
   ],
   "commitConvention": "none",

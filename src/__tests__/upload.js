@@ -61,6 +61,8 @@ test('should fire the correct events with label', () => {
     label[for="element"] - click: Left (0)
     input#element[value=""] - click: Left (0)
     input#element[value=""] - focusin
+    input#element[value=""] - input
+    input#element[value=""] - change
   `)
 })
 

@@ -3,10 +3,12 @@ import {
   fireEvent,
   getConfig as getDOMTestingLibraryConfig,
 } from '@testing-library/dom'
+
 import {
   getActiveElement,
   calculateNewValue,
   setSelectionRangeIfNecessary,
+  wrapInEventWrapper,
 } from './utils'
 import {click} from './click'
 
@@ -528,6 +530,7 @@ function getEventCallbackMap({
     }
   }
 }
+type = wrapInEventWrapper(type)
 
 export {type}
 

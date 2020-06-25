@@ -1,5 +1,9 @@
 import {fireEvent} from '@testing-library/dom'
-import {setSelectionRangeIfNecessary, calculateNewValue} from './utils'
+import {
+  setSelectionRangeIfNecessary,
+  calculateNewValue,
+  wrapInEventWrapper,
+} from './utils'
 
 function paste(
   element,
@@ -49,5 +53,6 @@ function paste(
     })
   }
 }
+paste = wrapInEventWrapper(paste)
 
 export {paste}

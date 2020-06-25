@@ -55,6 +55,7 @@
     "rules": {
       "jsx-a11y/click-events-have-key-events": "off",
       "jsx-a11y/tabindex-no-positive": "off",
+      "no-func-assign": "off",
       "no-return-assign": "off",
       "react/prop-types": "off",
       "testing-library/no-dom-import": "off"

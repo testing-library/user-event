@@ -1,4 +1,5 @@
 import {fireEvent, createEvent} from '@testing-library/dom'
+import {wrapInEventWrapper} from './utils'
 import {click} from './click'
 import {blur} from './blur'
 import {focus} from './focus'
@@ -47,5 +48,6 @@ function upload(element, fileOrFiles, init) {
     ...init,
   })
 }
+upload = wrapInEventWrapper(upload)
 
 export {upload}

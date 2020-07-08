@@ -758,14 +758,18 @@ test('typing on input type file should not result in an error', () => {
 })
 
 test('should submit a form when ENTER is pressed on input', () => {
-  const {element} = setup(`
+  const handleSubmit = jest.fn()
+  const {element} = setup(
+    `
     <form>
       <input type='text'/>
     </form>
-  `)
-  const onSubmit = jest.fn()
-  element.addEventListener('submit', onSubmit)
+  `,
+    {
+      eventHandlers: {submit: handleSubmit},
+    },
+  )
   userEvent.type(element.querySelector('input'), '{enter}')
 
-  expect(onSubmit).toHaveBeenCalledTimes(1)
+  expect(handleSubmit).toHaveBeenCalledTimes(1)
 })

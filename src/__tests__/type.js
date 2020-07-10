@@ -600,6 +600,13 @@ test('can type into an input with type `email`', () => {
   expect(element).toHaveValue(email)
 })
 
+test('can type into an input with type `date`', () => {
+  const {element} = setup('<input type="date" />')
+  const date = '2020-07-09'
+  userEvent.type(element, date)
+  expect(element).toHaveValue(date)
+})
+
 // https://github.com/testing-library/user-event/issues/336
 test('can type "-" into number inputs', () => {
   const {element, getEventSnapshot} = setup('<input type="number" />')

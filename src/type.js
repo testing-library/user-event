@@ -120,7 +120,6 @@ async function typeImpl(
     const callbacks = []
     const modifierClosers = []
     let remainingString = text
-    let charPosition = 0
     while (remainingString) {
       const eventKey = Object.keys(eventCallbackMap).find(key =>
         remainingString.startsWith(key),
@@ -142,8 +141,9 @@ async function typeImpl(
         remainingString = remainingString.slice(eventKey.length)
       } else {
         const character = remainingString[0]
+        const remainingText = remainingString
         callbacks.push(args =>
-          typeCharacter(character, {charPosition: charPosition++, ...args}),
+          typeCharacter(character, {remainingText, ...args}),
         )
         remainingString = remainingString.slice(1)
       }
@@ -196,7 +196,7 @@ async function typeImpl(
       prevWasPeriod = false,
       prevValue = '',
       eventOverrides,
-      charPosition,
+      remainingText,
     },
   ) {
     const key = char // TODO: check if this also valid for characters with diacritic markers e.g. úé etc
@@ -224,9 +224,10 @@ async function typeImpl(
           newEntry = `-${char}`
         } else if (prevWasPeriod) {
           newEntry = `${prevValue}.${char}`
-        }
-
-        if (currentElement().type === 'date' && charPosition === 9) {
+        } else if (
+          currentElement().type === 'date' &&
+          remainingText.length === 1
+        ) {
           newEntry = text
         }
 

@@ -10,6 +10,7 @@ import {
   setSelectionRangeIfNecessary,
 } from './utils'
 import {click} from './click'
+import {navigationKey} from './keys/navigation-key'
 
 function wait(time) {
   return new Promise(resolve => setTimeout(() => resolve(), time))
@@ -365,6 +366,8 @@ function getEventCallbackMap({
       keyCode: 93,
       modifierProperty: 'metaKey',
     }),
+    '{arrowleft}': navigationKey(currentElement, 'ArrowLeft'),
+    '{arrowright}': navigationKey(currentElement, 'ArrowRight'),
     '{enter}': ({eventOverrides}) => {
       const key = 'Enter'
       const keyCode = 13

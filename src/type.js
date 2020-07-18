@@ -15,6 +15,7 @@ import {
   isContentEditable,
 } from './utils'
 import {click} from './click'
+import {navigationKey} from './keys/navigation-key'
 
 const modifierCallbackMap = {
   ...createModifierCallbackEntries({
@@ -44,6 +45,8 @@ const modifierCallbackMap = {
 }
 
 const specialCharCallbackMap = {
+  '{arrowleft}': navigationKey('ArrowLeft'),
+  '{arrowright}': navigationKey( 'ArrowRight'),
   '{enter}': handleEnter,
   '{esc}': handleEsc,
   '{del}': handleDel,

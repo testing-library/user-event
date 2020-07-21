@@ -179,6 +179,12 @@ function eventWrapper(cb) {
   return result
 }
 
+function isValidDateValue(element, value) {
+  const clone = element.cloneNode()
+  clone.value = value
+  return element.type == 'date' && clone.value === value
+}
+
 export {
   FOCUSABLE_SELECTOR,
   isFocusable,
@@ -188,4 +194,5 @@ export {
   calculateNewValue,
   setSelectionRangeIfNecessary,
   eventWrapper,
+  isValidDateValue,
 }

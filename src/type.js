@@ -281,7 +281,7 @@ async function typeImpl(
       prevWasMinus: nextPrevWasMinus,
       prevWasPeriod: nextPrevWasPeriod,
       prevValue,
-      typedValue: typedValue + char,
+      typedValue: textToBeTyped,
     }
   }
 }

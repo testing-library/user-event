@@ -48,12 +48,8 @@ async function typeImpl(
   if (!skipClick) click(element)
 
   // The focused element could change between each event, so get the currently active element each time
-  // This is why most of the utilities are within the type function itself. If
-  // they weren't, then we'd have to pass the "currentElement" function to them
-  // as an argument, which would be fine, but make sure that you pass the function
-  // and not just the element if the active element could change while the function
-  // is being run (for example, functions that are and/or fire events).
   const currentElement = () => getActiveElement(element.ownerDocument)
+
   const currentValue = () => {
     const activeElement = currentElement()
     const value = activeElement.value
@@ -63,28 +59,6 @@ async function typeImpl(
       )
     }
     return value
-  }
-  const setSelectionRange = ({newValue, newSelectionStart}) => {
-    // if we *can* change the selection start, then we will if the new value
-    // is the same as the current value (so it wasn't programatically changed
-    // when the fireEvent.input was triggered).
-    // The reason we have to do this at all is because it actually *is*
-    // programmatically changed by fireEvent.input, so we have to simulate the
-    // browser's default behavior
-    const value = currentValue()
-
-    if (value === newValue) {
-      setSelectionRangeIfNecessary(
-        currentElement(),
-        newSelectionStart,
-        newSelectionStart,
-      )
-    } else {
-      // If the currentValue is different than the expected newValue and we *can*
-      // change the selection range, than we should set it to the length of the
-      // currentValue to ensure that the browser behavior is mimicked.
-      setSelectionRangeIfNecessary(currentElement(), value.length, value.length)
-    }
   }
 
   // by default, a new element has it's selection start and end at 0
@@ -113,8 +87,6 @@ async function typeImpl(
   const eventCallbackMap = getEventCallbackMap({
     currentElement,
     currentValue,
-    fireInputEventIfNeeded,
-    setSelectionRange,
   })
 
   const eventCallbacks = queueCallbacks()
@@ -122,46 +94,63 @@ async function typeImpl(
 
   function queueCallbacks() {
     const callbacks = []
-    const modifierClosers = []
+    const appendedCallbacks = []
     let remainingString = text
-    while (remainingString) {
-      const modifierKey = Object.keys(modifierCallbackMap).find(key =>
-        remainingString.startsWith(key),
-      )
-      const eventKey = Object.keys(eventCallbackMap).find(key =>
-        remainingString.startsWith(key),
-      )
-      if (modifierKey) {
-        const modifierCallback = modifierCallbackMap[modifierKey]
-        callbacks.push(modifierCallback)
 
-        // if this modifier has an associated "close" callback and the developer
-        // doesn't close it themselves, then we close it for them automatically
-        // Effectively if they send in: '{alt}a' then we type: '{alt}a{/alt}'
-        if (
-          !skipAutoClose &&
-          modifierCallback.close &&
-          !remainingString.includes(modifierCallback.close.name)
-        ) {
-          modifierClosers.push(modifierCallback.close.fn)
-        }
-        remainingString = remainingString.slice(modifierKey.length)
-      } else if (eventKey) {
-        const eventCallback = eventCallbackMap[eventKey]
-        callbacks.push(eventCallback)
-        remainingString = remainingString.slice(eventKey.length)
-      } else {
-        let character = remainingString[0]
-        if (remainingString.startsWith('{space}')) {
-          character = ' '
-          remainingString = remainingString.slice(7)
-        } else {
-          remainingString = remainingString.slice(1)
-        }
-        callbacks.push((...args) => typeCharacter(character, ...args))
+    while (remainingString) {
+      const {callback, appendedCallback, handledLength} = getNextCallback(
+        remainingString,
+      )
+      callbacks.push(callback)
+      if (appendedCallback) {
+        appendedCallbacks.push(appendedCallback)
       }
+      remainingString = remainingString.slice(handledLength)
     }
-    return [...callbacks, ...modifierClosers]
+
+    return [...callbacks, ...appendedCallbacks]
+  }
+
+  function getNextCallback(remainingString) {
+    let callback, appendedCallback, handledLength
+    const modifierKey = Object.keys(modifierCallbackMap).find(key =>
+      remainingString.startsWith(key),
+    )
+    const eventKey = Object.keys(eventCallbackMap).find(key =>
+      remainingString.startsWith(key),
+    )
+    if (modifierKey) {
+      callback = modifierCallbackMap[modifierKey]
+
+      // if this modifier has an associated "close" callback and the developer
+      // doesn't close it themselves, then we close it for them automatically
+      // Effectively if they send in: '{alt}a' then we type: '{alt}a{/alt}'
+      if (
+        !skipAutoClose &&
+        callback.close &&
+        !remainingString.includes(callback.close.name)
+      ) {
+        appendedCallback = callback.close.fn
+      }
+      handledLength = modifierKey.length
+    } else if (eventKey) {
+      callback = eventCallbackMap[eventKey]
+      handledLength = eventKey.length
+    } else {
+      let character = remainingString[0]
+      if (remainingString.startsWith('{space}')) {
+        character = ' '
+        handledLength = 7
+      } else {
+        handledLength = 1
+      }
+      callback = createTypeCharacter(character, currentElement, currentValue)
+    }
+    return {
+      callback,
+      appendedCallback,
+      handledLength,
+    }
   }
 
   async function runCallbacks(callbacks) {
@@ -183,105 +172,148 @@ async function typeImpl(
       }
     }
   }
+}
 
-  function fireInputEventIfNeeded({
-    newValue,
-    newSelectionStart,
-    eventOverrides,
-  }) {
-    const prevValue = currentValue()
-    if (!currentElement().readOnly && currentElement().tagName !== 'BUTTON' && newValue !== prevValue) {
-      fireEvent.input(currentElement(), {
-        target: {value: newValue},
-        ...eventOverrides,
-      })
+const setSelectionRange = ({
+  currentElement,
+  currentValue,
+  newValue,
+  newSelectionStart,
+}) => {
+  // if we *can* change the selection start, then we will if the new value
+  // is the same as the current value (so it wasn't programatically changed
+  // when the fireEvent.input was triggered).
+  // The reason we have to do this at all is because it actually *is*
+  // programmatically changed by fireEvent.input, so we have to simulate the
+  // browser's default behavior
+  const value = currentValue()
 
-      setSelectionRange({newValue, newSelectionStart})
-    }
-
-    return {prevValue}
+  if (value === newValue) {
+    setSelectionRangeIfNecessary(
+      currentElement(),
+      newSelectionStart,
+      newSelectionStart,
+    )
+  } else {
+    // If the currentValue is different than the expected newValue and we *can*
+    // change the selection range, than we should set it to the length of the
+    // currentValue to ensure that the browser behavior is mimicked.
+    setSelectionRangeIfNecessary(currentElement(), value.length, value.length)
   }
+}
 
-  function typeCharacter(
-    char,
-    {
-      prevWasMinus = false,
-      prevWasPeriod = false,
-      prevValue = '',
-      eventOverrides,
-    },
+function fireInputEventIfNeeded({
+  newValue,
+  newSelectionStart,
+  eventOverrides,
+  currentValue,
+  currentElement,
+}) {
+  const prevValue = currentValue()
+  if (
+    !currentElement().readOnly &&
+    currentElement().tagName !== 'BUTTON' &&
+    newValue !== prevValue
   ) {
-    const key = char // TODO: check if this also valid for characters with diacritic markers e.g. úé etc
-    const keyCode = char.charCodeAt(0)
-    let nextPrevWasMinus, nextPrevWasPeriod
-
-    const keyDownDefaultNotPrevented = fireEvent.keyDown(currentElement(), {
-      key,
-      keyCode,
-      which: keyCode,
+    fireEvent.input(currentElement(), {
+      target: {value: newValue},
       ...eventOverrides,
     })
 
-    if (keyDownDefaultNotPrevented) {
-      const keyPressDefaultNotPrevented = fireEvent.keyPress(currentElement(), {
-        key,
-        keyCode,
-        charCode: keyCode,
-        ...eventOverrides,
+    setSelectionRange({
+      currentElement,
+      currentValue,
+      newValue,
+      newSelectionStart,
+    })
+  }
+
+  return {prevValue}
+}
+
+function createTypeCharacter(character, currentElement, currentValue) {
+  return (...args) =>
+    typeCharacter(character, currentElement, currentValue, ...args)
+}
+
+function typeCharacter(
+  char,
+  currentElement,
+  currentValue,
+  {prevWasMinus = false, prevWasPeriod = false, prevValue = '', eventOverrides},
+) {
+  const key = char // TODO: check if this also valid for characters with diacritic markers e.g. úé etc
+  const keyCode = char.charCodeAt(0)
+  let nextPrevWasMinus, nextPrevWasPeriod
+
+  const keyDownDefaultNotPrevented = fireEvent.keyDown(currentElement(), {
+    key,
+    keyCode,
+    which: keyCode,
+    ...eventOverrides,
+  })
+
+  if (keyDownDefaultNotPrevented) {
+    const keyPressDefaultNotPrevented = fireEvent.keyPress(currentElement(), {
+      key,
+      keyCode,
+      charCode: keyCode,
+      ...eventOverrides,
+    })
+
+    if (keyPressDefaultNotPrevented) {
+      let newEntry = char
+      if (prevWasMinus) {
+        newEntry = `-${char}`
+      } else if (prevWasPeriod) {
+        newEntry = `${prevValue}.${char}`
+      }
+
+      const inputEvent = fireInputEventIfNeeded({
+        ...calculateNewValue(newEntry, currentElement(), currentValue()),
+        eventOverrides: {
+          data: key,
+          inputType: 'insertText',
+          ...eventOverrides,
+        },
+        currentValue,
+        currentElement,
       })
+      prevValue = inputEvent.prevValue
 
-      if (keyPressDefaultNotPrevented) {
-        let newEntry = char
-        if (prevWasMinus) {
-          newEntry = `-${char}`
-        } else if (prevWasPeriod) {
-          newEntry = `${prevValue}.${char}`
+      // typing "-" into a number input will not actually update the value
+      // so for the next character we type, the value should be set to
+      // `-${newEntry}`
+      // we also preserve the prevWasMinus when the value is unchanged due
+      // to typing an invalid character (typing "-a3" results in "-3")
+      // same applies for the decimal character.
+      if (currentElement().type === 'number') {
+        const newValue = currentValue()
+        if (newValue === prevValue && newEntry !== '-') {
+          nextPrevWasMinus = prevWasMinus
+        } else {
+          nextPrevWasMinus = newEntry === '-'
         }
-
-        const inputEvent = fireInputEventIfNeeded({
-          ...calculateNewValue(newEntry, currentElement(), currentValue()),
-          eventOverrides: {
-            data: key,
-            inputType: 'insertText',
-            ...eventOverrides,
-          },
-        })
-        prevValue = inputEvent.prevValue
-
-        // typing "-" into a number input will not actually update the value
-        // so for the next character we type, the value should be set to
-        // `-${newEntry}`
-        // we also preserve the prevWasMinus when the value is unchanged due
-        // to typing an invalid character (typing "-a3" results in "-3")
-        // same applies for the decimal character.
-        if (currentElement().type === 'number') {
-          const newValue = currentValue()
-          if (newValue === prevValue && newEntry !== '-') {
-            nextPrevWasMinus = prevWasMinus
-          } else {
-            nextPrevWasMinus = newEntry === '-'
-          }
-          if (newValue === prevValue && newEntry !== '.') {
-            nextPrevWasPeriod = prevWasPeriod
-          } else {
-            nextPrevWasPeriod = newEntry === '.'
-          }
+        if (newValue === prevValue && newEntry !== '.') {
+          nextPrevWasPeriod = prevWasPeriod
+        } else {
+          nextPrevWasPeriod = newEntry === '.'
         }
       }
     }
+  }
 
-    fireEvent.keyUp(currentElement(), {
-      key,
-      keyCode,
-      which: keyCode,
-      ...eventOverrides,
-    })
+  fireEvent.keyUp(currentElement(), {
+    key,
+    keyCode,
+    which: keyCode,
+    ...eventOverrides,
+  })
 
-    return {
-      prevWasMinus: nextPrevWasMinus,
-      prevWasPeriod: nextPrevWasPeriod,
-      prevValue,
-    }
+  return {
+    prevWasMinus: nextPrevWasMinus,
+    prevWasPeriod: nextPrevWasPeriod,
+    prevValue,
   }
 }
 
@@ -350,9 +382,7 @@ function calculateNewDeleteValue(element, value) {
   return {newValue, newSelectionStart: selectionStart}
 }
 
-function getModifierCallbackMap({
-  currentElement,
-}) {
+function getModifierCallbackMap({currentElement}) {
   const callbackMap = {
     ...modifier({
       name: 'shift',
@@ -417,12 +447,7 @@ function getModifierCallbackMap({
   }
 }
 
-function getEventCallbackMap({
-  currentElement,
-  currentValue,
-  fireInputEventIfNeeded,
-  setSelectionRange,
-}) {
+function getEventCallbackMap({currentElement, currentValue}) {
   const callbackMap = {
     '{enter}': ({eventOverrides}) => {
       const key = 'Enter'
@@ -461,7 +486,12 @@ function getEventCallbackMap({
           inputType: 'insertLineBreak',
           ...eventOverrides,
         })
-        setSelectionRange({newValue, newSelectionStart})
+        setSelectionRange({
+          currentElement,
+          currentValue,
+          newValue,
+          newSelectionStart,
+        })
       }
 
       fireEvent.keyUp(currentElement(), {
@@ -509,6 +539,8 @@ function getEventCallbackMap({
             inputType: 'deleteContentForward',
             ...eventOverrides,
           },
+          currentElement,
+          currentValue,
         })
       }
 
@@ -537,6 +569,8 @@ function getEventCallbackMap({
             inputType: 'deleteContentBackward',
             ...eventOverrides,
           },
+          currentElement,
+          currentValue,
         })
       }
 
@@ -557,6 +591,12 @@ function getEventCallbackMap({
   if (currentElement().tagName === 'BUTTON') {
     callbackMap['{space}'] = handleSpaceOnButton
     callbackMap[' '] = handleSpaceOnButton
+  } else {
+    callbackMap['{space}'] = createTypeCharacter(
+      ' ',
+      currentElement,
+      currentValue,
+    )
   }
 
   return callbackMap

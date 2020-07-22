@@ -715,3 +715,9 @@ test('should give error if we are trying to call type on an invalid element', as
     `"the current element is of type BODY and doesn't have a valid value"`,
   )
 })
+
+test('typing on button should not alter its value', () => {
+  const {element} = setup('<button value="foo" />')
+  userEvent.type(element, 'bar')
+  expect(element).toHaveValue('foo')
+})

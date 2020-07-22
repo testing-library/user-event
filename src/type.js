@@ -106,6 +106,10 @@ async function typeImpl(
     )
   }
 
+  const modifierCallbackMap = getModifierCallbackMap({
+    currentElement,
+  })
+
   const eventCallbackMap = getEventCallbackMap({
     currentElement,
     currentValue,
@@ -121,11 +125,14 @@ async function typeImpl(
     const modifierClosers = []
     let remainingString = text
     while (remainingString) {
+      const modifierKey = Object.keys(modifierCallbackMap).find(key =>
+        remainingString.startsWith(key),
+      )
       const eventKey = Object.keys(eventCallbackMap).find(key =>
         remainingString.startsWith(key),
       )
-      if (eventKey) {
-        const modifierCallback = eventCallbackMap[eventKey]
+      if (modifierKey) {
+        const modifierCallback = modifierCallbackMap[modifierKey]
         callbacks.push(modifierCallback)
 
         // if this modifier has an associated "close" callback and the developer
@@ -138,11 +145,20 @@ async function typeImpl(
         ) {
           modifierClosers.push(modifierCallback.close.fn)
         }
+        remainingString = remainingString.slice(modifierKey.length)
+      } else if (eventKey) {
+        const eventCallback = eventCallbackMap[eventKey]
+        callbacks.push(eventCallback)
         remainingString = remainingString.slice(eventKey.length)
       } else {
-        const character = remainingString[0]
+        let character = remainingString[0]
+        if (remainingString.startsWith('{space}')) {
+          character = ' '
+          remainingString = remainingString.slice(7)
+        } else {
+          remainingString = remainingString.slice(1)
+        }
         callbacks.push((...args) => typeCharacter(character, ...args))
-        remainingString = remainingString.slice(1)
       }
     }
     return [...callbacks, ...modifierClosers]
@@ -174,7 +190,7 @@ async function typeImpl(
     eventOverrides,
   }) {
     const prevValue = currentValue()
-    if (!currentElement().readOnly && newValue !== prevValue) {
+    if (!currentElement().readOnly && currentElement().tagName !== 'BUTTON' && newValue !== prevValue) {
       fireEvent.input(currentElement(), {
         target: {value: newValue},
         ...eventOverrides,
@@ -334,13 +350,10 @@ function calculateNewDeleteValue(element, value) {
   return {newValue, newSelectionStart: selectionStart}
 }
 
-function getEventCallbackMap({
+function getModifierCallbackMap({
   currentElement,
-  currentValue,
-  fireInputEventIfNeeded,
-  setSelectionRange,
 }) {
-  return {
+  const callbackMap = {
     ...modifier({
       name: 'shift',
       key: 'Shift',
@@ -365,6 +378,52 @@ function getEventCallbackMap({
       keyCode: 93,
       modifierProperty: 'metaKey',
     }),
+  }
+
+  return callbackMap
+
+  function modifier({name, key, keyCode, modifierProperty}) {
+    function open({eventOverrides}) {
+      const newEventOverrides = {[modifierProperty]: true}
+
+      fireEvent.keyDown(currentElement(), {
+        key,
+        keyCode,
+        which: keyCode,
+        ...eventOverrides,
+        ...newEventOverrides,
+      })
+
+      return {eventOverrides: newEventOverrides}
+    }
+    open.close = {name: [`{/${name}}`], fn: close}
+    function close({eventOverrides}) {
+      const newEventOverrides = {[modifierProperty]: false}
+
+      fireEvent.keyUp(currentElement(), {
+        key,
+        keyCode,
+        which: keyCode,
+        ...eventOverrides,
+        ...newEventOverrides,
+      })
+
+      return {eventOverrides: newEventOverrides}
+    }
+    return {
+      [`{${name}}`]: open,
+      [`{/${name}}`]: close,
+    }
+  }
+}
+
+function getEventCallbackMap({
+  currentElement,
+  currentValue,
+  fireInputEventIfNeeded,
+  setSelectionRange,
+}) {
+  const callbackMap = {
     '{enter}': ({eventOverrides}) => {
       const key = 'Enter'
       const keyCode = 13
@@ -495,38 +554,43 @@ function getEventCallbackMap({
     },
   }
 
-  function modifier({name, key, keyCode, modifierProperty}) {
-    function open({eventOverrides}) {
-      const newEventOverrides = {[modifierProperty]: true}
+  if (currentElement().tagName === 'BUTTON') {
+    callbackMap['{space}'] = handleSpaceOnButton
+    callbackMap[' '] = handleSpaceOnButton
+  }
 
-      fireEvent.keyDown(currentElement(), {
+  return callbackMap
+
+  function handleSpaceOnButton({eventOverrides}) {
+    const key = ' '
+    const keyCode = 32
+
+    const keyDownDefaultNotPrevented = fireEvent.keyDown(currentElement(), {
+      key,
+      keyCode,
+      which: keyCode,
+      ...eventOverrides,
+    })
+
+    if (keyDownDefaultNotPrevented) {
+      fireEvent.keyPress(currentElement(), {
         key,
         keyCode,
-        which: keyCode,
+        charCode: keyCode,
         ...eventOverrides,
-        ...newEventOverrides,
       })
-
-      return {eventOverrides: newEventOverrides}
     }
-    open.close = {name: [`{/${name}}`], fn: close}
-    function close({eventOverrides}) {
-      const newEventOverrides = {[modifierProperty]: false}
 
-      fireEvent.keyUp(currentElement(), {
-        key,
-        keyCode,
-        which: keyCode,
-        ...eventOverrides,
-        ...newEventOverrides,
-      })
+    fireEvent.keyUp(currentElement(), {
+      key,
+      keyCode,
+      which: keyCode,
+      ...eventOverrides,
+    })
 
-      return {eventOverrides: newEventOverrides}
-    }
-    return {
-      [`{${name}}`]: open,
-      [`{/${name}}`]: close,
-    }
+    fireEvent.click(currentElement(), {
+      ...eventOverrides,
+    })
   }
 }
 

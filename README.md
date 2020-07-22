@@ -185,6 +185,7 @@ The following special character strings are supported:
 | Text string   | Key       | Modifier   | Notes                                                                                                                                                               |
 | ------------- | --------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `{enter}`     | Enter     | N/A        | Will insert a newline character (`<textarea />` only).                                                                                                              |
+| `{space}`     | `' '`     | N/A        |                                                                                                         |
 | `{esc}`       | Escape    | N/A        |                                                                                                                                                                     |
 | `{backspace}` | Backspace | N/A        | Will delete the previous character (or the characters within the `selectedRange`).                                                                                  |
 | `{del}`       | Delete    | N/A        | Will delete the next character (or the characters within the `selectedRange`)                                                                                       |

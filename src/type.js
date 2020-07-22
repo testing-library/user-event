@@ -84,7 +84,7 @@ async function typeImpl(
     currentElement,
   })
 
-  const eventCallbackMap = getEventCallbackMap({
+  const specialCharCallbackMap = getSpecialCharCallbackMap({
     currentElement,
     currentValue,
   })
@@ -112,44 +112,70 @@ async function typeImpl(
   }
 
   function getNextCallback(remainingString) {
-    let callback, appendedCallback, handledLength
+    const modifierCallback = getModifierCallback(remainingString)
+    if (modifierCallback) {
+      return modifierCallback
+    }
+
+    const specialCharCallback = getSpecialCharCallback(remainingString)
+    if (specialCharCallback) {
+      return specialCharCallback
+    }
+
+    return getTypeCallback(remainingString)
+  }
+
+  function getModifierCallback(remainingString) {
     const modifierKey = Object.keys(modifierCallbackMap).find(key =>
       remainingString.startsWith(key),
     )
-    const eventKey = Object.keys(eventCallbackMap).find(key =>
-      remainingString.startsWith(key),
-    )
-    if (modifierKey) {
-      callback = modifierCallbackMap[modifierKey]
-
-      // if this modifier has an associated "close" callback and the developer
-      // doesn't close it themselves, then we close it for them automatically
-      // Effectively if they send in: '{alt}a' then we type: '{alt}a{/alt}'
-      if (
-        !skipAutoClose &&
-        callback.close &&
-        !remainingString.includes(callback.close.name)
-      ) {
-        appendedCallback = callback.close.fn
-      }
-      handledLength = modifierKey.length
-    } else if (eventKey) {
-      callback = eventCallbackMap[eventKey]
-      handledLength = eventKey.length
-    } else {
-      let character = remainingString[0]
-      if (remainingString.startsWith('{space}')) {
-        character = ' '
-        handledLength = 7
-      } else {
-        handledLength = 1
-      }
-      callback = createTypeCharacter(character, currentElement, currentValue)
+    if (!modifierKey) {
+      return null
     }
+    const callback = modifierCallbackMap[modifierKey]
+
+    let appendedCallback = null
+    // if this modifier has an associated "close" callback and the developer
+    // doesn't close it themselves, then we close it for them automatically
+    // Effectively if they send in: '{alt}a' then we type: '{alt}a{/alt}'
+    if (
+      !skipAutoClose &&
+      callback.close &&
+      !remainingString.includes(callback.close.name)
+    ) {
+      appendedCallback = callback.close.fn
+    }
+    const handledLength = modifierKey.length
     return {
       callback,
       appendedCallback,
       handledLength,
+    }
+  }
+
+  function getSpecialCharCallback(remainingString) {
+    const specialChar = Object.keys(specialCharCallbackMap).find(key =>
+      remainingString.startsWith(key),
+    )
+    if (!specialChar) {
+      return null
+    }
+    return {
+      callback: specialCharCallbackMap[specialChar],
+      handledLength: specialChar.length,
+    }
+  }
+
+  function getTypeCallback(remainingString) {
+    const character = remainingString[0]
+    const callback = createTypeCharacter(
+      character,
+      currentElement,
+      currentValue,
+    )
+    return {
+      callback,
+      handledLength: 1,
     }
   }
 
@@ -232,8 +258,8 @@ function fireInputEventIfNeeded({
 }
 
 function createTypeCharacter(character, currentElement, currentValue) {
-  return (...args) =>
-    typeCharacter(character, currentElement, currentValue, ...args)
+  return context =>
+    typeCharacter(character, currentElement, currentValue, context)
 }
 
 function typeCharacter(
@@ -383,7 +409,7 @@ function calculateNewDeleteValue(element, value) {
 }
 
 function getModifierCallbackMap({currentElement}) {
-  const callbackMap = {
+  return {
     ...modifier({
       name: 'shift',
       key: 'Shift',
@@ -409,8 +435,6 @@ function getModifierCallbackMap({currentElement}) {
       modifierProperty: 'metaKey',
     }),
   }
-
-  return callbackMap
 
   function modifier({name, key, keyCode, modifierProperty}) {
     function open({eventOverrides}) {
@@ -447,8 +471,8 @@ function getModifierCallbackMap({currentElement}) {
   }
 }
 
-function getEventCallbackMap({currentElement, currentValue}) {
-  const callbackMap = {
+function getSpecialCharCallbackMap({currentElement, currentValue}) {
+  return {
     '{enter}': ({eventOverrides}) => {
       const key = 'Enter'
       const keyCode = 13
@@ -586,22 +610,19 @@ function getEventCallbackMap({currentElement, currentValue}) {
     '{selectall}': () => {
       currentElement().setSelectionRange(0, currentValue().length)
     },
+    '{space}': handleSpace,
+    ' ': handleSpace,
   }
 
-  if (currentElement().tagName === 'BUTTON') {
-    callbackMap['{space}'] = handleSpaceOnButton
-    callbackMap[' '] = handleSpaceOnButton
-  } else {
-    callbackMap['{space}'] = createTypeCharacter(
-      ' ',
-      currentElement,
-      currentValue,
-    )
+  function handleSpace(context) {
+    if (currentElement().tagName === 'BUTTON') {
+      handleSpaceOnButton(context.eventOverrides)
+      return
+    }
+    createTypeCharacter(' ', currentElement, currentValue)(context)
   }
 
-  return callbackMap
-
-  function handleSpaceOnButton({eventOverrides}) {
+  function handleSpaceOnButton(eventOverrides) {
     const key = ' '
     const keyCode = 32
 

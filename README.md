@@ -249,7 +249,7 @@ test('upload multiple files', () => {
     </div>,
   )
   const input = screen.getByLabelText(/upload file/i)
-  userEvent.upload(input, file)
+  userEvent.upload(input, files)
 
   expect(input.files).toHaveLength(2)
   expect(input.files[0]).toStrictEqual(files[0])

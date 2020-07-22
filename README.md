@@ -23,7 +23,7 @@
 [![MIT License][license-badge]][license]
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-52-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-53-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 [![PRs Welcome][prs-badge]][prs]
 [![Code of Conduct][coc-badge]][coc]
@@ -552,6 +552,7 @@ Thanks goes to these people ([emoji key][emojis]):
     <td align="center"><a href="https://github.com/marcosvega91"><img src="https://avatars2.githubusercontent.com/u/5365582?v=4" width="100px;" alt=""/><br /><sub><b>Marco Moretti</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=marcosvega91" title="Code">💻</a> <a href="https://github.com/testing-library/user-event/commits?author=marcosvega91" title="Tests">⚠️</a></td>
     <td align="center"><a href="https://github.com/ybentz"><img src="https://avatars3.githubusercontent.com/u/14811577?v=4" width="100px;" alt=""/><br /><sub><b>ybentz</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=ybentz" title="Code">💻</a> <a href="https://github.com/testing-library/user-event/commits?author=ybentz" title="Tests">⚠️</a></td>
     <td align="center"><a href="http://www.lemoncode.net/"><img src="https://avatars2.githubusercontent.com/u/4374977?v=4" width="100px;" alt=""/><br /><sub><b>Nasdan</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3ANasdan" title="Bug reports">🐛</a></td>
+    <td align="center"><a href="https://github.com/JavierMartinz"><img src="https://avatars1.githubusercontent.com/u/1155507?v=4" width="100px;" alt=""/><br /><sub><b>Javier Martínez</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=JavierMartinz" title="Documentation">📖</a></td>
   </tr>
 </table>
 

@@ -528,6 +528,95 @@ test('{space} on an input', () => {
   `)
 })
 
+test('{enter} on an input type="color"', () => {
+  const {element, getEventSnapshot} = setup(
+    `<input value="#ffffff" type="color" />`,
+  )
+
+  userEvent.type(element, '{enter}')
+
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
+    Events fired on: input[value="#ffffff"]
+
+    input[value="#ffffff"] - pointerover
+    input[value="#ffffff"] - pointerenter
+    input[value="#ffffff"] - mouseover: Left (0)
+    input[value="#ffffff"] - mouseenter: Left (0)
+    input[value="#ffffff"] - pointermove
+    input[value="#ffffff"] - mousemove: Left (0)
+    input[value="#ffffff"] - pointerdown
+    input[value="#ffffff"] - mousedown: Left (0)
+    input[value="#ffffff"] - focus
+    input[value="#ffffff"] - focusin
+    input[value="#ffffff"] - pointerup
+    input[value="#ffffff"] - mouseup: Left (0)
+    input[value="#ffffff"] - click: Left (0)
+    input[value="#ffffff"] - keydown: Enter (13)
+    input[value="#ffffff"] - keypress: Enter (13)
+    input[value="#ffffff"] - click: Left (0)
+    input[value="#ffffff"] - keyup: Enter (13)
+  `)
+})
+
+test('{space} on an input type="color"', () => {
+  const {element, getEventSnapshot} = setup(
+    `<input value="#ffffff" type="color" />`,
+  )
+
+  userEvent.type(element, '{space}')
+
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
+    Events fired on: input[value="#ffffff"]
+
+    input[value="#ffffff"] - pointerover
+    input[value="#ffffff"] - pointerenter
+    input[value="#ffffff"] - mouseover: Left (0)
+    input[value="#ffffff"] - mouseenter: Left (0)
+    input[value="#ffffff"] - pointermove
+    input[value="#ffffff"] - mousemove: Left (0)
+    input[value="#ffffff"] - pointerdown
+    input[value="#ffffff"] - mousedown: Left (0)
+    input[value="#ffffff"] - focus
+    input[value="#ffffff"] - focusin
+    input[value="#ffffff"] - pointerup
+    input[value="#ffffff"] - mouseup: Left (0)
+    input[value="#ffffff"] - click: Left (0)
+    input[value="#ffffff"] - keydown: (32)
+    input[value="#ffffff"] - keypress: (32)
+    input[value="#ffffff"] - keyup: (32)
+    input[value="#ffffff"] - click: Left (0)
+  `)
+})
+
+test('" " on an input type="color"', () => {
+  const {element, getEventSnapshot} = setup(
+    `<input value="#ffffff" type="color" />`,
+  )
+
+  userEvent.type(element, ' ')
+
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
+    Events fired on: input[value="#ffffff"]
+
+    input[value="#ffffff"] - pointerover
+    input[value="#ffffff"] - pointerenter
+    input[value="#ffffff"] - mouseover: Left (0)
+    input[value="#ffffff"] - mouseenter: Left (0)
+    input[value="#ffffff"] - pointermove
+    input[value="#ffffff"] - mousemove: Left (0)
+    input[value="#ffffff"] - pointerdown
+    input[value="#ffffff"] - mousedown: Left (0)
+    input[value="#ffffff"] - focus
+    input[value="#ffffff"] - focusin
+    input[value="#ffffff"] - pointerup
+    input[value="#ffffff"] - mouseup: Left (0)
+    input[value="#ffffff"] - click: Left (0)
+    input[value="#ffffff"] - keydown: (32)
+    input[value="#ffffff"] - keypress: (32)
+    input[value="#ffffff"] - keyup: (32)
+    input[value="#ffffff"] - click: Left (0)
+  `)
+})
 
 test('{enter} on a textarea', () => {
   const {element, getEventSnapshot} = setup('<textarea></textarea>')

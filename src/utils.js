@@ -171,6 +171,23 @@ function isFocusable(element) {
   )
 }
 
+const CLICKABLE_INPUT_TYPES = [
+  'button',
+  'color',
+  'file',
+  'image',
+  'reset',
+  'submit',
+]
+
+function isClickable(element) {
+  return (
+    element.tagName === 'BUTTON' ||
+    (element instanceof HTMLInputElement &&
+      CLICKABLE_INPUT_TYPES.includes(element.type))
+  )
+}
+
 function eventWrapper(cb) {
   let result
   getConfig().eventWrapper(() => {
@@ -182,6 +199,7 @@ function eventWrapper(cb) {
 export {
   FOCUSABLE_SELECTOR,
   isFocusable,
+  isClickable,
   getMouseEventOptions,
   isLabelWithInternallyDisabledControl,
   getActiveElement,

@@ -8,6 +8,7 @@ import {
   getActiveElement,
   calculateNewValue,
   setSelectionRangeIfNecessary,
+  isClickable,
 } from './utils'
 import {click} from './click'
 
@@ -238,7 +239,7 @@ function fireInputEventIfNeeded({
   const prevValue = currentValue()
   if (
     !currentElement().readOnly &&
-    currentElement().tagName !== 'BUTTON' &&
+    !isClickable(currentElement()) &&
     newValue !== prevValue
   ) {
     fireEvent.input(currentElement(), {
@@ -493,7 +494,7 @@ function getSpecialCharCallbackMap({currentElement, currentValue}) {
         })
       }
 
-      if (currentElement().tagName === 'BUTTON') {
+      if (isClickable(currentElement())) {
         fireEvent.click(currentElement(), {
           ...eventOverrides,
         })
@@ -615,14 +616,14 @@ function getSpecialCharCallbackMap({currentElement, currentValue}) {
   }
 
   function handleSpace(context) {
-    if (currentElement().tagName === 'BUTTON') {
-      handleSpaceOnButton(context.eventOverrides)
+    if (isClickable(currentElement())) {
+      handleSpaceOnClickable(context.eventOverrides)
       return
     }
     createTypeCharacter(' ', currentElement, currentValue)(context)
   }
 
-  function handleSpaceOnButton(eventOverrides) {
+  function handleSpaceOnClickable(eventOverrides) {
     const key = ' '
     const keyCode = 32
 

@@ -11,6 +11,7 @@ test('should paste text in input', () => {
     Events fired on: input[value="Hello, world!"]
 
     input[value=""] - focus
+    input[value=""] - focusin
     input[value=""] - paste
     input[value="Hello, world!"] - input
       "{CURSOR}" -> "Hello, world!{CURSOR}"
@@ -28,6 +29,7 @@ test('should paste text in textarea', () => {
     Events fired on: textarea[value="Hello, world!"]
 
     textarea[value=""] - focus
+    textarea[value=""] - focusin
     textarea[value=""] - paste
     textarea[value="Hello, world!"] - input
       "{CURSOR}" -> "Hello, world!{CURSOR}"
@@ -43,6 +45,7 @@ test('does not paste when readOnly', () => {
     Events fired on: input[value=""]
 
     input[value=""] - focus
+    input[value=""] - focusin
     input[value=""] - paste
   `)
 })

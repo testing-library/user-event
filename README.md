@@ -149,7 +149,7 @@ test('double click', () => {
   const checkbox = screen.getByTestId('checkbox')
   userEvent.dblClick(checkbox)
   expect(onChange).toHaveBeenCalledTimes(2)
-  expect(checkbox).toHaveProperty('checked', false)
+  expect(checkbox).not.toBeChecked()
 })
 ```
 
@@ -185,6 +185,7 @@ The following special character strings are supported:
 | Text string   | Key       | Modifier   | Notes                                                                                                                                                               |
 | ------------- | --------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `{enter}`     | Enter     | N/A        | Will insert a newline character (`<textarea />` only).                                                                                                              |
+| `{space}`     | `' '`     | N/A        |                                                                                                                                                                     |
 | `{esc}`       | Escape    | N/A        |                                                                                                                                                                     |
 | `{backspace}` | Backspace | N/A        | Will delete the previous character (or the characters within the `selectedRange`).                                                                                  |
 | `{del}`       | Delete    | N/A        | Will delete the next character (or the characters within the `selectedRange`)                                                                                       |
@@ -558,6 +559,7 @@ Thanks goes to these people ([emoji key][emojis]):
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors][all-contributors] specification.

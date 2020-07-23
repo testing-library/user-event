@@ -52,6 +52,7 @@ test('blurs previously focused element', () => {
     option[value="1"][selected=false] - mousemove: Left (0)
     option[value="1"][selected=false] - pointerdown
     option[value="1"][selected=false] - mousedown: Left (0)
+    button - focusout
     select[name="select"][value=[]] - focusin
     option[value="1"][selected=false] - pointerup
     option[value="1"][selected=false] - mouseup: Left (0)

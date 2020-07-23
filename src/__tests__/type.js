@@ -715,3 +715,48 @@ test('should give error if we are trying to call type on an invalid element', as
     `"the current element is of type BODY and doesn't have a valid value"`,
   )
 })
+
+test('typing on button should not alter its value', () => {
+  const {element} = setup('<button value="foo" />')
+  userEvent.type(element, 'bar')
+  expect(element).toHaveValue('foo')
+})
+
+test('typing on input type button should not alter its value', () => {
+  const {element} = setup('<input type="button" value="foo" />')
+  userEvent.type(element, 'bar')
+  expect(element).toHaveValue('foo')
+})
+
+test('typing on input type color should not alter its value', () => {
+  const {element} = setup('<input type="color" value="#ffffff" />')
+  userEvent.type(element, 'bar')
+  expect(element).toHaveValue('#ffffff')
+})
+
+test('typing on input type image should not alter its value', () => {
+  const {element} = setup('<input type="image" value="foo" />')
+  userEvent.type(element, 'bar')
+  expect(element).toHaveValue('foo')
+})
+
+test('typing on input type reset should not alter its value', () => {
+  const {element} = setup('<input type="reset" value="foo" />')
+  userEvent.type(element, 'bar')
+  expect(element).toHaveValue('foo')
+})
+
+test('typing on input type submit should not alter its value', () => {
+  const {element} = setup('<input type="submit" value="foo" />')
+  userEvent.type(element, 'bar')
+  expect(element).toHaveValue('foo')
+})
+
+test('typing on input type file should not trigger input event', () => {
+  const inputHandler = jest.fn()
+  const {element} = setup('<input type="file" />', {
+    eventHandlers: {input: inputHandler},
+  })
+  userEvent.type(element, 'bar')
+  expect(inputHandler).toHaveBeenCalledTimes(0)
+})

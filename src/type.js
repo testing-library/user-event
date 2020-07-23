@@ -12,6 +12,43 @@ import {
 } from './utils'
 import {click} from './click'
 
+const modifierCallbackMap = {
+  ...createModifierCallbackEntries({
+    name: 'shift',
+    key: 'Shift',
+    keyCode: 16,
+    modifierProperty: 'shiftKey',
+  }),
+  ...createModifierCallbackEntries({
+    name: 'ctrl',
+    key: 'Control',
+    keyCode: 17,
+    modifierProperty: 'ctrlKey',
+  }),
+  ...createModifierCallbackEntries({
+    name: 'alt',
+    key: 'Alt',
+    keyCode: 18,
+    modifierProperty: 'altKey',
+  }),
+  ...createModifierCallbackEntries({
+    name: 'meta',
+    key: 'Meta',
+    keyCode: 93,
+    modifierProperty: 'metaKey',
+  }),
+}
+
+const specialCharCallbackMap = {
+  '{enter}': handleEnter,
+  '{esc}': handleEsc,
+  '{del}': handleDel,
+  '{backspace}': handleBackspace,
+  '{selectall}': handleSelectall,
+  '{space}': handleSpace,
+  ' ': handleSpace,
+}
+
 function wait(time) {
   return new Promise(resolve => setTimeout(() => resolve(), time))
 }
@@ -81,15 +118,6 @@ async function typeImpl(
     )
   }
 
-  const modifierCallbackMap = getModifierCallbackMap({
-    currentElement,
-  })
-
-  const specialCharCallbackMap = getSpecialCharCallbackMap({
-    currentElement,
-    currentValue,
-  })
-
   const eventCallbacks = queueCallbacks()
   await runCallbacks(eventCallbacks)
 
@@ -100,78 +128,13 @@ async function typeImpl(
     while (remainingString) {
       const {callback, remainingString: newRemainingString} = getNextCallback(
         remainingString,
+        skipAutoClose,
       )
       callbacks.push(callback)
       remainingString = newRemainingString
     }
 
     return callbacks
-  }
-
-  function getNextCallback(remainingString) {
-    const modifierCallback = getModifierCallback(remainingString)
-    if (modifierCallback) {
-      return modifierCallback
-    }
-
-    const specialCharCallback = getSpecialCharCallback(remainingString)
-    if (specialCharCallback) {
-      return specialCharCallback
-    }
-
-    return getTypeCallback(remainingString)
-  }
-
-  function getModifierCallback(remainingString) {
-    const modifierKey = Object.keys(modifierCallbackMap).find(key =>
-      remainingString.startsWith(key),
-    )
-    if (!modifierKey) {
-      return null
-    }
-    const callback = modifierCallbackMap[modifierKey]
-
-    // if this modifier has an associated "close" callback and the developer
-    // doesn't close it themselves, then we close it for them automatically
-    // Effectively if they send in: '{alt}a' then we type: '{alt}a{/alt}'
-    if (
-      !skipAutoClose &&
-      callback.closeName &&
-      !remainingString.includes(callback.closeName)
-    ) {
-      remainingString += callback.closeName
-    }
-    remainingString = remainingString.slice(modifierKey.length)
-    return {
-      callback,
-      remainingString,
-    }
-  }
-
-  function getSpecialCharCallback(remainingString) {
-    const specialChar = Object.keys(specialCharCallbackMap).find(key =>
-      remainingString.startsWith(key),
-    )
-    if (!specialChar) {
-      return null
-    }
-    return {
-      callback: specialCharCallbackMap[specialChar],
-      remainingString: remainingString.slice(specialChar.length),
-    }
-  }
-
-  function getTypeCallback(remainingString) {
-    const character = remainingString[0]
-    const callback = createTypeCharacter(
-      character,
-      currentElement,
-      currentValue,
-    )
-    return {
-      callback,
-      remainingString: remainingString.slice(1),
-    }
   }
 
   async function runCallbacks(callbacks) {
@@ -181,6 +144,8 @@ async function typeImpl(
       if (delay > 0) await wait(delay)
       if (!currentElement().disabled) {
         const returnValue = callback({
+          currentElement,
+          currentValue,
           prevWasMinus,
           prevWasPeriod,
           prevValue,
@@ -195,12 +160,74 @@ async function typeImpl(
   }
 }
 
-const setSelectionRange = ({
+function getNextCallback(remainingString, skipAutoClose) {
+  const modifierCallback = getModifierCallback(remainingString, skipAutoClose)
+  if (modifierCallback) {
+    return modifierCallback
+  }
+
+  const specialCharCallback = getSpecialCharCallback(remainingString)
+  if (specialCharCallback) {
+    return specialCharCallback
+  }
+
+  return getTypeCallback(remainingString)
+}
+
+function getModifierCallback(remainingString, skipAutoClose) {
+  const modifierKey = Object.keys(modifierCallbackMap).find(key =>
+    remainingString.startsWith(key),
+  )
+  if (!modifierKey) {
+    return null
+  }
+  const callback = modifierCallbackMap[modifierKey]
+
+  // if this modifier has an associated "close" callback and the developer
+  // doesn't close it themselves, then we close it for them automatically
+  // Effectively if they send in: '{alt}a' then we type: '{alt}a{/alt}'
+  if (
+    !skipAutoClose &&
+    callback.closeName &&
+    !remainingString.includes(callback.closeName)
+  ) {
+    remainingString += callback.closeName
+  }
+  remainingString = remainingString.slice(modifierKey.length)
+  return {
+    callback,
+    remainingString,
+  }
+}
+
+function getSpecialCharCallback(remainingString) {
+  const specialChar = Object.keys(specialCharCallbackMap).find(key =>
+    remainingString.startsWith(key),
+  )
+  if (!specialChar) {
+    return null
+  }
+  return {
+    callback: specialCharCallbackMap[specialChar],
+    remainingString: remainingString.slice(specialChar.length),
+  }
+}
+
+function getTypeCallback(remainingString) {
+  const character = remainingString[0]
+  const callback = createTypeCharacter(character)
+  return {
+    callback,
+    remainingString: remainingString.slice(1),
+  }
+}
+
+function setSelectionRange({
   currentElement,
   currentValue,
   newValue,
   newSelectionStart,
-}) => {
+}) {
   // if we *can* change the selection start, then we will if the new value
   // is the same as the current value (so it wasn't programatically changed
   // when the fireEvent.input was triggered).
@@ -252,16 +279,20 @@ function fireInputEventIfNeeded({
   return {prevValue}
 }
 
-function createTypeCharacter(character, currentElement, currentValue) {
-  return context =>
-    typeCharacter(character, currentElement, currentValue, context)
+function createTypeCharacter(character) {
+  return context => typeCharacter(character, context)
 }
 
 function typeCharacter(
   char,
-  currentElement,
-  currentValue,
-  {prevWasMinus = false, prevWasPeriod = false, prevValue = '', eventOverrides},
+  {
+    currentElement,
+    currentValue,
+    prevWasMinus = false,
+    prevWasPeriod = false,
+    prevValue = '',
+    eventOverrides,
+  },
 ) {
   const key = char // TODO: check if this also valid for characters with diacritic markers e.g. úé etc
   const keyCode = char.charCodeAt(0)
@@ -403,254 +434,223 @@ function calculateNewDeleteValue(element, value) {
   return {newValue, newSelectionStart: selectionStart}
 }
 
-function getModifierCallbackMap({currentElement}) {
-  return {
-    ...modifier({
-      name: 'shift',
-      key: 'Shift',
-      keyCode: 16,
-      modifierProperty: 'shiftKey',
-    }),
-    ...modifier({
-      name: 'ctrl',
-      key: 'Control',
-      keyCode: 17,
-      modifierProperty: 'ctrlKey',
-    }),
-    ...modifier({
-      name: 'alt',
-      key: 'Alt',
-      keyCode: 18,
-      modifierProperty: 'altKey',
-    }),
-    ...modifier({
-      name: 'meta',
-      key: 'Meta',
-      keyCode: 93,
-      modifierProperty: 'metaKey',
-    }),
-  }
+function createModifierCallbackEntries({name, key, keyCode, modifierProperty}) {
+  const openName = `{${name}}`
+  const closeName = `{/${name}}`
 
-  function modifier({name, key, keyCode, modifierProperty}) {
-    const openName = `{${name}}`
-    const closeName = `{/${name}}`
+  function open({currentElement, eventOverrides}) {
+    const newEventOverrides = {[modifierProperty]: true}
 
-    function open({eventOverrides}) {
-      const newEventOverrides = {[modifierProperty]: true}
-
-      fireEvent.keyDown(currentElement(), {
-        key,
-        keyCode,
-        which: keyCode,
-        ...eventOverrides,
-        ...newEventOverrides,
-      })
-
-      return {eventOverrides: newEventOverrides}
-    }
-    open.closeName = closeName
-    function close({eventOverrides}) {
-      const newEventOverrides = {[modifierProperty]: false}
-
-      fireEvent.keyUp(currentElement(), {
-        key,
-        keyCode,
-        which: keyCode,
-        ...eventOverrides,
-        ...newEventOverrides,
-      })
-
-      return {eventOverrides: newEventOverrides}
-    }
-    return {
-      [openName]: open,
-      [closeName]: close,
-    }
-  }
-}
-
-function getSpecialCharCallbackMap({currentElement, currentValue}) {
-  return {
-    '{enter}': ({eventOverrides}) => {
-      const key = 'Enter'
-      const keyCode = 13
-
-      const keyDownDefaultNotPrevented = fireEvent.keyDown(currentElement(), {
-        key,
-        keyCode,
-        which: keyCode,
-        ...eventOverrides,
-      })
-
-      if (keyDownDefaultNotPrevented) {
-        fireEvent.keyPress(currentElement(), {
-          key,
-          keyCode,
-          charCode: keyCode,
-          ...eventOverrides,
-        })
-      }
-
-      if (isClickable(currentElement())) {
-        fireEvent.click(currentElement(), {
-          ...eventOverrides,
-        })
-      }
-
-      if (currentElement().tagName === 'TEXTAREA') {
-        const {newValue, newSelectionStart} = calculateNewValue(
-          '\n',
-          currentElement(),
-          currentValue(),
-        )
-        fireEvent.input(currentElement(), {
-          target: {value: newValue},
-          inputType: 'insertLineBreak',
-          ...eventOverrides,
-        })
-        setSelectionRange({
-          currentElement,
-          currentValue,
-          newValue,
-          newSelectionStart,
-        })
-      }
-
-      fireEvent.keyUp(currentElement(), {
-        key,
-        keyCode,
-        which: keyCode,
-        ...eventOverrides,
-      })
-    },
-    '{esc}': ({eventOverrides}) => {
-      const key = 'Escape'
-      const keyCode = 27
-
-      fireEvent.keyDown(currentElement(), {
-        key,
-        keyCode,
-        which: keyCode,
-        ...eventOverrides,
-      })
-
-      // NOTE: Browsers do not fire a keypress on meta key presses
-
-      fireEvent.keyUp(currentElement(), {
-        key,
-        keyCode,
-        which: keyCode,
-        ...eventOverrides,
-      })
-    },
-    '{del}': ({eventOverrides}) => {
-      const key = 'Delete'
-      const keyCode = 46
-
-      const keyPressDefaultNotPrevented = fireEvent.keyDown(currentElement(), {
-        key,
-        keyCode,
-        which: keyCode,
-        ...eventOverrides,
-      })
-
-      if (keyPressDefaultNotPrevented) {
-        fireInputEventIfNeeded({
-          ...calculateNewDeleteValue(currentElement(), currentValue()),
-          eventOverrides: {
-            inputType: 'deleteContentForward',
-            ...eventOverrides,
-          },
-          currentElement,
-          currentValue,
-        })
-      }
-
-      fireEvent.keyUp(currentElement(), {
-        key,
-        keyCode,
-        which: keyCode,
-        ...eventOverrides,
-      })
-    },
-    '{backspace}': ({eventOverrides}) => {
-      const key = 'Backspace'
-      const keyCode = 8
-
-      const keyPressDefaultNotPrevented = fireEvent.keyDown(currentElement(), {
-        key,
-        keyCode,
-        which: keyCode,
-        ...eventOverrides,
-      })
-
-      if (keyPressDefaultNotPrevented) {
-        fireInputEventIfNeeded({
-          ...calculateNewBackspaceValue(currentElement(), currentValue()),
-          eventOverrides: {
-            inputType: 'deleteContentBackward',
-            ...eventOverrides,
-          },
-          currentElement,
-          currentValue,
-        })
-      }
-
-      fireEvent.keyUp(currentElement(), {
-        key,
-        keyCode,
-        which: keyCode,
-        ...eventOverrides,
-      })
-    },
-    // the user can actually select in several different ways
-    // we're not going to choose, so we'll *only* set the selection range
-    '{selectall}': () => {
-      currentElement().setSelectionRange(0, currentValue().length)
-    },
-    '{space}': handleSpace,
-    ' ': handleSpace,
-  }
-
-  function handleSpace(context) {
-    if (isClickable(currentElement())) {
-      handleSpaceOnClickable(context.eventOverrides)
-      return
-    }
-    createTypeCharacter(' ', currentElement, currentValue)(context)
-  }
-
-  function handleSpaceOnClickable(eventOverrides) {
-    const key = ' '
-    const keyCode = 32
-
-    const keyDownDefaultNotPrevented = fireEvent.keyDown(currentElement(), {
+    fireEvent.keyDown(currentElement(), {
       key,
       keyCode,
       which: keyCode,
       ...eventOverrides,
+      ...newEventOverrides,
     })
 
-    if (keyDownDefaultNotPrevented) {
-      fireEvent.keyPress(currentElement(), {
-        key,
-        keyCode,
-        charCode: keyCode,
-        ...eventOverrides,
-      })
-    }
+    return {eventOverrides: newEventOverrides}
+  }
+  open.closeName = closeName
+  function close({currentElement, eventOverrides}) {
+    const newEventOverrides = {[modifierProperty]: false}
 
     fireEvent.keyUp(currentElement(), {
       key,
       keyCode,
       which: keyCode,
       ...eventOverrides,
+      ...newEventOverrides,
     })
 
+    return {eventOverrides: newEventOverrides}
+  }
+  return {
+    [openName]: open,
+    [closeName]: close,
+  }
+}
+
+function handleEnter({currentElement, currentValue, eventOverrides}) {
+  const key = 'Enter'
+  const keyCode = 13
+
+  const keyDownDefaultNotPrevented = fireEvent.keyDown(currentElement(), {
+    key,
+    keyCode,
+    which: keyCode,
+    ...eventOverrides,
+  })
+
+  if (keyDownDefaultNotPrevented) {
+    fireEvent.keyPress(currentElement(), {
+      key,
+      keyCode,
+      charCode: keyCode,
+      ...eventOverrides,
+    })
+  }
+
+  if (isClickable(currentElement())) {
     fireEvent.click(currentElement(), {
       ...eventOverrides,
     })
   }
+
+  if (currentElement().tagName === 'TEXTAREA') {
+    const {newValue, newSelectionStart} = calculateNewValue(
+      '\n',
+      currentElement(),
+      currentValue(),
+    )
+    fireEvent.input(currentElement(), {
+      target: {value: newValue},
+      inputType: 'insertLineBreak',
+      ...eventOverrides,
+    })
+    setSelectionRange({
+      currentElement,
+      currentValue,
+      newValue,
+      newSelectionStart,
+    })
+  }
+
+  fireEvent.keyUp(currentElement(), {
+    key,
+    keyCode,
+    which: keyCode,
+    ...eventOverrides,
+  })
+}
+
+function handleEsc({currentElement, eventOverrides}) {
+  const key = 'Escape'
+  const keyCode = 27
+
+  fireEvent.keyDown(currentElement(), {
+    key,
+    keyCode,
+    which: keyCode,
+    ...eventOverrides,
+  })
+
+  // NOTE: Browsers do not fire a keypress on meta key presses
+
+  fireEvent.keyUp(currentElement(), {
+    key,
+    keyCode,
+    which: keyCode,
+    ...eventOverrides,
+  })
+}
+
+function handleDel({currentElement, currentValue, eventOverrides}) {
+  const key = 'Delete'
+  const keyCode = 46
+
+  const keyPressDefaultNotPrevented = fireEvent.keyDown(currentElement(), {
+    key,
+    keyCode,
+    which: keyCode,
+    ...eventOverrides,
+  })
+
+  if (keyPressDefaultNotPrevented) {
+    fireInputEventIfNeeded({
+      ...calculateNewDeleteValue(currentElement(), currentValue()),
+      eventOverrides: {
+        inputType: 'deleteContentForward',
+        ...eventOverrides,
+      },
+      currentElement,
+      currentValue,
+    })
+  }
+
+  fireEvent.keyUp(currentElement(), {
+    key,
+    keyCode,
+    which: keyCode,
+    ...eventOverrides,
+  })
+}
+
+function handleBackspace({currentElement, currentValue, eventOverrides}) {
+  const key = 'Backspace'
+  const keyCode = 8
+
+  const keyPressDefaultNotPrevented = fireEvent.keyDown(currentElement(), {
+    key,
+    keyCode,
+    which: keyCode,
+    ...eventOverrides,
+  })
+
+  if (keyPressDefaultNotPrevented) {
+    fireInputEventIfNeeded({
+      ...calculateNewBackspaceValue(currentElement(), currentValue()),
+      eventOverrides: {
+        inputType: 'deleteContentBackward',
+        ...eventOverrides,
+      },
+      currentElement,
+      currentValue,
+    })
+  }
+
+  fireEvent.keyUp(currentElement(), {
+    key,
+    keyCode,
+    which: keyCode,
+    ...eventOverrides,
+  })
+}
+
+function handleSelectall({currentElement, currentValue}) {
+  // the user can actually select in several different ways
+  // we're not going to choose, so we'll *only* set the selection range
+  currentElement().setSelectionRange(0, currentValue().length)
+}
+
+function handleSpace(context) {
+  if (isClickable(context.currentElement())) {
+    handleSpaceOnClickable(context)
+    return
+  }
+  typeCharacter(' ', context)
+}
+
+function handleSpaceOnClickable({currentElement, eventOverrides}) {
+  const key = ' '
+  const keyCode = 32
+
+  const keyDownDefaultNotPrevented = fireEvent.keyDown(currentElement(), {
+    key,
+    keyCode,
+    which: keyCode,
+    ...eventOverrides,
+  })
+
+  if (keyDownDefaultNotPrevented) {
+    fireEvent.keyPress(currentElement(), {
+      key,
+      keyCode,
+      charCode: keyCode,
+      ...eventOverrides,
+    })
+  }
+
+  fireEvent.keyUp(currentElement(), {
+    key,
+    keyCode,
+    which: keyCode,
+    ...eventOverrides,
+  })
+
+  fireEvent.click(currentElement(), {
+    ...eventOverrides,
+  })
 }
 
 export {type}
@@ -658,5 +658,4 @@ export {type}
 /*
 eslint
   no-loop-func: "off",
-  max-lines-per-function: "off",
 */

@@ -529,6 +529,17 @@
       "contributions": [
         "doc"
       ]
+    },
+    {
+      "login": "visualjerk",
+      "name": "Jörg Bayreuther",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/28823153?v=4",
+      "profile": "http://www.visualjerk.de",
+      "contributions": [
+        "code",
+        "test",
+        "doc"
+      ]
     }
   ],
   "commitConvention": "none",

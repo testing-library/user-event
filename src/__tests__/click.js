@@ -79,7 +79,7 @@ test('clicking a disabled checkbox only fires pointer events', () => {
     input[checked=false] - pointerup
   `)
   expect(element).toBeDisabled()
-  expect(element).toHaveProperty('checked', false)
+  expect(element).not.toBeChecked()
 })
 
 test('clicking a radio button', () => {
@@ -107,7 +107,7 @@ test('clicking a radio button', () => {
     input[checked=true] - change
   `)
 
-  expect(element).toHaveProperty('checked', true)
+  expect(element).toBeChecked()
 })
 
 test('clicking a disabled radio button only fires pointer events', () => {
@@ -125,7 +125,7 @@ test('clicking a disabled radio button only fires pointer events', () => {
   `)
   expect(element).toBeDisabled()
 
-  expect(element).toHaveProperty('checked', false)
+  expect(element).not.toBeChecked()
 })
 
 test('should fire the correct events for <div>', () => {

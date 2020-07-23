@@ -23,7 +23,7 @@
 [![MIT License][license-badge]][license]
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-53-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-54-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 [![PRs Welcome][prs-badge]][prs]
 [![Code of Conduct][coc-badge]][coc]
@@ -554,12 +554,12 @@ Thanks goes to these people ([emoji key][emojis]):
     <td align="center"><a href="https://github.com/ybentz"><img src="https://avatars3.githubusercontent.com/u/14811577?v=4" width="100px;" alt=""/><br /><sub><b>ybentz</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=ybentz" title="Code">💻</a> <a href="https://github.com/testing-library/user-event/commits?author=ybentz" title="Tests">⚠️</a></td>
     <td align="center"><a href="http://www.lemoncode.net/"><img src="https://avatars2.githubusercontent.com/u/4374977?v=4" width="100px;" alt=""/><br /><sub><b>Nasdan</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3ANasdan" title="Bug reports">🐛</a></td>
     <td align="center"><a href="https://github.com/JavierMartinz"><img src="https://avatars1.githubusercontent.com/u/1155507?v=4" width="100px;" alt=""/><br /><sub><b>Javier Martínez</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=JavierMartinz" title="Documentation">📖</a></td>
+    <td align="center"><a href="http://www.visualjerk.de"><img src="https://avatars0.githubusercontent.com/u/28823153?v=4" width="100px;" alt=""/><br /><sub><b>Jörg Bayreuther</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=visualjerk" title="Code">💻</a> <a href="https://github.com/testing-library/user-event/commits?author=visualjerk" title="Tests">⚠️</a> <a href="https://github.com/testing-library/user-event/commits?author=visualjerk" title="Documentation">📖</a></td>
   </tr>
 </table>
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
-
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors][all-contributors] specification.

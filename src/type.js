@@ -95,21 +95,17 @@ async function typeImpl(
 
   function queueCallbacks() {
     const callbacks = []
-    const appendedCallbacks = []
     let remainingString = text
 
     while (remainingString) {
-      const {callback, appendedCallback, handledLength} = getNextCallback(
+      const {callback, remainingString: newRemainingString} = getNextCallback(
         remainingString,
       )
       callbacks.push(callback)
-      if (appendedCallback) {
-        appendedCallbacks.push(appendedCallback)
-      }
-      remainingString = remainingString.slice(handledLength)
+      remainingString = newRemainingString
     }
 
-    return [...callbacks, ...appendedCallbacks]
+    return callbacks
   }
 
   function getNextCallback(remainingString) {
@@ -135,22 +131,20 @@ async function typeImpl(
     }
     const callback = modifierCallbackMap[modifierKey]
 
-    let appendedCallback = null
     // if this modifier has an associated "close" callback and the developer
     // doesn't close it themselves, then we close it for them automatically
     // Effectively if they send in: '{alt}a' then we type: '{alt}a{/alt}'
     if (
       !skipAutoClose &&
-      callback.close &&
-      !remainingString.includes(callback.close.name)
+      callback.closeName &&
+      !remainingString.includes(callback.closeName)
     ) {
-      appendedCallback = callback.close.fn
+      remainingString += callback.closeName
     }
-    const handledLength = modifierKey.length
+    remainingString = remainingString.slice(modifierKey.length)
     return {
       callback,
-      appendedCallback,
-      handledLength,
+      remainingString,
     }
   }
 
@@ -163,7 +157,7 @@ async function typeImpl(
     }
     return {
       callback: specialCharCallbackMap[specialChar],
-      handledLength: specialChar.length,
+      remainingString: remainingString.slice(specialChar.length),
     }
   }
 
@@ -176,7 +170,7 @@ async function typeImpl(
     )
     return {
       callback,
-      handledLength: 1,
+      remainingString: remainingString.slice(1),
     }
   }
 
@@ -438,6 +432,9 @@ function getModifierCallbackMap({currentElement}) {
   }
 
   function modifier({name, key, keyCode, modifierProperty}) {
+    const openName = `{${name}}`
+    const closeName = `{/${name}}`
+
     function open({eventOverrides}) {
       const newEventOverrides = {[modifierProperty]: true}
 
@@ -451,7 +448,7 @@ function getModifierCallbackMap({currentElement}) {
 
       return {eventOverrides: newEventOverrides}
     }
-    open.close = {name: [`{/${name}}`], fn: close}
+    open.closeName = closeName
     function close({eventOverrides}) {
       const newEventOverrides = {[modifierProperty]: false}
 
@@ -466,8 +463,8 @@ function getModifierCallbackMap({currentElement}) {
       return {eventOverrides: newEventOverrides}
     }
     return {
-      [`{${name}}`]: open,
-      [`{/${name}}`]: close,
+      [openName]: open,
+      [closeName]: close,
     }
   }
 }

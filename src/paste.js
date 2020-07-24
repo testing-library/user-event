@@ -38,11 +38,7 @@ function paste(
   fireEvent.paste(element, init)
 
   if (!element.readOnly) {
-    const {newValue, newSelectionStart} = calculateNewValue(
-      text,
-      element,
-      element.value,
-    )
+    const {newValue, newSelectionStart} = calculateNewValue(text, element)
     fireEvent.input(element, {
       inputType: 'insertFromPaste',
       target: {value: newValue},

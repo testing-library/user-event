@@ -520,6 +520,26 @@
       "contributions": [
         "bug"
       ]
+    },
+    {
+      "login": "JavierMartinz",
+      "name": "Javier Martínez",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/1155507?v=4",
+      "profile": "https://github.com/JavierMartinz",
+      "contributions": [
+        "doc"
+      ]
+    },
+    {
+      "login": "visualjerk",
+      "name": "Jörg Bayreuther",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/28823153?v=4",
+      "profile": "http://www.visualjerk.de",
+      "contributions": [
+        "code",
+        "test",
+        "doc"
+      ]
     }
   ],
   "commitConvention": "none",

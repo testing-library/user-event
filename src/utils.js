@@ -171,6 +171,23 @@ function isFocusable(element) {
   )
 }
 
+const CLICKABLE_INPUT_TYPES = [
+  'button',
+  'color',
+  'file',
+  'image',
+  'reset',
+  'submit',
+]
+
+function isClickable(element) {
+  return (
+    element.tagName === 'BUTTON' ||
+    (element instanceof HTMLInputElement &&
+      CLICKABLE_INPUT_TYPES.includes(element.type))
+  )
+}
+
 function eventWrapper(cb) {
   let result
   getConfig().eventWrapper(() => {
@@ -180,14 +197,17 @@ function eventWrapper(cb) {
 }
 
 function isValidDateValue(element, value) {
+  if(element.type !== 'date') return false
+
   const clone = element.cloneNode()
   clone.value = value
-  return element.type == 'date' && clone.value === value
+  return clone.value === value
 }
 
 export {
   FOCUSABLE_SELECTOR,
   isFocusable,
+  isClickable,
   getMouseEventOptions,
   isLabelWithInternallyDisabledControl,
   getActiveElement,

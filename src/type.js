@@ -243,8 +243,16 @@ function fireInputEventIfNeeded({
   newValue,
   newSelectionStart,
   eventOverrides,
+  textToBeTyped,
 }) {
   const prevValue = currentElement().value
+
+  if (
+    currentElement().type === 'date' &&
+    !isValidDateValue(currentElement(), textToBeTyped)
+  )
+    return {prevValue}
+
   if (
     !currentElement().readOnly &&
     !isClickable(currentElement()) &&
@@ -306,21 +314,17 @@ function typeCharacter(
         newEntry = textToBeTyped
       }
 
-      if (
-        !(currentElement().type === 'date') ||
-        isValidDateValue(currentElement(), textToBeTyped)
-      ) {
-        const inputEvent = fireInputEventIfNeeded({
-          ...calculateNewValue(newEntry, currentElement()),
-          eventOverrides: {
-            data: key,
-            inputType: 'insertText',
-            ...eventOverrides,
-          },
-          currentElement,
-        })
-        prevValue = inputEvent.prevValue
-      }
+      const inputEvent = fireInputEventIfNeeded({
+        ...calculateNewValue(newEntry, currentElement()),
+        eventOverrides: {
+          data: key,
+          inputType: 'insertText',
+          ...eventOverrides,
+        },
+        currentElement,
+        textToBeTyped,
+      })
+      prevValue = inputEvent.prevValue
 
       if (isValidDateValue(currentElement(), textToBeTyped)) {
         fireEvent.change(currentElement(), {target: {value: textToBeTyped}})

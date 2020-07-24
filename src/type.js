@@ -466,12 +466,11 @@ function handleEnter({currentElement, eventOverrides}) {
       charCode: keyCode,
       ...eventOverrides,
     })
-  }
-
-  if (isClickable(currentElement())) {
-    fireEvent.click(currentElement(), {
-      ...eventOverrides,
-    })
+    if (isClickable(currentElement())) {
+      fireEvent.click(currentElement(), {
+        ...eventOverrides,
+      })
+    }
   }
 
   if (currentElement().tagName === 'TEXTAREA') {
@@ -621,9 +620,11 @@ function handleSpaceOnClickable({currentElement, eventOverrides}) {
     ...eventOverrides,
   })
 
-  fireEvent.click(currentElement(), {
-    ...eventOverrides,
-  })
+  if (keyDownDefaultNotPrevented) {
+    fireEvent.click(currentElement(), {
+      ...eventOverrides,
+    })
+  }
 }
 
 export {type}

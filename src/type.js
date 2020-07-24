@@ -88,8 +88,6 @@ async function typeImpl(
   // The focused element could change between each event, so get the currently active element each time
   const currentElement = () => getActiveElement(element.ownerDocument)
 
-  const currentValue = () => currentElement().value
-
   // by default, a new element has it's selection start and end at 0
   // but most of the time when people call "type", they expect it to type
   // at the end of the current input value. So, if the selection start
@@ -98,15 +96,16 @@ async function typeImpl(
   // the only time it would make sense to pass the initialSelectionStart or
   // initialSelectionEnd is if you have an input with a value and want to
   // explicitely start typing with the cursor at 0. Not super common.
+  const value = currentElement().value
   if (
+    value != null &&
     currentElement().selectionStart === 0 &&
-    currentElement().selectionEnd === 0 &&
-    currentValue() != null
+    currentElement().selectionEnd === 0
   ) {
     setSelectionRangeIfNecessary(
       currentElement(),
-      initialSelectionStart ?? currentValue().length,
-      initialSelectionEnd ?? currentValue().length,
+      initialSelectionStart ?? value.length,
+      initialSelectionEnd ?? value.length,
     )
   }
 
@@ -137,7 +136,6 @@ async function typeImpl(
       if (!currentElement().disabled) {
         const returnValue = callback({
           currentElement,
-          currentValue,
           prevWasMinus,
           prevWasPeriod,
           prevValue,
@@ -214,19 +212,14 @@ function getTypeCallback(remainingString) {
   }
 }
 
-function setSelectionRange({
-  currentElement,
-  currentValue,
-  newValue,
-  newSelectionStart,
-}) {
+function setSelectionRange({currentElement, newValue, newSelectionStart}) {
   // if we *can* change the selection start, then we will if the new value
   // is the same as the current value (so it wasn't programatically changed
   // when the fireEvent.input was triggered).
   // The reason we have to do this at all is because it actually *is*
   // programmatically changed by fireEvent.input, so we have to simulate the
   // browser's default behavior
-  const value = currentValue()
+  const value = currentElement().value
 
   if (value === newValue) {
     setSelectionRangeIfNecessary(
@@ -243,13 +236,12 @@ function setSelectionRange({
 }
 
 function fireInputEventIfNeeded({
+  currentElement,
   newValue,
   newSelectionStart,
   eventOverrides,
-  currentValue,
-  currentElement,
 }) {
-  const prevValue = currentValue()
+  const prevValue = currentElement().value
   if (
     !currentElement().readOnly &&
     !isClickable(currentElement()) &&
@@ -262,7 +254,6 @@ function fireInputEventIfNeeded({
 
     setSelectionRange({
       currentElement,
-      currentValue,
       newValue,
       newSelectionStart,
     })
@@ -275,7 +266,6 @@ function typeCharacter(
   char,
   {
     currentElement,
-    currentValue,
     prevWasMinus = false,
     prevWasPeriod = false,
     prevValue = '',
@@ -301,7 +291,7 @@ function typeCharacter(
       ...eventOverrides,
     })
 
-    if (keyPressDefaultNotPrevented && currentValue() != null) {
+    if (currentElement().value != null && keyPressDefaultNotPrevented) {
       let newEntry = char
       if (prevWasMinus) {
         newEntry = `-${char}`
@@ -310,13 +300,12 @@ function typeCharacter(
       }
 
       const inputEvent = fireInputEventIfNeeded({
-        ...calculateNewValue(newEntry, currentElement(), currentValue()),
+        ...calculateNewValue(newEntry, currentElement()),
         eventOverrides: {
           data: key,
           inputType: 'insertText',
           ...eventOverrides,
         },
-        currentValue,
         currentElement,
       })
       prevValue = inputEvent.prevValue
@@ -328,7 +317,7 @@ function typeCharacter(
       // to typing an invalid character (typing "-a3" results in "-3")
       // same applies for the decimal character.
       if (currentElement().type === 'number') {
-        const newValue = currentValue()
+        const newValue = currentElement().value
         if (newValue === prevValue && newEntry !== '-') {
           nextPrevWasMinus = prevWasMinus
         } else {
@@ -361,8 +350,8 @@ function typeCharacter(
 // and you may be tempted to create a shared abstraction.
 // If you, brave soul, decide to so endevor, please increment this count
 // when you inevitably fail: 1
-function calculateNewBackspaceValue(element, value) {
-  const {selectionStart, selectionEnd} = element
+function calculateNewBackspaceValue(element) {
+  const {selectionStart, selectionEnd, value} = element
   let newValue, newSelectionStart
 
   if (selectionStart === null) {
@@ -394,8 +383,8 @@ function calculateNewBackspaceValue(element, value) {
   return {newValue, newSelectionStart}
 }
 
-function calculateNewDeleteValue(element, value) {
-  const {selectionStart, selectionEnd} = element
+function calculateNewDeleteValue(element) {
+  const {selectionStart, selectionEnd, value} = element
   let newValue
 
   if (selectionStart === null) {
@@ -459,7 +448,7 @@ function createModifierCallbackEntries({name, key, keyCode, modifierProperty}) {
   }
 }
 
-function handleEnter({currentElement, currentValue, eventOverrides}) {
+function handleEnter({currentElement, eventOverrides}) {
   const key = 'Enter'
   const keyCode = 13
 
@@ -489,7 +478,6 @@ function handleEnter({currentElement, currentValue, eventOverrides}) {
     const {newValue, newSelectionStart} = calculateNewValue(
       '\n',
       currentElement(),
-      currentValue(),
     )
     fireEvent.input(currentElement(), {
       target: {value: newValue},
@@ -498,7 +486,6 @@ function handleEnter({currentElement, currentValue, eventOverrides}) {
     })
     setSelectionRange({
       currentElement,
-      currentValue,
       newValue,
       newSelectionStart,
     })
@@ -533,7 +520,7 @@ function handleEsc({currentElement, eventOverrides}) {
   })
 }
 
-function handleDel({currentElement, currentValue, eventOverrides}) {
+function handleDel({currentElement, eventOverrides}) {
   const key = 'Delete'
   const keyCode = 46
 
@@ -546,13 +533,12 @@ function handleDel({currentElement, currentValue, eventOverrides}) {
 
   if (keyPressDefaultNotPrevented) {
     fireInputEventIfNeeded({
-      ...calculateNewDeleteValue(currentElement(), currentValue()),
+      ...calculateNewDeleteValue(currentElement()),
       eventOverrides: {
         inputType: 'deleteContentForward',
         ...eventOverrides,
       },
       currentElement,
-      currentValue,
     })
   }
 
@@ -564,7 +550,7 @@ function handleDel({currentElement, currentValue, eventOverrides}) {
   })
 }
 
-function handleBackspace({currentElement, currentValue, eventOverrides}) {
+function handleBackspace({currentElement, eventOverrides}) {
   const key = 'Backspace'
   const keyCode = 8
 
@@ -577,13 +563,12 @@ function handleBackspace({currentElement, currentValue, eventOverrides}) {
 
   if (keyPressDefaultNotPrevented) {
     fireInputEventIfNeeded({
-      ...calculateNewBackspaceValue(currentElement(), currentValue()),
+      ...calculateNewBackspaceValue(currentElement()),
       eventOverrides: {
         inputType: 'deleteContentBackward',
         ...eventOverrides,
       },
       currentElement,
-      currentValue,
     })
   }
 
@@ -595,10 +580,10 @@ function handleBackspace({currentElement, currentValue, eventOverrides}) {
   })
 }
 
-function handleSelectall({currentElement, currentValue}) {
+function handleSelectall({currentElement}) {
   // the user can actually select in several different ways
   // we're not going to choose, so we'll *only* set the selection range
-  currentElement().setSelectionRange(0, currentValue().length)
+  currentElement().setSelectionRange(0, currentElement().value.length)
 }
 
 function handleSpace(context) {
@@ -642,8 +627,3 @@ function handleSpaceOnClickable({currentElement, eventOverrides}) {
 }
 
 export {type}
-
-/*
-eslint
-  no-loop-func: "off",
-*/

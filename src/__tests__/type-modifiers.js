@@ -443,10 +443,68 @@ test('{enter} on a button', () => {
   `)
 })
 
+test('{enter} with preventDefault on a button', () => {
+  const {element, getEventSnapshot} = setup('<button />', {
+    eventHandlers: {
+      keyDown: e => e.preventDefault(),
+    },
+  })
+
+  userEvent.type(element, '{enter}')
+
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
+    Events fired on: button
+
+    button - pointerover
+    button - pointerenter
+    button - mouseover: Left (0)
+    button - mouseenter: Left (0)
+    button - pointermove
+    button - mousemove: Left (0)
+    button - pointerdown
+    button - mousedown: Left (0)
+    button - focus
+    button - focusin
+    button - pointerup
+    button - mouseup: Left (0)
+    button - click: Left (0)
+    button - keydown: Enter (13)
+    button - keyup: Enter (13)
+  `)
+})
+
 test('{space} on a button', () => {
   const {element, getEventSnapshot} = setup('<button />')
 
   userEvent.type(element, '{space}')
+
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
+    Events fired on: button
+
+    button - pointerover
+    button - pointerenter
+    button - mouseover: Left (0)
+    button - mouseenter: Left (0)
+    button - pointermove
+    button - mousemove: Left (0)
+    button - pointerdown
+    button - mousedown: Left (0)
+    button - focus
+    button - focusin
+    button - pointerup
+    button - mouseup: Left (0)
+    button - click: Left (0)
+    button - keydown: (32)
+    button - keypress: (32)
+    button - keyup: (32)
+    button - click: Left (0)
+  `)
+})
+
+test(`' ' on a button is the same as '{space}'`, () => {
+  const {element, getEventSnapshot} = setup('<button />')
+
+  userEvent.type(element, ' ')
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: button
@@ -498,14 +556,17 @@ test('{space} with preventDefault keydown on button', () => {
     button - click: Left (0)
     button - keydown: (32)
     button - keyup: (32)
-    button - click: Left (0)
   `)
 })
 
-test(`' ' on a button`, () => {
-  const {element, getEventSnapshot} = setup('<button />')
+test('{space} with preventDefault keyup on button', () => {
+  const {element, getEventSnapshot} = setup('<button />', {
+    eventHandlers: {
+      keyUp: e => e.preventDefault(),
+    },
+  })
 
-  userEvent.type(element, ' ')
+  userEvent.type(element, '{space}')
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: button
@@ -526,7 +587,6 @@ test(`' ' on a button`, () => {
     button - keydown: (32)
     button - keypress: (32)
     button - keyup: (32)
-    button - click: Left (0)
   `)
 })
 
@@ -559,7 +619,7 @@ test('{space} on an input', () => {
   `)
 })
 
-test('{enter} on an input type="color"', () => {
+test('{enter} on an input type="color" fires same events as a button', () => {
   const {element, getEventSnapshot} = setup(
     `<input value="#ffffff" type="color" />`,
   )
@@ -589,7 +649,7 @@ test('{enter} on an input type="color"', () => {
   `)
 })
 
-test('{space} on an input type="color"', () => {
+test('{space} on an input type="color" fires same events as a button', () => {
   const {element, getEventSnapshot} = setup(
     `<input value="#ffffff" type="color" />`,
   )
@@ -619,7 +679,7 @@ test('{space} on an input type="color"', () => {
   `)
 })
 
-test('" " on an input type="color"', () => {
+test(`' ' on input type="color" is the same as '{space}'`, () => {
   const {element, getEventSnapshot} = setup(
     `<input value="#ffffff" type="color" />`,
   )

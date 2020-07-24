@@ -88,16 +88,7 @@ async function typeImpl(
   // The focused element could change between each event, so get the currently active element each time
   const currentElement = () => getActiveElement(element.ownerDocument)
 
-  const currentValue = () => {
-    const activeElement = currentElement()
-    const value = activeElement.value
-    if (typeof value === 'undefined') {
-      throw new TypeError(
-        `the current element is of type ${activeElement.tagName} and doesn't have a valid value`,
-      )
-    }
-    return value
-  }
+  const currentValue = () => currentElement().value
 
   // by default, a new element has it's selection start and end at 0
   // but most of the time when people call "type", they expect it to type
@@ -109,7 +100,8 @@ async function typeImpl(
   // explicitely start typing with the cursor at 0. Not super common.
   if (
     currentElement().selectionStart === 0 &&
-    currentElement().selectionEnd === 0
+    currentElement().selectionEnd === 0 &&
+    currentValue() != null
   ) {
     setSelectionRangeIfNecessary(
       currentElement(),
@@ -215,7 +207,7 @@ function getSpecialCharCallback(remainingString) {
 
 function getTypeCallback(remainingString) {
   const character = remainingString[0]
-  const callback = createTypeCharacter(character)
+  const callback = context => typeCharacter(character, context)
   return {
     callback,
     remainingString: remainingString.slice(1),
@@ -279,10 +271,6 @@ function fireInputEventIfNeeded({
   return {prevValue}
 }
 
-function createTypeCharacter(character) {
-  return context => typeCharacter(character, context)
-}
-
 function typeCharacter(
   char,
   {
@@ -313,7 +301,7 @@ function typeCharacter(
       ...eventOverrides,
     })
 
-    if (keyPressDefaultNotPrevented) {
+    if (keyPressDefaultNotPrevented && currentValue() != null) {
       let newEntry = char
       if (prevWasMinus) {
         newEntry = `-${char}`

@@ -707,13 +707,12 @@ test('typing an invalid input value', () => {
   expect(element.validity.badInput).toBe(false)
 })
 
-test('should give error if we are trying to call type on an invalid element', async () => {
-  const {element} = setup('<div  />')
-  await expect(() =>
-    userEvent.type(element, "I'm only a div :("),
-  ).rejects.toThrowErrorMatchingInlineSnapshot(
-    `"the current element is of type BODY and doesn't have a valid value"`,
-  )
+test('should not throw error if we are trying to call type on an element without a value', () => {
+  const {element} = setup('<div />')
+  expect.assertions(0)
+  return userEvent
+    .type(element, "I'm only a div :(")
+    .catch(e => expect(e).toBeUndefined())
 })
 
 test('typing on button should not alter its value', () => {
@@ -752,11 +751,8 @@ test('typing on input type submit should not alter its value', () => {
   expect(element).toHaveValue('foo')
 })
 
-test('typing on input type file should not trigger input event', () => {
-  const inputHandler = jest.fn()
-  const {element} = setup('<input type="file" />', {
-    eventHandlers: {input: inputHandler},
-  })
-  userEvent.type(element, 'bar')
-  expect(inputHandler).toHaveBeenCalledTimes(0)
+test('typing on input type file should not result in an error', () => {
+  const {element} = setup('<input type="file" />')
+  expect.assertions(0)
+  return userEvent.type(element, 'bar').catch(e => expect(e).toBeUndefined())
 })

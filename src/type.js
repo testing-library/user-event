@@ -613,14 +613,14 @@ function handleSpaceOnClickable({currentElement, eventOverrides}) {
     })
   }
 
-  fireEvent.keyUp(currentElement(), {
+  const keyUpDefaultNotPrevented = fireEvent.keyUp(currentElement(), {
     key,
     keyCode,
     which: keyCode,
     ...eventOverrides,
   })
 
-  if (keyDownDefaultNotPrevented) {
+  if (keyDownDefaultNotPrevented && keyUpDefaultNotPrevented) {
     fireEvent.click(currentElement(), {
       ...eventOverrides,
     })

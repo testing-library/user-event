@@ -10,6 +10,9 @@ import {
   setSelectionRangeIfNecessary,
   isClickable,
   isValidDateValue,
+  getSelectionRange,
+  getValue,
+  isContentEditable,
 } from './utils'
 import {click} from './click'
 
@@ -86,6 +89,14 @@ async function typeImpl(
 
   if (!skipClick) click(element)
 
+  if (isContentEditable(element)) {
+    if (document.getSelection().rangeCount === 0) {
+      const range = document.createRange()
+      range.setStart(element, 0)
+      range.setEnd(element, 0)
+      document.getSelection().addRange(range)
+    }
+  }
   // The focused element could change between each event, so get the currently active element each time
   const currentElement = () => getActiveElement(element.ownerDocument)
 
@@ -97,12 +108,11 @@ async function typeImpl(
   // the only time it would make sense to pass the initialSelectionStart or
   // initialSelectionEnd is if you have an input with a value and want to
   // explicitely start typing with the cursor at 0. Not super common.
-  const value = currentElement().value
-  if (
-    value != null &&
-    currentElement().selectionStart === 0 &&
-    currentElement().selectionEnd === 0
-  ) {
+  const value = getValue(currentElement())
+
+  const {selectionStart, selectionEnd} = getSelectionRange(element)
+
+  if (value != null && selectionStart === 0 && selectionEnd === 0) {
     setSelectionRangeIfNecessary(
       currentElement(),
       initialSelectionStart ?? value.length,
@@ -222,7 +232,7 @@ function setSelectionRange({currentElement, newValue, newSelectionStart}) {
   // The reason we have to do this at all is because it actually *is*
   // programmatically changed by fireEvent.input, so we have to simulate the
   // browser's default behavior
-  const value = currentElement().value
+  const value = getValue(currentElement())
 
   if (value === newValue) {
     setSelectionRangeIfNecessary(
@@ -244,16 +254,23 @@ function fireInputEventIfNeeded({
   newSelectionStart,
   eventOverrides,
 }) {
-  const prevValue = currentElement().value
+  const prevValue = getValue(currentElement())
   if (
     !currentElement().readOnly &&
     !isClickable(currentElement()) &&
     newValue !== prevValue
   ) {
-    fireEvent.input(currentElement(), {
-      target: {value: newValue},
-      ...eventOverrides,
-    })
+    if (isContentEditable(currentElement())) {
+      fireEvent.input(currentElement(), {
+        target: {textContent: newValue},
+        ...eventOverrides,
+      })
+    } else {
+      fireEvent.input(currentElement(), {
+        target: {value: newValue},
+        ...eventOverrides,
+      })
+    }
 
     setSelectionRange({
       currentElement,
@@ -280,7 +297,6 @@ function typeCharacter(
   const keyCode = char.charCodeAt(0)
   let nextPrevWasMinus, nextPrevWasPeriod
   const textToBeTyped = typedValue + char
-
   const keyDownDefaultNotPrevented = fireEvent.keyDown(currentElement(), {
     key,
     keyCode,
@@ -295,8 +311,7 @@ function typeCharacter(
       charCode: keyCode,
       ...eventOverrides,
     })
-
-    if (currentElement().value != null && keyPressDefaultNotPrevented) {
+    if (getValue(currentElement()) != null && keyPressDefaultNotPrevented) {
       let newEntry = char
       if (prevWasMinus) {
         newEntry = `-${char}`
@@ -330,7 +345,7 @@ function typeCharacter(
       // to typing an invalid character (typing "-a3" results in "-3")
       // same applies for the decimal character.
       if (currentElement().type === 'number') {
-        const newValue = currentElement().value
+        const newValue = getValue(currentElement())
         if (newValue === prevValue && newEntry !== '-') {
           nextPrevWasMinus = prevWasMinus
         } else {
@@ -365,7 +380,8 @@ function typeCharacter(
 // If you, brave soul, decide to so endevor, please increment this count
 // when you inevitably fail: 1
 function calculateNewBackspaceValue(element) {
-  const {selectionStart, selectionEnd, value} = element
+  const {selectionStart, selectionEnd} = getSelectionRange(element)
+  const value = getValue(element)
   let newValue, newSelectionStart
 
   if (selectionStart === null) {
@@ -398,7 +414,8 @@ function calculateNewBackspaceValue(element) {
 }
 
 function calculateNewDeleteValue(element) {
-  const {selectionStart, selectionEnd, value} = element
+  const {selectionStart, selectionEnd} = getSelectionRange(element)
+  const value = getValue(element)
   let newValue
 
   if (selectionStart === null) {
@@ -600,7 +617,14 @@ function handleBackspace({currentElement, eventOverrides}) {
 function handleSelectall({currentElement}) {
   // the user can actually select in several different ways
   // we're not going to choose, so we'll *only* set the selection range
-  currentElement().setSelectionRange(0, currentElement().value.length)
+  if (isContentEditable(currentElement())) {
+    const range = document.createRange()
+    range.selectNodeContents(currentElement())
+    document.getSelection().removeAllRanges()
+    document.getSelection().addRange(range)
+  } else {
+    currentElement().setSelectionRange(0, getValue(currentElement()).length)
+  }
 }
 
 function handleSpace(context) {

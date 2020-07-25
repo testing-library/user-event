@@ -876,33 +876,33 @@ test('should type inside a contenteditable div ', () => {
   userEvent.type(element, 'bar')
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
-    Events fired on: div[value="bar"]
+    Events fired on: div
 
-    div[value=""] - pointerover
-    div[value=""] - pointerenter
-    div[value=""] - mouseover: Left (0)
-    div[value=""] - mouseenter: Left (0)
-    div[value=""] - pointermove
-    div[value=""] - mousemove: Left (0)
-    div[value=""] - pointerdown
-    div[value=""] - mousedown: Left (0)
-    div[value=""] - focus
-    div[value=""] - focusin
-    div[value=""] - pointerup
-    div[value=""] - mouseup: Left (0)
-    div[value=""] - click: Left (0)
-    div[value=""] - keydown: b (98)
-    div[value=""] - keypress: b (98)
-    div[value="b"] - input
-    div[value="b"] - keyup: b (98)
-    div[value="b"] - keydown: a (97)
-    div[value="b"] - keypress: a (97)
-    div[value="ba"] - input
-    div[value="ba"] - keyup: a (97)
-    div[value="ba"] - keydown: r (114)
-    div[value="ba"] - keypress: r (114)
-    div[value="bar"] - input
-    div[value="bar"] - keyup: r (114)
+    div - pointerover
+    div - pointerenter
+    div - mouseover: Left (0)
+    div - mouseenter: Left (0)
+    div - pointermove
+    div - mousemove: Left (0)
+    div - pointerdown
+    div - mousedown: Left (0)
+    div - focus
+    div - focusin
+    div - pointerup
+    div - mouseup: Left (0)
+    div - click: Left (0)
+    div - keydown: b (98)
+    div - keypress: b (98)
+    div - input
+    div - keyup: b (98)
+    div - keydown: a (97)
+    div - keypress: a (97)
+    div - input
+    div - keyup: a (97)
+    div - keydown: r (114)
+    div - keypress: r (114)
+    div - input
+    div - keyup: r (114)
   `)
   expect(element).toHaveTextContent('bar')
 })

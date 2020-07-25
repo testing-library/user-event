@@ -127,7 +127,8 @@ function getSelectionRange(element) {
 function isContentEditable(element) {
   return (
     element.hasAttribute('contenteditable') &&
-    element.getAttribute('contenteditable') == 'true'
+    (element.getAttribute('contenteditable') == 'true' ||
+      element.getAttribute('contenteditable') == '')
   )
 }
 

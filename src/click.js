@@ -2,6 +2,7 @@ import {fireEvent} from '@testing-library/dom'
 import {
   getMouseEventOptions,
   isLabelWithInternallyDisabledControl,
+  isContentEditable,
 } from './utils'
 import {hover} from './hover'
 import {blur} from './blur'
@@ -63,7 +64,10 @@ function clickElement(element, init, {clickCount}) {
     const shouldFocus = element.ownerDocument.activeElement !== element
     if (continueDefaultHandling) {
       if (previousElement) blur(previousElement, init)
-      if (shouldFocus) focus(element, init)
+      if (shouldFocus) {
+        if (element.tagName !== 'DIV' || isContentEditable(element))
+          focus(element, init)
+      }
     }
   }
   fireEvent.pointerUp(element, init)

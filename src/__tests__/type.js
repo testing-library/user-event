@@ -869,3 +869,40 @@ test('should submit a form when ENTER is pressed on input', () => {
 
   expect(handleSubmit).toHaveBeenCalledTimes(1)
 })
+
+test('should type inside a contenteditable div ', () => {
+  const {element, getEventSnapshot} = setup('<div contenteditable=true></div>')
+
+  userEvent.type(element, 'bar')
+
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
+    Events fired on: div[value="bar"]
+
+    div[value=""] - pointerover
+    div[value=""] - pointerenter
+    div[value=""] - mouseover: Left (0)
+    div[value=""] - mouseenter: Left (0)
+    div[value=""] - pointermove
+    div[value=""] - mousemove: Left (0)
+    div[value=""] - pointerdown
+    div[value=""] - mousedown: Left (0)
+    div[value=""] - focus
+    div[value=""] - focusin
+    div[value=""] - pointerup
+    div[value=""] - mouseup: Left (0)
+    div[value=""] - click: Left (0)
+    div[value=""] - keydown: b (98)
+    div[value=""] - keypress: b (98)
+    div[value="b"] - input
+    div[value="b"] - keyup: b (98)
+    div[value="b"] - keydown: a (97)
+    div[value="b"] - keypress: a (97)
+    div[value="ba"] - input
+    div[value="ba"] - keyup: a (97)
+    div[value="ba"] - keydown: r (114)
+    div[value="ba"] - keypress: r (114)
+    div[value="bar"] - input
+    div[value="bar"] - keyup: r (114)
+  `)
+  expect(element).toHaveTextContent('bar')
+})

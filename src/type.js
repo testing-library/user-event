@@ -490,6 +490,10 @@ function handleEnter({currentElement, eventOverrides}) {
     })
   }
 
+  if (currentElement().tagName === 'INPUT' && currentElement().form) {
+    fireEvent.submit(currentElement().form)
+  }
+
   fireEvent.keyUp(currentElement(), {
     key,
     keyCode,

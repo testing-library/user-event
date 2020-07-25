@@ -906,3 +906,25 @@ test('should type inside a contenteditable div ', () => {
   `)
   expect(element).toHaveTextContent('bar')
 })
+
+test('should not type inside a contenteditable=false div', () => {
+  const {element, getEventSnapshot} = setup('<div contenteditable=false></div>')
+
+  userEvent.type(element, 'bar')
+
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
+    Events fired on: div
+
+    div - pointerover
+    div - pointerenter
+    div - mouseover: Left (0)
+    div - mouseenter: Left (0)
+    div - pointermove
+    div - mousemove: Left (0)
+    div - pointerdown
+    div - mousedown: Left (0)
+    div - pointerup
+    div - mouseup: Left (0)
+    div - click: Left (0)
+  `)
+})

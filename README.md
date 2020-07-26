@@ -220,14 +220,14 @@ test('delete characters within the selectedRange', () => {
   render(
     <div>
       <label htmlFor="my-input">Example:</label>
-      <input id="my-input" type="text" value="This is an example" />
+      <input id="my-input" type="text" value="This is a bad example" />
     </div>,
   )
   const input = screen.getByLabelText(/example/i)
-  input.setSelectionRange(11, 16)
-  userEvent.type(input, '{backspace}')
+  input.setSelectionRange(10, 13)
+  userEvent.type(input, '{backspace}good')
 
-  expect(input).toHaveValue('This is an le')
+  expect(input).toHaveValue('This is a good example')
 })
 ```
 

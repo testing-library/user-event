@@ -187,8 +187,8 @@ The following special character strings are supported:
 | `{enter}`     | Enter     | N/A        | Will insert a newline character (`<textarea />` only).                                                                                                              |
 | `{space}`     | `' '`     | N/A        |                                                                                                                                                                     |
 | `{esc}`       | Escape    | N/A        |                                                                                                                                                                     |
-| `{backspace}` | Backspace | N/A        | Will delete the previous character (or the characters within the `selectedRange`).                                                                                  |
-| `{del}`       | Delete    | N/A        | Will delete the next character (or the characters within the `selectedRange`)                                                                                       |
+| `{backspace}` | Backspace | N/A        | Will delete the previous character (or the characters within the `selectedRange`, see example below).                                                               |
+| `{del}`       | Delete    | N/A        | Will delete the next character (or the characters within the `selectedRange`, see example below)                                                                    |
 | `{selectall}` | N/A       | N/A        | Selects all the text of the element. Note that this will only work for elements that support selection ranges (so, not `email`, `password`, `number`, among others) |
 | `{shift}`     | Shift     | `shiftKey` | Does **not** capitalize following characters.                                                                                                                       |
 | `{ctrl}`      | Control   | `ctrlKey`  |                                                                                                                                                                     |
@@ -208,6 +208,28 @@ The following special character strings are supported:
 > in that we do not simulate the behavior that happens with modifier key
 > combinations as different operating systems function differently in this
 > regard.
+
+An example of an usage with a selection range:
+
+```jsx
+import React from 'react'
+import {render, screen} from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+
+test('delete characters within the selectedRange', () => {
+  render(
+    <div>
+      <label htmlFor="my-input">Example:</label>
+      <input id="my-input" type="text" value="This is a bad example" />
+    </div>,
+  )
+  const input = screen.getByLabelText(/example/i)
+  input.setSelectionRange(10, 13)
+  userEvent.type(input, '{backspace}good')
+
+  expect(input).toHaveValue('This is a good example')
+})
+```
 
 ### `upload(element, file, [{ clickInit, changeInit }])`
 
@@ -560,6 +582,7 @@ Thanks goes to these people ([emoji key][emojis]):
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors][all-contributors] specification.

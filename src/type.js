@@ -310,7 +310,9 @@ function typeCharacter(
         newEntry = `-${char}`
       } else if (prevWasPeriod) {
         newEntry = `${prevValue}.${char}`
-      } else if (isValidDateValue(currentElement(), textToBeTyped)) {
+      }
+
+      if (isValidDateValue(currentElement(), textToBeTyped)) {
         newEntry = textToBeTyped
       }
 

@@ -317,7 +317,6 @@ function typeCharacter(
           ...eventOverrides,
         },
         currentElement,
-        textToBeTyped,
       })
       prevValue = inputEvent.prevValue
 

@@ -94,6 +94,22 @@ function getActiveElement(document) {
   }
 }
 
+function supportsMaxLength(element) {
+  if (element.tagName === 'TEXTAREA') return true
+
+  if (element.tagName === 'INPUT') {
+    const type = element.getAttribute('type')
+
+    // Missing value default is "text"
+    if (!type) return true
+
+    // https://html.spec.whatwg.org/multipage/input.html#concept-input-apply
+    if (type.match(/email|password|search|telephone|text|url/)) return true
+  }
+
+  return false
+}
+
 function calculateNewValue(newEntry, element) {
   const {selectionStart, selectionEnd, value} = element
 
@@ -126,7 +142,7 @@ function calculateNewValue(newEntry, element) {
     newSelectionStart = firstPart.length
   }
 
-  if (maxLength < 0) {
+  if (!supportsMaxLength(element) || maxLength < 0) {
     return {newValue, newSelectionStart}
   } else {
     return {

@@ -245,7 +245,6 @@ function fireInputEventIfNeeded({
   eventOverrides,
 }) {
   const prevValue = currentElement().value
-
   if (
     !currentElement().readOnly &&
     !isClickable(currentElement()) &&

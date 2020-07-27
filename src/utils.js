@@ -126,6 +126,10 @@ function calculateNewValue(newEntry, element) {
     newSelectionStart = firstPart.length
   }
 
+  if (element.type === 'date' && !isValidDateValue(element, newValue)) {
+    newValue = value
+  }
+
   if (maxLength < 0) {
     return {newValue, newSelectionStart}
   } else {
@@ -197,7 +201,7 @@ function eventWrapper(cb) {
 }
 
 function isValidDateValue(element, value) {
-  if(element.type !== 'date') return false
+  if (element.type !== 'date') return false
 
   const clone = element.cloneNode()
   clone.value = value

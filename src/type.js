@@ -243,15 +243,8 @@ function fireInputEventIfNeeded({
   newValue,
   newSelectionStart,
   eventOverrides,
-  textToBeTyped,
 }) {
   const prevValue = currentElement().value
-
-  if (
-    currentElement().type === 'date' &&
-    !isValidDateValue(currentElement(), textToBeTyped)
-  )
-    return {prevValue}
 
   if (
     !currentElement().readOnly &&

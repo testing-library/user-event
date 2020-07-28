@@ -322,6 +322,45 @@ test('honors maxlength with existing text', () => {
   `)
 })
 
+test('honors maxlength on textarea', () => {
+  const {element, getEventSnapshot} = setup(
+    '<textarea maxlength="2">12</textarea>',
+  )
+
+  userEvent.type(element, '3')
+
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
+    Events fired on: textarea[value="12"]
+
+    textarea[value="12"] - pointerover
+    textarea[value="12"] - pointerenter
+    textarea[value="12"] - mouseover: Left (0)
+    textarea[value="12"] - mouseenter: Left (0)
+    textarea[value="12"] - pointermove
+    textarea[value="12"] - mousemove: Left (0)
+    textarea[value="12"] - pointerdown
+    textarea[value="12"] - mousedown: Left (0)
+    textarea[value="12"] - focus
+    textarea[value="12"] - focusin
+    textarea[value="12"] - pointerup
+    textarea[value="12"] - mouseup: Left (0)
+    textarea[value="12"] - click: Left (0)
+    textarea[value="12"] - select
+    textarea[value="12"] - keydown: 3 (51)
+    textarea[value="12"] - keypress: 3 (51)
+    textarea[value="12"] - keyup: 3 (51)
+  `)
+})
+
+// https://github.com/testing-library/user-event/issues/418
+test('ignores maxlength on input[type=number]', () => {
+  const {element} = setup(`<input maxlength="2" type="number" value="12" />`)
+
+  userEvent.type(element, '3')
+
+  expect(element).toHaveValue(123)
+})
+
 test('should fire events on the currently focused element', () => {
   const {element} = setup(`<div><input /><input /></div>`, {
     eventHandlers: {keyDown: handleKeyDown},
@@ -812,4 +851,21 @@ test('typing on input type file should not result in an error', () => {
   const {element} = setup('<input type="file" />')
   expect.assertions(0)
   return userEvent.type(element, 'bar').catch(e => expect(e).toBeUndefined())
+})
+
+test('should submit a form when ENTER is pressed on input', () => {
+  const handleSubmit = jest.fn()
+  const {element} = setup(
+    `
+    <form>
+      <input type='text'/>
+    </form>
+  `,
+    {
+      eventHandlers: {submit: handleSubmit},
+    },
+  )
+  userEvent.type(element.querySelector('input'), '{enter}')
+
+  expect(handleSubmit).toHaveBeenCalledTimes(1)
 })

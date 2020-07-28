@@ -9,6 +9,7 @@ import {
   calculateNewValue,
   setSelectionRangeIfNecessary,
   isClickable,
+  isValidDateValue,
 } from './utils'
 import {click} from './click'
 
@@ -130,7 +131,7 @@ async function typeImpl(
 
   async function runCallbacks(callbacks) {
     const eventOverrides = {}
-    let prevWasMinus, prevWasPeriod, prevValue
+    let prevWasMinus, prevWasPeriod, prevValue, typedValue
     for (const callback of callbacks) {
       if (delay > 0) await wait(delay)
       if (!currentElement().disabled) {
@@ -140,11 +141,13 @@ async function typeImpl(
           prevWasPeriod,
           prevValue,
           eventOverrides,
+          typedValue,
         })
         Object.assign(eventOverrides, returnValue?.eventOverrides)
         prevWasMinus = returnValue?.prevWasMinus
         prevWasPeriod = returnValue?.prevWasPeriod
         prevValue = returnValue?.prevValue
+        typedValue = returnValue?.typedValue
       }
     }
   }
@@ -269,12 +272,14 @@ function typeCharacter(
     prevWasMinus = false,
     prevWasPeriod = false,
     prevValue = '',
+    typedValue = '',
     eventOverrides,
   },
 ) {
   const key = char // TODO: check if this also valid for characters with diacritic markers e.g. úé etc
   const keyCode = char.charCodeAt(0)
   let nextPrevWasMinus, nextPrevWasPeriod
+  const textToBeTyped = typedValue + char
 
   const keyDownDefaultNotPrevented = fireEvent.keyDown(currentElement(), {
     key,
@@ -299,6 +304,10 @@ function typeCharacter(
         newEntry = `${prevValue}.${char}`
       }
 
+      if (isValidDateValue(currentElement(), textToBeTyped)) {
+        newEntry = textToBeTyped
+      }
+
       const inputEvent = fireInputEventIfNeeded({
         ...calculateNewValue(newEntry, currentElement()),
         eventOverrides: {
@@ -309,6 +318,10 @@ function typeCharacter(
         currentElement,
       })
       prevValue = inputEvent.prevValue
+
+      if (isValidDateValue(currentElement(), textToBeTyped)) {
+        fireEvent.change(currentElement(), {target: {value: textToBeTyped}})
+      }
 
       // typing "-" into a number input will not actually update the value
       // so for the next character we type, the value should be set to
@@ -343,6 +356,7 @@ function typeCharacter(
     prevWasMinus: nextPrevWasMinus,
     prevWasPeriod: nextPrevWasPeriod,
     prevValue,
+    typedValue: textToBeTyped,
   }
 }
 

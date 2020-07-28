@@ -639,6 +639,63 @@ test('can type into an input with type `email`', () => {
   expect(element).toHaveValue(email)
 })
 
+test('can type into an input with type `date`', () => {
+  const {element, getEventSnapshot} = setup('<input type="date" />')
+  const date = '2020-06-29'
+  userEvent.type(element, date)
+  expect(element).toHaveValue(date)
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
+    Events fired on: input[value="2020-06-29"]
+
+    input[value=""] - pointerover
+    input[value=""] - pointerenter
+    input[value=""] - mouseover: Left (0)
+    input[value=""] - mouseenter: Left (0)
+    input[value=""] - pointermove
+    input[value=""] - mousemove: Left (0)
+    input[value=""] - pointerdown
+    input[value=""] - mousedown: Left (0)
+    input[value=""] - focus
+    input[value=""] - focusin
+    input[value=""] - pointerup
+    input[value=""] - mouseup: Left (0)
+    input[value=""] - click: Left (0)
+    input[value=""] - keydown: 2 (50)
+    input[value=""] - keypress: 2 (50)
+    input[value=""] - keyup: 2 (50)
+    input[value=""] - keydown: 0 (48)
+    input[value=""] - keypress: 0 (48)
+    input[value=""] - keyup: 0 (48)
+    input[value=""] - keydown: 2 (50)
+    input[value=""] - keypress: 2 (50)
+    input[value=""] - keyup: 2 (50)
+    input[value=""] - keydown: 0 (48)
+    input[value=""] - keypress: 0 (48)
+    input[value=""] - keyup: 0 (48)
+    input[value=""] - keydown: - (45)
+    input[value=""] - keypress: - (45)
+    input[value=""] - keyup: - (45)
+    input[value=""] - keydown: 0 (48)
+    input[value=""] - keypress: 0 (48)
+    input[value=""] - keyup: 0 (48)
+    input[value=""] - keydown: 6 (54)
+    input[value=""] - keypress: 6 (54)
+    input[value=""] - keyup: 6 (54)
+    input[value=""] - keydown: - (45)
+    input[value=""] - keypress: - (45)
+    input[value=""] - keyup: - (45)
+    input[value=""] - keydown: 2 (50)
+    input[value=""] - keypress: 2 (50)
+    input[value=""] - keyup: 2 (50)
+    input[value=""] - keydown: 9 (57)
+    input[value=""] - keypress: 9 (57)
+    input[value="2020-06-29"] - input
+      "{CURSOR}" -> "{CURSOR}2020-06-29"
+    input[value="2020-06-29"] - change
+    input[value="2020-06-29"] - keyup: 9 (57)
+  `)
+})
+
 // https://github.com/testing-library/user-event/issues/336
 test('can type "-" into number inputs', () => {
   const {element, getEventSnapshot} = setup('<input type="number" />')

@@ -142,6 +142,10 @@ function calculateNewValue(newEntry, element) {
     newSelectionStart = firstPart.length
   }
 
+  if (element.type === 'date' && !isValidDateValue(element, newValue)) {
+    newValue = value
+  }
+
   if (!supportsMaxLength(element) || maxLength < 0) {
     return {newValue, newSelectionStart}
   } else {
@@ -212,6 +216,14 @@ function eventWrapper(cb) {
   return result
 }
 
+function isValidDateValue(element, value) {
+  if (element.type !== 'date') return false
+
+  const clone = element.cloneNode()
+  clone.value = value
+  return clone.value === value
+}
+
 export {
   FOCUSABLE_SELECTOR,
   isFocusable,
@@ -222,4 +234,5 @@ export {
   calculateNewValue,
   setSelectionRangeIfNecessary,
   eventWrapper,
+  isValidDateValue,
 }

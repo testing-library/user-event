@@ -224,15 +224,13 @@ const FOCUSABLE_SELECTOR = [
   'select:not([disabled])',
   'textarea:not([disabled])',
   'a[href]',
-  'div[contenteditable]',
-  'div[contenteditable=true]',
   '[tabindex]:not([disabled])',
 ].join(', ')
 
 function isFocusable(element) {
   return (
     !isLabelWithInternallyDisabledControl(element) &&
-    element?.matches(FOCUSABLE_SELECTOR)
+    (isContentEditable(element) || element?.matches(FOCUSABLE_SELECTOR))
   )
 }
 

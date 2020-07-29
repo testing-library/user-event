@@ -89,13 +89,11 @@ async function typeImpl(
 
   if (!skipClick) click(element)
 
-  if (isContentEditable(element)) {
-    if (document.getSelection().rangeCount === 0) {
-      const range = document.createRange()
-      range.setStart(element, 0)
-      range.setEnd(element, 0)
-      document.getSelection().addRange(range)
-    }
+  if (isContentEditable(element) && document.getSelection().rangeCount === 0) {
+    const range = document.createRange()
+    range.setStart(element, 0)
+    range.setEnd(element, 0)
+    document.getSelection().addRange(range)
   }
   // The focused element could change between each event, so get the currently active element each time
   const currentElement = () => getActiveElement(element.ownerDocument)

@@ -870,7 +870,7 @@ test('should submit a form when ENTER is pressed on input', () => {
   expect(handleSubmit).toHaveBeenCalledTimes(1)
 })
 
-test('should type inside a contenteditable div ', () => {
+test('should type inside a contenteditable div', () => {
   const {element, getEventSnapshot} = setup('<div contenteditable=true></div>')
 
   userEvent.type(element, 'bar')

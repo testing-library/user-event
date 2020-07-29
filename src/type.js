@@ -615,16 +615,7 @@ function handleBackspace({currentElement, eventOverrides}) {
 }
 
 function handleSelectall({currentElement}) {
-  // the user can actually select in several different ways
-  // we're not going to choose, so we'll *only* set the selection range
-  if (isContentEditable(currentElement())) {
-    const range = document.createRange()
-    range.selectNodeContents(currentElement())
-    document.getSelection().removeAllRanges()
-    document.getSelection().addRange(range)
-  } else {
-    currentElement().setSelectionRange(0, getValue(currentElement()).length)
-  }
+  currentElement().setSelectionRange(0, getValue(currentElement()).length)
 }
 
 function handleSpace(context) {

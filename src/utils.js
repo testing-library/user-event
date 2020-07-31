@@ -110,8 +110,38 @@ function supportsMaxLength(element) {
   return false
 }
 
+function getSelectionRange(element) {
+  if (isContentEditable(element)) {
+    const range = document.getSelection().getRangeAt(0)
+
+    return {selectionStart: range.startOffset, selectionEnd: range.endOffset}
+  }
+
+  return {
+    selectionStart: element.selectionStart,
+    selectionEnd: element.selectionEnd,
+  }
+}
+
+//jsdom is not supporting isContentEditable
+function isContentEditable(element) {
+  return (
+    element.hasAttribute('contenteditable') &&
+    (element.getAttribute('contenteditable') == 'true' ||
+      element.getAttribute('contenteditable') == '')
+  )
+}
+
+function getValue(element) {
+  if (isContentEditable(element)) {
+    return element.textContent
+  }
+  return element.value
+}
+
 function calculateNewValue(newEntry, element) {
-  const {selectionStart, selectionEnd, value} = element
+  const {selectionStart, selectionEnd} = getSelectionRange(element)
+  const value = getValue(element)
 
   // can't use .maxLength property because of a jsdom bug:
   // https://github.com/jsdom/jsdom/issues/2927
@@ -162,8 +192,12 @@ function setSelectionRangeIfNecessary(
   newSelectionStart,
   newSelectionEnd,
 ) {
-  const {selectionStart, selectionEnd} = element
-  if (!element.setSelectionRange || selectionStart === null) {
+  const {selectionStart, selectionEnd} = getSelectionRange(element)
+
+  if (
+    !isContentEditable(element) &&
+    (!element.setSelectionRange || selectionStart === null)
+  ) {
     // cannot set selection
     return
   }
@@ -171,7 +205,16 @@ function setSelectionRangeIfNecessary(
     selectionStart !== newSelectionStart ||
     selectionEnd !== newSelectionStart
   ) {
-    element.setSelectionRange(newSelectionStart, newSelectionEnd)
+    if (isContentEditable(element)) {
+      const range = document.createRange()
+      range.selectNodeContents(element)
+      range.setStart(element.firstChild, newSelectionStart)
+      range.setEnd(element.firstChild, newSelectionEnd)
+      document.getSelection().removeAllRanges()
+      document.getSelection().addRange(range)
+    } else {
+      element.setSelectionRange(newSelectionStart, newSelectionEnd)
+    }
   }
 }
 
@@ -180,6 +223,8 @@ const FOCUSABLE_SELECTOR = [
   'button:not([disabled])',
   'select:not([disabled])',
   'textarea:not([disabled])',
+  '[contenteditable=""]',
+  '[contenteditable="true"]',
   'a[href]',
   '[tabindex]:not([disabled])',
 ].join(', ')
@@ -235,4 +280,7 @@ export {
   setSelectionRangeIfNecessary,
   eventWrapper,
   isValidDateValue,
+  getValue,
+  getSelectionRange,
+  isContentEditable,
 }

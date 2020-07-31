@@ -1,5 +1,4 @@
 import {eventMap} from '@testing-library/dom/dist/event-map'
-
 // this is pretty helpful:
 // https://codesandbox.io/s/quizzical-worker-eo909
 
@@ -95,6 +94,7 @@ function getElementValue(element) {
     // handled separately
     return null
   }
+
   return JSON.stringify(element.value)
 }
 

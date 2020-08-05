@@ -175,6 +175,10 @@ are typed. By default it's 0. You can use this option if your component has a
 different behavior for fast or slow users. If you do this, you need to make sure
 to `await`!
 
+> To be clear, `userEvent.type` *always* returns a promise, but you *only* need
+> to `await` the promise it returns if you're using the `delay` option. Otherwise
+> everything runs synchronously and you can ignore the promise.
+
 `type` will click the element before typing. To disable this, set the
 `skipClick` option to `true`.
 

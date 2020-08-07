@@ -519,7 +519,13 @@ function handleEnter({currentElement, eventOverrides}) {
     })
   }
 
-  if (currentElement().tagName === 'INPUT' && currentElement().form) {
+  if (
+    currentElement().tagName === 'INPUT' &&
+    currentElement().form &&
+    (currentElement().form.querySelectorAll('input').length === 1 ||
+      currentElement().form.querySelector('input[type="submit"]') ||
+      currentElement().form.querySelector('button[type="submit"]'))
+  ) {
     fireEvent.submit(currentElement().form)
   }
 

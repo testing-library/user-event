@@ -384,6 +384,25 @@ test('should fire events on the currently focused element', () => {
   expect(input2).toHaveFocus()
 })
 
+test('honors ignoreActiveElement option', () => {
+  const {element} = setup(`<div><input /><input /></div>`, {
+    eventHandlers: {keyDown: handleKeyDown},
+  })
+
+  const input1 = element.children[0]
+  const input2 = element.children[1]
+
+  const text = 'Hello, world!'
+  function handleKeyDown() {
+    input2.focus()
+  }
+
+  userEvent.type(input1, text, {ignoreActiveElement: true})
+
+  expect(input1).toHaveValue('Hello, world!')
+  expect(input2).not.toHaveValue()
+})
+
 test('should replace selected text', () => {
   const {element} = setup('<input value="hello world" />')
   const selectionStart = 'hello world'.search('world')

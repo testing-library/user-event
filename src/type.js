@@ -83,6 +83,7 @@ async function typeImpl(
     skipAutoClose = false,
     initialSelectionStart,
     initialSelectionEnd,
+    ignoreActiveElement,
   },
 ) {
   if (element.disabled) return
@@ -96,7 +97,10 @@ async function typeImpl(
     document.getSelection().addRange(range)
   }
   // The focused element could change between each event, so get the currently active element each time
-  const currentElement = () => getActiveElement(element.ownerDocument)
+  const currentElement = () =>
+    ignoreActiveElement === true
+      ? element
+      : getActiveElement(element.ownerDocument)
 
   // by default, a new element has it's selection start and end at 0
   // but most of the time when people call "type", they expect it to type

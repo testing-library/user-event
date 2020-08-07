@@ -175,12 +175,16 @@ are typed. By default it's 0. You can use this option if your component has a
 different behavior for fast or slow users. If you do this, you need to make sure
 to `await`!
 
-> To be clear, `userEvent.type` *always* returns a promise, but you *only* need
-> to `await` the promise it returns if you're using the `delay` option. Otherwise
-> everything runs synchronously and you can ignore the promise.
+> To be clear, `userEvent.type` _always_ returns a promise, but you _only_ need
+> to `await` the promise it returns if you're using the `delay` option.
+> Otherwise everything runs synchronously and you can ignore the promise.
 
 `type` will click the element before typing. To disable this, set the
 `skipClick` option to `true`.
+
+`type` will type into the document's active element. To change this behavior and
+type into the `element` regardless of the active element you can set the
+`ignoreActiveElement` option to `true`.
 
 #### Special characters
 
@@ -588,6 +592,7 @@ Thanks goes to these people ([emoji key][emojis]):
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors][all-contributors] specification.

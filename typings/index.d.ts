@@ -5,6 +5,7 @@ export interface ITypeOpts {
   delay?: number
   initialSelectionStart?: number
   initialSelectionEnd?: number
+  ignoreActiveElement?: boolean
 }
 
 export interface ITabUserOptions {

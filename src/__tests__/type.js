@@ -853,10 +853,9 @@ test('typing on input type file should not result in an error', () => {
   return userEvent.type(element, 'bar').catch(e => expect(e).toBeUndefined())
 })
 
-test('should submit a form with only one input when ENTER is pressed on it', () => {
+test('should submit a form containing multiple text inputs and an input of type submit', () => {
   const handleSubmit = jest.fn()
-  let utils
-  utils = setup(
+  const {element} = setup(
     `
     <form>
       <input type='text'/>
@@ -868,11 +867,15 @@ test('should submit a form with only one input when ENTER is pressed on it', () 
       eventHandlers: {submit: handleSubmit},
     },
   )
-  userEvent.type(utils.element.querySelector('input'), '{enter}')
+  userEvent.type(element.querySelector('input'), '{enter}')
 
   expect(handleSubmit).toHaveBeenCalledTimes(1)
+})
 
-  utils = setup(
+test('should submit a form containing multiple text inputs and a submit button', () => {
+  const handleSubmit = jest.fn()
+
+  const {element} = setup(
     `
     <form>
       <input type='text'/>
@@ -884,11 +887,15 @@ test('should submit a form with only one input when ENTER is pressed on it', () 
       eventHandlers: {submit: handleSubmit},
     },
   )
-  userEvent.type(utils.element.querySelector('input'), '{enter}')
+  userEvent.type(element.querySelector('input'), '{enter}')
 
-  expect(handleSubmit).toHaveBeenCalledTimes(2)
+  expect(handleSubmit).toHaveBeenCalledTimes(1)
+})
 
-  utils = setup(
+test('should submit a form with one input element', () => {
+  const handleSubmit = jest.fn()
+
+  const {element} = setup(
     `
     <form>
       <input type='text'/>
@@ -898,9 +905,9 @@ test('should submit a form with only one input when ENTER is pressed on it', () 
       eventHandlers: {submit: handleSubmit},
     },
   )
-  userEvent.type(utils.element.querySelector('input'), '{enter}')
+  userEvent.type(element.querySelector('input'), '{enter}')
 
-  expect(handleSubmit).toHaveBeenCalledTimes(3)
+  expect(handleSubmit).toHaveBeenCalledTimes(1)
 })
 
 test('should not submit a form with multiple input when ENTER is pressed on one of it', () => {

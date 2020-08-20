@@ -419,3 +419,22 @@ test('fires mouse events with custom buttons property', () => {
     click - button=1; buttons=4; detail=1
   `)
 })
+
+test('calls FocusEvents with relatedTarget', () => {
+  const {element} = setup('<div><input/><input/></div>')
+
+  const element0 = element.children[0]
+  const element1 = element.children[1]
+  element0.focus()
+  const events0 = addListeners(element0)
+  const events1 = addListeners(element1)
+
+  userEvent.click(element1)
+
+  expect(events0.getEvents().find(e => e.type === 'blur').relatedTarget).toBe(
+    element1,
+  )
+  expect(events1.getEvents().find(e => e.type === 'focus').relatedTarget).toBe(
+    element0,
+  )
+})

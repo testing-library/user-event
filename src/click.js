@@ -2,6 +2,7 @@ import {fireEvent} from '@testing-library/dom'
 import {
   getMouseEventOptions,
   isLabelWithInternallyDisabledControl,
+  isFocusable,
 } from './utils'
 import {hover} from './hover'
 import {blur} from './blur'
@@ -60,10 +61,15 @@ function clickElement(element, init, {clickCount}) {
       element,
       getMouseEventOptions('mousedown', init, clickCount),
     )
-    const shouldFocus = element.ownerDocument.activeElement !== element
-    if (continueDefaultHandling) {
-      if (previousElement) blur(previousElement, init)
-      if (shouldFocus) focus(element, init)
+    if (
+      continueDefaultHandling &&
+      element !== element.ownerDocument.activeElement
+    ) {
+      if (previousElement && !isFocusable(element)) {
+        blur(previousElement, init)
+      } else {
+        focus(element, init)
+      }
     }
   }
   fireEvent.pointerUp(element, init)

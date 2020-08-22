@@ -94,16 +94,17 @@ function tab({shift = false, focusTrap} = {}) {
     // preventDefault on the shift key makes no difference
     if (shift) fireEvent.keyDown(previousElement, {...shiftKeyInit})
     continueToTab = fireEvent.keyDown(previousElement, {...tabKeyInit})
-    if (continueToTab) {
-      blur(previousElement)
-    }
   }
 
   const keyUpTarget =
     !continueToTab && previousElement ? previousElement : nextElement
 
   if (continueToTab) {
-    focus(nextElement)
+    if (nextElement === document.body) {
+      blur(previousElement)
+    } else {
+      focus(nextElement)
+    }
   }
 
   fireEvent.keyUp(keyUpTarget, {...tabKeyInit})

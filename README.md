@@ -23,7 +23,7 @@
 [![MIT License][license-badge]][license]
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-56-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-57-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 [![PRs Welcome][prs-badge]][prs]
 [![Code of Conduct][coc-badge]][coc]
@@ -583,6 +583,9 @@ Thanks goes to these people ([emoji key][emojis]):
     <td align="center"><a href="http://www.visualjerk.de"><img src="https://avatars0.githubusercontent.com/u/28823153?v=4" width="100px;" alt=""/><br /><sub><b>Jörg Bayreuther</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=visualjerk" title="Code">💻</a> <a href="https://github.com/testing-library/user-event/commits?author=visualjerk" title="Tests">⚠️</a> <a href="https://github.com/testing-library/user-event/commits?author=visualjerk" title="Documentation">📖</a></td>
     <td align="center"><a href="https://ko-fi.com/thislucas"><img src="https://avatars0.githubusercontent.com/u/8645841?v=4" width="100px;" alt=""/><br /><sub><b>Lucas Bernalte</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=lucbpz" title="Documentation">📖</a></td>
     <td align="center"><a href="https://github.com/maxnewlands"><img src="https://avatars3.githubusercontent.com/u/1304166?v=4" width="100px;" alt=""/><br /><sub><b>Maxwell Newlands</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=maxnewlands" title="Code">💻</a> <a href="https://github.com/testing-library/user-event/commits?author=maxnewlands" title="Tests">⚠️</a></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/ph-fritsche"><img src="https://avatars3.githubusercontent.com/u/39068198?v=4" width="100px;" alt=""/><br /><sub><b>ph-fritsche</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=ph-fritsche" title="Code">💻</a> <a href="https://github.com/testing-library/user-event/commits?author=ph-fritsche" title="Tests">⚠️</a></td>
   </tr>
 </table>
 

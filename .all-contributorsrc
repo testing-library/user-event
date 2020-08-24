@@ -569,6 +569,16 @@
         "code",
         "test"
       ]
+    },
+    {
+      "login": "reywright",
+      "name": "Rey Wright",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/708820?v=4",
+      "profile": "https://github.com/reywright",
+      "contributions": [
+        "bug",
+        "code"
+      ]
     }
   ],
   "commitConvention": "none",

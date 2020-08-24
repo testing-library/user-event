@@ -112,7 +112,7 @@ function supportsMaxLength(element) {
 
 function getSelectionRange(element) {
   if (isContentEditable(element)) {
-    const range = document.getSelection().getRangeAt(0)
+    const range = element.ownerDocument.getSelection().getRangeAt(0)
 
     return {selectionStart: range.startOffset, selectionEnd: range.endOffset}
   }
@@ -206,12 +206,12 @@ function setSelectionRangeIfNecessary(
     selectionEnd !== newSelectionStart
   ) {
     if (isContentEditable(element)) {
-      const range = document.createRange()
+      const range = element.ownerDocument.createRange()
       range.selectNodeContents(element)
       range.setStart(element.firstChild, newSelectionStart)
       range.setEnd(element.firstChild, newSelectionEnd)
-      document.getSelection().removeAllRanges()
-      document.getSelection().addRange(range)
+      element.ownerDocument.getSelection().removeAllRanges()
+      element.ownerDocument.getSelection().addRange(range)
     } else {
       element.setSelectionRange(newSelectionStart, newSelectionEnd)
     }
@@ -248,7 +248,7 @@ const CLICKABLE_INPUT_TYPES = [
 function isClickable(element) {
   return (
     element.tagName === 'BUTTON' ||
-    (element instanceof HTMLInputElement &&
+    (element instanceof element.ownerDocument.defaultView.HTMLInputElement &&
       CLICKABLE_INPUT_TYPES.includes(element.type))
   )
 }

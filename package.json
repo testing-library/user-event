@@ -38,7 +38,8 @@
     "validate": "kcd-scripts validate"
   },
   "dependencies": {
-    "@babel/runtime": "^7.10.2"
+    "@babel/runtime": "^7.10.2",
+    "@testing-library/dom": ">=7.21.4"
   },
   "devDependencies": {
     "@testing-library/dom": "^7.21.4",
@@ -46,9 +47,6 @@
     "is-ci": "^2.0.0",
     "jest-serializer-ansi": "^1.0.3",
     "kcd-scripts": "^6.2.3"
-  },
-  "peerDependencies": {
-    "@testing-library/dom": ">=7.21.4"
   },
   "eslintConfig": {
     "extends": "./node_modules/kcd-scripts/eslint.js",

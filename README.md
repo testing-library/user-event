@@ -76,13 +76,13 @@ change the state of the checkbox.
 With NPM:
 
 ```sh
-npm install @testing-library/user-event @testing-library/dom --save-dev
+npm install @testing-library/user-event --save-dev
 ```
 
 With Yarn:
 
 ```sh
-yarn add @testing-library/user-event @testing-library/dom --dev
+yarn add @testing-library/user-event --dev
 ```
 
 Now simply import it in your tests:

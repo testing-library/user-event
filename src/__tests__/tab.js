@@ -423,16 +423,60 @@ test('should respect radio groups', () => {
   )
 
   userEvent.tab()
-
   expect(firstLeft).toHaveFocus()
 
   userEvent.tab()
-
   expect(secondRight).toHaveFocus()
 
   userEvent.tab({shift: true})
-
   expect(firstRight).toHaveFocus()
+})
+
+it('should respect the correct sequence when radio group is beetwen other elements', () => {
+  setup(`
+    <div>
+      <button  data-testid="element">Left Button</button>
+      <input
+        data-testid="element"
+        type="radio"
+        name="first"
+        value="radio_left"
+      />
+      <input
+        data-testid="element"
+        type="radio"
+        name="first"
+        value="radio_right"
+        
+      />
+      <button  data-testid="element">Right Button</button>
+    </div>
+  `)
+
+  const [
+    leftButton,
+    leftRadio,
+    rightRadio,
+    rightButton,
+  ] = document.querySelectorAll('[data-testid="element"]')
+
+  userEvent.tab()
+  expect(leftButton).toHaveFocus()
+
+  userEvent.tab()
+  expect(leftRadio).toHaveFocus()
+
+  userEvent.tab({shift: true})
+  expect(leftButton).toHaveFocus()
+
+  userEvent.tab()
+  expect(leftRadio).toHaveFocus()
+
+  userEvent.tab()
+  expect(rightButton).toHaveFocus()
+
+  userEvent.tab({shift: true})
+  expect(rightRadio).toHaveFocus()
 })
 
 test('calls FocusEvents with relatedTarget', () => {

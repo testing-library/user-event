@@ -432,6 +432,71 @@ test('should respect radio groups', () => {
   expect(firstRight).toHaveFocus()
 })
 
+it('should respect the correct sequence when elements in the same radiogroup are not consecutive', () => {
+  setup(`
+    <div>
+      <input
+        data-testid="element"
+        type="radio"
+        name="first"
+        value="radio_left"
+      />
+      <button  data-testid="element">Right Button</button>
+      <input
+        data-testid="element"
+        type="radio"
+        name="first"
+        value="radio_right"
+      />
+    </div>
+  `)
+
+  const [leftRadio, centralButton, rightRadio] = document.querySelectorAll(
+    '[data-testid="element"]',
+  )
+  userEvent.tab()
+  expect(leftRadio).toHaveFocus()
+
+  userEvent.tab()
+  expect(centralButton).toHaveFocus()
+
+  userEvent.tab()
+  expect(rightRadio).toHaveFocus()
+})
+
+it('should respect the correct sequence when non focusable radio has the focus', () => {
+  setup(`
+    <div>
+      <input
+        data-testid="element"
+        type="radio"
+        name="first"
+        value="radio_left"
+      />
+      <input
+        data-testid="element"
+        type="radio"
+        name="first"
+        value="radio_right"
+      />
+      <button  data-testid="element">Right Button</button>
+    </div>
+  `)
+
+  const [leftRadio, rightRadio, rightButton] = document.querySelectorAll(
+    '[data-testid="element"]',
+  )
+
+  userEvent.click(rightRadio)
+
+  expect(rightRadio).toBeChecked()
+
+  focus(leftRadio)
+
+  userEvent.tab()
+  expect(rightButton).toHaveFocus()
+})
+
 it('should respect the correct sequence when radio group is beetwen other elements', () => {
   setup(`
     <div>

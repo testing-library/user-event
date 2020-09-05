@@ -46,30 +46,58 @@ function tab({shift = false, focusTrap} = {}) {
     })
     .map(({el}) => el)
 
+  const checkedRadio = {}
+  let radioSubgroupContainsFocusedElement = false
+  let currentTakenElementInSubgroup
   // keep only the checked or first element in each radio group
   const prunedElements = []
   for (const el of orderedElements) {
     if (el.type === 'radio' && el.name) {
-      const replacedIndex = prunedElements.findIndex(
-        ({name}) => name === el.name,
-      )
-      if (replacedIndex === -1) {
-        prunedElements.push(el)
-      } else if (el.checked) {
-        prunedElements.splice(replacedIndex, 1)
-        prunedElements.push(el)
-      } else if (
-        shift &&
-        !prunedElements[replacedIndex].checked &&
-        el.ownerDocument.activeElement !== prunedElements[replacedIndex]
+      if (
+        currentTakenElementInSubgroup &&
+        currentTakenElementInSubgroup.name !== el.name
       ) {
-        prunedElements.splice(replacedIndex, 1)
-        prunedElements.push(el)
+        prunedElements.push(currentTakenElementInSubgroup)
+        currentTakenElementInSubgroup = null
+        radioSubgroupContainsFocusedElement = false
+      }
+      if (el.ownerDocument.activeElement === el) {
+        radioSubgroupContainsFocusedElement = true
+        currentTakenElementInSubgroup = el
+      } else if (el.checked && !radioSubgroupContainsFocusedElement) {
+        checkedRadio[el.name] = el
+        currentTakenElementInSubgroup = el
+        const elementSameRadiogroup = prunedElements.filter(
+          ({name}) => name === el.name,
+        )
+        elementSameRadiogroup.forEach(radio => {
+          if (radio !== el.ownerDocument.activeElement) {
+            const indexToDelete = prunedElements.findIndex(
+              elementToDelete => elementToDelete === radio,
+            )
+
+            prunedElements.splice(indexToDelete, 1)
+          }
+        })
+      } else if (
+        !el.checked &&
+        !radioSubgroupContainsFocusedElement &&
+        !checkedRadio[el.name]
+      ) {
+        if (!currentTakenElementInSubgroup || shift)
+          currentTakenElementInSubgroup = el
       }
     } else {
+      if (currentTakenElementInSubgroup)
+        prunedElements.push(currentTakenElementInSubgroup)
+      currentTakenElementInSubgroup = null
+      radioSubgroupContainsFocusedElement = false
       prunedElements.push(el)
     }
   }
+
+  if (currentTakenElementInSubgroup)
+    prunedElements.push(currentTakenElementInSubgroup)
 
   const index = prunedElements.findIndex(
     el => el === el.ownerDocument.activeElement,

@@ -29,7 +29,9 @@ function tab({shift = false, focusTrap} = {}) {
   const focusableElements = focusTrap.querySelectorAll(FOCUSABLE_SELECTOR)
 
   const enabledElements = [...focusableElements].filter(
-    el => el.getAttribute('tabindex') !== '-1' && !el.disabled,
+    el =>
+      el === previousElement ||
+      (el.getAttribute('tabindex') !== '-1' && !el.disabled),
   )
 
   if (enabledElements.length === 0) return
@@ -37,6 +39,14 @@ function tab({shift = false, focusTrap} = {}) {
   const orderedElements = enabledElements
     .map((el, idx) => ({el, idx}))
     .sort((a, b) => {
+      // tabindex has no effect if the active element has tabindex="-1"
+      if (
+        previousElement &&
+        previousElement.getAttribute('tabindex') === '-1'
+      ) {
+        return a.idx - b.idx
+      }
+
       const tabIndexA = a.el.getAttribute('tabindex')
       const tabIndexB = b.el.getAttribute('tabindex')
 
@@ -47,61 +57,53 @@ function tab({shift = false, focusTrap} = {}) {
     .map(({el}) => el)
 
   const checkedRadio = {}
-  let radioSubgroupContainsFocusedElement = false
-  let currentTakenElementInSubgroup
-  // keep only the checked or first element in each radio group
-  const prunedElements = []
-  for (const el of orderedElements) {
+  let prunedElements = []
+  orderedElements.forEach(el => {
+    // For radio groups keep only the active radio
+    // If there is no active radio, keep only the checked radio
+    // If there is no checked radio, keep only the first / last (with shift) of consecutive elements
     if (el.type === 'radio' && el.name) {
+      // If the active element is part of the group, add only that
       if (
-        currentTakenElementInSubgroup &&
-        currentTakenElementInSubgroup.name !== el.name
+        previousElement &&
+        previousElement.type === el.type &&
+        previousElement.name === el.name
       ) {
-        prunedElements.push(currentTakenElementInSubgroup)
-        currentTakenElementInSubgroup = null
-        radioSubgroupContainsFocusedElement = false
+        if (el === previousElement) {
+          prunedElements.push(el)
+        }
+        return
       }
-      if (el.ownerDocument.activeElement === el) {
-        radioSubgroupContainsFocusedElement = true
-        currentTakenElementInSubgroup = el
-      } else if (el.checked && !radioSubgroupContainsFocusedElement) {
-        checkedRadio[el.name] = el
-        currentTakenElementInSubgroup = el
-        const elementSameRadiogroup = prunedElements.filter(
-          ({name}) => name === el.name,
+
+      // If we stumble upon a checked radio, remove the others
+      if (el.checked) {
+        prunedElements = prunedElements.filter(
+          e => e.type !== el.type || e.name !== el.name,
         )
-        elementSameRadiogroup.forEach(radio => {
-          if (radio !== el.ownerDocument.activeElement) {
-            const indexToDelete = prunedElements.findIndex(
-              elementToDelete => elementToDelete === radio,
-            )
-
-            prunedElements.splice(indexToDelete, 1)
-          }
-        })
-      } else if (
-        !el.checked &&
-        !radioSubgroupContainsFocusedElement &&
-        !checkedRadio[el.name]
-      ) {
-        if (!currentTakenElementInSubgroup || shift)
-          currentTakenElementInSubgroup = el
+        prunedElements.push(el)
+        checkedRadio[el.name] = el
+        return
       }
-    } else {
-      if (currentTakenElementInSubgroup)
-        prunedElements.push(currentTakenElementInSubgroup)
-      currentTakenElementInSubgroup = null
-      radioSubgroupContainsFocusedElement = false
-      prunedElements.push(el)
+
+      // If we already found the checked one, skip
+      if (checkedRadio[el.name]) {
+        return
+      }
+
+      // For consecutive radios only keep the one we need in that tab direction
+      const lastEl = prunedElements[prunedElements.length]
+      if (lastEl && lastEl.type === el.type && lastEl.name === el.name) {
+        if (shift) {
+          prunedElements[prunedElements.length] = el
+        }
+        return
+      }
     }
-  }
 
-  if (currentTakenElementInSubgroup)
-    prunedElements.push(currentTakenElementInSubgroup)
+    prunedElements.push(el)
+  })
 
-  const index = prunedElements.findIndex(
-    el => el === el.ownerDocument.activeElement,
-  )
+  const index = prunedElements.findIndex(el => el === previousElement)
   const nextElement = getNextElement(index, shift, prunedElements, focusTrap)
 
   const shiftKeyInit = {

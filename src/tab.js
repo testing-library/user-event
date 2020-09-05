@@ -46,8 +46,6 @@ function tab({shift = false, focusTrap} = {}) {
     })
     .map(({el}) => el)
 
-  if (shift) orderedElements.reverse()
-
   // keep only the checked or first element in each radio group
   const prunedElements = []
   for (const el of orderedElements) {
@@ -55,10 +53,16 @@ function tab({shift = false, focusTrap} = {}) {
       const replacedIndex = prunedElements.findIndex(
         ({name}) => name === el.name,
       )
-
       if (replacedIndex === -1) {
         prunedElements.push(el)
       } else if (el.checked) {
+        prunedElements.splice(replacedIndex, 1)
+        prunedElements.push(el)
+      } else if (
+        shift &&
+        !prunedElements[replacedIndex].checked &&
+        el.ownerDocument.activeElement !== prunedElements[replacedIndex]
+      ) {
         prunedElements.splice(replacedIndex, 1)
         prunedElements.push(el)
       }
@@ -67,12 +71,9 @@ function tab({shift = false, focusTrap} = {}) {
     }
   }
 
-  if (shift) prunedElements.reverse()
-
   const index = prunedElements.findIndex(
     el => el === el.ownerDocument.activeElement,
   )
-
   const nextElement = getNextElement(index, shift, prunedElements, focusTrap)
 
   const shiftKeyInit = {

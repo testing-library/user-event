@@ -244,6 +244,26 @@ test('should suport a mix of elements with/without tab index', () => {
   expect(radio).toHaveFocus()
 })
 
+test('ignore tabindex when active element has tabindex="-1"', () => {
+  setup(`
+    <input tabindex='1'/>
+    <input tabindex='0'/>
+    <input tabindex='-1'/>
+    <input tabindex='2'/>
+  `)
+  const [inputA, inputB, inputC, inputD] = document.body.lastChild.children
+
+  inputB.focus()
+  userEvent.tab()
+
+  expect(inputA).toHaveFocus()
+
+  inputC.focus()
+  userEvent.tab()
+
+  expect(inputD).toHaveFocus()
+})
+
 test('should not tab to <a> with no href', () => {
   setup(`
     <div>
@@ -388,160 +408,103 @@ test('should keep focus on the document if there are no enabled, focusable eleme
   expect(document.body).toHaveFocus()
 })
 
-test('should respect radio groups', () => {
+test('skip consecutive radios of same group', () => {
   setup(`
-    <div>
-      <input
-        data-testid="element"
-        type="radio"
-        name="first"
-        value="first_left"
-      />
-      <input
-        data-testid="element"
-        type="radio"
-        name="first"
-        value="first_right"
-      />
-      <input
-        data-testid="element"
-        type="radio"
-        name="second"
-        value="second_left"
-      />
-      <input
-        data-testid="element"
-        type="radio"
-        name="second"
-        value="second_right"
-        checked
-      />
-    </div>`)
-
-  const [firstLeft, firstRight, , secondRight] = document.querySelectorAll(
-    '[data-testid="element"]',
-  )
-
-  userEvent.tab()
-  expect(firstLeft).toHaveFocus()
-
-  userEvent.tab()
-  expect(secondRight).toHaveFocus()
-
-  userEvent.tab({shift: true})
-  expect(firstRight).toHaveFocus()
-})
-
-it('should respect the correct sequence when elements in the same radiogroup are not consecutive', () => {
-  setup(`
-    <div>
-      <input
-        data-testid="element"
-        type="radio"
-        name="first"
-        value="radio_left"
-      />
-      <button  data-testid="element">Right Button</button>
-      <input
-        data-testid="element"
-        type="radio"
-        name="first"
-        value="radio_right"
-      />
-    </div>
+    <input/>
+    <input type="radio" name="radio1"/>
+    <input type="radio" name="radio1"/>
+    <input/>
+    <input type="radio" name="radio1"/>
+    <input type="radio" name="radio2"/>
+    <input type="radio" name="radio2"/>
+    <input/>
   `)
-
-  const [leftRadio, centralButton, rightRadio] = document.querySelectorAll(
-    '[data-testid="element"]',
-  )
-  userEvent.tab()
-  expect(leftRadio).toHaveFocus()
-
-  userEvent.tab()
-  expect(centralButton).toHaveFocus()
-
-  userEvent.tab()
-  expect(rightRadio).toHaveFocus()
-})
-
-it('should respect the correct sequence when non focusable radio has the focus', () => {
-  setup(`
-    <div>
-      <input
-        data-testid="element"
-        type="radio"
-        name="first"
-        value="radio_left"
-      />
-      <input
-        data-testid="element"
-        type="radio"
-        name="first"
-        value="radio_right"
-      />
-      <button  data-testid="element">Right Button</button>
-    </div>
-  `)
-
-  const [leftRadio, rightRadio, rightButton] = document.querySelectorAll(
-    '[data-testid="element"]',
-  )
-
-  userEvent.click(rightRadio)
-
-  expect(rightRadio).toBeChecked()
-
-  focus(leftRadio)
-
-  userEvent.tab()
-  expect(rightButton).toHaveFocus()
-})
-
-it('should respect the correct sequence when radio group is beetwen other elements', () => {
-  setup(`
-    <div>
-      <button  data-testid="element">Left Button</button>
-      <input
-        data-testid="element"
-        type="radio"
-        name="first"
-        value="radio_left"
-      />
-      <input
-        data-testid="element"
-        type="radio"
-        name="first"
-        value="radio_right"
-        
-      />
-      <button  data-testid="element">Right Button</button>
-    </div>
-  `)
-
   const [
-    leftButton,
-    leftRadio,
-    rightRadio,
-    rightButton,
-  ] = document.querySelectorAll('[data-testid="element"]')
+    inputA,
+    radioA,
+    radioB,
+    inputB,
+    radioC,
+    radioD,
+    radioE,
+    inputC,
+  ] = document.body.lastChild.children
+
+  inputA.focus()
 
   userEvent.tab()
-  expect(leftButton).toHaveFocus()
-
+  expect(radioA).toHaveFocus()
   userEvent.tab()
-  expect(leftRadio).toHaveFocus()
+  expect(inputB).toHaveFocus()
+  userEvent.tab()
+  expect(radioC).toHaveFocus()
+  userEvent.tab()
+  expect(radioD).toHaveFocus()
+  userEvent.tab()
+
+  expect(inputC).toHaveFocus()
 
   userEvent.tab({shift: true})
-  expect(leftButton).toHaveFocus()
-
-  userEvent.tab()
-  expect(leftRadio).toHaveFocus()
-
-  userEvent.tab()
-  expect(rightButton).toHaveFocus()
-
+  expect(radioE).toHaveFocus()
   userEvent.tab({shift: true})
-  expect(rightRadio).toHaveFocus()
+  expect(radioC).toHaveFocus()
+  userEvent.tab({shift: true})
+  expect(inputB).toHaveFocus()
+  userEvent.tab({shift: true})
+  expect(radioB).toHaveFocus()
+  userEvent.tab({shift: true})
+
+  expect(inputA).toHaveFocus()
+})
+
+test('skip unchecked radios if that group has a checked one', () => {
+  setup(`
+    <input/>
+    <input type="radio" name="radio"/>
+    <input/>
+    <input type="radio" name="radio" checked/>
+    <input/>
+    <input type="radio" name="radio"/>
+    <input/>
+  `)
+  const [
+    inputA,
+    ,
+    inputB,
+    radioB,
+    inputC,
+    ,
+    inputD,
+  ] = document.body.lastChild.children
+
+  inputA.focus()
+
+  userEvent.tab()
+  expect(inputB).toHaveFocus()
+  userEvent.tab()
+  expect(radioB).toHaveFocus()
+  userEvent.tab()
+  expect(inputC).toHaveFocus()
+  userEvent.tab()
+  expect(inputD).toHaveFocus()
+})
+
+test('tab from active radio when another one is checked', () => {
+  setup(`
+    <input/>
+    <input type="radio" name="radio" checked/>
+    <input/>
+    <input type="radio" name="radio"/>
+    <input/>
+  `)
+
+  const [, , , radioB, inputC] = document.body.lastChild.children
+
+  radioB.focus()
+
+  userEvent.tab()
+
+  expect(inputC).toHaveFocus()
 })
 
 test('calls FocusEvents with relatedTarget', () => {

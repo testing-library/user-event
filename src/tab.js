@@ -61,7 +61,7 @@ function tab({shift = false, focusTrap} = {}) {
   orderedElements.forEach(el => {
     // For radio groups keep only the active radio
     // If there is no active radio, keep only the checked radio
-    // If there is no checked radio, keep only the first / last (with shift) of consecutive elements
+    // If there is no checked radio, treat like everything else
     if (el.type === 'radio' && el.name) {
       // If the active element is part of the group, add only that
       if (
@@ -87,15 +87,6 @@ function tab({shift = false, focusTrap} = {}) {
 
       // If we already found the checked one, skip
       if (checkedRadio[el.name]) {
-        return
-      }
-
-      // For consecutive radios only keep the one we need in that tab direction
-      const lastEl = prunedElements[prunedElements.length]
-      if (lastEl && lastEl.type === el.type && lastEl.name === el.name) {
-        if (shift) {
-          prunedElements[prunedElements.length] = el
-        }
         return
       }
     }

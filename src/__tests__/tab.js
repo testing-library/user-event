@@ -244,6 +244,26 @@ test('should suport a mix of elements with/without tab index', () => {
   expect(radio).toHaveFocus()
 })
 
+test('ignore tabindex when active element has tabindex="-1"', () => {
+  const {element} = setup(`
+    <input tabindex='1'/>
+    <input tabindex='0'/>
+    <input tabindex='-1'/>
+    <input tabindex='2'/>
+  `)
+  const [inputA, inputB, inputC, inputD] = element.parentElement.children
+
+  inputB.focus()
+  userEvent.tab()
+
+  expect(inputA).toHaveFocus()
+
+  inputC.focus()
+  userEvent.tab()
+
+  expect(inputD).toHaveFocus()
+})
+
 test('should not tab to <a> with no href', () => {
   setup(`
     <div>
@@ -388,51 +408,102 @@ test('should keep focus on the document if there are no enabled, focusable eleme
   expect(document.body).toHaveFocus()
 })
 
-test('should respect radio groups', () => {
-  setup(`
-    <div>
-      <input
-        data-testid="element"
-        type="radio"
-        name="first"
-        value="first_left"
-      />
-      <input
-        data-testid="element"
-        type="radio"
-        name="first"
-        value="first_right"
-      />
-      <input
-        data-testid="element"
-        type="radio"
-        name="second"
-        value="second_left"
-      />
-      <input
-        data-testid="element"
-        type="radio"
-        name="second"
-        value="second_right"
-        checked
-      />
-    </div>`)
+test('skip consecutive radios of same group', () => {
+  const {element} = setup(`
+    <input/>
+    <input type="radio" name="radio1"/>
+    <input type="radio" name="radio1"/>
+    <input/>
+    <input type="radio" name="radio1"/>
+    <input type="radio" name="radio2"/>
+    <input type="radio" name="radio2"/>
+    <input/>
+  `)
+  const [
+    inputA,
+    radioA,
+    radioB,
+    inputB,
+    radioC,
+    radioD,
+    radioE,
+    inputC,
+  ] = element.parentElement.children
 
-  const [firstLeft, firstRight, , secondRight] = document.querySelectorAll(
-    '[data-testid="element"]',
-  )
+  inputA.focus()
 
   userEvent.tab()
-
-  expect(firstLeft).toHaveFocus()
-
+  expect(radioA).toHaveFocus()
+  userEvent.tab()
+  expect(inputB).toHaveFocus()
+  userEvent.tab()
+  expect(radioC).toHaveFocus()
+  userEvent.tab()
+  expect(radioD).toHaveFocus()
   userEvent.tab()
 
-  expect(secondRight).toHaveFocus()
+  expect(inputC).toHaveFocus()
 
   userEvent.tab({shift: true})
+  expect(radioE).toHaveFocus()
+  userEvent.tab({shift: true})
+  expect(radioC).toHaveFocus()
+  userEvent.tab({shift: true})
+  expect(inputB).toHaveFocus()
+  userEvent.tab({shift: true})
+  expect(radioB).toHaveFocus()
+  userEvent.tab({shift: true})
 
-  expect(firstRight).toHaveFocus()
+  expect(inputA).toHaveFocus()
+})
+
+test('skip unchecked radios if that group has a checked one', () => {
+  const {element} = setup(`
+    <input/>
+    <input type="radio" name="radio"/>
+    <input/>
+    <input type="radio" name="radio" checked/>
+    <input/>
+    <input type="radio" name="radio"/>
+    <input/>
+  `)
+  const [
+    inputA,
+    ,
+    inputB,
+    radioB,
+    inputC,
+    ,
+    inputD,
+  ] = element.parentElement.children
+
+  inputA.focus()
+
+  userEvent.tab()
+  expect(inputB).toHaveFocus()
+  userEvent.tab()
+  expect(radioB).toHaveFocus()
+  userEvent.tab()
+  expect(inputC).toHaveFocus()
+  userEvent.tab()
+  expect(inputD).toHaveFocus()
+})
+
+test('tab from active radio when another one is checked', () => {
+  const {element} = setup(`
+    <input/>
+    <input type="radio" name="radio" checked/>
+    <input/>
+    <input type="radio" name="radio"/>
+    <input/>
+  `)
+  const [, , , radioB, inputC] = element.parentElement.children
+
+  radioB.focus()
+
+  userEvent.tab()
+
+  expect(inputC).toHaveFocus()
 })
 
 test('calls FocusEvents with relatedTarget', () => {

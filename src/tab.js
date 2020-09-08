@@ -29,7 +29,9 @@ function tab({shift = false, focusTrap} = {}) {
   const focusableElements = focusTrap.querySelectorAll(FOCUSABLE_SELECTOR)
 
   const enabledElements = [...focusableElements].filter(
-    el => el.getAttribute('tabindex') !== '-1' && !el.disabled,
+    el =>
+      el === previousElement ||
+      (el.getAttribute('tabindex') !== '-1' && !el.disabled),
   )
 
   if (enabledElements.length === 0) return
@@ -37,6 +39,14 @@ function tab({shift = false, focusTrap} = {}) {
   const orderedElements = enabledElements
     .map((el, idx) => ({el, idx}))
     .sort((a, b) => {
+      // tabindex has no effect if the active element has tabindex="-1"
+      if (
+        previousElement &&
+        previousElement.getAttribute('tabindex') === '-1'
+      ) {
+        return a.idx - b.idx
+      }
+
       const tabIndexA = a.el.getAttribute('tabindex')
       const tabIndexB = b.el.getAttribute('tabindex')
 
@@ -46,33 +56,45 @@ function tab({shift = false, focusTrap} = {}) {
     })
     .map(({el}) => el)
 
-  if (shift) orderedElements.reverse()
-
-  // keep only the checked or first element in each radio group
-  const prunedElements = []
-  for (const el of orderedElements) {
+  const checkedRadio = {}
+  let prunedElements = []
+  orderedElements.forEach(el => {
+    // For radio groups keep only the active radio
+    // If there is no active radio, keep only the checked radio
+    // If there is no checked radio, treat like everything else
     if (el.type === 'radio' && el.name) {
-      const replacedIndex = prunedElements.findIndex(
-        ({name}) => name === el.name,
-      )
-
-      if (replacedIndex === -1) {
-        prunedElements.push(el)
-      } else if (el.checked) {
-        prunedElements.splice(replacedIndex, 1)
-        prunedElements.push(el)
+      // If the active element is part of the group, add only that
+      if (
+        previousElement &&
+        previousElement.type === el.type &&
+        previousElement.name === el.name
+      ) {
+        if (el === previousElement) {
+          prunedElements.push(el)
+        }
+        return
       }
-    } else {
-      prunedElements.push(el)
+
+      // If we stumble upon a checked radio, remove the others
+      if (el.checked) {
+        prunedElements = prunedElements.filter(
+          e => e.type !== el.type || e.name !== el.name,
+        )
+        prunedElements.push(el)
+        checkedRadio[el.name] = el
+        return
+      }
+
+      // If we already found the checked one, skip
+      if (checkedRadio[el.name]) {
+        return
+      }
     }
-  }
 
-  if (shift) prunedElements.reverse()
+    prunedElements.push(el)
+  })
 
-  const index = prunedElements.findIndex(
-    el => el === el.ownerDocument.activeElement,
-  )
-
+  const index = prunedElements.findIndex(el => el === previousElement)
   const nextElement = getNextElement(index, shift, prunedElements, focusTrap)
 
   const shiftKeyInit = {

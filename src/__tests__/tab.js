@@ -409,7 +409,7 @@ test('should keep focus on the document if there are no enabled, focusable eleme
 })
 
 test('skip consecutive radios of same group', () => {
-  setup(`
+  const {element} = setup(`
     <input/>
     <input type="radio" name="radio1"/>
     <input type="radio" name="radio1"/>
@@ -428,7 +428,7 @@ test('skip consecutive radios of same group', () => {
     radioD,
     radioE,
     inputC,
-  ] = document.body.lastChild.children
+  ] = element.parentElement.children
 
   inputA.focus()
 
@@ -458,7 +458,7 @@ test('skip consecutive radios of same group', () => {
 })
 
 test('skip unchecked radios if that group has a checked one', () => {
-  setup(`
+  const {element} = setup(`
     <input/>
     <input type="radio" name="radio"/>
     <input/>
@@ -475,7 +475,7 @@ test('skip unchecked radios if that group has a checked one', () => {
     inputC,
     ,
     inputD,
-  ] = document.body.lastChild.children
+  ] = element.parentElement.children
 
   inputA.focus()
 
@@ -490,15 +490,14 @@ test('skip unchecked radios if that group has a checked one', () => {
 })
 
 test('tab from active radio when another one is checked', () => {
-  setup(`
+  const {element} = setup(`
     <input/>
     <input type="radio" name="radio" checked/>
     <input/>
     <input type="radio" name="radio"/>
     <input/>
   `)
-
-  const [, , , radioB, inputC] = document.body.lastChild.children
+  const [, , , radioB, inputC] = element.parentElement.children
 
   radioB.focus()
 

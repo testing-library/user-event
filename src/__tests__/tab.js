@@ -245,13 +245,13 @@ test('should suport a mix of elements with/without tab index', () => {
 })
 
 test('ignore tabindex when active element has tabindex="-1"', () => {
-  setup(`
+  const {element} = setup(`
     <input tabindex='1'/>
     <input tabindex='0'/>
     <input tabindex='-1'/>
     <input tabindex='2'/>
   `)
-  const [inputA, inputB, inputC, inputD] = document.body.lastChild.children
+  const [inputA, inputB, inputC, inputD] = element.parentElement.children
 
   inputB.focus()
   userEvent.tab()

@@ -17,9 +17,14 @@ function setup(ui, {eventHandlers} = {}) {
   div.innerHTML = ui.trim()
   document.body.append(div)
 
-  const element = div.firstChild
-
-  return {element, ...addListeners(element, {eventHandlers})}
+  return {
+    element: div.firstChild,
+    elements: div.children,
+    // for single elements add the listeners to the element for capturing non-bubbling events
+    ...addListeners(div.children.length === 1 ? div.firstChild : div, {
+      eventHandlers,
+    }),
+  }
 }
 
 function setupSelect({

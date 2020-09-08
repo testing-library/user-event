@@ -245,13 +245,14 @@ test('should suport a mix of elements with/without tab index', () => {
 })
 
 test('ignore tabindex when active element has tabindex="-1"', () => {
-  const {element} = setup(`
+  const {
+    elements: [inputA, inputB, inputC, inputD],
+  } = setup(`
     <input tabindex='1'/>
     <input tabindex='0'/>
     <input tabindex='-1'/>
     <input tabindex='2'/>
   `)
-  const [inputA, inputB, inputC, inputD] = element.parentElement.children
 
   inputB.focus()
   userEvent.tab()
@@ -409,7 +410,9 @@ test('should keep focus on the document if there are no enabled, focusable eleme
 })
 
 test('skip consecutive radios of same group', () => {
-  const {element} = setup(`
+  const {
+    elements: [inputA, radioA, radioB, inputB, radioC, radioD, radioE, inputC],
+  } = setup(`
     <input/>
     <input type="radio" name="radio1"/>
     <input type="radio" name="radio1"/>
@@ -419,16 +422,6 @@ test('skip consecutive radios of same group', () => {
     <input type="radio" name="radio2"/>
     <input/>
   `)
-  const [
-    inputA,
-    radioA,
-    radioB,
-    inputB,
-    radioC,
-    radioD,
-    radioE,
-    inputC,
-  ] = element.parentElement.children
 
   inputA.focus()
 
@@ -458,7 +451,9 @@ test('skip consecutive radios of same group', () => {
 })
 
 test('skip unchecked radios if that group has a checked one', () => {
-  const {element} = setup(`
+  const {
+    elements: [inputA, , inputB, radioB, inputC, , inputD],
+  } = setup(`
     <input/>
     <input type="radio" name="radio"/>
     <input/>
@@ -467,15 +462,6 @@ test('skip unchecked radios if that group has a checked one', () => {
     <input type="radio" name="radio"/>
     <input/>
   `)
-  const [
-    inputA,
-    ,
-    inputB,
-    radioB,
-    inputC,
-    ,
-    inputD,
-  ] = element.parentElement.children
 
   inputA.focus()
 
@@ -490,14 +476,15 @@ test('skip unchecked radios if that group has a checked one', () => {
 })
 
 test('tab from active radio when another one is checked', () => {
-  const {element} = setup(`
+  const {
+    elements: [, , , radioB, inputC],
+  } = setup(`
     <input/>
     <input type="radio" name="radio" checked/>
     <input/>
     <input type="radio" name="radio"/>
     <input/>
   `)
-  const [, , , radioB, inputC] = element.parentElement.children
 
   radioB.focus()
 
@@ -507,10 +494,10 @@ test('tab from active radio when another one is checked', () => {
 })
 
 test('calls FocusEvents with relatedTarget', () => {
-  const {element} = setup('<div><input/><input/></div>')
+  const {
+    elements: [element0, element1],
+  } = setup('<input/><input/>')
 
-  const element0 = element.children[0]
-  const element1 = element.children[1]
   element0.focus()
   const events0 = addListeners(element0)
   const events1 = addListeners(element1)

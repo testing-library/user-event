@@ -23,7 +23,7 @@
 [![MIT License][license-badge]][license]
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-58-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-59-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 [![PRs Welcome][prs-badge]][prs]
 [![Code of Conduct][coc-badge]][coc]
@@ -587,6 +587,7 @@ Thanks goes to these people ([emoji key][emojis]):
   <tr>
     <td align="center"><a href="https://github.com/ph-fritsche"><img src="https://avatars3.githubusercontent.com/u/39068198?v=4" width="100px;" alt=""/><br /><sub><b>ph-fritsche</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=ph-fritsche" title="Code">💻</a> <a href="https://github.com/testing-library/user-event/commits?author=ph-fritsche" title="Tests">⚠️</a></td>
     <td align="center"><a href="https://github.com/reywright"><img src="https://avatars3.githubusercontent.com/u/708820?v=4" width="100px;" alt=""/><br /><sub><b>Rey Wright</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3Areywright" title="Bug reports">🐛</a> <a href="https://github.com/testing-library/user-event/commits?author=reywright" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/mischnic"><img src="https://avatars1.githubusercontent.com/u/4586894?v=4" width="100px;" alt=""/><br /><sub><b>Niklas Mischkulnig</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=mischnic" title="Code">💻</a> <a href="https://github.com/testing-library/user-event/commits?author=mischnic" title="Tests">⚠️</a></td>
   </tr>
 </table>
 

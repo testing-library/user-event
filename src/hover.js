@@ -4,14 +4,30 @@ import {
   getMouseEventOptions,
 } from './utils'
 
+// includes `element`
+function getParentElements(element) {
+  const parentElements = [element]
+  let currentElement = element
+  while ((currentElement = currentElement.parentElement) != null) {
+    parentElements.push(currentElement)
+  }
+  return parentElements
+}
+
 function hover(element, init) {
   if (isLabelWithInternallyDisabledControl(element)) return
 
+  const parentElements = getParentElements(element).reverse()
+
   fireEvent.pointerOver(element, init)
-  fireEvent.pointerEnter(element, init)
+  for (const el of parentElements) {
+    fireEvent.pointerEnter(el, init)
+  }
   if (!element.disabled) {
     fireEvent.mouseOver(element, getMouseEventOptions('mouseover', init))
-    fireEvent.mouseEnter(element, getMouseEventOptions('mouseenter', init))
+    for (const el of parentElements) {
+      fireEvent.mouseEnter(el, getMouseEventOptions('mouseenter', init))
+    }
   }
   fireEvent.pointerMove(element, init)
   if (!element.disabled) {
@@ -22,15 +38,21 @@ function hover(element, init) {
 function unhover(element, init) {
   if (isLabelWithInternallyDisabledControl(element)) return
 
+  const parentElements = getParentElements(element)
+
   fireEvent.pointerMove(element, init)
   if (!element.disabled) {
     fireEvent.mouseMove(element, getMouseEventOptions('mousemove', init))
   }
   fireEvent.pointerOut(element, init)
-  fireEvent.pointerLeave(element, init)
+  for (const el of parentElements) {
+    fireEvent.pointerLeave(el, init)
+  }
   if (!element.disabled) {
     fireEvent.mouseOut(element, getMouseEventOptions('mouseout', init))
-    fireEvent.mouseLeave(element, getMouseEventOptions('mouseleave', init))
+    for (const el of parentElements) {
+      fireEvent.mouseLeave(el, getMouseEventOptions('mouseleave', init))
+    }
   }
 }
 

@@ -51,7 +51,9 @@ test('should fire the correct events with label', () => {
     Events fired on: form
 
     label[for="element"] - pointerover
+    form - pointerenter
     label[for="element"] - mouseover: Left (0)
+    form - mouseenter: Left (0)
     label[for="element"] - pointermove
     label[for="element"] - mousemove: Left (0)
     label[for="element"] - pointerdown

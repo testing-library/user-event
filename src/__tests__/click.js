@@ -184,7 +184,9 @@ test('should blur the previous element', () => {
     Events fired on: div
 
     input[name="b"][value=""] - pointerover
+    div - pointerenter
     input[name="b"][value=""] - mouseover: Left (0)
+    div - mouseenter: Left (0)
     input[name="b"][value=""] - pointermove
     input[name="b"][value=""] - mousemove: Left (0)
     input[name="b"][value=""] - pointerdown
@@ -222,7 +224,9 @@ test('should not blur the previous element when mousedown prevents default', () 
     Events fired on: div
 
     input[name="b"][value=""] - pointerover
+    div - pointerenter
     input[name="b"][value=""] - mouseover: Left (0)
+    div - mouseenter: Left (0)
     input[name="b"][value=""] - pointermove
     input[name="b"][value=""] - mousemove: Left (0)
     input[name="b"][value=""] - pointerdown

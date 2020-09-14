@@ -40,9 +40,12 @@ test('no events fired on labels that contain disabled controls', () => {
 })
 
 test('fires non-bubbling events on parents for hover', () => {
-  const wrapper = document.createElement('div')
-  wrapper.innerHTML = '<div><button></button></div>'
-  document.body.append(wrapper)
+  // Doesn't use getEventSnapshot() because:
+  // 1) We're asserting the events of both elements (not what bubbles to the outer div)
+  // 2) We're asserting the order of these events in a single list as they're
+  //     interleaved across two elements.
+  const {element: div} = setup('<div><button></button></div>')
+  const button = div.firstChild
 
   const calls = []
   function addListeners(el) {
@@ -61,9 +64,6 @@ test('fires non-bubbling events on parents for hover', () => {
       })
     }
   }
-  const div = wrapper.firstChild
-  const button = div.firstChild
-
   addListeners(div)
   addListeners(button)
 
@@ -82,9 +82,12 @@ test('fires non-bubbling events on parents for hover', () => {
 })
 
 test('fires non-bubbling events on parents for unhover', () => {
-  const wrapper = document.createElement('div')
-  wrapper.innerHTML = '<div><button></button></div>'
-  document.body.append(wrapper)
+  // Doesn't use getEventSnapshot() because:
+  // 1) We're asserting the events of both elements (not what bubbles to the outer div)
+  // 2) We're asserting the order of these events in a single list as they're
+  //     interleaved across two elements.
+  const {element: div} = setup('<div><button></button></div>')
+  const button = div.firstChild
 
   const calls = []
   function addListeners(el) {
@@ -103,9 +106,6 @@ test('fires non-bubbling events on parents for unhover', () => {
       })
     }
   }
-  const div = wrapper.firstChild
-  const button = div.firstChild
-
   addListeners(div)
   addListeners(button)
 

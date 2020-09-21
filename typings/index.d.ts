@@ -61,7 +61,8 @@ declare const userEvent: {
   tab: (userOpts?: ITabUserOptions) => void
   paste: (
     element: TargetElement,
-    init?: {},
+    text: string,
+    init?: MouseEventInit,
     pasteOptions?: {
       initialSelectionStart?: number
       initialSelectionEnd?: number

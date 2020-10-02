@@ -910,6 +910,42 @@ test('should submit a form with one input element', () => {
   expect(handleSubmit).toHaveBeenCalledTimes(1)
 })
 
+test('should not submit a form with when keydown calls prevent default', () => {
+  const handleSubmit = jest.fn()
+
+  const {element} = setup(
+    `
+    <form>
+      <input type='text'/>
+    </form>
+  `,
+    {
+      eventHandlers: {submit: handleSubmit, keyDown: e => e.preventDefault()},
+    },
+  )
+  userEvent.type(element.querySelector('input'), '{enter}')
+
+  expect(handleSubmit).not.toHaveBeenCalled()
+})
+
+test('should not submit a form with when keypress calls prevent default', () => {
+  const handleSubmit = jest.fn()
+
+  const {element} = setup(
+    `
+    <form>
+      <input type='text'/>
+    </form>
+  `,
+    {
+      eventHandlers: {submit: handleSubmit, keyPress: e => e.preventDefault()},
+    },
+  )
+  userEvent.type(element.querySelector('input'), '{enter}')
+
+  expect(handleSubmit).not.toHaveBeenCalled()
+})
+
 test('should not submit a form with multiple input when ENTER is pressed on one of it', () => {
   const handleSubmit = jest.fn()
   const {element} = setup(

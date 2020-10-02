@@ -145,6 +145,7 @@ async function typeImpl(
       if (!currentElement().disabled) {
         const returnValue = callback({
           currentElement,
+          prevElement: currentElement(),
           prevWasMinus,
           prevWasPeriod,
           prevValue,
@@ -247,6 +248,7 @@ function setSelectionRange({currentElement, newValue, newSelectionStart}) {
 }
 
 function fireInputEventIfNeeded({
+  prevElement,
   currentElement,
   newValue,
   newSelectionStart,
@@ -269,12 +271,14 @@ function fireInputEventIfNeeded({
         ...eventOverrides,
       })
     }
-
-    setSelectionRange({
-      currentElement,
-      newValue,
-      newSelectionStart,
-    })
+    
+    if(prevElement === currentElement()) {
+      setSelectionRange({
+        currentElement,
+        newValue,
+        newSelectionStart,
+      })
+    }
   }
 
   return {prevValue}
@@ -283,6 +287,7 @@ function fireInputEventIfNeeded({
 function typeCharacter(
   char,
   {
+    prevElement,
     currentElement,
     prevWasMinus = false,
     prevWasPeriod = false,
@@ -328,6 +333,7 @@ function typeCharacter(
           inputType: 'insertText',
           ...eventOverrides,
         },
+        prevElement,
         currentElement,
       })
       prevValue = inputEvent.prevValue

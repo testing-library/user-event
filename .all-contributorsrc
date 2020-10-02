@@ -598,6 +598,16 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "malwilley",
+      "name": "Malachi Willey",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/10888943?v=4",
+      "profile": "http://malachi.dev",
+      "contributions": [
+        "code",
+        "test"
+      ]
     }
   ],
   "commitConvention": "none",

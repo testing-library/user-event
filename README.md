@@ -23,7 +23,7 @@
 [![MIT License][license-badge]][license]
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-60-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-61-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 [![PRs Welcome][prs-badge]][prs]
 [![Code of Conduct][coc-badge]][coc]
@@ -589,6 +589,7 @@ Thanks goes to these people ([emoji key][emojis]):
     <td align="center"><a href="https://github.com/reywright"><img src="https://avatars3.githubusercontent.com/u/708820?v=4" width="100px;" alt=""/><br /><sub><b>Rey Wright</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3Areywright" title="Bug reports">🐛</a> <a href="https://github.com/testing-library/user-event/commits?author=reywright" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/mischnic"><img src="https://avatars1.githubusercontent.com/u/4586894?v=4" width="100px;" alt=""/><br /><sub><b>Niklas Mischkulnig</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=mischnic" title="Code">💻</a> <a href="https://github.com/testing-library/user-event/commits?author=mischnic" title="Tests">⚠️</a></td>
     <td align="center"><a href="http://pascalduez.me"><img src="https://avatars3.githubusercontent.com/u/335467?v=4" width="100px;" alt=""/><br /><sub><b>Pascal Duez</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=pascalduez" title="Code">💻</a></td>
+    <td align="center"><a href="http://malachi.dev"><img src="https://avatars3.githubusercontent.com/u/10888943?v=4" width="100px;" alt=""/><br /><sub><b>Malachi Willey</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=malwilley" title="Code">💻</a> <a href="https://github.com/testing-library/user-event/commits?author=malwilley" title="Tests">⚠️</a></td>
   </tr>
 </table>
 

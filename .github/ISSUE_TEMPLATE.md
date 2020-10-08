@@ -33,7 +33,6 @@ supported version.
 Relevant code or config
 
 ```javascript
-
 ```
 
 What you did:

@@ -12,6 +12,13 @@ learn how: http://kcd.im/pull-request
 -->
 
 - `@testing-library/user-event` version:
+<!--
+If your version doesn't match this project's current release found at
+https://github.com/testing-library/user-event/releases, please try upgrading
+to see if that solves your issue. This especially may be the case if you are
+using Create React App, which currently provides an older version of user-event.
+-->
+
 - Testing Framework and version:
   <!-- are you using jest, mocha, puppeteer, ava? And what version? -->
 - DOM Environment:
@@ -26,6 +33,7 @@ supported version.
 Relevant code or config
 
 ```javascript
+
 ```
 
 What you did:

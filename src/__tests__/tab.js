@@ -288,14 +288,13 @@ test('should not tab to <a> with no href', () => {
 })
 
 test('should not tab to <input> with type="hidden"', () => {
-  setup(`
-    <div>
-      <input data-testid="element" tabIndex="0" type="checkbox" />
-      <input type="hidden">
-      <input data-testid="element" type="text"  />
-    </div>`)
-
-  const [checkbox, text] = document.querySelectorAll('[data-testid="element"]')
+  const {
+    elements: [checkbox, , text],
+  } = setup(`
+    <input tabIndex="0" type="checkbox" />
+    <input type="hidden" />
+    <input type="text" />
+  `)
 
   userEvent.tab()
 

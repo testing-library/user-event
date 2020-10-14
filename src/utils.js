@@ -219,7 +219,7 @@ function setSelectionRangeIfNecessary(
 }
 
 const FOCUSABLE_SELECTOR = [
-  'input:not([disabled])',
+  'input:not([type=hidden]):not([disabled])',
   'button:not([disabled])',
   'select:not([disabled])',
   'textarea:not([disabled])',

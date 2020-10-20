@@ -10,7 +10,9 @@ function selectOptionsBase(newValue, select, values, init) {
     )
   }
   const valArray = Array.isArray(values) ? values : [values]
-  const allOptions = Array.from(select.querySelectorAll('option'))
+  const allOptions = Array.from(
+    select.querySelectorAll('option, [role="option"]'),
+  )
   const selectedOptions = valArray
     .map(val => {
       if (allOptions.includes(val)) {

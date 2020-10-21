@@ -65,7 +65,8 @@ function selectOptionsBase(newValue, select, values, init) {
 
   function selectOption(option) {
     if (option.getAttribute('role') === 'option') {
-      option['aria-selected'] = newValue
+      option?.setAttribute?.('aria-selected', newValue)
+
       hover(option, init)
       click(option, init)
       unhover(option, init)

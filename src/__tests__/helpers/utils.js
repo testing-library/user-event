@@ -55,6 +55,32 @@ function setupSelect({
   }
 }
 
+function setupListbox() {
+  const wrapper = document.createElement('div')
+  wrapper.innerHTML = `
+    <button id="button" aria-haspopup="listbox">
+      Some label
+    </button>
+    <ul
+      role="listbox"
+      name="listbox"
+      aria-labelledby="button"
+    >
+      <option role="option" aria-selected="false">1</option>
+      <option role="option" aria-selected="false">2</option>
+      <option role="option" aria-selected="false">3</option>
+    </ul>
+  `
+  document.body.append(wrapper)
+  const listbox = wrapper.querySelector('[role="listbox"]')
+  const options = Array.from(wrapper.querySelectorAll('[role="option"]'))
+  return {
+    ...addListeners(listbox),
+    listbox,
+    options,
+  }
+}
+
 const eventLabelGetters = {
   KeyboardEvent(event) {
     return [
@@ -278,4 +304,4 @@ afterEach(() => {
   document.body.innerHTML = ''
 })
 
-export {setup, setupSelect, addEventListener, addListeners}
+export {setup, setupSelect, setupListbox, addEventListener, addListeners}

@@ -46,28 +46,28 @@ test('fires correct events on listBox select', () => {
     ul - pointerup
     ul - mouseup: Left (0)
     ul - click: Left (0)
-    option[value="2"][selected=false] - pointerover
+    li[value=0] - pointerover
     ul - pointerenter
-    option[value="2"][selected=false] - mouseover: Left (0)
+    li[value=0] - mouseover: Left (0)
     ul - mouseenter: Left (0)
-    option[value="2"][selected=false] - pointermove
-    option[value="2"][selected=false] - mousemove: Left (0)
-    option[value="2"][selected=false] - pointerover
+    li[value=0] - pointermove
+    li[value=0] - mousemove: Left (0)
+    li[value=0] - pointerover
     ul - pointerenter
-    option[value="2"][selected=false] - mouseover: Left (0)
+    li[value=0] - mouseover: Left (0)
     ul - mouseenter: Left (0)
-    option[value="2"][selected=false] - pointermove
-    option[value="2"][selected=false] - mousemove: Left (0)
-    option[value="2"][selected=false] - pointerdown
-    option[value="2"][selected=false] - mousedown: Left (0)
-    option[value="2"][selected=false] - pointerup
-    option[value="2"][selected=false] - mouseup: Left (0)
-    option[value="2"][selected=false] - click: Left (0)
-    option[value="2"][selected=false] - pointermove
-    option[value="2"][selected=false] - mousemove: Left (0)
-    option[value="2"][selected=false] - pointerout
+    li[value=0] - pointermove
+    li[value=0] - mousemove: Left (0)
+    li[value=0] - pointerdown
+    li[value=0] - mousedown: Left (0)
+    li[value=0] - pointerup
+    li[value=0] - mouseup: Left (0)
+    li[value=0] - click: Left (0)
+    li[value=0] - pointermove
+    li[value=0] - mousemove: Left (0)
+    li[value=0] - pointerout
     ul - pointerleave
-    option[value="2"][selected=false] - mouseout: Left (0)
+    li[value=0] - mouseout: Left (0)
     ul - mouseleave: Left (0)
   `)
   const [o1, o2, o3] = options

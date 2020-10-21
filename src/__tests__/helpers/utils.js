@@ -66,9 +66,9 @@ function setupListbox() {
       name="listbox"
       aria-labelledby="button"
     >
-      <option role="option" aria-selected="false">1</option>
-      <option role="option" aria-selected="false">2</option>
-      <option role="option" aria-selected="false">3</option>
+      <li role="option" aria-selected="false">1</li>
+      <li role="option" aria-selected="false">2</li>
+      <li role="option" aria-selected="false">3</li>
     </ul>
   `
   document.body.append(wrapper)

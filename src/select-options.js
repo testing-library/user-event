@@ -1,6 +1,7 @@
 import {createEvent, getConfig, fireEvent} from '@testing-library/dom'
 import {click} from './click'
 import {focus} from './focus'
+import {hover, unhover} from './hover'
 
 function selectOptionsBase(newValue, select, values, init) {
   if (!newValue && !select.multiple) {
@@ -18,7 +19,9 @@ function selectOptionsBase(newValue, select, values, init) {
       if (allOptions.includes(val)) {
         return val
       } else {
-        const matchingOption = allOptions.find(o => o.value === val)
+        const matchingOption = allOptions.find(
+          o => o.value === val || o.innerHTML === val,
+        )
         if (matchingOption) {
           return matchingOption
         } else {
@@ -61,17 +64,24 @@ function selectOptionsBase(newValue, select, values, init) {
   }
 
   function selectOption(option) {
-    option.selected = newValue
-    fireEvent(
-      select,
-      createEvent('input', select, {
-        bubbles: true,
-        cancelable: false,
-        composed: true,
-        ...init,
-      }),
-    )
-    fireEvent.change(select, init)
+    if (option.getAttribute('role') === 'option') {
+      option['aria-selected'] = newValue
+      hover(option, init)
+      click(option, init)
+      unhover(option, init)
+    } else {
+      option.selected = newValue
+      fireEvent(
+        select,
+        createEvent('input', select, {
+          bubbles: true,
+          cancelable: false,
+          composed: true,
+          ...init,
+        }),
+      )
+      fireEvent.change(select, init)
+    }
   }
 }
 

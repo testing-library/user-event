@@ -1,5 +1,5 @@
 import userEvent from '../'
-import {setupSelect, addListeners} from './helpers/utils'
+import {setupSelect, addListeners, setupListbox} from './helpers/utils'
 
 test('fires correct events', () => {
   const {select, options, getEventSnapshot} = setupSelect()
@@ -27,6 +27,53 @@ test('fires correct events', () => {
   expect(o1.selected).toBe(false)
   expect(o2.selected).toBe(true)
   expect(o3.selected).toBe(false)
+})
+
+test('fires correct events on listBox select', () => {
+  const {listbox, options, getEventSnapshot} = setupListbox()
+  userEvent.selectOptions(listbox, '2')
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
+    Events fired on: ul[value="2"]
+
+    ul - pointerover
+    ul - pointerenter
+    ul - mouseover: Left (0)
+    ul - mouseenter: Left (0)
+    ul - pointermove
+    ul - mousemove: Left (0)
+    ul - pointerdown
+    ul - mousedown: Left (0)
+    ul - pointerup
+    ul - mouseup: Left (0)
+    ul - click: Left (0)
+    li#2[value="2"][aria-selected=true] - pointerover
+    ul[value="2"] - pointerenter
+    li#2[value="2"][aria-selected=true] - mouseover: Left (0)
+    ul[value="2"] - mouseenter: Left (0)
+    li#2[value="2"][aria-selected=true] - pointermove
+    li#2[value="2"][aria-selected=true] - mousemove: Left (0)
+    li#2[value="2"][aria-selected=true] - pointerover
+    ul[value="2"] - pointerenter
+    li#2[value="2"][aria-selected=true] - mouseover: Left (0)
+    ul[value="2"] - mouseenter: Left (0)
+    li#2[value="2"][aria-selected=true] - pointermove
+    li#2[value="2"][aria-selected=true] - mousemove: Left (0)
+    li#2[value="2"][aria-selected=true] - pointerdown
+    li#2[value="2"][aria-selected=true] - mousedown: Left (0)
+    li#2[value="2"][aria-selected=true] - pointerup
+    li#2[value="2"][aria-selected=true] - mouseup: Left (0)
+    li#2[value="2"][aria-selected=true] - click: Left (0)
+    li#2[value="2"][aria-selected=true] - pointermove
+    li#2[value="2"][aria-selected=true] - mousemove: Left (0)
+    li#2[value="2"][aria-selected=true] - pointerout
+    ul[value="2"] - pointerleave
+    li#2[value="2"][aria-selected=true] - mouseout: Left (0)
+    ul[value="2"] - mouseleave: Left (0)
+  `)
+  const [o1, o2, o3] = options
+  expect(o1).toHaveAttribute('aria-selected', 'false')
+  expect(o2).toHaveAttribute('aria-selected', 'true')
+  expect(o3).toHaveAttribute('aria-selected', 'false')
 })
 
 test('fires correct events on multi-selects', () => {
@@ -77,6 +124,15 @@ test('sets the selected prop on the selected option using option html elements',
   expect(o1.selected).toBe(true)
   expect(o2.selected).toBe(false)
   expect(o3.selected).toBe(false)
+})
+
+test('sets the selected prop on the selected listbox option using option html elements', () => {
+  const {listbox, options} = setupListbox()
+  const [o1, o2, o3] = options
+  userEvent.selectOptions(listbox, o1)
+  expect(o1).toHaveAttribute('aria-selected', 'true')
+  expect(o2).toHaveAttribute('aria-selected', 'false')
+  expect(o3).toHaveAttribute('aria-selected', 'false')
 })
 
 test('a previously focused input gets blurred', () => {

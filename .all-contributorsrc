@@ -627,6 +627,15 @@
         "code",
         "test"
       ]
+    },
+    {
+      "login": "luistak",
+      "name": "Luís Takahashi",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/19766035?v=4",
+      "profile": "https://www.linkedin.com/in/luis-takahashi/",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "commitConvention": "none",

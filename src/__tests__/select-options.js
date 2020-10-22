@@ -33,7 +33,7 @@ test('fires correct events on listBox select', () => {
   const {listbox, options, getEventSnapshot} = setupListbox()
   userEvent.selectOptions(listbox, '2')
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
-    Events fired on: ul
+    Events fired on: ul[value="2"]
 
     ul - pointerover
     ul - pointerenter
@@ -46,29 +46,29 @@ test('fires correct events on listBox select', () => {
     ul - pointerup
     ul - mouseup: Left (0)
     ul - click: Left (0)
-    li[value=0] - pointerover
-    ul - pointerenter
-    li[value=0] - mouseover: Left (0)
-    ul - mouseenter: Left (0)
-    li[value=0] - pointermove
-    li[value=0] - mousemove: Left (0)
-    li[value=0] - pointerover
-    ul - pointerenter
-    li[value=0] - mouseover: Left (0)
-    ul - mouseenter: Left (0)
-    li[value=0] - pointermove
-    li[value=0] - mousemove: Left (0)
-    li[value=0] - pointerdown
-    li[value=0] - mousedown: Left (0)
-    li[value=0] - pointerup
-    li[value=0] - mouseup: Left (0)
-    li[value=0] - click: Left (0)
-    li[value=0] - pointermove
-    li[value=0] - mousemove: Left (0)
-    li[value=0] - pointerout
-    ul - pointerleave
-    li[value=0] - mouseout: Left (0)
-    ul - mouseleave: Left (0)
+    li#2[value="2"][aria-selected=true] - pointerover
+    ul[value="2"] - pointerenter
+    li#2[value="2"][aria-selected=true] - mouseover: Left (0)
+    ul[value="2"] - mouseenter: Left (0)
+    li#2[value="2"][aria-selected=true] - pointermove
+    li#2[value="2"][aria-selected=true] - mousemove: Left (0)
+    li#2[value="2"][aria-selected=true] - pointerover
+    ul[value="2"] - pointerenter
+    li#2[value="2"][aria-selected=true] - mouseover: Left (0)
+    ul[value="2"] - mouseenter: Left (0)
+    li#2[value="2"][aria-selected=true] - pointermove
+    li#2[value="2"][aria-selected=true] - mousemove: Left (0)
+    li#2[value="2"][aria-selected=true] - pointerdown
+    li#2[value="2"][aria-selected=true] - mousedown: Left (0)
+    li#2[value="2"][aria-selected=true] - pointerup
+    li#2[value="2"][aria-selected=true] - mouseup: Left (0)
+    li#2[value="2"][aria-selected=true] - click: Left (0)
+    li#2[value="2"][aria-selected=true] - pointermove
+    li#2[value="2"][aria-selected=true] - mousemove: Left (0)
+    li#2[value="2"][aria-selected=true] - pointerout
+    ul[value="2"] - pointerleave
+    li#2[value="2"][aria-selected=true] - mouseout: Left (0)
+    ul[value="2"] - mouseleave: Left (0)
   `)
   const [o1, o2, o3] = options
   expect(o1).toHaveAttribute('aria-selected', 'false')

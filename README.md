@@ -594,7 +594,7 @@ Thanks goes to these people ([emoji key][emojis]):
     <td align="center"><a href="https://github.com/lazytype"><img src="https://avatars1.githubusercontent.com/u/840985?v=4" width="100px;" alt=""/><br /><sub><b>lazytype</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=lazytype" title="Code">💻</a> <a href="https://github.com/testing-library/user-event/commits?author=lazytype" title="Tests">⚠️</a></td>
   </tr>
   <tr>
-    <td align="center"><a href="https://www.linkedin.com/in/luis-takahashi/"><img src="https://avatars0.githubusercontent.com/u/19766035?v=4" width="100px;" alt=""/><br /><sub><b>Luís Takahashi</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=luistak" title="Code">💻</a></td>
+    <td align="center"><a href="https://www.linkedin.com/in/luis-takahashi/"><img src="https://avatars0.githubusercontent.com/u/19766035?v=4" width="100px;" alt=""/><br /><sub><b>Luís Takahashi</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=luistak" title="Code">💻</a> <a href="https://github.com/testing-library/user-event/commits?author=luistak" title="Tests">⚠️</a></td>
   </tr>
 </table>
 

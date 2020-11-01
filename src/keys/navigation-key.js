@@ -12,19 +12,11 @@ const keys = {
 }
 
 function getSelectionRange(currentElement, key) {
-  switch (key) {
-    case 'ArrowLeft':
-      return {
-        selectionStart: currentElement().selectionStart - 1,
-        selectionEnd: currentElement().selectionEnd - 1,
-      }
-    case 'ArrowRight':
-      return {
-        selectionStart: currentElement().selectionStart + 1,
-        selectionEnd: currentElement().selectionEnd + 1,
-      }
-    default:
-      return {}
+  const {selectionStart, selectionEnd} = currentElement()
+  const cursorChange = Number(key in keys) * (key === 'ArrowLeft' ? -1 : 1)
+  return {
+    selectionStart: selectionStart + cursorChange,
+    selectionEnd: selectionEnd + cursorChange,
   }
 }
 

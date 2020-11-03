@@ -1022,3 +1022,47 @@ test('should not type inside a contenteditable=false div', () => {
     div - click: Left (0)
   `)
 })
+
+test('navigation key: {arrowleft} and {arrowright} moves the cursor', () => {
+  const {element, getEventSnapshot} = setup('<input />')
+  userEvent.type(element, 'b{arrowleft}a{arrowright}c')
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
+    Events fired on: input[value="abc"]
+
+    input[value=""] - pointerover
+    input[value=""] - pointerenter
+    input[value=""] - mouseover: Left (0)
+    input[value=""] - mouseenter: Left (0)
+    input[value=""] - pointermove
+    input[value=""] - mousemove: Left (0)
+    input[value=""] - pointerdown
+    input[value=""] - mousedown: Left (0)
+    input[value=""] - focus
+    input[value=""] - focusin
+    input[value=""] - pointerup
+    input[value=""] - mouseup: Left (0)
+    input[value=""] - click: Left (0)
+    input[value=""] - keydown: b (98)
+    input[value=""] - keypress: b (98)
+    input[value="b"] - input
+      "{CURSOR}" -> "b{CURSOR}"
+    input[value="b"] - keyup: b (98)
+    input[value="b"] - keydown: ArrowLeft (37)
+    input[value="b"] - select
+    input[value="b"] - keyup: ArrowLeft (37)
+    input[value="b"] - keydown: a (97)
+    input[value="b"] - keypress: a (97)
+    input[value="ab"] - input
+      "{CURSOR}b" -> "ab{CURSOR}"
+    input[value="ab"] - select
+    input[value="ab"] - keyup: a (97)
+    input[value="ab"] - keydown: ArrowRight (39)
+    input[value="ab"] - select
+    input[value="ab"] - keyup: ArrowRight (39)
+    input[value="ab"] - keydown: c (99)
+    input[value="ab"] - keypress: c (99)
+    input[value="abc"] - input
+      "ab{CURSOR}" -> "abc{CURSOR}"
+    input[value="abc"] - keyup: c (99)
+  `)
+})

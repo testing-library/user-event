@@ -637,6 +637,16 @@
         "code",
         "test"
       ]
+    },
+    {
+      "login": "jesujcastillom",
+      "name": "Jesu Castillo",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/7827281?v=4",
+      "profile": "https://github.com/jesujcastillom",
+      "contributions": [
+        "code",
+        "test"
+      ]
     }
   ],
   "commitConvention": "none",

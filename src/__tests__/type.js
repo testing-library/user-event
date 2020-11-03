@@ -1025,9 +1025,9 @@ test('should not type inside a contenteditable=false div', () => {
 
 test('navigation key: {arrowleft} and {arrowright} moves the cursor', () => {
   const {element, getEventSnapshot} = setup('<input />')
-  userEvent.type(element, 'Brea{arrowleft}k{arrowright}fast')
+  userEvent.type(element, 'b{arrowleft}a{arrowright}c')
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
-    Events fired on: input[value="Brekafast"]
+    Events fired on: input[value="abc"]
 
     input[value=""] - pointerover
     input[value=""] - pointerenter
@@ -1042,57 +1042,27 @@ test('navigation key: {arrowleft} and {arrowright} moves the cursor', () => {
     input[value=""] - pointerup
     input[value=""] - mouseup: Left (0)
     input[value=""] - click: Left (0)
-    input[value=""] - keydown: B (66)
-    input[value=""] - keypress: B (66)
-    input[value="B"] - input
-      "{CURSOR}" -> "B{CURSOR}"
-    input[value="B"] - keyup: B (66)
-    input[value="B"] - keydown: r (114)
-    input[value="B"] - keypress: r (114)
-    input[value="Br"] - input
-      "B{CURSOR}" -> "Br{CURSOR}"
-    input[value="Br"] - keyup: r (114)
-    input[value="Br"] - keydown: e (101)
-    input[value="Br"] - keypress: e (101)
-    input[value="Bre"] - input
-      "Br{CURSOR}" -> "Bre{CURSOR}"
-    input[value="Bre"] - keyup: e (101)
-    input[value="Bre"] - keydown: a (97)
-    input[value="Bre"] - keypress: a (97)
-    input[value="Brea"] - input
-      "Bre{CURSOR}" -> "Brea{CURSOR}"
-    input[value="Brea"] - keyup: a (97)
-    input[value="Brea"] - keydown: ArrowLeft (37)
-    input[value="Brea"] - select
-    input[value="Brea"] - keyup: ArrowLeft (37)
-    input[value="Brea"] - keydown: k (107)
-    input[value="Brea"] - keypress: k (107)
-    input[value="Breka"] - input
-      "Bre{CURSOR}a" -> "Breka{CURSOR}"
-    input[value="Breka"] - select
-    input[value="Breka"] - keyup: k (107)
-    input[value="Breka"] - keydown: ArrowRight (39)
-    input[value="Breka"] - select
-    input[value="Breka"] - keyup: ArrowRight (39)
-    input[value="Breka"] - keydown: f (102)
-    input[value="Breka"] - keypress: f (102)
-    input[value="Brekaf"] - input
-      "Breka{CURSOR}" -> "Brekaf{CURSOR}"
-    input[value="Brekaf"] - keyup: f (102)
-    input[value="Brekaf"] - keydown: a (97)
-    input[value="Brekaf"] - keypress: a (97)
-    input[value="Brekafa"] - input
-      "Brekaf{CURSOR}" -> "Brekafa{CURSOR}"
-    input[value="Brekafa"] - keyup: a (97)
-    input[value="Brekafa"] - keydown: s (115)
-    input[value="Brekafa"] - keypress: s (115)
-    input[value="Brekafas"] - input
-      "Brekafa{CURSOR}" -> "Brekafas{CURSOR}"
-    input[value="Brekafas"] - keyup: s (115)
-    input[value="Brekafas"] - keydown: t (116)
-    input[value="Brekafas"] - keypress: t (116)
-    input[value="Brekafast"] - input
-      "Brekafas{CURSOR}" -> "Brekafast{CURSOR}"
-    input[value="Brekafast"] - keyup: t (116)
+    input[value=""] - keydown: b (98)
+    input[value=""] - keypress: b (98)
+    input[value="b"] - input
+      "{CURSOR}" -> "b{CURSOR}"
+    input[value="b"] - keyup: b (98)
+    input[value="b"] - keydown: ArrowLeft (37)
+    input[value="b"] - select
+    input[value="b"] - keyup: ArrowLeft (37)
+    input[value="b"] - keydown: a (97)
+    input[value="b"] - keypress: a (97)
+    input[value="ab"] - input
+      "{CURSOR}b" -> "ab{CURSOR}"
+    input[value="ab"] - select
+    input[value="ab"] - keyup: a (97)
+    input[value="ab"] - keydown: ArrowRight (39)
+    input[value="ab"] - select
+    input[value="ab"] - keyup: ArrowRight (39)
+    input[value="ab"] - keydown: c (99)
+    input[value="ab"] - keypress: c (99)
+    input[value="abc"] - input
+      "ab{CURSOR}" -> "abc{CURSOR}"
+    input[value="abc"] - keyup: c (99)
   `)
 })

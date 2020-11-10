@@ -15,6 +15,7 @@ import {
   isContentEditable,
 } from './utils'
 import {click} from './click'
+import {navigationKey} from './keys/navigation-key'
 
 const modifierCallbackMap = {
   ...createModifierCallbackEntries({
@@ -44,6 +45,8 @@ const modifierCallbackMap = {
 }
 
 const specialCharCallbackMap = {
+  '{arrowleft}': navigationKey('ArrowLeft'),
+  '{arrowright}': navigationKey('ArrowRight'),
   '{enter}': handleEnter,
   '{esc}': handleEsc,
   '{del}': handleDel,
@@ -495,44 +498,47 @@ function handleEnter({currentElement, eventOverrides}) {
   })
 
   if (keyDownDefaultNotPrevented) {
-    fireEvent.keyPress(currentElement(), {
+    const keyPressDefaultNotPrevented = fireEvent.keyPress(currentElement(), {
       key,
       keyCode,
       charCode: keyCode,
       ...eventOverrides,
     })
-    if (isClickable(currentElement())) {
-      fireEvent.click(currentElement(), {
-        ...eventOverrides,
-      })
+
+    if (keyPressDefaultNotPrevented) {
+      if (isClickable(currentElement())) {
+        fireEvent.click(currentElement(), {
+          ...eventOverrides,
+        })
+      }
+
+      if (currentElement().tagName === 'TEXTAREA') {
+        const {newValue, newSelectionStart} = calculateNewValue(
+          '\n',
+          currentElement(),
+        )
+        fireEvent.input(currentElement(), {
+          target: {value: newValue},
+          inputType: 'insertLineBreak',
+          ...eventOverrides,
+        })
+        setSelectionRange({
+          currentElement,
+          newValue,
+          newSelectionStart,
+        })
+      }
+
+      if (
+        currentElement().tagName === 'INPUT' &&
+        currentElement().form &&
+        (currentElement().form.querySelectorAll('input').length === 1 ||
+          currentElement().form.querySelector('input[type="submit"]') ||
+          currentElement().form.querySelector('button[type="submit"]'))
+      ) {
+        fireEvent.submit(currentElement().form)
+      }
     }
-  }
-
-  if (currentElement().tagName === 'TEXTAREA') {
-    const {newValue, newSelectionStart} = calculateNewValue(
-      '\n',
-      currentElement(),
-    )
-    fireEvent.input(currentElement(), {
-      target: {value: newValue},
-      inputType: 'insertLineBreak',
-      ...eventOverrides,
-    })
-    setSelectionRange({
-      currentElement,
-      newValue,
-      newSelectionStart,
-    })
-  }
-
-  if (
-    currentElement().tagName === 'INPUT' &&
-    currentElement().form &&
-    (currentElement().form.querySelectorAll('input').length === 1 ||
-      currentElement().form.querySelector('input[type="submit"]') ||
-      currentElement().form.querySelector('button[type="submit"]'))
-  ) {
-    fireEvent.submit(currentElement().form)
   }
 
   fireEvent.keyUp(currentElement(), {

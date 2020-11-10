@@ -21,10 +21,7 @@
 [![version][version-badge]][package]
 [![downloads][downloads-badge]][npmtrends]
 [![MIT License][license-badge]][license]
-
-<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-60-orange.svg?style=flat-square)](#contributors-)
-<!-- ALL-CONTRIBUTORS-BADGE:END -->
+[![All Contributors][all-contributors-badge]](#contributors)
 [![PRs Welcome][prs-badge]][prs]
 [![Code of Conduct][coc-badge]][coc]
 <!-- prettier-ignore-end -->
@@ -175,9 +172,9 @@ are typed. By default it's 0. You can use this option if your component has a
 different behavior for fast or slow users. If you do this, you need to make sure
 to `await`!
 
-> To be clear, `userEvent.type` *always* returns a promise, but you *only* need
-> to `await` the promise it returns if you're using the `delay` option. Otherwise
-> everything runs synchronously and you can ignore the promise.
+> To be clear, `userEvent.type` _always_ returns a promise, but you _only_ need
+> to `await` the promise it returns if you're using the `delay` option.
+> Otherwise everything runs synchronously and you can ignore the promise.
 
 `type` will click the element before typing. To disable this, set the
 `skipClick` option to `true`.
@@ -186,18 +183,20 @@ to `await`!
 
 The following special character strings are supported:
 
-| Text string   | Key       | Modifier   | Notes                                                                                                                                                               |
-| ------------- | --------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `{enter}`     | Enter     | N/A        | Will insert a newline character (`<textarea />` only).                                                                                                              |
-| `{space}`     | `' '`     | N/A        |                                                                                                                                                                     |
-| `{esc}`       | Escape    | N/A        |                                                                                                                                                                     |
-| `{backspace}` | Backspace | N/A        | Will delete the previous character (or the characters within the `selectedRange`, see example below).                                                               |
-| `{del}`       | Delete    | N/A        | Will delete the next character (or the characters within the `selectedRange`, see example below)                                                                    |
-| `{selectall}` | N/A       | N/A        | Selects all the text of the element. Note that this will only work for elements that support selection ranges (so, not `email`, `password`, `number`, among others) |
-| `{shift}`     | Shift     | `shiftKey` | Does **not** capitalize following characters.                                                                                                                       |
-| `{ctrl}`      | Control   | `ctrlKey`  |                                                                                                                                                                     |
-| `{alt}`       | Alt       | `altKey`   |                                                                                                                                                                     |
-| `{meta}`      | OS        | `metaKey`  |                                                                                                                                                                     |
+| Text string    | Key        | Modifier   | Notes                                                                                                                                                               |
+| -------------- | ---------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `{enter}`      | Enter      | N/A        | Will insert a newline character (`<textarea />` only).                                                                                                              |
+| `{space}`      | `' '`      | N/A        |                                                                                                                                                                     |
+| `{esc}`        | Escape     | N/A        |                                                                                                                                                                     |
+| `{backspace}`  | Backspace  | N/A        | Will delete the previous character (or the characters within the `selectedRange`, see example below).                                                               |
+| `{del}`        | Delete     | N/A        | Will delete the next character (or the characters within the `selectedRange`, see example below)                                                                    |
+| `{selectall}`  | N/A        | N/A        | Selects all the text of the element. Note that this will only work for elements that support selection ranges (so, not `email`, `password`, `number`, among others) |
+| `{arrowleft}`  | ArrowLeft  | N/A        |                                                                                                                                                                     |
+| `{arrowright}` | ArrowRight | N/A        |                                                                                                                                                                     |
+| `{shift}`      | Shift      | `shiftKey` | Does **not** capitalize following characters.                                                                                                                       |
+| `{ctrl}`       | Control    | `ctrlKey`  |                                                                                                                                                                     |
+| `{alt}`        | Alt        | `altKey`   |                                                                                                                                                                     |
+| `{meta}`       | OS         | `metaKey`  |                                                                                                                                                                     |
 
 > **A note about modifiers:** Modifier keys (`{shift}`, `{ctrl}`, `{alt}`,
 > `{meta}`) will activate their corresponding event modifiers for the duration
@@ -589,11 +588,20 @@ Thanks goes to these people ([emoji key][emojis]):
     <td align="center"><a href="https://github.com/reywright"><img src="https://avatars3.githubusercontent.com/u/708820?v=4" width="100px;" alt=""/><br /><sub><b>Rey Wright</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3Areywright" title="Bug reports">🐛</a> <a href="https://github.com/testing-library/user-event/commits?author=reywright" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/mischnic"><img src="https://avatars1.githubusercontent.com/u/4586894?v=4" width="100px;" alt=""/><br /><sub><b>Niklas Mischkulnig</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=mischnic" title="Code">💻</a> <a href="https://github.com/testing-library/user-event/commits?author=mischnic" title="Tests">⚠️</a></td>
     <td align="center"><a href="http://pascalduez.me"><img src="https://avatars3.githubusercontent.com/u/335467?v=4" width="100px;" alt=""/><br /><sub><b>Pascal Duez</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=pascalduez" title="Code">💻</a></td>
+    <td align="center"><a href="http://malachi.dev"><img src="https://avatars3.githubusercontent.com/u/10888943?v=4" width="100px;" alt=""/><br /><sub><b>Malachi Willey</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=malwilley" title="Code">💻</a> <a href="https://github.com/testing-library/user-event/commits?author=malwilley" title="Tests">⚠️</a></td>
+    <td align="center"><a href="https://clarkwinters.com"><img src="https://avatars2.githubusercontent.com/u/40615752?v=4" width="100px;" alt=""/><br /><sub><b>Clark Winters</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=cwinters8" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://github.com/lazytype"><img src="https://avatars1.githubusercontent.com/u/840985?v=4" width="100px;" alt=""/><br /><sub><b>lazytype</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=lazytype" title="Code">💻</a> <a href="https://github.com/testing-library/user-event/commits?author=lazytype" title="Tests">⚠️</a></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="https://www.linkedin.com/in/luis-takahashi/"><img src="https://avatars0.githubusercontent.com/u/19766035?v=4" width="100px;" alt=""/><br /><sub><b>Luís Takahashi</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=luistak" title="Code">💻</a> <a href="https://github.com/testing-library/user-event/commits?author=luistak" title="Tests">⚠️</a></td>
+    <td align="center"><a href="https://github.com/jesujcastillom"><img src="https://avatars3.githubusercontent.com/u/7827281?v=4" width="100px;" alt=""/><br /><sub><b>Jesu Castillo</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=jesujcastillom" title="Code">💻</a> <a href="https://github.com/testing-library/user-event/commits?author=jesujcastillom" title="Tests">⚠️</a></td>
+    <td align="center"><a href="https://sarahdayan.dev"><img src="https://avatars1.githubusercontent.com/u/5370675?v=4" width="100px;" alt=""/><br /><sub><b>Sarah Dayan</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=sarahdayan" title="Documentation">📖</a></td>
   </tr>
 </table>
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors][all-contributors] specification.
@@ -606,8 +614,8 @@ MIT
 <!-- prettier-ignore-start -->
 [npm]: https://www.npmjs.com
 [node]: https://nodejs.org
-[build-badge]: https://img.shields.io/travis/testing-library/user-event.svg?style=flat-square
-[build]: https://travis-ci.org/testing-library/user-event
+[build-badge]: https://img.shields.io/github/workflow/status/testing-library/user-event/validate/main?logo=github&style=flat-square
+[build]: https://github.com/testing-library/user-event/actions?query=workflow%3Avalidate
 [coverage-badge]: https://img.shields.io/codecov/c/github/testing-library/user-event.svg?style=flat-square
 [coverage]: https://codecov.io/github/testing-library/user-event
 [version-badge]: https://img.shields.io/npm/v/@testing-library/user-event.svg?style=flat-square
@@ -622,6 +630,7 @@ MIT
 [coc]: https://github.com/testing-library/user-event/blob/master/other/CODE_OF_CONDUCT.md
 [emojis]: https://github.com/all-contributors/all-contributors#emoji-key
 [all-contributors]: https://github.com/all-contributors/all-contributors
+[all-contributors-badge]: https://img.shields.io/github/all-contributors/testing-library/user-event?color=orange&style=flat-square
 [bugs]: https://github.com/testing-library/user-event/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+sort%3Acreated-desc+label%3Abug
 [requests]: https://github.com/testing-library/user-event/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+sort%3Areactions-%2B1-desc+label%3Aenhancement
 [good-first-issue]: https://github.com/testing-library/user-event/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+sort%3Areactions-%2B1-desc+label%3Aenhancement+label%3A%22good+first+issue%22

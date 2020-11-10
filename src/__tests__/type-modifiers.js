@@ -443,7 +443,7 @@ test('{enter} on a button', () => {
   `)
 })
 
-test('{enter} with preventDefault on a button', () => {
+test('{enter} on a button when keydown calls prevent default', () => {
   const {element, getEventSnapshot} = setup('<button />', {
     eventHandlers: {
       keyDown: e => e.preventDefault(),
@@ -469,6 +469,37 @@ test('{enter} with preventDefault on a button', () => {
     button - mouseup: Left (0)
     button - click: Left (0)
     button - keydown: Enter (13)
+    button - keyup: Enter (13)
+  `)
+})
+
+test('{enter} on a button when keypress calls prevent default', () => {
+  const {element, getEventSnapshot} = setup('<button />', {
+    eventHandlers: {
+      keyPress: e => e.preventDefault(),
+    },
+  })
+
+  userEvent.type(element, '{enter}')
+
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
+    Events fired on: button
+
+    button - pointerover
+    button - pointerenter
+    button - mouseover: Left (0)
+    button - mouseenter: Left (0)
+    button - pointermove
+    button - mousemove: Left (0)
+    button - pointerdown
+    button - mousedown: Left (0)
+    button - focus
+    button - focusin
+    button - pointerup
+    button - mouseup: Left (0)
+    button - click: Left (0)
+    button - keydown: Enter (13)
+    button - keypress: Enter (13)
     button - keyup: Enter (13)
   `)
 })
@@ -735,6 +766,63 @@ test('{enter} on a textarea', () => {
     textarea[value="\\n"] - input
       "{CURSOR}" -> "\\n{CURSOR}"
     textarea[value="\\n"] - keyup: Enter (13)
+  `)
+})
+
+test('{enter} on a textarea when keydown calls prevent default', () => {
+  const {element, getEventSnapshot} = setup('<textarea></textarea>', {
+    eventHandlers: {keyDown: e => e.preventDefault()},
+  })
+
+  userEvent.type(element, '{enter}')
+
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
+    Events fired on: textarea[value=""]
+
+    textarea[value=""] - pointerover
+    textarea[value=""] - pointerenter
+    textarea[value=""] - mouseover: Left (0)
+    textarea[value=""] - mouseenter: Left (0)
+    textarea[value=""] - pointermove
+    textarea[value=""] - mousemove: Left (0)
+    textarea[value=""] - pointerdown
+    textarea[value=""] - mousedown: Left (0)
+    textarea[value=""] - focus
+    textarea[value=""] - focusin
+    textarea[value=""] - pointerup
+    textarea[value=""] - mouseup: Left (0)
+    textarea[value=""] - click: Left (0)
+    textarea[value=""] - keydown: Enter (13)
+    textarea[value=""] - keyup: Enter (13)
+  `)
+})
+
+test('{enter} on a textarea when keypress calls prevent default', () => {
+  const {element, getEventSnapshot} = setup('<textarea></textarea>', {
+    eventHandlers: {keyPress: e => e.preventDefault()},
+  })
+
+  userEvent.type(element, '{enter}')
+
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
+    Events fired on: textarea[value=""]
+
+    textarea[value=""] - pointerover
+    textarea[value=""] - pointerenter
+    textarea[value=""] - mouseover: Left (0)
+    textarea[value=""] - mouseenter: Left (0)
+    textarea[value=""] - pointermove
+    textarea[value=""] - mousemove: Left (0)
+    textarea[value=""] - pointerdown
+    textarea[value=""] - mousedown: Left (0)
+    textarea[value=""] - focus
+    textarea[value=""] - focusin
+    textarea[value=""] - pointerup
+    textarea[value=""] - mouseup: Left (0)
+    textarea[value=""] - click: Left (0)
+    textarea[value=""] - keydown: Enter (13)
+    textarea[value=""] - keypress: Enter (13)
+    textarea[value=""] - keyup: Enter (13)
   `)
 })
 

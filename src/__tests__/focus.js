@@ -43,6 +43,15 @@ test('no events fired on a disabled focusable input', () => {
   expect(element).not.toHaveFocus()
 })
 
+test('no events fired on a hidden input', () => {
+  const {element, getEventSnapshot} = setup(`<input type="hidden" />`)
+  focus(element)
+  expect(getEventSnapshot()).toMatchInlineSnapshot(
+    `No events were fired on: input[value=""]`,
+  )
+  expect(element).not.toHaveFocus()
+})
+
 test('no events fired if the element is already focused', () => {
   const {element, getEventSnapshot, clearEventCalls} = setup(`<button />`)
   focus(element)

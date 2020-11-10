@@ -26,6 +26,14 @@ series [How to Contribute to an Open Source Project on GitHub][egghead]
 > can make all of your pull request branches based on this `master` branch.
 > Whenever you want to update your version of `master`, do a regular `git pull`.
 
+## Consistency
+
+We have a
+[user event playground codesandbox](https://codesandbox.io/s/user-event-playground-eo909)
+which helps us ensure that we're triggering the correct events for the
+interactions we're trying to simulate. This might help you developing bug fixes
+and features.
+
 ## Committing and Pushing changes
 
 Please make sure to run the tests before you commit your changes. You can run

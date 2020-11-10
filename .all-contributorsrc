@@ -598,6 +598,64 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "malwilley",
+      "name": "Malachi Willey",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/10888943?v=4",
+      "profile": "http://malachi.dev",
+      "contributions": [
+        "code",
+        "test"
+      ]
+    },
+    {
+      "login": "cwinters8",
+      "name": "Clark Winters",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/40615752?v=4",
+      "profile": "https://clarkwinters.com",
+      "contributions": [
+        "doc"
+      ]
+    },
+    {
+      "login": "lazytype",
+      "name": "lazytype",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/840985?v=4",
+      "profile": "https://github.com/lazytype",
+      "contributions": [
+        "code",
+        "test"
+      ]
+    },
+    {
+      "login": "luistak",
+      "name": "Luís Takahashi",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/19766035?v=4",
+      "profile": "https://www.linkedin.com/in/luis-takahashi/",
+      "contributions": [
+        "code",
+        "test"
+      ]
+    },
+    {
+      "login": "jesujcastillom",
+      "name": "Jesu Castillo",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/7827281?v=4",
+      "profile": "https://github.com/jesujcastillom",
+      "contributions": [
+        "code",
+        "test"
+      ]
+    },
+    {
+      "login": "sarahdayan",
+      "name": "Sarah Dayan",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/5370675?v=4",
+      "profile": "https://sarahdayan.dev",
+      "contributions": [
+        "doc"
+      ]
     }
   ],
   "commitConvention": "none",

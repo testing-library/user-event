@@ -221,7 +221,7 @@ test('should respect tab index order, then DOM order', () => {
   expect(checkbox).toHaveFocus()
 })
 
-test('should suport a mix of elements with/without tab index', () => {
+test('should support a mix of elements with/without tab index', () => {
   setup(`
     <div>
       <input data-testid="element" tabIndex="0" type="checkbox" />
@@ -285,6 +285,24 @@ test('should not tab to <a> with no href', () => {
   userEvent.tab()
 
   expect(link).toHaveFocus()
+})
+
+test('should not tab to <input> with type="hidden"', () => {
+  const {
+    elements: [checkbox, , text],
+  } = setup(`
+    <input tabIndex="0" type="checkbox" />
+    <input type="hidden" />
+    <input type="text" />
+  `)
+
+  userEvent.tab()
+
+  expect(checkbox).toHaveFocus()
+
+  userEvent.tab()
+
+  expect(text).toHaveFocus()
 })
 
 test('should stay within a focus trap', () => {

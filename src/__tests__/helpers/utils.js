@@ -55,6 +55,32 @@ function setupSelect({
   }
 }
 
+function setupListbox() {
+  const wrapper = document.createElement('div')
+  wrapper.innerHTML = `
+    <button id="button" aria-haspopup="listbox">
+      Some label
+    </button>
+    <ul
+      role="listbox"
+      name="listbox"
+      aria-labelledby="button"
+    >
+      <li id="1" role="option" aria-selected="false">1</li>
+      <li id="2" role="option" aria-selected="false">2</li>
+      <li id="3" role="option" aria-selected="false">3</li>
+    </ul>
+  `
+  document.body.append(wrapper)
+  const listbox = wrapper.querySelector('[role="listbox"]')
+  const options = Array.from(wrapper.querySelectorAll('[role="option"]'))
+  return {
+    ...addListeners(listbox),
+    listbox,
+    options,
+  }
+}
+
 const eventLabelGetters = {
   KeyboardEvent(event) {
     return [
@@ -91,6 +117,12 @@ function addEventListener(el, type, listener, options) {
 function getElementValue(element) {
   if (element.tagName === 'SELECT' && element.multiple) {
     return JSON.stringify(Array.from(element.selectedOptions).map(o => o.value))
+  } else if (element.getAttribute('role') === 'listbox') {
+    return JSON.stringify(
+      element.querySelector('[aria-selected="true"]')?.innerHTML,
+    )
+  } else if (element.getAttribute('role') === 'option') {
+    return JSON.stringify(element.innerHTML)
   } else if (
     element.type === 'checkbox' ||
     element.type === 'radio' ||
@@ -114,6 +146,9 @@ function getElementDisplayName(element) {
     value ? `[value=${value}]` : null,
     hasChecked ? `[checked=${element.checked}]` : null,
     element.tagName === 'OPTION' ? `[selected=${element.selected}]` : null,
+    element.getAttribute('role') === 'option'
+      ? `[aria-selected=${element.getAttribute('aria-selected')}]`
+      : null,
   ]
     .filter(Boolean)
     .join('')
@@ -278,4 +313,4 @@ afterEach(() => {
   document.body.innerHTML = ''
 })
 
-export {setup, setupSelect, addEventListener, addListeners}
+export {setup, setupSelect, setupListbox, addEventListener, addListeners}

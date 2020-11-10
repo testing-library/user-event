@@ -21,10 +21,7 @@
 [![version][version-badge]][package]
 [![downloads][downloads-badge]][npmtrends]
 [![MIT License][license-badge]][license]
-
-<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-66-orange.svg?style=flat-square)](#contributors-)
-<!-- ALL-CONTRIBUTORS-BADGE:END -->
+[![All Contributors][all-contributors-badge]](#contributors)
 [![PRs Welcome][prs-badge]][prs]
 [![Code of Conduct][coc-badge]][coc]
 <!-- prettier-ignore-end -->
@@ -175,9 +172,9 @@ are typed. By default it's 0. You can use this option if your component has a
 different behavior for fast or slow users. If you do this, you need to make sure
 to `await`!
 
-> To be clear, `userEvent.type` *always* returns a promise, but you *only* need
-> to `await` the promise it returns if you're using the `delay` option. Otherwise
-> everything runs synchronously and you can ignore the promise.
+> To be clear, `userEvent.type` _always_ returns a promise, but you _only_ need
+> to `await` the promise it returns if you're using the `delay` option.
+> Otherwise everything runs synchronously and you can ignore the promise.
 
 `type` will click the element before typing. To disable this, set the
 `skipClick` option to `true`.
@@ -604,6 +601,7 @@ Thanks goes to these people ([emoji key][emojis]):
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors][all-contributors] specification.
@@ -616,8 +614,8 @@ MIT
 <!-- prettier-ignore-start -->
 [npm]: https://www.npmjs.com
 [node]: https://nodejs.org
-[build-badge]: https://img.shields.io/travis/testing-library/user-event.svg?style=flat-square
-[build]: https://travis-ci.org/testing-library/user-event
+[build-badge]: https://img.shields.io/github/workflow/status/testing-library/user-event/validate/main?logo=github&style=flat-square
+[build]: https://github.com/testing-library/user-event/actions?query=workflow%3Avalidate
 [coverage-badge]: https://img.shields.io/codecov/c/github/testing-library/user-event.svg?style=flat-square
 [coverage]: https://codecov.io/github/testing-library/user-event
 [version-badge]: https://img.shields.io/npm/v/@testing-library/user-event.svg?style=flat-square
@@ -632,6 +630,7 @@ MIT
 [coc]: https://github.com/testing-library/user-event/blob/master/other/CODE_OF_CONDUCT.md
 [emojis]: https://github.com/all-contributors/all-contributors#emoji-key
 [all-contributors]: https://github.com/all-contributors/all-contributors
+[all-contributors-badge]: https://img.shields.io/github/all-contributors/testing-library/user-event?color=orange&style=flat-square
 [bugs]: https://github.com/testing-library/user-event/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+sort%3Acreated-desc+label%3Abug
 [requests]: https://github.com/testing-library/user-event/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+sort%3Areactions-%2B1-desc+label%3Aenhancement
 [good-first-issue]: https://github.com/testing-library/user-event/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+sort%3Areactions-%2B1-desc+label%3Aenhancement+label%3A%22good+first+issue%22

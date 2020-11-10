@@ -23,7 +23,7 @@
 [![MIT License][license-badge]][license]
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-65-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-66-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 [![PRs Welcome][prs-badge]][prs]
 [![Code of Conduct][coc-badge]][coc]
@@ -598,6 +598,7 @@ Thanks goes to these people ([emoji key][emojis]):
   <tr>
     <td align="center"><a href="https://www.linkedin.com/in/luis-takahashi/"><img src="https://avatars0.githubusercontent.com/u/19766035?v=4" width="100px;" alt=""/><br /><sub><b>Luís Takahashi</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=luistak" title="Code">💻</a> <a href="https://github.com/testing-library/user-event/commits?author=luistak" title="Tests">⚠️</a></td>
     <td align="center"><a href="https://github.com/jesujcastillom"><img src="https://avatars3.githubusercontent.com/u/7827281?v=4" width="100px;" alt=""/><br /><sub><b>Jesu Castillo</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=jesujcastillom" title="Code">💻</a> <a href="https://github.com/testing-library/user-event/commits?author=jesujcastillom" title="Tests">⚠️</a></td>
+    <td align="center"><a href="https://sarahdayan.dev"><img src="https://avatars1.githubusercontent.com/u/5370675?v=4" width="100px;" alt=""/><br /><sub><b>Sarah Dayan</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=sarahdayan" title="Documentation">📖</a></td>
   </tr>
 </table>
 

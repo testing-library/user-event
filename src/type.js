@@ -271,8 +271,8 @@ function fireInputEventIfNeeded({
         ...eventOverrides,
       })
     }
-    
-    if(prevElement === currentElement()) {
+
+    if (prevElement === currentElement()) {
       setSelectionRange({
         currentElement,
         newValue,
@@ -564,7 +564,7 @@ function handleEsc({currentElement, eventOverrides}) {
   })
 }
 
-function handleDel({currentElement, eventOverrides}) {
+function handleDel({prevElement, currentElement, eventOverrides}) {
   const key = 'Delete'
   const keyCode = 46
 
@@ -582,6 +582,7 @@ function handleDel({currentElement, eventOverrides}) {
         inputType: 'deleteContentForward',
         ...eventOverrides,
       },
+      prevElement,
       currentElement,
     })
   }
@@ -594,7 +595,7 @@ function handleDel({currentElement, eventOverrides}) {
   })
 }
 
-function handleBackspace({currentElement, eventOverrides}) {
+function handleBackspace({prevElement, currentElement, eventOverrides}) {
   const key = 'Backspace'
   const keyCode = 8
 
@@ -612,6 +613,7 @@ function handleBackspace({currentElement, eventOverrides}) {
         inputType: 'deleteContentBackward',
         ...eventOverrides,
       },
+      prevElement,
       currentElement,
     })
   }

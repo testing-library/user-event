@@ -656,6 +656,15 @@
       "contributions": [
         "doc"
       ]
+    },
+    {
+      "login": "Saul-Mirone",
+      "name": "Mirone",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/10047788?v=4",
+      "profile": "http://saul-mirone.github.io/",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "commitConvention": "none",

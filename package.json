@@ -26,7 +26,7 @@
   "homepage": "https://github.com/testing-library/user-event#readme",
   "files": [
     "dist",
-    "typings"
+    "typings/index.d.ts"
   ],
   "scripts": {
     "build": "kcd-scripts build",
@@ -35,7 +35,8 @@
     "test": "kcd-scripts test",
     "test:debug": "kcd-scripts --inspect-brk test --runInBand",
     "test:update": "npm test -- --updateSnapshot --coverage",
-    "validate": "kcd-scripts validate"
+    "validate": "kcd-scripts validate",
+    "typecheck": "tsc --project typings"
   },
   "dependencies": {
     "@babel/runtime": "^7.10.2"
@@ -46,7 +47,8 @@
     "@types/estree": "0.0.45",
     "is-ci": "^2.0.0",
     "jest-serializer-ansi": "^1.0.3",
-    "kcd-scripts": "^6.2.3"
+    "kcd-scripts": "^6.2.3",
+    "typescript": "^4.0.5"
   },
   "peerDependencies": {
     "@testing-library/dom": ">=7.21.4"

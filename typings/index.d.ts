@@ -53,11 +53,11 @@ declare const userEvent: {
     files: FilesArgument,
     init?: UploadInitArgument,
   ) => void
-  type: (
+  type: <T extends ITypeOpts>(
     element: TargetElement,
     text: string,
-    userOpts?: ITypeOpts,
-  ) => Promise<void>
+    userOpts?: T,
+  ) => T extends {delay: number} ? Promise<void> : void
   tab: (userOpts?: ITabUserOptions) => void
   paste: (
     element: TargetElement,

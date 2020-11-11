@@ -44,6 +44,7 @@
   "devDependencies": {
     "@testing-library/dom": "^7.21.4",
     "@testing-library/jest-dom": "^5.11.1",
+    "@types/estree": "0.0.45",
     "is-ci": "^2.0.0",
     "jest-serializer-ansi": "^1.0.3",
     "kcd-scripts": "^6.2.3",

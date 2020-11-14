@@ -89,7 +89,7 @@ import userEvent from '@testing-library/user-event'
 
 // or
 
-var userEvent = require('@testing-library/user-event')
+const { default: userEvent } = require('@testing-library/user-event')
 ```
 
 ## API

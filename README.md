@@ -94,6 +94,12 @@ const { default: userEvent } = require('@testing-library/user-event')
 
 ## API
 
+Note: All userEvent methods are synchronous with one exception: when `delay`
+with `userEvent.type` as described below). We also discourage using
+`userEvent` inside `before/after` blocks at all, for important reasons
+described in
+["Avoid Nesting When You're Testing"](https://kentcdodds.com/blog/avoid-nesting-when-youre-testing).
+
 ### `click(element, eventInit, options)`
 
 Clicks `element`, depending on what `element` is it can have different side

@@ -665,6 +665,15 @@
       "contributions": [
         "bug"
       ]
+    },
+    {
+      "login": "amandapouget",
+      "name": "Amanda Pouget",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/12855692?v=4",
+      "profile": "https://github.com/amandapouget",
+      "contributions": [
+        "doc"
+      ]
     }
   ],
   "commitConvention": "none",

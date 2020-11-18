@@ -603,6 +603,7 @@ Thanks goes to these people ([emoji key][emojis]):
     <td align="center"><a href="https://github.com/jesujcastillom"><img src="https://avatars3.githubusercontent.com/u/7827281?v=4" width="100px;" alt=""/><br /><sub><b>Jesu Castillo</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=jesujcastillom" title="Code">💻</a> <a href="https://github.com/testing-library/user-event/commits?author=jesujcastillom" title="Tests">⚠️</a></td>
     <td align="center"><a href="https://sarahdayan.dev"><img src="https://avatars1.githubusercontent.com/u/5370675?v=4" width="100px;" alt=""/><br /><sub><b>Sarah Dayan</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=sarahdayan" title="Documentation">📖</a></td>
     <td align="center"><a href="http://saul-mirone.github.io/"><img src="https://avatars0.githubusercontent.com/u/10047788?v=4" width="100px;" alt=""/><br /><sub><b>Mirone</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3ASaul-Mirone" title="Bug reports">🐛</a></td>
+    <td align="center"><a href="https://github.com/amandapouget"><img src="https://avatars3.githubusercontent.com/u/12855692?v=4" width="100px;" alt=""/><br /><sub><b>Amanda Pouget</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=amandapouget" title="Documentation">📖</a></td>
   </tr>
 </table>
 

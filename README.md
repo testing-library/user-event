@@ -94,7 +94,11 @@ const { default: userEvent } = require('@testing-library/user-event')
 
 ## API
 
-Note: You do not need to `await` userEvent.<method> unless you are using it in a `before/after` block (or when using certain arguments like `delay` as described below). We discourage use of `before/after` blocks at all in testing in general, for stylistic reasons described [here](https://kentcdodds.com/blog/avoid-nesting-when-youre-testing). For example, `userEvent.click(...)` does not need an `await` in an `it` block, but if you omit `await` when using it in a `beforeEach` block, you will see a false-positive warning about needing to wrap it in `act`.
+Note: All userEvent methods are synchronous with one exception: when `delay`
+with `userEvent.type` as described below). We also discourage using
+`userEvent` inside `before/after` blocks at all, for important reasons
+described in
+["Avoid Nesting When You're Testing"](https://kentcdodds.com/blog/avoid-nesting-when-youre-testing).
 
 ### `click(element, eventInit, options)`
 

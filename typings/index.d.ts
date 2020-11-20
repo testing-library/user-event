@@ -40,12 +40,12 @@ declare const userEvent: {
   ) => void
   selectOptions: (
     element: TargetElement,
-    values: string | string[] | HTMLElement | HTMLElement[],
+    values: string | string[] | Element | Element[],
     init?: MouseEventInit,
   ) => void
   deselectOptions: (
     element: TargetElement,
-    values: string | string[] | HTMLElement | HTMLElement[],
+    values: string | string[] | Element | Element[],
     init?: MouseEventInit,
   ) => void
   upload: (

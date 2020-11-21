@@ -1,6 +1,6 @@
 const observed = ['value']
 
-class CustomEl extends Element {
+class CustomEl extends HTMLElement {
   static getObservedAttributes() {
     return observed
   }

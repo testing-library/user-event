@@ -176,6 +176,14 @@ function calculateNewValue(newEntry, element) {
     newValue = value
   }
 
+  if (element.type === 'time' && !isValidInputTimevalue(element, newValue)) {
+    if (isValidInputTimevalue(element, newEntry)) {
+      newValue = newEntry
+    } else {
+      newValue = value
+    }
+  }
+
   if (!supportsMaxLength(element) || maxLength < 0) {
     return {newValue, newSelectionStart}
   } else {
@@ -269,6 +277,47 @@ function isValidDateValue(element, value) {
   return clone.value === value
 }
 
+function buildTimeValue(value) {
+  function build(onlyDigitsValue, index) {
+    const hours = onlyDigitsValue.slice(0, index)
+    const validHours = Math.min(parseInt(hours, 10), 23)
+    const minuteCharacters = onlyDigitsValue.slice(index)
+    const parsedMinutes = parseInt(minuteCharacters, 10)
+    const validMinutes = Math.min(parsedMinutes, 59)
+    return `${validHours
+      .toString()
+      .padStart(2, '0')}:${validMinutes.toString().padStart(2, '0')}`
+  }
+
+  const onlyDigitsValue = value.replace(/\D/g, '')
+  if (onlyDigitsValue.length < 2) {
+    return value
+  }
+  const firstDigit = parseInt(onlyDigitsValue[0], 10)
+  const secondDigit = parseInt(onlyDigitsValue[1], 10)
+  if (firstDigit >= 3 || (firstDigit === 2 && secondDigit >= 4)) {
+    let index
+    if (firstDigit >= 3) {
+      index = 1
+    } else {
+      index = 2
+    }
+    return build(onlyDigitsValue, index)
+  }
+  if (value.length === 2) {
+    return value
+  }
+  return build(onlyDigitsValue, 2)
+}
+
+function isValidInputTimevalue(element, timeValue) {
+  if (element.type !== 'time') return false
+
+  const clone = element.cloneNode()
+  clone.value = timeValue
+  return clone.value === timeValue
+}
+
 export {
   FOCUSABLE_SELECTOR,
   isFocusable,
@@ -280,6 +329,8 @@ export {
   setSelectionRangeIfNecessary,
   eventWrapper,
   isValidDateValue,
+  isValidInputTimevalue,
+  buildTimeValue,
   getValue,
   getSelectionRange,
   isContentEditable,

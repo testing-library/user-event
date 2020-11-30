@@ -42,6 +42,47 @@ const modifierCallbackMap = {
     keyCode: 93,
     modifierProperty: 'metaKey',
   }),
+  // capslock is inline because of the need to fire both keydown and keyup on use, while preserving the modifier state.
+  '{capslock}': function capslockOn({currentElement, eventOverrides}) {
+    const newEventOverrides = {modifierCapsLock: true}
+
+    fireEvent.keyDown(currentElement(), {
+      key: 'CapsLock',
+      keyCode: 20,
+      which: 20,
+      ...eventOverrides,
+      ...newEventOverrides,
+    })
+    fireEvent.keyUp(currentElement(), {
+      key: 'CapsLock',
+      keyCode: 20,
+      which: 20,
+      ...eventOverrides,
+      ...newEventOverrides,
+    })
+
+    return {eventOverrides: newEventOverrides}
+  },
+  '{/capslock}': function capslockOff({currentElement, eventOverrides}) {
+    const newEventOverrides = {modifierCapsLock: false}
+
+    fireEvent.keyDown(currentElement(), {
+      key: 'CapsLock',
+      keyCode: 20,
+      which: 20,
+      ...eventOverrides,
+      ...newEventOverrides,
+    })
+    fireEvent.keyUp(currentElement(), {
+      key: 'CapsLock',
+      keyCode: 20,
+      which: 20,
+      ...eventOverrides,
+      ...newEventOverrides,
+    })
+
+    return {eventOverrides: newEventOverrides}
+  },
 }
 
 const specialCharCallbackMap = {

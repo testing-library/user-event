@@ -353,6 +353,39 @@ test('{shift}a{/shift}', () => {
   `)
 })
 
+test('{capslock}a{/capslock}', () => {
+  const {element, getEventSnapshot} = setup('<input />')
+
+  userEvent.type(element, '{capslock}a{/capslock}')
+
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
+    Events fired on: input[value="a"]
+
+    input[value=""] - pointerover
+    input[value=""] - pointerenter
+    input[value=""] - mouseover: Left (0)
+    input[value=""] - mouseenter: Left (0)
+    input[value=""] - pointermove
+    input[value=""] - mousemove: Left (0)
+    input[value=""] - pointerdown
+    input[value=""] - mousedown: Left (0)
+    input[value=""] - focus
+    input[value=""] - focusin
+    input[value=""] - pointerup
+    input[value=""] - mouseup: Left (0)
+    input[value=""] - click: Left (0)
+    input[value=""] - keydown: CapsLock (20)
+    input[value=""] - keyup: CapsLock (20)
+    input[value=""] - keydown: a (97)
+    input[value=""] - keypress: a (97)
+    input[value="a"] - input
+      "{CURSOR}" -> "a{CURSOR}"
+    input[value="a"] - keyup: a (97)
+    input[value="a"] - keydown: CapsLock (20)
+    input[value="a"] - keyup: CapsLock (20)
+  `)
+})
+
 test('a{enter}', () => {
   const {element, getEventSnapshot} = setup('<input />')
 

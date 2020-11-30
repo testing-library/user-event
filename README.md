@@ -622,7 +622,7 @@ MIT
 <!-- prettier-ignore-start -->
 [npm]: https://www.npmjs.com
 [node]: https://nodejs.org
-[build-badge]: https://img.shields.io/github/workflow/status/testing-library/user-event/validate/main?logo=github&style=flat-square
+[build-badge]: https://img.shields.io/github/workflow/status/testing-library/user-event/validate/master?logo=github&style=flat-square
 [build]: https://github.com/testing-library/user-event/actions?query=workflow%3Avalidate
 [coverage-badge]: https://img.shields.io/codecov/c/github/testing-library/user-event.svg?style=flat-square
 [coverage]: https://codecov.io/github/testing-library/user-event

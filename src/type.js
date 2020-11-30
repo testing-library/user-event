@@ -42,6 +42,12 @@ const modifierCallbackMap = {
     keyCode: 93,
     modifierProperty: 'metaKey',
   }),
+  ...createModifierCallbackEntries({
+    name: 'capslock',
+    key: 'CapsLock',
+    keyCode: 20,
+    modifierProperty: 'modifierCapsLock',
+  }),
 }
 
 const specialCharCallbackMap = {

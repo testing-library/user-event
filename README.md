@@ -202,7 +202,7 @@ The following special character strings are supported:
 | `{ctrl}`       | Control    | `ctrlKey`          |                                                                                                                                                                     |
 | `{alt}`        | Alt        | `altKey`           |                                                                                                                                                                     |
 | `{meta}`       | OS         | `metaKey`          |                                                                                                                                                                     |
-| `{capslock}`   | CapsLock   | `modifierCapsLock` |                                                                                                                                                                     |
+| `{capslock}`   | CapsLock   | `modifierCapsLock` | Fires both keydown and keyup when used.                                                                                                                             |
 
 > **A note about modifiers:** Modifier keys (`{shift}`, `{ctrl}`, `{alt}`,
 > `{meta}`) will activate their corresponding event modifiers for the duration

@@ -42,12 +42,47 @@ const modifierCallbackMap = {
     keyCode: 93,
     modifierProperty: 'metaKey',
   }),
-  ...createCapsLockModifierCallbackEntries({
-    name: 'capslock',
-    key: 'CapsLock',
-    keyCode: 20,
-    modifierProperty: 'modifierCapsLock',
-  }),
+  // capslock is inline because of the need to fire both keydown and keyup on use, while preserving the modifier state.
+  '{capslock}': function capslockOn({currentElement, eventOverrides}) {
+    const newEventOverrides = {modifierCapsLock: true}
+
+    fireEvent.keyDown(currentElement(), {
+      key: 'CapsLock',
+      keyCode: 20,
+      which: 20,
+      ...eventOverrides,
+      ...newEventOverrides,
+    })
+    fireEvent.keyUp(currentElement(), {
+      key: 'CapsLock',
+      keyCode: 20,
+      which: 20,
+      ...eventOverrides,
+      ...newEventOverrides,
+    })
+
+    return {eventOverrides: newEventOverrides}
+  },
+  '{/capslock}': function capslockOff({currentElement, eventOverrides}) {
+    const newEventOverrides = {modifierCapsLock: false}
+
+    fireEvent.keyDown(currentElement(), {
+      key: 'CapsLock',
+      keyCode: 20,
+      which: 20,
+      ...eventOverrides,
+      ...newEventOverrides,
+    })
+    fireEvent.keyUp(currentElement(), {
+      key: 'CapsLock',
+      keyCode: 20,
+      which: 20,
+      ...eventOverrides,
+      ...newEventOverrides,
+    })
+
+    return {eventOverrides: newEventOverrides}
+  },
 }
 
 const specialCharCallbackMap = {
@@ -470,62 +505,6 @@ function createModifierCallbackEntries({name, key, keyCode, modifierProperty}) {
   function close({currentElement, eventOverrides}) {
     const newEventOverrides = {[modifierProperty]: false}
 
-    fireEvent.keyUp(currentElement(), {
-      key,
-      keyCode,
-      which: keyCode,
-      ...eventOverrides,
-      ...newEventOverrides,
-    })
-
-    return {eventOverrides: newEventOverrides}
-  }
-  return {
-    [openName]: open,
-    [closeName]: close,
-  }
-}
-
-function createCapsLockModifierCallbackEntries({
-  name,
-  key,
-  keyCode,
-  modifierProperty,
-}) {
-  const openName = `{${name}}`
-  const closeName = `{/${name}}`
-
-  function open({currentElement, eventOverrides}) {
-    const newEventOverrides = {[modifierProperty]: true}
-
-    fireEvent.keyDown(currentElement(), {
-      key,
-      keyCode,
-      which: keyCode,
-      ...eventOverrides,
-      ...newEventOverrides,
-    })
-    fireEvent.keyUp(currentElement(), {
-      key,
-      keyCode,
-      which: keyCode,
-      ...eventOverrides,
-      ...newEventOverrides,
-    })
-
-    return {eventOverrides: newEventOverrides}
-  }
-  open.closeName = closeName
-  function close({currentElement, eventOverrides}) {
-    const newEventOverrides = {[modifierProperty]: false}
-
-    fireEvent.keyDown(currentElement(), {
-      key,
-      keyCode,
-      which: keyCode,
-      ...eventOverrides,
-      ...newEventOverrides,
-    })
     fireEvent.keyUp(currentElement(), {
       key,
       keyCode,

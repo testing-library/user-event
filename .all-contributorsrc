@@ -674,6 +674,17 @@
       "contributions": [
         "doc"
       ]
+    },
+    {
+      "login": "Sonic12040",
+      "name": "Sonic12040",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/21055893?v=4",
+      "profile": "https://github.com/Sonic12040",
+      "contributions": [
+        "code",
+        "test",
+        "doc"
+      ]
     }
   ],
   "commitConvention": "none",

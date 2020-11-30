@@ -375,11 +375,13 @@ test('{capslock}a{/capslock}', () => {
     input[value=""] - mouseup: Left (0)
     input[value=""] - click: Left (0)
     input[value=""] - keydown: CapsLock (20)
+    input[value=""] - keyup: CapsLock (20)
     input[value=""] - keydown: a (97)
     input[value=""] - keypress: a (97)
     input[value="a"] - input
       "{CURSOR}" -> "a{CURSOR}"
     input[value="a"] - keyup: a (97)
+    input[value="a"] - keydown: CapsLock (20)
     input[value="a"] - keyup: CapsLock (20)
   `)
 })

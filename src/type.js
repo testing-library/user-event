@@ -455,28 +455,68 @@ function createModifierCallbackEntries({name, key, keyCode, modifierProperty}) {
 
   function open({currentElement, eventOverrides}) {
     const newEventOverrides = {[modifierProperty]: true}
+    switch (key) {
+      case 'CapsLock':
+        fireEvent.keyDown(currentElement(), {
+          key,
+          keyCode,
+          which: keyCode,
+          ...eventOverrides,
+          ...newEventOverrides,
+        })
+        fireEvent.keyUp(currentElement(), {
+          key,
+          keyCode,
+          which: keyCode,
+          ...eventOverrides,
+          ...newEventOverrides,
+        })
+        break
 
-    fireEvent.keyDown(currentElement(), {
-      key,
-      keyCode,
-      which: keyCode,
-      ...eventOverrides,
-      ...newEventOverrides,
-    })
+      default:
+        fireEvent.keyDown(currentElement(), {
+          key,
+          keyCode,
+          which: keyCode,
+          ...eventOverrides,
+          ...newEventOverrides,
+        })
+        break
+    }
 
     return {eventOverrides: newEventOverrides}
   }
   open.closeName = closeName
   function close({currentElement, eventOverrides}) {
     const newEventOverrides = {[modifierProperty]: false}
+    switch (key) {
+      case 'CapsLock':
+        fireEvent.keyDown(currentElement(), {
+          key,
+          keyCode,
+          which: keyCode,
+          ...eventOverrides,
+          ...newEventOverrides,
+        })
+        fireEvent.keyUp(currentElement(), {
+          key,
+          keyCode,
+          which: keyCode,
+          ...eventOverrides,
+          ...newEventOverrides,
+        })
+        break
 
-    fireEvent.keyUp(currentElement(), {
-      key,
-      keyCode,
-      which: keyCode,
-      ...eventOverrides,
-      ...newEventOverrides,
-    })
+      default:
+        fireEvent.keyUp(currentElement(), {
+          key,
+          keyCode,
+          which: keyCode,
+          ...eventOverrides,
+          ...newEventOverrides,
+        })
+        break
+    }
 
     return {eventOverrides: newEventOverrides}
   }

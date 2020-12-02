@@ -73,3 +73,15 @@ declare const userEvent: {
 }
 
 export default userEvent
+
+export enum specialChars {
+  arrowLeft = '{arrowleft}',
+  arrowRight = '{arrowright}',
+  enter = '{enter}',
+  escape = '{esc}',
+  delete = '{del}',
+  backspace = '{backspace}',
+  selectAll = '{selectall}',
+  space = '{space}',
+  whiteSpace = ' ',
+}

@@ -85,16 +85,28 @@ const modifierCallbackMap = {
   },
 }
 
+const specialCharMap = {
+  arrowLeft: '{arrowleft}',
+  arrowRight: '{arrowright}',
+  enter: '{enter}',
+  escape: '{esc}',
+  delete: '{del}',
+  backspace: '{backspace}',
+  selectAll: '{selectall}',
+  space: '{space}',
+  whiteSpace: ' ',
+}
+
 const specialCharCallbackMap = {
-  '{arrowleft}': navigationKey('ArrowLeft'),
-  '{arrowright}': navigationKey('ArrowRight'),
-  '{enter}': handleEnter,
-  '{esc}': handleEsc,
-  '{del}': handleDel,
-  '{backspace}': handleBackspace,
-  '{selectall}': handleSelectall,
-  '{space}': handleSpace,
-  ' ': handleSpace,
+  [specialCharMap.arrowLeft]: navigationKey('ArrowLeft'),
+  [specialCharMap.arrowRight]: navigationKey('ArrowRight'),
+  [specialCharMap.enter]: handleEnter,
+  [specialCharMap.escape]: handleEsc,
+  [specialCharMap.delete]: handleDel,
+  [specialCharMap.backspace]: handleBackspace,
+  [specialCharMap.selectAll]: handleSelectall,
+  [specialCharMap.space]: handleSpace,
+  [specialCharMap.whiteSpace]: handleSpace,
 }
 
 function wait(time) {
@@ -711,4 +723,4 @@ function handleSpaceOnClickable({currentElement, eventOverrides}) {
   }
 }
 
-export {type}
+export {type, specialCharMap}

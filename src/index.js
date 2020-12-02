@@ -1,5 +1,5 @@
 import {click, dblClick} from './click'
-import {type} from './type'
+import {type, specialCharMap} from './type'
 import {clear} from './clear'
 import {tab} from './tab'
 import {hover, unhover} from './hover'
@@ -22,3 +22,5 @@ const userEvent = {
 }
 
 export default userEvent
+
+export {specialCharMap as specialChars}

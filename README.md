@@ -60,6 +60,7 @@ change the state of the checkbox.
   - [`hover(element)`](#hoverelement)
   - [`unhover(element)`](#unhoverelement)
   - [`paste(element, text, eventInit, options)`](#pasteelement-text-eventinit-options)
+  - [`specialChars`](#specialchars)
 - [Issues](#issues)
   - [🐛 Bugs](#-bugs)
   - [💡 Feature Requests](#-feature-requests)
@@ -202,7 +203,7 @@ The following special character strings are supported:
 | `{ctrl}`       | Control    | `ctrlKey`          |                                                                                                                                                                     |
 | `{alt}`        | Alt        | `altKey`           |                                                                                                                                                                     |
 | `{meta}`       | OS         | `metaKey`          |                                                                                                                                                                     |
-| `{capslock}`   | CapsLock   | `modifierCapsLock` | Fires both keydown and keyup when used (simulates a user clicking their "Caps Lock" button to enable caps lock).                                                                                                                             |
+| `{capslock}`   | CapsLock   | `modifierCapsLock` | Fires both keydown and keyup when used (simulates a user clicking their "Caps Lock" button to enable caps lock).                                                    |
 
 > **A note about modifiers:** Modifier keys (`{shift}`, `{ctrl}`, `{alt}`,
 > `{meta}`) will activate their corresponding event modifiers for the duration
@@ -491,6 +492,44 @@ test('should paste text in input', () => {
 You can use the `eventInit` if what you're pasting should have `clipboardData`
 (like `files`).
 
+### `specialChars`
+
+A handful set of special characters used in [type](#type) method.
+
+| Key        | Character      |
+| ---------- | -------------- |
+| arrowLeft  | `{arrowleft}`  |
+| arrowRight | `{arrowright}` |
+| enter      | `{enter}`      |
+| escape     | `{esc}`        |
+| delete     | `{del}`        |
+| backspace  | `{backspace}`  |
+| selectAll  | `{selectall}`  |
+| space      | `{space}`      |
+| whiteSpace | `' '`          |
+
+Usage example:
+
+```jsx
+import React from 'react'
+import {render, screen} from '@testing-library/react'
+import userEvent, {specialChars} from '@testing-library/user-event'
+
+test('delete characters within the selectedRange', () => {
+  render(
+    <div>
+      <label htmlFor="my-input">Example:</label>
+      <input id="my-input" type="text" value="This is a bad example" />
+    </div>,
+  )
+  const input = screen.getByLabelText(/example/i)
+  input.setSelectionRange(10, 13)
+  userEvent.type(input, `${specialChars.backspace}good`)
+
+  expect(input).toHaveValue('This is a good example')
+})
+```
+
 ## Issues
 
 _Looking to contribute? Look for the [Good First Issue][good-first-issue]
@@ -610,6 +649,7 @@ Thanks goes to these people ([emoji key][emojis]):
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors][all-contributors] specification.

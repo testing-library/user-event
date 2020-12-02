@@ -425,7 +425,7 @@ test('typing into a controlled input works', () => {
 
   userEvent.type(element, '23')
 
-  expect(element.value).toBe('$23')
+  expect(element).toHaveValue('$23')
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value="$23"]
 
@@ -461,7 +461,7 @@ test('typing in the middle of a controlled input works', () => {
 
   userEvent.type(element, '1')
 
-  expect(element.value).toBe('$213')
+  expect(element).toHaveValue('$213')
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value="$213"]
 
@@ -503,7 +503,7 @@ test('ignored {backspace} in controlled input', () => {
   expect(element.selectionEnd).toBe(element.value.length)
   userEvent.type(element, '4')
 
-  expect(element.value).toBe('$234')
+  expect(element).toHaveValue('$234')
   // the backslash in the inline snapshot is to escape the $ before {CURSOR}
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value="$234"]

@@ -82,6 +82,7 @@ test('clears even on inputs that cannot (programmatically) have a selection', ()
   const {element: number} = setup('<input value="12" type="number" />')
   userEvent.clear(number)
   // jest-dom does funny stuff with toHaveValue on number inputs
+  // eslint-disable-next-line jest-dom/prefer-to-have-value
   expect(number.value).toBe('')
 })
 

@@ -47,7 +47,6 @@ change the state of the checkbox.
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-
 - [Installation](#installation)
 - [API](#api)
   - [`click(element, eventInit, options)`](#clickelement-eventinit-options)
@@ -251,8 +250,16 @@ import {render, screen} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 test('types into the input', () => {
-  render(<input type="time" data-testid="time" />)
-  const input = screen.getByTestId('time')
+  render(
+    <>
+      <label for="time">Enter a time</label>
+      <input
+        type="time"
+        id="time"
+      />
+    </>
+  )
+  const input = screen.getByLabelText(/enter a time/i)
   userEvent.type(input, '13:58')
   expect(input.value).toBe('13:58')
 })

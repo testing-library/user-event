@@ -494,7 +494,8 @@ You can use the `eventInit` if what you're pasting should have `clipboardData`
 
 ### `specialChars`
 
-A handful set of special characters used in [type](#type) method.
+A handful set of special characters used in [type](#typeelement-text-options)
+method.
 
 | Key        | Character      |
 | ---------- | -------------- |

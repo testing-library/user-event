@@ -176,8 +176,8 @@ function calculateNewValue(newEntry, element) {
     newValue = value
   }
 
-  if (element.type === 'time' && !isValidInputTimevalue(element, newValue)) {
-    if (isValidInputTimevalue(element, newEntry)) {
+  if (element.type === 'time' && !isValidInputTimeValue(element, newValue)) {
+    if (isValidInputTimeValue(element, newEntry)) {
       newValue = newEntry
     } else {
       newValue = value
@@ -310,7 +310,7 @@ function buildTimeValue(value) {
   return build(onlyDigitsValue, 2)
 }
 
-function isValidInputTimevalue(element, timeValue) {
+function isValidInputTimeValue(element, timeValue) {
   if (element.type !== 'time') return false
 
   const clone = element.cloneNode()
@@ -329,7 +329,7 @@ export {
   setSelectionRangeIfNecessary,
   eventWrapper,
   isValidDateValue,
-  isValidInputTimevalue,
+  isValidInputTimeValue,
   buildTimeValue,
   getValue,
   getSelectionRange,

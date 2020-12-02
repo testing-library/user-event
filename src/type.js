@@ -13,7 +13,7 @@ import {
   getSelectionRange,
   getValue,
   isContentEditable,
-  isValidInputTimevalue,
+  isValidInputTimeValue,
   buildTimeValue,
 } from './utils'
 import {click} from './click'
@@ -327,7 +327,7 @@ function typeCharacter(
       }
 
       const timeNewEntry = buildTimeValue(textToBeTyped)
-      if (isValidInputTimevalue(currentElement(), timeNewEntry)) {
+      if (isValidInputTimeValue(currentElement(), timeNewEntry)) {
         newEntry = timeNewEntry
       }
 
@@ -391,7 +391,7 @@ function fireChangeForInputTimeIfValid(
   timeNewEntry,
 ) {
   if (
-    isValidInputTimevalue(currentElement(), timeNewEntry) &&
+    isValidInputTimeValue(currentElement(), timeNewEntry) &&
     prevValue !== timeNewEntry
   ) {
     fireEvent.change(currentElement(), {target: {value: timeNewEntry}})

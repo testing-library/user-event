@@ -1069,6 +1069,50 @@ test('navigation key: {arrowleft} and {arrowright} moves the cursor', () => {
 
 test('can type into an input with type `time`', () => {
   const {element, getEventSnapshot} = setup('<input type="time" />')
+  userEvent.type(element, '01:05')
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
+  Events fired on: input[value="01:05"]
+  
+  input[value=""] - pointerover
+  input[value=""] - pointerenter
+  input[value=""] - mouseover: Left (0)
+  input[value=""] - mouseenter: Left (0)
+  input[value=""] - pointermove
+  input[value=""] - mousemove: Left (0)
+  input[value=""] - pointerdown
+  input[value=""] - mousedown: Left (0)
+  input[value=""] - focus
+  input[value=""] - focusin
+  input[value=""] - pointerup
+  input[value=""] - mouseup: Left (0)
+  input[value=""] - click: Left (0)
+  input[value=""] - keydown: 0 (48)
+  input[value=""] - keypress: 0 (48)
+  input[value=""] - keyup: 0 (48)
+  input[value=""] - keydown: 1 (49)
+  input[value=""] - keypress: 1 (49)
+  input[value=""] - keyup: 1 (49)
+  input[value=""] - keydown: : (58)
+  input[value=""] - keypress: : (58)
+  input[value=""] - keyup: : (58)
+  input[value=""] - keydown: 0 (48)
+  input[value=""] - keypress: 0 (48)
+  input[value="01:00"] - input
+    "{CURSOR}" -> "{CURSOR}01:00"
+  input[value="01:00"] - change
+  input[value="01:00"] - keyup: 0 (48)
+  input[value="01:00"] - keydown: 5 (53)
+  input[value="01:00"] - keypress: 5 (53)
+  input[value="01:05"] - input
+    "{CURSOR}01:00" -> "{CURSOR}01:05"
+  input[value="01:05"] - change
+  input[value="01:05"] - keyup: 5 (53)
+  `)
+  expect(element.value).toBe('01:05')
+})
+
+test('can type into an input with type `time` without ":"', () => {
+  const {element, getEventSnapshot} = setup('<input type="time" />')
   userEvent.type(element, '0105')
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
   Events fired on: input[value="01:05"]
@@ -1110,7 +1154,7 @@ test('can type into an input with type `time`', () => {
 
 test('can type more a number higher than 60 minutes into an input `time` and they are converted into 59 minutes', () => {
   const {element, getEventSnapshot} = setup('<input type="time" />')
-  userEvent.type(element, '2390')
+  userEvent.type(element, '23:90')
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value="23:59"]
@@ -1134,6 +1178,9 @@ test('can type more a number higher than 60 minutes into an input `time` and the
     input[value=""] - keydown: 3 (51)
     input[value=""] - keypress: 3 (51)
     input[value=""] - keyup: 3 (51)
+    input[value=""] - keydown: : (58)
+    input[value=""] - keypress: : (58)
+    input[value=""] - keyup: : (58)
     input[value=""] - keydown: 9 (57)
     input[value=""] - keypress: 9 (57)
     input[value="23:09"] - input
@@ -1214,7 +1261,7 @@ test('can type letters into an input `time` and they are ignored', () => {
 
 test('can type a digit bigger in the hours section, bigger than 2 and it shows the time correctly', () => {
   const {element, getEventSnapshot} = setup('<input type="time" />')
-  userEvent.type(element, '925')
+  userEvent.type(element, '9:25')
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value="09:25"]
@@ -1235,6 +1282,9 @@ test('can type a digit bigger in the hours section, bigger than 2 and it shows t
     input[value=""] - keydown: 9 (57)
     input[value=""] - keypress: 9 (57)
     input[value=""] - keyup: 9 (57)
+    input[value=""] - keydown: : (58)
+    input[value=""] - keypress: : (58)
+    input[value=""] - keyup: : (58)
     input[value=""] - keydown: 2 (50)
     input[value=""] - keypress: 2 (50)
     input[value="09:02"] - input
@@ -1254,7 +1304,7 @@ test('can type a digit bigger in the hours section, bigger than 2 and it shows t
 
 test('can type two digits in the hours section, equals to 24 and it shows the hours as 23', () => {
   const {element, getEventSnapshot} = setup('<input type="time" />')
-  userEvent.type(element, '2452')
+  userEvent.type(element, '24:52')
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value="23:52"]
@@ -1278,6 +1328,9 @@ test('can type two digits in the hours section, equals to 24 and it shows the ho
     input[value=""] - keydown: 4 (52)
     input[value=""] - keypress: 4 (52)
     input[value=""] - keyup: 4 (52)
+    input[value=""] - keydown: : (58)
+    input[value=""] - keypress: : (58)
+    input[value=""] - keyup: : (58)
     input[value=""] - keydown: 5 (53)
     input[value=""] - keypress: 5 (53)
     input[value="23:05"] - input
@@ -1297,7 +1350,7 @@ test('can type two digits in the hours section, equals to 24 and it shows the ho
 
 test('can type two digits in the hours section, bigger than 24 and less than 30, and it shows the hours as 23', () => {
   const {element, getEventSnapshot} = setup('<input type="time" />')
-  userEvent.type(element, '2752')
+  userEvent.type(element, '27:52')
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value="23:52"]
@@ -1321,6 +1374,9 @@ test('can type two digits in the hours section, bigger than 24 and less than 30,
     input[value=""] - keydown: 7 (55)
     input[value=""] - keypress: 7 (55)
     input[value=""] - keyup: 7 (55)
+    input[value=""] - keydown: : (58)
+    input[value=""] - keypress: : (58)
+    input[value=""] - keyup: : (58)
     input[value=""] - keydown: 5 (53)
     input[value=""] - keypress: 5 (53)
     input[value="23:05"] - input

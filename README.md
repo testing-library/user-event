@@ -47,6 +47,7 @@ change the state of the checkbox.
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
+
 - [Installation](#installation)
 - [API](#api)
   - [`click(element, eventInit, options)`](#clickelement-eventinit-options)
@@ -89,15 +90,14 @@ import userEvent from '@testing-library/user-event'
 
 // or
 
-const { default: userEvent } = require('@testing-library/user-event')
+const {default: userEvent} = require('@testing-library/user-event')
 ```
 
 ## API
 
 Note: All userEvent methods are synchronous with one exception: when `delay`
-with `userEvent.type` as described below). We also discourage using
-`userEvent` inside `before/after` blocks at all, for important reasons
-described in
+with `userEvent.type` as described below). We also discourage using `userEvent`
+inside `before/after` blocks at all, for important reasons described in
 ["Avoid Nesting When You're Testing"](https://kentcdodds.com/blog/avoid-nesting-when-youre-testing).
 
 ### `click(element, eventInit, options)`
@@ -237,6 +237,24 @@ test('delete characters within the selectedRange', () => {
   userEvent.type(input, '{backspace}good')
 
   expect(input).toHaveValue('This is a good example')
+})
+```
+
+#### <input type="time" /> support
+
+The following is an example of usage of this library with
+`<input type="time" />`
+
+```jsx
+import React from 'react
+import {render, screen} from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+
+test('types into the input', () => {
+  render(<input type="time" data-testid="time" />)
+  const input = screen.getByTestId('time')
+  userEvent.type(input, '13:58')
+  expect(input.value).toBe('13:58')
 })
 ```
 
@@ -609,6 +627,7 @@ Thanks goes to these people ([emoji key][emojis]):
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors][all-contributors] specification.

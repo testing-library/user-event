@@ -1066,3 +1066,59 @@ test('navigation key: {arrowleft} and {arrowright} moves the cursor', () => {
     input[value="abc"] - keyup: c (99)
   `)
 })
+
+test('{arrowdown} fires keyup/keydown events', () => {
+  const {element} = setup('<input />')
+  const handleKeyDown = jest.fn()
+  const handleKeyUp = jest.fn()
+
+  addListeners(element, {
+    eventHandlers: {
+      keyDown: handleKeyDown,
+      keyUp: handleKeyUp,
+    },
+  })
+
+  userEvent.type(element, '{arrowdown}')
+
+  expect(handleKeyDown).toHaveBeenCalledWith(
+    expect.objectContaining({
+      key: 'ArrowDown',
+      keyCode: 40,
+    }),
+  )
+  expect(handleKeyUp).toHaveBeenCalledWith(
+    expect.objectContaining({
+      key: 'ArrowDown',
+      keyCode: 40,
+    }),
+  )
+})
+
+test('{arrowup} fires keyup/keydown events', () => {
+  const {element} = setup('<input />')
+  const handleKeyDown = jest.fn()
+  const handleKeyUp = jest.fn()
+
+  addListeners(element, {
+    eventHandlers: {
+      keyDown: handleKeyDown,
+      keyUp: handleKeyUp,
+    },
+  })
+
+  userEvent.type(element, '{arrowup}')
+
+  expect(handleKeyDown).toHaveBeenCalledWith(
+    expect.objectContaining({
+      key: 'ArrowUp',
+      keyCode: 38,
+    }),
+  )
+  expect(handleKeyUp).toHaveBeenCalledWith(
+    expect.objectContaining({
+      key: 'ArrowUp',
+      keyCode: 38,
+    }),
+  )
+})

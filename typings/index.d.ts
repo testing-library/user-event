@@ -83,5 +83,5 @@ export enum specialChars {
   backspace = '{backspace}',
   selectAll = '{selectall}',
   space = '{space}',
-  whiteSpace = ' ',
+  whitespace = ' ',
 }

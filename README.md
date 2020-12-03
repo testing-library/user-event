@@ -507,7 +507,7 @@ method.
 | backspace  | `{backspace}`  |
 | selectAll  | `{selectall}`  |
 | space      | `{space}`      |
-| whiteSpace | `' '`          |
+| whitespace | `' '`          |
 
 Usage example:
 

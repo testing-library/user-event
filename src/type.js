@@ -94,7 +94,7 @@ const specialCharMap = {
   backspace: '{backspace}',
   selectAll: '{selectall}',
   space: '{space}',
-  whiteSpace: ' ',
+  whitespace: ' ',
 }
 
 const specialCharCallbackMap = {
@@ -106,7 +106,7 @@ const specialCharCallbackMap = {
   [specialCharMap.backspace]: handleBackspace,
   [specialCharMap.selectAll]: handleSelectall,
   [specialCharMap.space]: handleSpace,
-  [specialCharMap.whiteSpace]: handleSpace,
+  [specialCharMap.whitespace]: handleSpace,
 }
 
 function wait(time) {

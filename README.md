@@ -242,6 +242,32 @@ test('delete characters within the selectedRange', () => {
 })
 ```
 
+#### <input type="time" /> support
+
+The following is an example of usage of this library with
+`<input type="time" />`
+
+```jsx
+import React from 'react
+import {render, screen} from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+
+test('types into the input', () => {
+  render(
+    <>
+      <label for="time">Enter a time</label>
+      <input
+        type="time"
+        id="time"
+      />
+    </>
+  )
+  const input = screen.getByLabelText(/enter a time/i)
+  userEvent.type(input, '13:58')
+  expect(input.value).toBe('13:58')
+})
+```
+
 ### `upload(element, file, [{ clickInit, changeInit }])`
 
 Uploads file to an `<input>`. For uploading multiple files use `<input>` with
@@ -607,6 +633,7 @@ Thanks goes to these people ([emoji key][emojis]):
     <td align="center"><a href="http://saul-mirone.github.io/"><img src="https://avatars0.githubusercontent.com/u/10047788?v=4" width="100px;" alt=""/><br /><sub><b>Mirone</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3ASaul-Mirone" title="Bug reports">🐛</a></td>
     <td align="center"><a href="https://github.com/amandapouget"><img src="https://avatars3.githubusercontent.com/u/12855692?v=4" width="100px;" alt=""/><br /><sub><b>Amanda Pouget</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=amandapouget" title="Documentation">📖</a></td>
     <td align="center"><a href="https://github.com/Sonic12040"><img src="https://avatars3.githubusercontent.com/u/21055893?v=4" width="100px;" alt=""/><br /><sub><b>Sonic12040</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=Sonic12040" title="Code">💻</a> <a href="https://github.com/testing-library/user-event/commits?author=Sonic12040" title="Tests">⚠️</a> <a href="https://github.com/testing-library/user-event/commits?author=Sonic12040" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://github.com/gndelia"><img src="https://avatars1.githubusercontent.com/u/352474?v=4" width="100px;" alt=""/><br /><sub><b>Gonzalo D'Elia</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=gndelia" title="Code">💻</a> <a href="https://github.com/testing-library/user-event/commits?author=gndelia" title="Tests">⚠️</a> <a href="https://github.com/testing-library/user-event/commits?author=gndelia" title="Documentation">📖</a></td>
   </tr>
 </table>
 

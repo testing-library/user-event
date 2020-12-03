@@ -13,6 +13,8 @@ import {
   getSelectionRange,
   getValue,
   isContentEditable,
+  isValidInputTimeValue,
+  buildTimeValue,
 } from './utils'
 import {click} from './click'
 import {navigationKey} from './keys/navigation-key'
@@ -367,6 +369,11 @@ function typeCharacter(
         newEntry = textToBeTyped
       }
 
+      const timeNewEntry = buildTimeValue(textToBeTyped)
+      if (isValidInputTimeValue(currentElement(), timeNewEntry)) {
+        newEntry = timeNewEntry
+      }
+
       const inputEvent = fireInputEventIfNeeded({
         ...calculateNewValue(newEntry, currentElement()),
         eventOverrides: {
@@ -381,6 +388,8 @@ function typeCharacter(
       if (isValidDateValue(currentElement(), textToBeTyped)) {
         fireEvent.change(currentElement(), {target: {value: textToBeTyped}})
       }
+
+      fireChangeForInputTimeIfValid(currentElement, prevValue, timeNewEntry)
 
       // typing "-" into a number input will not actually update the value
       // so for the next character we type, the value should be set to
@@ -416,6 +425,19 @@ function typeCharacter(
     prevWasPeriod: nextPrevWasPeriod,
     prevValue,
     typedValue: textToBeTyped,
+  }
+}
+
+function fireChangeForInputTimeIfValid(
+  currentElement,
+  prevValue,
+  timeNewEntry,
+) {
+  if (
+    isValidInputTimeValue(currentElement(), timeNewEntry) &&
+    prevValue !== timeNewEntry
+  ) {
+    fireEvent.change(currentElement(), {target: {value: timeNewEntry}})
   }
 }
 

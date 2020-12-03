@@ -240,6 +240,32 @@ test('delete characters within the selectedRange', () => {
 })
 ```
 
+#### <input type="time" /> support
+
+The following is an example of usage of this library with
+`<input type="time" />`
+
+```jsx
+import React from 'react
+import {render, screen} from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+
+test('types into the input', () => {
+  render(
+    <>
+      <label for="time">Enter a time</label>
+      <input
+        type="time"
+        id="time"
+      />
+    </>
+  )
+  const input = screen.getByLabelText(/enter a time/i)
+  userEvent.type(input, '13:58')
+  expect(input.value).toBe('13:58')
+})
+```
+
 ### `upload(element, file, [{ clickInit, changeInit }])`
 
 Uploads file to an `<input>`. For uploading multiple files use `<input>` with
@@ -610,6 +636,7 @@ Thanks goes to these people ([emoji key][emojis]):
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors][all-contributors] specification.

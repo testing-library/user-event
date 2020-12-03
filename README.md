@@ -198,11 +198,13 @@ The following special character strings are supported:
 | `{selectall}`  | N/A        | N/A                | Selects all the text of the element. Note that this will only work for elements that support selection ranges (so, not `email`, `password`, `number`, among others) |
 | `{arrowleft}`  | ArrowLeft  | N/A                |                                                                                                                                                                     |
 | `{arrowright}` | ArrowRight | N/A                |                                                                                                                                                                     |
+| `{arrowup}`    | ArrowUp    | N/A                |                                                                                                                                                                     |
+| `{arrowdown}`  | ArrowDown  | N/A                |                                                                                                                                                                     |
 | `{shift}`      | Shift      | `shiftKey`         | Does **not** capitalize following characters.                                                                                                                       |
 | `{ctrl}`       | Control    | `ctrlKey`          |                                                                                                                                                                     |
 | `{alt}`        | Alt        | `altKey`           |                                                                                                                                                                     |
 | `{meta}`       | OS         | `metaKey`          |                                                                                                                                                                     |
-| `{capslock}`   | CapsLock   | `modifierCapsLock` | Fires both keydown and keyup when used (simulates a user clicking their "Caps Lock" button to enable caps lock).                                                                                                                             |
+| `{capslock}`   | CapsLock   | `modifierCapsLock` | Fires both keydown and keyup when used (simulates a user clicking their "Caps Lock" button to enable caps lock).                                                    |
 
 > **A note about modifiers:** Modifier keys (`{shift}`, `{ctrl}`, `{alt}`,
 > `{meta}`) will activate their corresponding event modifiers for the duration
@@ -637,6 +639,7 @@ Thanks goes to these people ([emoji key][emojis]):
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors][all-contributors] specification.

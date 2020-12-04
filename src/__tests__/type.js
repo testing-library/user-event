@@ -1393,3 +1393,55 @@ test('can type two digits in the hours section, bigger than 24 and less than 30,
 
   expect(element).toHaveValue('23:52')
 })
+
+test('{arrowdown} fires keyup/keydown events', () => {
+  const {element, getEventSnapshot} = setup('<input />')
+
+  userEvent.type(element, '{arrowdown}')
+
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
+    Events fired on: input[value=""]
+
+    input[value=""] - pointerover
+    input[value=""] - pointerenter
+    input[value=""] - mouseover: Left (0)
+    input[value=""] - mouseenter: Left (0)
+    input[value=""] - pointermove
+    input[value=""] - mousemove: Left (0)
+    input[value=""] - pointerdown
+    input[value=""] - mousedown: Left (0)
+    input[value=""] - focus
+    input[value=""] - focusin
+    input[value=""] - pointerup
+    input[value=""] - mouseup: Left (0)
+    input[value=""] - click: Left (0)
+    input[value=""] - keydown: ArrowDown (40)
+    input[value=""] - keyup: ArrowDown (40)
+  `)
+})
+
+test('{arrowup} fires keyup/keydown events', () => {
+  const {element, getEventSnapshot} = setup('<input />')
+
+  userEvent.type(element, '{arrowup}')
+
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
+    Events fired on: input[value=""]
+
+    input[value=""] - pointerover
+    input[value=""] - pointerenter
+    input[value=""] - mouseover: Left (0)
+    input[value=""] - mouseenter: Left (0)
+    input[value=""] - pointermove
+    input[value=""] - mousemove: Left (0)
+    input[value=""] - pointerdown
+    input[value=""] - mousedown: Left (0)
+    input[value=""] - focus
+    input[value=""] - focusin
+    input[value=""] - pointerup
+    input[value=""] - mouseup: Left (0)
+    input[value=""] - click: Left (0)
+    input[value=""] - keydown: ArrowUp (38)
+    input[value=""] - keyup: ArrowUp (38)
+  `)
+})

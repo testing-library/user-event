@@ -90,6 +90,8 @@ const modifierCallbackMap = {
 const specialCharCallbackMap = {
   '{arrowleft}': navigationKey('ArrowLeft'),
   '{arrowright}': navigationKey('ArrowRight'),
+  '{arrowdown}': handleArrowDown,
+  '{arrowup}': handleArrowUp,
   '{enter}': handleEnter,
   '{esc}': handleEsc,
   '{del}': handleDel,
@@ -731,6 +733,44 @@ function handleSpaceOnClickable({currentElement, eventOverrides}) {
       ...eventOverrides,
     })
   }
+}
+
+function handleArrowDown({currentElement, eventOverrides}) {
+  const key = 'ArrowDown'
+  const keyCode = 40
+
+  fireEvent.keyDown(currentElement(), {
+    key,
+    keyCode,
+    which: keyCode,
+    ...eventOverrides,
+  })
+
+  fireEvent.keyUp(currentElement(), {
+    key,
+    keyCode,
+    which: keyCode,
+    ...eventOverrides,
+  })
+}
+
+function handleArrowUp({currentElement, eventOverrides}) {
+  const key = 'ArrowUp'
+  const keyCode = 38
+
+  fireEvent.keyDown(currentElement(), {
+    key,
+    keyCode,
+    which: keyCode,
+    ...eventOverrides,
+  })
+
+  fireEvent.keyUp(currentElement(), {
+    key,
+    keyCode,
+    which: keyCode,
+    ...eventOverrides,
+  })
 }
 
 export {type}

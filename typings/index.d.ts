@@ -77,6 +77,8 @@ export default userEvent
 export enum specialChars {
   arrowLeft = '{arrowleft}',
   arrowRight = '{arrowright}',
+  arrowDown = '{arrowdown}',
+  arrowUp = '{arrowup}',
   enter = '{enter}',
   escape = '{esc}',
   delete = '{del}',

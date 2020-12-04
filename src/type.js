@@ -13,6 +13,8 @@ import {
   getSelectionRange,
   getValue,
   isContentEditable,
+  isValidInputTimeValue,
+  buildTimeValue,
 } from './utils'
 import {click} from './click'
 import {navigationKey} from './keys/navigation-key'
@@ -88,6 +90,8 @@ const modifierCallbackMap = {
 const specialCharMap = {
   arrowLeft: '{arrowleft}',
   arrowRight: '{arrowright}',
+  arrowDown: '{arrowdown}',
+  arrowUp: '{arrowup}',
   enter: '{enter}',
   escape: '{esc}',
   delete: '{del}',
@@ -100,6 +104,8 @@ const specialCharMap = {
 const specialCharCallbackMap = {
   [specialCharMap.arrowLeft]: navigationKey('ArrowLeft'),
   [specialCharMap.arrowRight]: navigationKey('ArrowRight'),
+  [specialCharMap.arrowDown]: handleArrowDown,
+  [specialCharMap.arrowUp]: handleArrowUp,
   [specialCharMap.enter]: handleEnter,
   [specialCharMap.escape]: handleEsc,
   [specialCharMap.delete]: handleDel,
@@ -377,6 +383,11 @@ function typeCharacter(
         newEntry = textToBeTyped
       }
 
+      const timeNewEntry = buildTimeValue(textToBeTyped)
+      if (isValidInputTimeValue(currentElement(), timeNewEntry)) {
+        newEntry = timeNewEntry
+      }
+
       const inputEvent = fireInputEventIfNeeded({
         ...calculateNewValue(newEntry, currentElement()),
         eventOverrides: {
@@ -391,6 +402,8 @@ function typeCharacter(
       if (isValidDateValue(currentElement(), textToBeTyped)) {
         fireEvent.change(currentElement(), {target: {value: textToBeTyped}})
       }
+
+      fireChangeForInputTimeIfValid(currentElement, prevValue, timeNewEntry)
 
       // typing "-" into a number input will not actually update the value
       // so for the next character we type, the value should be set to
@@ -426,6 +439,19 @@ function typeCharacter(
     prevWasPeriod: nextPrevWasPeriod,
     prevValue,
     typedValue: textToBeTyped,
+  }
+}
+
+function fireChangeForInputTimeIfValid(
+  currentElement,
+  prevValue,
+  timeNewEntry,
+) {
+  if (
+    isValidInputTimeValue(currentElement(), timeNewEntry) &&
+    prevValue !== timeNewEntry
+  ) {
+    fireEvent.change(currentElement(), {target: {value: timeNewEntry}})
   }
 }
 
@@ -721,6 +747,44 @@ function handleSpaceOnClickable({currentElement, eventOverrides}) {
       ...eventOverrides,
     })
   }
+}
+
+function handleArrowDown({currentElement, eventOverrides}) {
+  const key = 'ArrowDown'
+  const keyCode = 40
+
+  fireEvent.keyDown(currentElement(), {
+    key,
+    keyCode,
+    which: keyCode,
+    ...eventOverrides,
+  })
+
+  fireEvent.keyUp(currentElement(), {
+    key,
+    keyCode,
+    which: keyCode,
+    ...eventOverrides,
+  })
+}
+
+function handleArrowUp({currentElement, eventOverrides}) {
+  const key = 'ArrowUp'
+  const keyCode = 38
+
+  fireEvent.keyDown(currentElement(), {
+    key,
+    keyCode,
+    which: keyCode,
+    ...eventOverrides,
+  })
+
+  fireEvent.keyUp(currentElement(), {
+    key,
+    keyCode,
+    which: keyCode,
+    ...eventOverrides,
+  })
 }
 
 export {type, specialCharMap}

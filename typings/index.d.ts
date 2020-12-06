@@ -57,6 +57,7 @@ declare const userEvent: {
     element: TargetElement,
     text: string,
     userOpts?: T,
+    // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
   ) => T extends {delay: number} ? Promise<void> : void
   tab: (userOpts?: ITabUserOptions) => void
   paste: (

@@ -32,6 +32,8 @@ jobs:
         uses: bahmutov/npm-install@v1
         with:
           useLockFile: false
+        env:
+          HUSKY_SKIP_INSTALL: true
 
       - name: ▶️ Run validate script
         run: npm run validate
@@ -59,6 +61,8 @@ jobs:
         uses: bahmutov/npm-install@v1
         with:
           useLockFile: false
+        env:
+          HUSKY_SKIP_INSTALL: true
 
       - name: 🏗️ Run build script
         run: npm run build

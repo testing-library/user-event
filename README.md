@@ -597,7 +597,7 @@ Thanks goes to these people ([emoji key][emojis]):
     <td align="center"><a href="https://github.com/nanivijay"><img src="https://avatars0.githubusercontent.com/u/5945591?v=4" width="100px;" alt=""/><br /><sub><b>Vijay Kumar Otti</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3Ananivijay" title="Bug reports">🐛</a></td>
     <td align="center"><a href="http://tompicton.com"><img src="https://avatars2.githubusercontent.com/u/12588098?v=4" width="100px;" alt=""/><br /><sub><b>Tom Picton</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3Atpict" title="Bug reports">🐛</a> <a href="https://github.com/testing-library/user-event/commits?author=tpict" title="Code">💻</a> <a href="https://github.com/testing-library/user-event/commits?author=tpict" title="Tests">⚠️</a></td>
     <td align="center"><a href="https://hung.dev"><img src="https://avatars3.githubusercontent.com/u/8603085?v=4" width="100px;" alt=""/><br /><sub><b>Hung Viet Nguyen</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3Anvh95" title="Bug reports">🐛</a></td>
-    <td align="center"><a href="https://nickmccurdy.com/"><img src="https://avatars0.githubusercontent.com/u/927220?v=4" width="100px;" alt=""/><br /><sub><b>Nick McCurdy</b></sub></a><br /><a href="#projectManagement-nickmccurdy" title="Project Management">📆</a> <a href="#question-nickmccurdy" title="Answering Questions">💬</a> <a href="https://github.com/testing-library/user-event/commits?author=nickmccurdy" title="Code">💻</a> <a href="https://github.com/testing-library/user-event/commits?author=nickmccurdy" title="Tests">⚠️</a></td>
+    <td align="center"><a href="https://nickmccurdy.com/"><img src="https://avatars0.githubusercontent.com/u/927220?v=4" width="100px;" alt=""/><br /><sub><b>Nick McCurdy</b></sub></a><br /><a href="#projectManagement-nickmccurdy" title="Project Management">📆</a> <a href="#question-nickmccurdy" title="Answering Questions">💬</a> <a href="https://github.com/testing-library/user-event/commits?author=nickmccurdy" title="Code">💻</a> <a href="https://github.com/testing-library/user-event/commits?author=nickmccurdy" title="Tests">⚠️</a> <a href="https://github.com/testing-library/user-event/commits?author=nickmccurdy" title="Documentation">📖</a></td>
   </tr>
   <tr>
     <td align="center"><a href="http://timdeschryver.dev"><img src="https://avatars1.githubusercontent.com/u/28659384?v=4" width="100px;" alt=""/><br /><sub><b>Tim Deschryver</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=timdeschryver" title="Tests">⚠️</a></td>
@@ -639,7 +639,6 @@ Thanks goes to these people ([emoji key][emojis]):
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
-
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors][all-contributors] specification.

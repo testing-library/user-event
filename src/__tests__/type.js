@@ -425,7 +425,7 @@ test('typing into a controlled input works', () => {
 
   userEvent.type(element, '23')
 
-  expect(element.value).toBe('$23')
+  expect(element).toHaveValue('$23')
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value="$23"]
 
@@ -461,7 +461,7 @@ test('typing in the middle of a controlled input works', () => {
 
   userEvent.type(element, '1')
 
-  expect(element.value).toBe('$213')
+  expect(element).toHaveValue('$213')
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value="$213"]
 
@@ -503,7 +503,7 @@ test('ignored {backspace} in controlled input', () => {
   expect(element.selectionEnd).toBe(element.value.length)
   userEvent.type(element, '4')
 
-  expect(element.value).toBe('$234')
+  expect(element).toHaveValue('$234')
   // the backslash in the inline snapshot is to escape the $ before {CURSOR}
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value="$234"]
@@ -1108,7 +1108,7 @@ test('can type into an input with type `time`', () => {
   input[value="01:05"] - change
   input[value="01:05"] - keyup: 5 (53)
   `)
-  expect(element.value).toBe('01:05')
+  expect(element).toHaveValue('01:05')
 })
 
 test('can type into an input with type `time` without ":"', () => {
@@ -1149,7 +1149,7 @@ test('can type into an input with type `time` without ":"', () => {
   input[value="01:05"] - change
   input[value="01:05"] - keyup: 5 (53)
   `)
-  expect(element.value).toBe('01:05')
+  expect(element).toHaveValue('01:05')
 })
 
 test('can type more a number higher than 60 minutes into an input `time` and they are converted into 59 minutes', () => {
@@ -1195,7 +1195,7 @@ test('can type more a number higher than 60 minutes into an input `time` and the
     input[value="23:59"] - keyup: 0 (48)
   `)
 
-  expect(element.value).toBe('23:59')
+  expect(element).toHaveValue('23:59')
 })
 
 test('can type letters into an input `time` and they are ignored', () => {
@@ -1256,7 +1256,7 @@ test('can type letters into an input `time` and they are ignored', () => {
     input[value="16:36"] - keyup: d (100)
   `)
 
-  expect(element.value).toBe('16:36')
+  expect(element).toHaveValue('16:36')
 })
 
 test('can type a digit bigger in the hours section, bigger than 2 and it shows the time correctly', () => {
@@ -1299,7 +1299,7 @@ test('can type a digit bigger in the hours section, bigger than 2 and it shows t
     input[value="09:25"] - keyup: 5 (53)
   `)
 
-  expect(element.value).toBe('09:25')
+  expect(element).toHaveValue('09:25')
 })
 
 test('can type two digits in the hours section, equals to 24 and it shows the hours as 23', () => {
@@ -1345,7 +1345,7 @@ test('can type two digits in the hours section, equals to 24 and it shows the ho
     input[value="23:52"] - keyup: 2 (50)
   `)
 
-  expect(element.value).toBe('23:52')
+  expect(element).toHaveValue('23:52')
 })
 
 test('can type two digits in the hours section, bigger than 24 and less than 30, and it shows the hours as 23', () => {
@@ -1391,7 +1391,7 @@ test('can type two digits in the hours section, bigger than 24 and less than 30,
     input[value="23:52"] - keyup: 2 (50)
   `)
 
-  expect(element.value).toBe('23:52')
+  expect(element).toHaveValue('23:52')
 })
 
 test('{arrowdown} fires keyup/keydown events', () => {

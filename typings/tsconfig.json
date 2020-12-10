@@ -1,7 +1,4 @@
 {
-  "compilerOptions": {
-    "lib": ["dom"],
-    "noEmit": true,
-    "strict": true
-  }
+  "extends": "../node_modules/kcd-scripts/shared-tsconfig.json",
+  "include": ["."]
 }

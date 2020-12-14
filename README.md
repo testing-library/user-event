@@ -678,11 +678,13 @@ Thanks goes to these people ([emoji key][emojis]):
     <td align="center"><a href="https://github.com/Sonic12040"><img src="https://avatars3.githubusercontent.com/u/21055893?v=4" width="100px;" alt=""/><br /><sub><b>Sonic12040</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=Sonic12040" title="Code">💻</a> <a href="https://github.com/testing-library/user-event/commits?author=Sonic12040" title="Tests">⚠️</a> <a href="https://github.com/testing-library/user-event/commits?author=Sonic12040" title="Documentation">📖</a></td>
     <td align="center"><a href="https://github.com/gndelia"><img src="https://avatars1.githubusercontent.com/u/352474?v=4" width="100px;" alt=""/><br /><sub><b>Gonzalo D'Elia</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=gndelia" title="Code">💻</a> <a href="https://github.com/testing-library/user-event/commits?author=gndelia" title="Tests">⚠️</a> <a href="https://github.com/testing-library/user-event/commits?author=gndelia" title="Documentation">📖</a></td>
   </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/vasilii-kovalev"><img src="https://avatars0.githubusercontent.com/u/10310491?v=4" width="100px;" alt=""/><br /><sub><b>Vasilii Kovalev</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=vasilii-kovalev" title="Code">💻</a> <a href="https://github.com/testing-library/user-event/commits?author=vasilii-kovalev" title="Documentation">📖</a></td>
+  </tr>
 </table>
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
-
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors][all-contributors] specification.

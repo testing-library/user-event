@@ -47,6 +47,7 @@ change the state of the checkbox.
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
+
 - [Installation](#installation)
 - [API](#api)
   - [`click(element, eventInit, options)`](#clickelement-eventinit-options)
@@ -60,6 +61,7 @@ change the state of the checkbox.
   - [`hover(element)`](#hoverelement)
   - [`unhover(element)`](#unhoverelement)
   - [`paste(element, text, eventInit, options)`](#pasteelement-text-eventinit-options)
+  - [`specialChars`](#specialchars)
 - [Issues](#issues)
   - [🐛 Bugs](#-bugs)
   - [💡 Feature Requests](#-feature-requests)
@@ -518,6 +520,47 @@ test('should paste text in input', () => {
 
 You can use the `eventInit` if what you're pasting should have `clipboardData`
 (like `files`).
+
+### `specialChars`
+
+A handful set of special characters used in [type](#typeelement-text-options)
+method.
+
+| Key        | Character      |
+| ---------- | -------------- |
+| arrowLeft  | `{arrowleft}`  |
+| arrowRight | `{arrowright}` |
+| arrowDown  | `{arrowdown}`  |
+| arrowUp    | `{arrowup}`    |
+| enter      | `{enter}`      |
+| escape     | `{esc}`        |
+| delete     | `{del}`        |
+| backspace  | `{backspace}`  |
+| selectAll  | `{selectall}`  |
+| space      | `{space}`      |
+| whitespace | `' '`          |
+
+Usage example:
+
+```jsx
+import React from 'react'
+import {render, screen} from '@testing-library/react'
+import userEvent, {specialChars} from '@testing-library/user-event'
+
+test('delete characters within the selectedRange', () => {
+  render(
+    <div>
+      <label htmlFor="my-input">Example:</label>
+      <input id="my-input" type="text" value="This is a bad example" />
+    </div>,
+  )
+  const input = screen.getByLabelText(/example/i)
+  input.setSelectionRange(10, 13)
+  userEvent.type(input, `${specialChars.backspace}good`)
+
+  expect(input).toHaveValue('This is a good example')
+})
+```
 
 ## Issues
 

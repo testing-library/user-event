@@ -92,6 +92,8 @@ const specialCharMap = {
   arrowRight: '{arrowright}',
   arrowDown: '{arrowdown}',
   arrowUp: '{arrowup}',
+  home: '{home}',
+  end: '{end}',
   enter: '{enter}',
   escape: '{esc}',
   delete: '{del}',
@@ -106,6 +108,8 @@ const specialCharCallbackMap = {
   [specialCharMap.arrowRight]: navigationKey('ArrowRight'),
   [specialCharMap.arrowDown]: handleArrowDown,
   [specialCharMap.arrowUp]: handleArrowUp,
+  [specialCharMap.home]: handleHome,
+  [specialCharMap.end]: handleEnd,
   [specialCharMap.enter]: handleEnter,
   [specialCharMap.escape]: handleEsc,
   [specialCharMap.delete]: handleDel,
@@ -771,6 +775,44 @@ function handleArrowDown({currentElement, eventOverrides}) {
 function handleArrowUp({currentElement, eventOverrides}) {
   const key = 'ArrowUp'
   const keyCode = 38
+
+  fireEvent.keyDown(currentElement(), {
+    key,
+    keyCode,
+    which: keyCode,
+    ...eventOverrides,
+  })
+
+  fireEvent.keyUp(currentElement(), {
+    key,
+    keyCode,
+    which: keyCode,
+    ...eventOverrides,
+  })
+}
+    
+function handleHome({currentElement, eventOverrides}) {
+  const key = 'Home'
+  const keyCode = 36
+
+  fireEvent.keyDown(currentElement(), {
+    key,
+    keyCode,
+    which: keyCode,
+    ...eventOverrides,
+  })
+
+  fireEvent.keyUp(currentElement(), {
+    key,
+    keyCode,
+    which: keyCode,
+    ...eventOverrides,
+  })
+}
+    
+function handleHome({currentElement, eventOverrides}) {
+  const key = 'End'
+  const keyCode = 35
 
   fireEvent.keyDown(currentElement(), {
     key,

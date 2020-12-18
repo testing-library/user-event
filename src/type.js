@@ -810,7 +810,7 @@ function handleHome({currentElement, eventOverrides}) {
   })
 }
     
-function handleHome({currentElement, eventOverrides}) {
+function handleEnd({currentElement, eventOverrides}) {
   const key = 'End'
   const keyCode = 35
 

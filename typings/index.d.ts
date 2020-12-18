@@ -80,6 +80,8 @@ export enum specialChars {
   arrowRight = '{arrowright}',
   arrowDown = '{arrowdown}',
   arrowUp = '{arrowup}',
+  home = '{home}',
+  end = '{end}',
   enter = '{enter}',
   escape = '{esc}',
   delete = '{del}',

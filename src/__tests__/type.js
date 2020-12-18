@@ -1445,3 +1445,55 @@ test('{arrowup} fires keyup/keydown events', () => {
     input[value=""] - keyup: ArrowUp (38)
   `)
 })
+
+test('{home} fires keyup/keydown events', () => {
+  const {element, getEventSnapshot} = setup('<input />')
+
+  userEvent.type(element, '{home}')
+
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
+    Events fired on: input[value=""]
+
+    input[value=""] - pointerover
+    input[value=""] - pointerenter
+    input[value=""] - mouseover: Left (0)
+    input[value=""] - mouseenter: Left (0)
+    input[value=""] - pointermove
+    input[value=""] - mousemove: Left (0)
+    input[value=""] - pointerdown
+    input[value=""] - mousedown: Left (0)
+    input[value=""] - focus
+    input[value=""] - focusin
+    input[value=""] - pointerup
+    input[value=""] - mouseup: Left (0)
+    input[value=""] - click: Left (0)
+    input[value=""] - keydown: Home (36)
+    input[value=""] - keyup: Home (36)
+  `)
+})
+
+test('{end} fires keyup/keydown events', () => {
+  const {element, getEventSnapshot} = setup('<input />')
+
+  userEvent.type(element, '{end}')
+
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
+    Events fired on: input[value=""]
+
+    input[value=""] - pointerover
+    input[value=""] - pointerenter
+    input[value=""] - mouseover: Left (0)
+    input[value=""] - mouseenter: Left (0)
+    input[value=""] - pointermove
+    input[value=""] - mousemove: Left (0)
+    input[value=""] - pointerdown
+    input[value=""] - mousedown: Left (0)
+    input[value=""] - focus
+    input[value=""] - focusin
+    input[value=""] - pointerup
+    input[value=""] - mouseup: Left (0)
+    input[value=""] - click: Left (0)
+    input[value=""] - keydown: End (35)
+    input[value=""] - keyup: End (35)
+  `)
+})

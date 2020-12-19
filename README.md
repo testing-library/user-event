@@ -149,8 +149,8 @@ import userEvent from '@testing-library/user-event'
 
 test('double click', () => {
   const onChange = jest.fn()
-  render(<input type="checkbox" id="checkbox" onChange={onChange} />)
-  const checkbox = screen.getByTestId('checkbox')
+  render(<input type="checkbox" onChange={onChange} />)
+  const checkbox = screen.getByRole('checkbox')
   userEvent.dblClick(checkbox)
   expect(onChange).toHaveBeenCalledTimes(2)
   expect(checkbox).not.toBeChecked()

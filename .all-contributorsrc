@@ -706,6 +706,15 @@
         "code",
         "doc"
       ]
+    },
+    {
+      "login": "daleseo",
+      "name": "Dale Seo",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/5466341?v=4",
+      "profile": "https://www.daleseo.com",
+      "contributions": [
+        "doc"
+      ]
     }
   ],
   "commitConvention": "none",

@@ -120,7 +120,7 @@ test('click', () => {
   )
 
   userEvent.click(screen.getByText('Check'))
-  expect(screen.getByLabelText('Check')).toHaveAttribute('checked', true)
+  expect(screen.getByLabelText('Check')).toBeChecked()
 })
 ```
 

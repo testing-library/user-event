@@ -288,6 +288,7 @@ const CLICKABLE_INPUT_TYPES = [
 function isClickable(element) {
   return (
     element.tagName === 'BUTTON' ||
+    (element.tagName === 'A' && element.href) ||
     (isInstanceOfElement(element, 'HTMLInputElement') &&
       CLICKABLE_INPUT_TYPES.includes(element.type))
   )

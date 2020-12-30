@@ -1067,6 +1067,56 @@ test('navigation key: {arrowleft} and {arrowright} moves the cursor', () => {
   `)
 })
 
+test('navigation key: {home} and {end} moves the cursor', () => {
+  const {element, getEventSnapshot} = setup('<input />')
+  userEvent.type(element, 'c{home}ab{end}d')
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
+    Events fired on: input[value="abcd"]
+
+    input[value=""] - pointerover
+    input[value=""] - pointerenter
+    input[value=""] - mouseover: Left (0)
+    input[value=""] - mouseenter: Left (0)
+    input[value=""] - pointermove
+    input[value=""] - mousemove: Left (0)
+    input[value=""] - pointerdown
+    input[value=""] - mousedown: Left (0)
+    input[value=""] - focus
+    input[value=""] - focusin
+    input[value=""] - pointerup
+    input[value=""] - mouseup: Left (0)
+    input[value=""] - click: Left (0)
+    input[value=""] - keydown: c (99)
+    input[value=""] - keypress: c (99)
+    input[value="c"] - input
+      "{CURSOR}" -> "c{CURSOR}"
+    input[value="c"] - keyup: c (99)
+    input[value="c"] - keydown: Home (35)
+    input[value="c"] - select
+    input[value="c"] - keyup: Home (35)
+    input[value="c"] - keydown: a (97)
+    input[value="c"] - keypress: a (97)
+    input[value="ac"] - input
+      "{CURSOR}c" -> "ac{CURSOR}"
+    input[value="ac"] - select
+    input[value="ac"] - keyup: a (97)
+    input[value="ac"] - keydown: b (98)
+    input[value="ac"] - keypress: b (98)
+    input[value="abc"] - input
+      "a{CURSOR}c" -> "abc{CURSOR}"
+    input[value="abc"] - select
+    input[value="abc"] - keyup: b (98)
+    input[value="abc"] - keydown: End (36)
+    input[value="abc"] - select
+    input[value="abc"] - keyup: End (36)
+    input[value="abc"] - keydown: d (100)
+    input[value="abc"] - keypress: d (100)
+    input[value="abcd"] - input
+      "abc{CURSOR}" -> "abcd{CURSOR}"
+    input[value="abcd"] - keyup: d (100)
+  `)
+})
+
 test('can type into an input with type `time`', () => {
   const {element, getEventSnapshot} = setup('<input type="time" />')
   userEvent.type(element, '01:05')

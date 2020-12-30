@@ -186,6 +186,24 @@ to `await`!
 `type` will click the element before typing. To disable this, set the
 `skipClick` option to `true`.
 
+
+An example of using `{space}` with a button:
+```jsx
+import React from "react";
+import { render } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+
+test("emit click on button for {space}", () => {
+  const handleClick = jest.fn();
+  const { getByRole } = render(<button onClick={handleClick}>foo</button>);
+  const button = getByRole("button");
+
+  button.focus();
+  userEvent.type(button, "{space}", { skipClick: true });
+
+  expect(handleClick).toHaveBeenCalledTimes(1);
+});
+```
 #### Special characters
 
 The following special character strings are supported:

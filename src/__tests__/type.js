@@ -1091,9 +1091,9 @@ test('navigation key: {home} and {end} moves the cursor', () => {
     input[value="c"] - input
       "{CURSOR}" -> "c{CURSOR}"
     input[value="c"] - keyup: c (99)
-    input[value="c"] - keydown: Home (35)
+    input[value="c"] - keydown: Home (36)
     input[value="c"] - select
-    input[value="c"] - keyup: Home (35)
+    input[value="c"] - keyup: Home (36)
     input[value="c"] - keydown: a (97)
     input[value="c"] - keypress: a (97)
     input[value="ac"] - input
@@ -1106,9 +1106,9 @@ test('navigation key: {home} and {end} moves the cursor', () => {
       "a{CURSOR}c" -> "abc{CURSOR}"
     input[value="abc"] - select
     input[value="abc"] - keyup: b (98)
-    input[value="abc"] - keydown: End (36)
+    input[value="abc"] - keydown: End (35)
     input[value="abc"] - select
-    input[value="abc"] - keyup: End (36)
+    input[value="abc"] - keyup: End (35)
     input[value="abc"] - keydown: d (100)
     input[value="abc"] - keypress: d (100)
     input[value="abcd"] - input

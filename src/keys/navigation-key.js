@@ -4,10 +4,10 @@ import {setSelectionRangeIfNecessary} from '../utils'
 
 const keys = {
   Home: {
-    keyCode: 35,
+    keyCode: 36,
   },
   End: {
-    keyCode: 36,
+    keyCode: 35,
   },
   ArrowLeft: {
     keyCode: 37,

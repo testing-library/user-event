@@ -22,6 +22,13 @@ test('fires correct events', () => {
     select[name="select"][value="1"] - click: Left (0)
     select[name="select"][value="2"] - input
     select[name="select"][value="2"] - change
+    select[name="select"][value="2"] - pointerover
+    select[name="select"][value="2"] - pointerenter
+    select[name="select"][value="2"] - mouseover: Left (0)
+    select[name="select"][value="2"] - mouseenter: Left (0)
+    select[name="select"][value="2"] - pointerup
+    select[name="select"][value="2"] - mouseup: Left (0)
+    select[name="select"][value="2"] - click: Left (0)
   `)
   const [o1, o2, o3] = options
   expect(o1.selected).toBe(false)

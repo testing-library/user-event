@@ -55,8 +55,20 @@ function selectOptionsBase(newValue, select, values, init) {
         fireEvent.click(option, init)
       }
     } else if (selectedOptions.length === 1) {
+      // the click to open the select options
       click(select, init)
+
       selectOption(selectedOptions[0])
+
+      // the browser triggers another click event on the select for the click on the option
+      // this second click has no 'down' phase
+      fireEvent.pointerOver(select, init)
+      fireEvent.pointerEnter(select, init)
+      fireEvent.mouseOver(select)
+      fireEvent.mouseEnter(select)
+      fireEvent.pointerUp(select, init)
+      fireEvent.mouseUp(select, init)
+      fireEvent.click(select, init)
     } else {
       throw getConfig().getElementError(
         `Cannot select multiple options on a non-multiple select`,

@@ -187,23 +187,6 @@ to `await`!
 `skipClick` option to `true`.
 
 
-An example of using `{space}` with a button:
-```jsx
-import React from "react";
-import { render } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-
-test("emit click on button for {space}", () => {
-  const handleClick = jest.fn();
-  const { getByRole } = render(<button onClick={handleClick}>foo</button>);
-  const button = getByRole("button");
-
-  button.focus();
-  userEvent.type(button, "{space}", { skipClick: true });
-
-  expect(handleClick).toHaveBeenCalledTimes(1);
-});
-```
 #### Special characters
 
 The following special character strings are supported:
@@ -240,26 +223,39 @@ The following special character strings are supported:
 > combinations as different operating systems function differently in this
 > regard.
 
-An example of an usage with a selection range:
+Examples of usage with a selection range and `{space}` on button:
 
 ```jsx
-import React from 'react'
-import {render, screen} from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
+import React from "react";
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 
-test('delete characters within the selectedRange', () => {
-  render(
-    <div>
-      <label htmlFor="my-input">Example:</label>
-      <input id="my-input" type="text" value="This is a bad example" />
-    </div>,
-  )
-  const input = screen.getByLabelText(/example/i)
-  input.setSelectionRange(10, 13)
-  userEvent.type(input, '{backspace}good')
+describe("Special characters examples", () => {
+  test("delete characters within the selectedRange", () => {
+    render(
+      <div>
+        <label htmlFor="my-input">Example:</label>
+        <input id="my-input" type="text" value="This is a bad example" />
+      </div>
+    );
+    const input = screen.getByLabelText(/example/i);
+    input.setSelectionRange(10, 13);
+    userEvent.type(input, "{backspace}good");
 
-  expect(input).toHaveValue('This is a good example')
-})
+    expect(input).toHaveValue("This is a good example");
+  });
+
+  test("emit click on button for {space}", () => {
+    const handleClick = jest.fn();
+    const { getByRole } = render(<button onClick={handleClick}>foo</button>);
+    const button = getByRole("button");
+
+    button.focus();
+    userEvent.type(button, "{space}", { skipClick: true });
+
+    expect(handleClick).toHaveBeenCalledTimes(1);
+  });
+});
 ```
 
 #### <input type="time" /> support

@@ -1,5 +1,5 @@
 import userEvent from '../'
-import {setupSelect, addListeners, setupListbox} from './helpers/utils'
+import {setupSelect, addListeners, setupListbox, setup} from './helpers/utils'
 
 test('fires correct events', () => {
   const {select, options, getEventSnapshot} = setupSelect()
@@ -144,6 +144,13 @@ test('a previously focused input gets blurred', () => {
     button - blur
     button - focusout
   `)
+})
+
+test('throws an error if elements is neither select nor listbox', () => {
+  const {element} = setup(`<ul><li role='option'>foo</li></ul>`)
+  expect(() => userEvent.selectOptions(element, ['foo'])).toThrowError(
+    /neither select nor listbox/i,
+  )
 })
 
 test('throws an error one selected option does not match', () => {

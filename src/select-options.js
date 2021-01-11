@@ -81,6 +81,11 @@ function selectOptionsBase(newValue, select, values, init) {
       click(option, init)
       unhover(option, init)
     })
+  } else {
+    throw getConfig().getElementError(
+      `Cannot select options on elements that are neither select nor listbox elements`,
+      select,
+    )
   }
 
   function selectOption(option) {

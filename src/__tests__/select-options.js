@@ -42,22 +42,22 @@ test('fires correct events on listBox select', () => {
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: ul[value="2"]
 
-    li#2[value="2"][aria-selected=true] - pointerover
-    ul[value="2"] - pointerenter
-    li#2[value="2"][aria-selected=true] - mouseover: Left (0)
-    ul[value="2"] - mouseenter: Left (0)
-    li#2[value="2"][aria-selected=true] - pointermove
-    li#2[value="2"][aria-selected=true] - mousemove: Left (0)
-    li#2[value="2"][aria-selected=true] - pointerover
-    ul[value="2"] - pointerenter
-    li#2[value="2"][aria-selected=true] - mouseover: Left (0)
-    ul[value="2"] - mouseenter: Left (0)
-    li#2[value="2"][aria-selected=true] - pointermove
-    li#2[value="2"][aria-selected=true] - mousemove: Left (0)
-    li#2[value="2"][aria-selected=true] - pointerdown
-    li#2[value="2"][aria-selected=true] - mousedown: Left (0)
-    li#2[value="2"][aria-selected=true] - pointerup
-    li#2[value="2"][aria-selected=true] - mouseup: Left (0)
+    li#2[value="2"][aria-selected=false] - pointerover
+    ul - pointerenter
+    li#2[value="2"][aria-selected=false] - mouseover: Left (0)
+    ul - mouseenter: Left (0)
+    li#2[value="2"][aria-selected=false] - pointermove
+    li#2[value="2"][aria-selected=false] - mousemove: Left (0)
+    li#2[value="2"][aria-selected=false] - pointerover
+    ul - pointerenter
+    li#2[value="2"][aria-selected=false] - mouseover: Left (0)
+    ul - mouseenter: Left (0)
+    li#2[value="2"][aria-selected=false] - pointermove
+    li#2[value="2"][aria-selected=false] - mousemove: Left (0)
+    li#2[value="2"][aria-selected=false] - pointerdown
+    li#2[value="2"][aria-selected=false] - mousedown: Left (0)
+    li#2[value="2"][aria-selected=false] - pointerup
+    li#2[value="2"][aria-selected=false] - mouseup: Left (0)
     li#2[value="2"][aria-selected=true] - click: Left (0)
     li#2[value="2"][aria-selected=true] - pointermove
     li#2[value="2"][aria-selected=true] - mousemove: Left (0)

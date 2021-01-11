@@ -77,8 +77,6 @@ function selectOptionsBase(newValue, select, values, init) {
     }
   } else if (select.getAttribute('role') === 'listbox') {
     selectedOptions.forEach(option => {
-      option?.setAttribute?.('aria-selected', newValue)
-
       hover(option, init)
       click(option, init)
       unhover(option, init)

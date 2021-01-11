@@ -35,17 +35,6 @@ test('fires correct events on listBox select', () => {
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: ul[value="2"]
 
-    ul - pointerover
-    ul - pointerenter
-    ul - mouseover: Left (0)
-    ul - mouseenter: Left (0)
-    ul - pointermove
-    ul - mousemove: Left (0)
-    ul - pointerdown
-    ul - mousedown: Left (0)
-    ul - pointerup
-    ul - mouseup: Left (0)
-    ul - click: Left (0)
     li#2[value="2"][aria-selected=true] - pointerover
     ul[value="2"] - pointerenter
     li#2[value="2"][aria-selected=true] - mouseover: Left (0)

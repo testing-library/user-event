@@ -6,16 +6,14 @@ import {focus} from './focus'
 function upload(element, fileOrFiles, init) {
   if (element.disabled) return
 
-  let files
-  let input = element
-
   click(element, init)
-  if (element.tagName === 'LABEL') {
-    files = element.control.multiple ? fileOrFiles : [fileOrFiles]
-    input = element.control
-  } else {
-    files = element.multiple ? fileOrFiles : [fileOrFiles]
-  }
+
+  const input = element.tagName === 'LABEL' ? element.control : element
+
+  const files = (Array.isArray(fileOrFiles)
+    ? fileOrFiles
+    : [fileOrFiles]
+  ).slice(0, input.multiple ? undefined : 1)
 
   // blur fires when the file selector pops up
   blur(element, init)

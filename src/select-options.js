@@ -36,7 +36,7 @@ function selectOptionsBase(newValue, select, values, init) {
 
   if (select.disabled || !selectedOptions.length) return
 
-  if (select instanceof HTMLSelectElement) {
+  if (select instanceof select.ownerDocument.defaultView.HTMLSelectElement) {
     if (select.multiple) {
       for (const option of selectedOptions) {
         // events fired for multiple select are weird. Can't use hover...

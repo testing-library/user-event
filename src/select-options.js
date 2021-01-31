@@ -1,4 +1,5 @@
 import {createEvent, getConfig, fireEvent} from '@testing-library/dom'
+import {isInstanceOfElement} from './utils'
 import {click} from './click'
 import {focus} from './focus'
 import {hover, unhover} from './hover'
@@ -36,7 +37,7 @@ function selectOptionsBase(newValue, select, values, init) {
 
   if (select.disabled || !selectedOptions.length) return
 
-  if (select instanceof HTMLSelectElement) {
+  if (isInstanceOfElement(select, 'HTMLSelectElement')) {
     if (select.multiple) {
       for (const option of selectedOptions) {
         // events fired for multiple select are weird. Can't use hover...

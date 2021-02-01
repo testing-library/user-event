@@ -1,4 +1,36 @@
 import {getConfig} from '@testing-library/dom'
+import {getWindowFromNode} from '@testing-library/dom/dist/helpers'
+
+// isInstanceOfElement can be removed once the peerDependency for @testing-library/dom is bumped to a version that includes https://github.com/testing-library/dom-testing-library/pull/885
+/**
+ * Check if an element is of a given type.
+ *
+ * @param Element The element to test
+ * @param string Constructor name. E.g. 'HTMLSelectElement'
+ */
+function isInstanceOfElement(element, elementType) {
+  try {
+    const window = getWindowFromNode(element)
+    // Window usually has the element constructors as properties but is not required to do so per specs
+    if (typeof window[elementType] === 'function') {
+      return element instanceof window[elementType]
+    }
+  } catch (e) {
+    // The document might not be associated with a window
+  }
+
+  // Fall back to the constructor name as workaround for test environments that
+  // a) not associate the document with a window
+  // b) not provide the constructor as property of window
+  if (/^HTML(\w+)Element$/.test(element.constructor.name)) {
+    return element.constructor.name === elementType
+  }
+
+  // The user passed some node that is not created in a browser-like environment
+  throw new Error(
+    `Unable to verify if element is instance of ${elementType}. Please file an issue describing your test environment: https://github.com/testing-library/dom-testing-library/issues/new`,
+  )
+}
 
 function isMousePressEvent(event) {
   return (
@@ -256,7 +288,7 @@ const CLICKABLE_INPUT_TYPES = [
 function isClickable(element) {
   return (
     element.tagName === 'BUTTON' ||
-    (element instanceof element.ownerDocument.defaultView.HTMLInputElement &&
+    (isInstanceOfElement(element, 'HTMLInputElement') &&
       CLICKABLE_INPUT_TYPES.includes(element.type))
   )
 }
@@ -334,4 +366,5 @@ export {
   getValue,
   getSelectionRange,
   isContentEditable,
+  isInstanceOfElement,
 }

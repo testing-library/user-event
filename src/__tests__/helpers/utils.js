@@ -74,6 +74,17 @@ function setupListbox() {
   document.body.append(wrapper)
   const listbox = wrapper.querySelector('[role="listbox"]')
   const options = Array.from(wrapper.querySelectorAll('[role="option"]'))
+
+  // the user is responsible for handling aria-selected on listbox options
+  options.forEach(el =>
+    el.addEventListener('click', e =>
+      e.target.setAttribute(
+        'aria-selected',
+        JSON.stringify(!JSON.parse(e.target.getAttribute('aria-selected'))),
+      ),
+    ),
+  )
+
   return {
     ...addListeners(listbox),
     listbox,

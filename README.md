@@ -47,7 +47,6 @@ change the state of the checkbox.
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-
 - [Installation](#installation)
 - [API](#api)
   - [`click(element, eventInit, options)`](#clickelement-eventinit-options)
@@ -202,6 +201,8 @@ The following special character strings are supported:
 | `{arrowright}` | ArrowRight | N/A                |                                                                                                                                                                     |
 | `{arrowup}`    | ArrowUp    | N/A                |                                                                                                                                                                     |
 | `{arrowdown}`  | ArrowDown  | N/A                |                                                                                                                                                                     |
+| `{home}`       | Home       | N/A                |                                                                                                                                                                     |
+| `{end}`        | End        | N/A                |                                                                                                                                                                     |
 | `{shift}`      | Shift      | `shiftKey`         | Does **not** capitalize following characters.                                                                                                                       |
 | `{ctrl}`       | Control    | `ctrlKey`          |                                                                                                                                                                     |
 | `{alt}`        | Alt        | `altKey`           |                                                                                                                                                                     |
@@ -686,6 +687,7 @@ Thanks goes to these people ([emoji key][emojis]):
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors][all-contributors] specification.

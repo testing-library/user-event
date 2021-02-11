@@ -3,6 +3,12 @@ import {fireEvent} from '@testing-library/dom'
 import {setSelectionRangeIfNecessary} from '../utils'
 
 const keys = {
+  Home: {
+    keyCode: 36,
+  },
+  End: {
+    keyCode: 35,
+  },
   ArrowLeft: {
     keyCode: 37,
   },
@@ -13,6 +19,21 @@ const keys = {
 
 function getSelectionRange(currentElement, key) {
   const {selectionStart, selectionEnd} = currentElement()
+
+  if (key === 'Home') {
+    return {
+      selectionStart: 0,
+      selectionEnd: 0,
+    }
+  }
+
+  if (key === 'End') {
+    return {
+      selectionStart: selectionEnd + 1,
+      selectionEnd: selectionEnd + 1,
+    }
+  }
+
   const cursorChange = Number(key in keys) * (key === 'ArrowLeft' ? -1 : 1)
   return {
     selectionStart: selectionStart + cursorChange,

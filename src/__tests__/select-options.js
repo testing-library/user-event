@@ -1,5 +1,5 @@
 import userEvent from '../'
-import {setupSelect, addListeners, setupListbox} from './helpers/utils'
+import {setupSelect, addListeners, setupListbox, setup} from './helpers/utils'
 
 test('fires correct events', () => {
   const {select, options, getEventSnapshot} = setupSelect()
@@ -22,6 +22,13 @@ test('fires correct events', () => {
     select[name="select"][value="1"] - click: Left (0)
     select[name="select"][value="2"] - input
     select[name="select"][value="2"] - change
+    select[name="select"][value="2"] - pointerover
+    select[name="select"][value="2"] - pointerenter
+    select[name="select"][value="2"] - mouseover: Left (0)
+    select[name="select"][value="2"] - mouseenter: Left (0)
+    select[name="select"][value="2"] - pointerup
+    select[name="select"][value="2"] - mouseup: Left (0)
+    select[name="select"][value="2"] - click: Left (0)
   `)
   const [o1, o2, o3] = options
   expect(o1.selected).toBe(false)
@@ -35,33 +42,22 @@ test('fires correct events on listBox select', () => {
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: ul[value="2"]
 
-    ul - pointerover
+    li#2[value="2"][aria-selected=false] - pointerover
     ul - pointerenter
-    ul - mouseover: Left (0)
+    li#2[value="2"][aria-selected=false] - mouseover: Left (0)
     ul - mouseenter: Left (0)
-    ul - pointermove
-    ul - mousemove: Left (0)
-    ul - pointerdown
-    ul - mousedown: Left (0)
-    ul - pointerup
-    ul - mouseup: Left (0)
-    ul - click: Left (0)
-    li#2[value="2"][aria-selected=true] - pointerover
-    ul[value="2"] - pointerenter
-    li#2[value="2"][aria-selected=true] - mouseover: Left (0)
-    ul[value="2"] - mouseenter: Left (0)
-    li#2[value="2"][aria-selected=true] - pointermove
-    li#2[value="2"][aria-selected=true] - mousemove: Left (0)
-    li#2[value="2"][aria-selected=true] - pointerover
-    ul[value="2"] - pointerenter
-    li#2[value="2"][aria-selected=true] - mouseover: Left (0)
-    ul[value="2"] - mouseenter: Left (0)
-    li#2[value="2"][aria-selected=true] - pointermove
-    li#2[value="2"][aria-selected=true] - mousemove: Left (0)
-    li#2[value="2"][aria-selected=true] - pointerdown
-    li#2[value="2"][aria-selected=true] - mousedown: Left (0)
-    li#2[value="2"][aria-selected=true] - pointerup
-    li#2[value="2"][aria-selected=true] - mouseup: Left (0)
+    li#2[value="2"][aria-selected=false] - pointermove
+    li#2[value="2"][aria-selected=false] - mousemove: Left (0)
+    li#2[value="2"][aria-selected=false] - pointerover
+    ul - pointerenter
+    li#2[value="2"][aria-selected=false] - mouseover: Left (0)
+    ul - mouseenter: Left (0)
+    li#2[value="2"][aria-selected=false] - pointermove
+    li#2[value="2"][aria-selected=false] - mousemove: Left (0)
+    li#2[value="2"][aria-selected=false] - pointerdown
+    li#2[value="2"][aria-selected=false] - mousedown: Left (0)
+    li#2[value="2"][aria-selected=false] - pointerup
+    li#2[value="2"][aria-selected=false] - mouseup: Left (0)
     li#2[value="2"][aria-selected=true] - click: Left (0)
     li#2[value="2"][aria-selected=true] - pointermove
     li#2[value="2"][aria-selected=true] - mousemove: Left (0)
@@ -148,6 +144,13 @@ test('a previously focused input gets blurred', () => {
     button - blur
     button - focusout
   `)
+})
+
+test('throws an error if elements is neither select nor listbox', () => {
+  const {element} = setup(`<ul><li role='option'>foo</li></ul>`)
+  expect(() => userEvent.selectOptions(element, ['foo'])).toThrowError(
+    /neither select nor listbox/i,
+  )
 })
 
 test('throws an error one selected option does not match', () => {

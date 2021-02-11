@@ -31,7 +31,11 @@ function tab({shift = false, focusTrap} = {}) {
   const enabledElements = [...focusableElements].filter(
     el =>
       el === previousElement ||
-      (el.getAttribute('tabindex') !== '-1' && !el.disabled),
+      (el.getAttribute('tabindex') !== '-1' &&
+        !el.disabled &&
+        // Hidden elements are taken out of the
+        // document, along with all their children.
+        !el.closest('[hidden]')),
   )
 
   if (enabledElements.length === 0) return

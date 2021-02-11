@@ -8,7 +8,7 @@ import {
   getActiveElement,
   calculateNewValue,
   setSelectionRangeIfNecessary,
-  isClickable,
+  isClickableInput,
   isValidDateValue,
   getSelectionRange,
   getValue,
@@ -321,7 +321,7 @@ function fireInputEventIfNeeded({
   const prevValue = getValue(currentElement())
   if (
     !currentElement().readOnly &&
-    !isClickable(currentElement()) &&
+    !isClickableInput(currentElement()) &&
     newValue !== prevValue
   ) {
     if (isContentEditable(currentElement())) {
@@ -583,7 +583,11 @@ function handleEnter({currentElement, eventOverrides}) {
     })
 
     if (keyPressDefaultNotPrevented) {
-      if (isClickable(currentElement())) {
+      if (
+        isClickableInput(currentElement()) ||
+        // Links with href handle Enter the same as a click
+        (currentElement().tagName === 'A' && currentElement().href)
+      ) {
         fireEvent.click(currentElement(), {
           ...eventOverrides,
         })
@@ -712,7 +716,7 @@ function handleSelectall({currentElement}) {
 }
 
 function handleSpace(context) {
-  if (isClickable(context.currentElement())) {
+  if (isClickableInput(context.currentElement())) {
     handleSpaceOnClickable(context)
     return
   }

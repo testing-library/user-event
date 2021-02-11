@@ -285,10 +285,9 @@ const CLICKABLE_INPUT_TYPES = [
   'submit',
 ]
 
-function isClickable(element) {
+function isClickableInput(element) {
   return (
     element.tagName === 'BUTTON' ||
-    (element.tagName === 'A' && element.href) ||
     (isInstanceOfElement(element, 'HTMLInputElement') &&
       CLICKABLE_INPUT_TYPES.includes(element.type))
   )
@@ -354,7 +353,7 @@ function isValidInputTimeValue(element, timeValue) {
 export {
   FOCUSABLE_SELECTOR,
   isFocusable,
-  isClickable,
+  isClickableInput,
   getMouseEventOptions,
   isLabelWithInternallyDisabledControl,
   getActiveElement,

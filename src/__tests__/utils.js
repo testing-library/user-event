@@ -1,4 +1,5 @@
-import {isInstanceOfElement} from '../utils'
+import { screen } from '@testing-library/dom'
+import {isInstanceOfElement, isVisible} from '../utils'
 import {setup} from './helpers/utils'
 
 // isInstanceOfElement can be removed once the peerDependency for @testing-library/dom is bumped to a version that includes https://github.com/testing-library/dom-testing-library/pull/885
@@ -70,4 +71,20 @@ describe('check element type per isInstanceOfElement', () => {
 
     expect(() => isInstanceOfElement(element, 'HTMLSpanElement')).toThrow()
   })
+})
+
+test('check if element is visible', () => {
+  setup(`
+    <input data-testid="visibleInput"/>
+    <input data-testid="hiddenInput" hidden/>
+    <input data-testid="styledHiddenInput" style="display: none">
+    <input data-testid="styledDisplayedInput" hidden style="display: block"/>
+    <div style="display: none"><input data-testid="childInput" /></div>
+  `)
+
+  expect(isVisible(screen.getByTestId('visibleInput'))).toBe(true)
+  expect(isVisible(screen.getByTestId('styledDisplayedInput'))).toBe(true)
+  expect(isVisible(screen.getByTestId('styledHiddenInput'))).toBe(false)
+  expect(isVisible(screen.getByTestId('childInput'))).toBe(false)
+  expect(isVisible(screen.getByTestId('hiddenInput'))).toBe(false)
 })

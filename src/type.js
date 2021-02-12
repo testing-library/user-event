@@ -15,6 +15,7 @@ import {
   isContentEditable,
   isValidInputTimeValue,
   buildTimeValue,
+  isInstanceOfElement,
 } from './utils'
 import {click} from './click'
 import {navigationKey} from './keys/navigation-key'
@@ -585,8 +586,9 @@ function handleEnter({currentElement, eventOverrides}) {
     if (keyPressDefaultNotPrevented) {
       if (
         isClickableInput(currentElement()) ||
-        // Links with href handle Enter the same as a click
-        (currentElement().tagName === 'A' && currentElement().href)
+        // Links with href defined should handle Enter the same as a click
+        (isInstanceOfElement(currentElement(), 'HTMLAnchorElement') &&
+          currentElement().href)
       ) {
         fireEvent.click(currentElement(), {
           ...eventOverrides,

@@ -683,6 +683,7 @@ Thanks goes to these people ([emoji key][emojis]):
     <td align="center"><a href="https://github.com/vasilii-kovalev"><img src="https://avatars0.githubusercontent.com/u/10310491?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Vasilii Kovalev</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=vasilii-kovalev" title="Code">💻</a> <a href="https://github.com/testing-library/user-event/commits?author=vasilii-kovalev" title="Documentation">📖</a></td>
     <td align="center"><a href="https://www.daleseo.com"><img src="https://avatars1.githubusercontent.com/u/5466341?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Dale Seo</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=daleseo" title="Documentation">📖</a></td>
     <td align="center"><a href="http://www.alex-boyce.me/"><img src="https://avatars.githubusercontent.com/u/4050934?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Alex Boyce</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=curiosity26" title="Code">💻</a></td>
+    <td align="center"><a href="https://benadamstyles.com"><img src="https://avatars.githubusercontent.com/u/4380655?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Ben Styles</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=benadamstyles" title="Code">💻</a> <a href="https://github.com/testing-library/user-event/commits?author=benadamstyles" title="Tests">⚠️</a></td>
   </tr>
 </table>
 

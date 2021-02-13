@@ -5,8 +5,8 @@ import {getWindowFromNode} from '@testing-library/dom/dist/helpers'
 /**
  * Check if an element is of a given type.
  *
- * @param Element The element to test
- * @param string Constructor name. E.g. 'HTMLSelectElement'
+ * @param {Element} element The element to test
+ * @param {string} elementType Constructor name. E.g. 'HTMLSelectElement'
  */
 function isInstanceOfElement(element, elementType) {
   try {
@@ -285,7 +285,7 @@ const CLICKABLE_INPUT_TYPES = [
   'submit',
 ]
 
-function isClickable(element) {
+function isClickableInput(element) {
   return (
     element.tagName === 'BUTTON' ||
     (isInstanceOfElement(element, 'HTMLInputElement') &&
@@ -353,7 +353,7 @@ function isValidInputTimeValue(element, timeValue) {
 export {
   FOCUSABLE_SELECTOR,
   isFocusable,
-  isClickable,
+  isClickableInput,
   getMouseEventOptions,
   isLabelWithInternallyDisabledControl,
   getActiveElement,

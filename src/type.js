@@ -8,13 +8,14 @@ import {
   getActiveElement,
   calculateNewValue,
   setSelectionRangeIfNecessary,
-  isClickable,
+  isClickableInput,
   isValidDateValue,
   getSelectionRange,
   getValue,
   isContentEditable,
   isValidInputTimeValue,
   buildTimeValue,
+  isInstanceOfElement,
 } from './utils'
 import {click} from './click'
 import {navigationKey} from './keys/navigation-key'
@@ -321,7 +322,7 @@ function fireInputEventIfNeeded({
   const prevValue = getValue(currentElement())
   if (
     !currentElement().readOnly &&
-    !isClickable(currentElement()) &&
+    !isClickableInput(currentElement()) &&
     newValue !== prevValue
   ) {
     if (isContentEditable(currentElement())) {
@@ -583,7 +584,12 @@ function handleEnter({currentElement, eventOverrides}) {
     })
 
     if (keyPressDefaultNotPrevented) {
-      if (isClickable(currentElement())) {
+      if (
+        isClickableInput(currentElement()) ||
+        // Links with href defined should handle Enter the same as a click
+        (isInstanceOfElement(currentElement(), 'HTMLAnchorElement') &&
+          currentElement().href)
+      ) {
         fireEvent.click(currentElement(), {
           ...eventOverrides,
         })
@@ -712,7 +718,7 @@ function handleSelectall({currentElement}) {
 }
 
 function handleSpace(context) {
-  if (isClickable(context.currentElement())) {
+  if (isClickableInput(context.currentElement())) {
     handleSpaceOnClickable(context)
     return
   }

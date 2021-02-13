@@ -725,6 +725,16 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "benadamstyles",
+      "name": "Ben Styles",
+      "avatar_url": "https://avatars.githubusercontent.com/u/4380655?v=4",
+      "profile": "https://benadamstyles.com",
+      "contributions": [
+        "code",
+        "test"
+      ]
     }
   ],
   "commitConvention": "none",

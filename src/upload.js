@@ -3,11 +3,24 @@ import {click} from './click'
 import {blur} from './blur'
 import {focus} from './focus'
 
+const isValidFileType = (acceptAttribute, type) => {
+  const acceptManyExtensions = /(video|audio|image)\/?\*/.test(acceptAttribute)
+
+  if (!acceptManyExtensions) {
+    return acceptAttribute.includes(type)
+  }
+
+  const fileMimeType = type.match(/\w+\/+/g)
+  const isValidMimeType = acceptAttribute.includes(fileMimeType)
+
+  return isValidMimeType
+}
+
 function upload(element, fileOrFiles, init) {
   const hasFileWithInvalidType =
     !Array.isArray(fileOrFiles) &&
     Boolean(element.accept) &&
-    !element.accept.includes(fileOrFiles.type)
+    !isValidFileType(element.accept, fileOrFiles.type)
 
   if (hasFileWithInvalidType || element.disabled) return
 
@@ -19,14 +32,13 @@ function upload(element, fileOrFiles, init) {
 
   if (Array.isArray(fileOrFiles)) {
     files = element.accept
-      ? fileOrFiles.filter(file => element.accept.includes(file.type))
+      ? fileOrFiles.filter(file => isValidFileType(element.accept, file.type))
       : fileOrFiles
   } else {
     files = [fileOrFiles]
   }
 
   const hasFilesWithInvalidTypes = files.length === 0
-
   if (hasFilesWithInvalidTypes) return
 
   files = files.slice(0, input.multiple ? undefined : 1)

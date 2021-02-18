@@ -6,8 +6,8 @@ import {focus} from './focus'
 function upload(element, fileOrFiles, init) {
   const hasFileWithInvalidType =
     !Array.isArray(fileOrFiles) &&
-    element.accept &&
-    !element.accept.includes(element.type)
+    Boolean(element.accept) &&
+    !element.accept.includes(fileOrFiles.type)
 
   if (hasFileWithInvalidType || element.disabled) return
 

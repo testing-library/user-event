@@ -6,14 +6,16 @@ import {focus} from './focus'
 const isValidFileType = (acceptAttribute, type) => {
   const acceptManyExtensions = /(video|audio|image)\/?\*/.test(acceptAttribute)
 
-  if (!acceptManyExtensions) {
-    return acceptAttribute.includes(type)
+  let isValidType
+
+  if (acceptManyExtensions) {
+    type = type.match(/\w+\/+/g)
+    isValidType = acceptAttribute.includes(type)
+  } else {
+    isValidType = acceptAttribute.includes(type)
   }
 
-  const fileMimeType = type.match(/\w+\/+/g)
-  const isValidMimeType = acceptAttribute.includes(fileMimeType)
-
-  return isValidMimeType
+  return isValidType
 }
 
 function upload(element, fileOrFiles, init) {

@@ -206,7 +206,6 @@ test('should not upload multiple files with unaccepted formats', () => {
     new File(['hello'], 'hello.txt', {type: 'text/plain'}),
     new File(['there'], 'there.pdf', {type: 'application/pdf'}),
     new File(['there'], 'there.png', {type: 'image/png'}),
-    new File(['there'], 'there.mp4', {type: 'video/mp4'}),
   ]
   const {element} = setup(`
     <input id="files" type="file" accept="video/*" multiple />
@@ -214,5 +213,5 @@ test('should not upload multiple files with unaccepted formats', () => {
 
   userEvent.upload(element, files)
 
-  expect(element.files).toHaveLength(1)
+  expect(element.files).toHaveLength(0)
 })

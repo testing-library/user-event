@@ -4,16 +4,32 @@ import {blur} from './blur'
 import {focus} from './focus'
 
 function upload(element, fileOrFiles, init) {
-  if (element.disabled) return
+  const hasFileWithInvalidType =
+    !Array.isArray(fileOrFiles) &&
+    element.accept &&
+    !element.accept.includes(element.type)
+
+  if (hasFileWithInvalidType || element.disabled) return
 
   click(element, init)
 
   const input = element.tagName === 'LABEL' ? element.control : element
 
-  const files = (Array.isArray(fileOrFiles)
-    ? fileOrFiles
-    : [fileOrFiles]
-  ).slice(0, input.multiple ? undefined : 1)
+  let files = []
+
+  if (Array.isArray(fileOrFiles)) {
+    files = element.accept
+      ? fileOrFiles.filter(file => element.accept.includes(file.type))
+      : fileOrFiles
+  } else {
+    files = [fileOrFiles]
+  }
+
+  const hasFilesWithInvalidTypes = files.length === 0
+
+  if (hasFilesWithInvalidTypes) return
+
+  files = files.slice(0, input.multiple ? undefined : 1)
 
   // blur fires when the file selector pops up
   blur(element, init)

@@ -163,3 +163,32 @@ test('should call onChange/input bubbling up the event when a file is selected',
   expect(onInputInput).toHaveBeenCalledTimes(1)
   expect(onInputForm).toHaveBeenCalledTimes(1)
 })
+
+test('should not upload file with invalid unaccepted format', () => {
+  const file = new File(['hello'], 'hello.png', {type: 'image/png'})
+
+  const {element} = setup('<input type="file" accept="image/jpg" />')
+
+  userEvent.upload(element, file)
+
+  expect(element.files[0]).toBeUndefined()
+  expect(element.files.item(0)).toBeNull()
+  expect(element.files).toHaveLength(0)
+})
+
+test('should not upload multiple files with invalid unaccepted formats', () => {
+  const files = [
+    new File(['hello'], 'hello.txt', {type: 'text/plain'}),
+    new File(['there'], 'there.pdf', {type: 'application/pdf'}),
+  ]
+
+  const {element} = setup(`
+    <input id="files" type="file" accept="image/jpeg,image/png" multiple />
+  `)
+
+  userEvent.upload(element, files)
+
+  expect(element.files[0]).toBeUndefined()
+  expect(element.files.item(0)).toBeNull()
+  expect(element.files).toHaveLength(0)
+})

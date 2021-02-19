@@ -1,7 +1,7 @@
 import userEvent from '../'
 import {setup} from './helpers/utils'
 
-test('should paste text in input', () => {
+test('paste text in input', () => {
   const {element, getEventSnapshot} = setup('<input />')
 
   const text = 'Hello, world!'
@@ -19,7 +19,7 @@ test('should paste text in input', () => {
   `)
 })
 
-test('should paste text in textarea', () => {
+test('paste text in textarea', () => {
   const {element, getEventSnapshot} = setup('<textarea />')
 
   const text = 'Hello, world!'
@@ -60,7 +60,7 @@ test('does not paste when disabled', () => {
 })
 
 test.each(['input', 'textarea'])(
-  'should paste text in <%s> up to maxLength if provided',
+  'paste text in <%s> up to maxLength if provided',
   type => {
     const {element} = setup(`<${type} maxlength="10" />`)
 
@@ -74,7 +74,7 @@ test.each(['input', 'textarea'])(
 )
 
 test.each(['input', 'textarea'])(
-  'should append text in <%s> up to maxLength if provided',
+  'append text in <%s> up to maxLength if provided',
   type => {
     const {element} = setup(`<${type} maxlength="10" />`)
 
@@ -88,7 +88,7 @@ test.each(['input', 'textarea'])(
   },
 )
 
-test('should replace selected text all at once', () => {
+test('replace selected text all at once', () => {
   const {element} = setup('<input value="hello world" />')
 
   const selectionStart = 'hello world'.search('world')
@@ -98,7 +98,7 @@ test('should replace selected text all at once', () => {
   expect(element).toHaveValue('hello friend')
 })
 
-test('should give error if we are trying to call paste on an invalid element', () => {
+test('give error if we are trying to call paste on an invalid element', () => {
   const {element} = setup('<div  />')
   expect(() =>
     userEvent.paste(element, "I'm only a div :("),

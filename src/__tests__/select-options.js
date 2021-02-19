@@ -193,7 +193,7 @@ test('does not select anything if options are disabled', () => {
   expect(o3.selected).toBe(false)
 })
 
-test('should call onChange/input bubbling up the event when a new option is selected', () => {
+test('call onChange/input bubbling up the event when a new option is selected', () => {
   const {select, form} = setupSelect({multiple: true})
   const onChangeSelect = jest.fn()
   const onChangeForm = jest.fn()

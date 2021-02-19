@@ -1,7 +1,7 @@
 import userEvent from '../'
 import {setup, addListeners} from './helpers/utils'
 
-test('should fire the correct events for input', () => {
+test('fire the correct events for input', () => {
   const file = new File(['hello'], 'hello.png', {type: 'image/png'})
   const {element, getEventSnapshot} = setup('<input type="file" />')
 
@@ -35,7 +35,7 @@ test('should fire the correct events for input', () => {
   `)
 })
 
-test('should fire the correct events with label', () => {
+test('fire the correct events with label', () => {
   const file = new File(['hello'], 'hello.png', {type: 'image/png'})
 
   const {element, getEventSnapshot} = setup(`
@@ -68,7 +68,7 @@ test('should fire the correct events with label', () => {
   `)
 })
 
-test('should upload the file', () => {
+test('upload the file', () => {
   const file = new File(['hello'], 'hello.png', {type: 'image/png'})
   const {element} = setup('<input type="file" />')
 
@@ -79,7 +79,7 @@ test('should upload the file', () => {
   expect(element.files).toHaveLength(1)
 })
 
-test('should upload multiple files', () => {
+test('upload multiple files', () => {
   const files = [
     new File(['hello'], 'hello.png', {type: 'image/png'}),
     new File(['there'], 'there.png', {type: 'image/png'}),
@@ -95,7 +95,7 @@ test('should upload multiple files', () => {
   expect(element.files).toHaveLength(2)
 })
 
-test('should upload multiple files when firing on the label', () => {
+test('upload multiple files when firing on the label', () => {
   const files = [
     new File(['hello'], 'hello.png', {type: 'image/png'}),
     new File(['there'], 'there.png', {type: 'image/png'}),
@@ -119,7 +119,7 @@ test('should upload multiple files when firing on the label', () => {
   expect(input.files).toHaveLength(2)
 })
 
-test('should not upload when is disabled', () => {
+test('does not upload when is disabled', () => {
   const file = new File(['hello'], 'hello.png', {type: 'image/png'})
   const {element} = setup('<input type="file" disabled />')
 
@@ -130,7 +130,7 @@ test('should not upload when is disabled', () => {
   expect(element.files).toHaveLength(0)
 })
 
-test('should call onChange/input bubbling up the event when a file is selected', () => {
+test('call onChange/input bubbling up the event when a file is selected', () => {
   const file = new File(['hello'], 'hello.png', {type: 'image/png'})
 
   const {element: form} = setup(`
@@ -164,7 +164,7 @@ test('should call onChange/input bubbling up the event when a file is selected',
   expect(onInputForm).toHaveBeenCalledTimes(1)
 })
 
-test('should upload file with accepted format', () => {
+test('upload file with accepted format', () => {
   const file = new File(['hello'], 'hello.png', {type: 'image/png'})
   const {element} = setup('<input type="file" accept="image/png" />')
 
@@ -173,7 +173,7 @@ test('should upload file with accepted format', () => {
   expect(element.files).toHaveLength(1)
 })
 
-test('should upload multiple files with accepted format', () => {
+test('upload multiple files with accepted format', () => {
   const files = [
     new File(['hello'], 'hello.png', {type: 'image/png'}),
     new File(['there'], 'there.jpg', {type: 'audio/mp3'}),
@@ -192,7 +192,7 @@ test('should upload multiple files with accepted format', () => {
   expect(element.files).toHaveLength(3)
 })
 
-test('should not upload file with unaccepted format', () => {
+test('does not upload file with unaccepted format', () => {
   const file = new File(['hello'], 'hello.png', {type: 'image/png'})
   const {element} = setup('<input type="file" accept="image/jpg" />')
 
@@ -201,7 +201,7 @@ test('should not upload file with unaccepted format', () => {
   expect(element.files).toHaveLength(0)
 })
 
-test('should not upload multiple files with unaccepted formats', () => {
+test('does not upload multiple files with unaccepted formats', () => {
   const files = [
     new File(['hello'], 'hello.txt', {type: 'text/plain'}),
     new File(['there'], 'there.pdf', {type: 'application/pdf'}),

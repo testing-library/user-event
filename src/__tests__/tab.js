@@ -82,7 +82,7 @@ test('fires correct events with shift key', () => {
   expect(bListeners.eventWasFired('blur')).toBe(true)
 })
 
-test('should cycle elements in document tab order', () => {
+test('cycle elements in document tab order', () => {
   setup(`
     <div>
       <input data-testid="element" type="checkbox" />
@@ -119,7 +119,7 @@ test('should cycle elements in document tab order', () => {
   expect(checkbox).toHaveFocus()
 })
 
-test('should go backwards when shift = true', () => {
+test('go backwards when shift = true', () => {
   setup(`
     <div>
       <input data-testid="element" type="checkbox" />
@@ -155,7 +155,7 @@ test('should go backwards when shift = true', () => {
   expect(number).toHaveFocus()
 })
 
-test('should respect tabindex, regardless of dom position', () => {
+test('respect tabindex, regardless of dom position', () => {
   setup(`
     <div>
       <input data-testid="element" tabIndex="2" type="checkbox" />
@@ -188,7 +188,7 @@ test('should respect tabindex, regardless of dom position', () => {
   expect(radio).toHaveFocus()
 })
 
-test('should respect tab index order, then DOM order', () => {
+test('respect tab index order, then DOM order', () => {
   setup(`
     <div>
       <input data-testid="element" tabIndex="0" type="checkbox" />
@@ -221,7 +221,7 @@ test('should respect tab index order, then DOM order', () => {
   expect(checkbox).toHaveFocus()
 })
 
-test('should support a mix of elements with/without tab index', () => {
+test('support a mix of elements with/without tab index', () => {
   setup(`
     <div>
       <input data-testid="element" tabIndex="0" type="checkbox" />
@@ -265,7 +265,7 @@ test('ignore tabindex when active element has tabindex="-1"', () => {
   expect(inputD).toHaveFocus()
 })
 
-test('should not tab to <a> with no href', () => {
+test('does not tab to <a> with no href', () => {
   setup(`
     <div>
       <input data-testid="element" tabIndex="0" type="checkbox" />
@@ -287,7 +287,7 @@ test('should not tab to <a> with no href', () => {
   expect(link).toHaveFocus()
 })
 
-test('should not tab to <input> with type="hidden"', () => {
+test('does not tab to <input> with type="hidden"', () => {
   const {
     elements: [checkbox, , text],
   } = setup(`
@@ -305,7 +305,7 @@ test('should not tab to <input> with type="hidden"', () => {
   expect(text).toHaveFocus()
 })
 
-test('should stay within a focus trap', () => {
+test('stay within a focus trap', () => {
   setup(`
     <>
       <div data-testid="div1">
@@ -376,7 +376,7 @@ test('should stay within a focus trap', () => {
 // for example under node 10 in this test:
 // > 'abcdefghijklmnopqrstuvwxyz'.split('').sort(() => 0).join('')
 // will give you 'nacdefghijklmbopqrstuvwxyz'
-test('should support unstable sorting environments like node 10', () => {
+test('support unstable sorting environments like node 10', () => {
   const letters = 'abcdefghijklmnopqrstuvwxyz'
 
   setup(`
@@ -396,7 +396,7 @@ test('should support unstable sorting environments like node 10', () => {
   }
 })
 
-test('should not focus disabled elements', () => {
+test('does not focus disabled elements', () => {
   setup(`
     <div>
       <input data-testid="one" />
@@ -418,7 +418,7 @@ test('should not focus disabled elements', () => {
   expect(five).toHaveFocus()
 })
 
-test('should keep focus on the document if there are no enabled, focusable elements', () => {
+test('keep focus on the document if there are no enabled, focusable elements', () => {
   setup(`<button disabled>no clicky</button>`)
   userEvent.tab()
   expect(document.body).toHaveFocus()

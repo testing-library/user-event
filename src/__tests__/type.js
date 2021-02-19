@@ -233,7 +233,7 @@ test('does not fire input when readonly', () => {
   `)
 })
 
-test('should delay the typing when opts.delay is not 0', async () => {
+test('delay the typing when opts.delay is not 0', async () => {
   const inputValues = [{timestamp: Date.now(), value: ''}]
   const onInput = jest.fn(event => {
     inputValues.push({timestamp: Date.now(), value: event.target.value})
@@ -361,7 +361,7 @@ test('ignores maxlength on input[type=number]', () => {
   expect(element).toHaveValue(123)
 })
 
-test('should fire events on the currently focused element', () => {
+test('fire events on the currently focused element', () => {
   const {element} = setup(`<div><input /><input /></div>`, {
     eventHandlers: {keyDown: handleKeyDown},
   })
@@ -384,7 +384,7 @@ test('should fire events on the currently focused element', () => {
   expect(input2).toHaveFocus()
 })
 
-test('should replace selected text', () => {
+test('replace selected text', () => {
   const {element} = setup('<input value="hello world" />')
   const selectionStart = 'hello world'.search('world')
   const selectionEnd = selectionStart + 'world'.length
@@ -803,7 +803,7 @@ test('typing an invalid input value', () => {
   expect(element.validity.badInput).toBe(false)
 })
 
-test('should not throw error if we are trying to call type on an element without a value', () => {
+test('does not throw error if we are trying to call type on an element without a value', () => {
   const {element} = setup('<div />')
   expect.assertions(0)
   return userEvent
@@ -853,7 +853,7 @@ test('typing on input type file should not result in an error', () => {
   return userEvent.type(element, 'bar').catch(e => expect(e).toBeUndefined())
 })
 
-test('should submit a form containing multiple text inputs and an input of type submit', () => {
+test('submit a form containing multiple text inputs and an input of type submit', () => {
   const handleSubmit = jest.fn()
   const {element} = setup(
     `
@@ -872,7 +872,7 @@ test('should submit a form containing multiple text inputs and an input of type 
   expect(handleSubmit).toHaveBeenCalledTimes(1)
 })
 
-test('should submit a form containing multiple text inputs and a submit button', () => {
+test('submit a form containing multiple text inputs and a submit button', () => {
   const handleSubmit = jest.fn()
 
   const {element} = setup(
@@ -892,7 +892,7 @@ test('should submit a form containing multiple text inputs and a submit button',
   expect(handleSubmit).toHaveBeenCalledTimes(1)
 })
 
-test('should submit a form with one input element', () => {
+test('submit a form with one input element', () => {
   const handleSubmit = jest.fn()
 
   const {element} = setup(
@@ -910,7 +910,7 @@ test('should submit a form with one input element', () => {
   expect(handleSubmit).toHaveBeenCalledTimes(1)
 })
 
-test('should not submit a form with when keydown calls prevent default', () => {
+test('does not submit a form with when keydown calls prevent default', () => {
   const handleSubmit = jest.fn()
 
   const {element} = setup(
@@ -928,7 +928,7 @@ test('should not submit a form with when keydown calls prevent default', () => {
   expect(handleSubmit).not.toHaveBeenCalled()
 })
 
-test('should not submit a form with when keypress calls prevent default', () => {
+test('does not submit a form with when keypress calls prevent default', () => {
   const handleSubmit = jest.fn()
 
   const {element} = setup(
@@ -946,7 +946,7 @@ test('should not submit a form with when keypress calls prevent default', () => 
   expect(handleSubmit).not.toHaveBeenCalled()
 })
 
-test('should not submit a form with multiple input when ENTER is pressed on one of it', () => {
+test('does not submit a form with multiple input when ENTER is pressed on one of it', () => {
   const handleSubmit = jest.fn()
   const {element} = setup(
     `
@@ -964,7 +964,7 @@ test('should not submit a form with multiple input when ENTER is pressed on one 
   expect(handleSubmit).toHaveBeenCalledTimes(0)
 })
 
-test('should type inside a contenteditable div', () => {
+test('type inside a contenteditable div', () => {
   const {element, getEventSnapshot} = setup('<div contenteditable=true></div>')
 
   userEvent.type(element, 'bar')
@@ -1001,7 +1001,7 @@ test('should type inside a contenteditable div', () => {
   expect(element).toHaveTextContent('bar')
 })
 
-test('should not type inside a contenteditable=false div', () => {
+test('does not type inside a contenteditable=false div', () => {
   const {element, getEventSnapshot} = setup('<div contenteditable=false></div>')
 
   userEvent.type(element, 'bar')

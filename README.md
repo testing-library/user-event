@@ -47,6 +47,7 @@ change the state of the checkbox.
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
+
 - [Installation](#installation)
 - [API](#api)
   - [`click(element, eventInit, options)`](#clickelement-eventinit-options)
@@ -438,7 +439,7 @@ import {render, screen} from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import userEvent from '@testing-library/user-event'
 
-it('should cycle elements in document tab order', () => {
+it('cycle elements in document tab order', () => {
   render(
     <div>
       <input data-testid="element" type="checkbox" />
@@ -510,7 +511,7 @@ Unhovers out of `element`.
 Allows you to simulate the user pasting some text into an input.
 
 ```javascript
-test('should paste text in input', () => {
+test('paste text in input', () => {
   render(<MyInput />)
 
   const text = 'Hello, world!'

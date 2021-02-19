@@ -128,7 +128,7 @@ test('clicking a disabled radio button only fires pointer events', () => {
   expect(element).not.toBeChecked()
 })
 
-test('should fire the correct events for <div>', () => {
+test('fire the correct events for <div>', () => {
   const {element, getEventSnapshot} = setup('<div></div>')
   userEvent.click(element)
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
@@ -166,7 +166,7 @@ test('toggles the focus', () => {
   expect(b).toHaveFocus()
 })
 
-test('should blur the previous element', () => {
+test('blur the previous element', () => {
   const {element, getEventSnapshot, clearEventCalls} = setup(
     `<div><input name="a" /><input name="b" /></div>`,
   )
@@ -204,7 +204,7 @@ test('should blur the previous element', () => {
   expect(bListeners.eventWasFired('focus')).toBe(true)
 })
 
-test('should not blur the previous element when mousedown prevents default', () => {
+test('does not blur the previous element when mousedown prevents default', () => {
   const {element, getEventSnapshot, clearEventCalls} = setup(
     `<div><input name="a" /><input name="b" /></div>`,
   )

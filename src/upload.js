@@ -3,45 +3,26 @@ import {click} from './click'
 import {blur} from './blur'
 import {focus} from './focus'
 
-const hasValidFileType = (acceptAttribute, type) => {
-  if (!acceptAttribute) {
-    return true
-  }
-
-  const acceptManyExtensions = /(video|audio|image)\/?\*/.test(acceptAttribute)
-
-  if (acceptManyExtensions) {
-    type = type.match(/\w+\/+/g)
-  }
-
-  const isValidType = acceptAttribute.includes(type)
-
-  return isValidType
-}
-
 function upload(element, fileOrFiles, init) {
-  const hasFileWithInvalidType =
-    !Array.isArray(fileOrFiles) &&
-    Boolean(element.accept) &&
-    !hasValidFileType(element.accept, fileOrFiles.type)
-
-  if (hasFileWithInvalidType || element.disabled) return
+  if (element.disabled) return
 
   click(element, init)
 
   const input = element.tagName === 'LABEL' ? element.control : element
 
   const files = (Array.isArray(fileOrFiles) ? fileOrFiles : [fileOrFiles])
-    .filter(file => hasValidFileType(element.accept, file.type))
+    .filter(file => isAcceptableFile(file, element.accept))
     .slice(0, input.multiple ? undefined : 1)
-
-  const hasFilesWithInvalidTypes = files.length === 0
-  if (hasFilesWithInvalidTypes) return
 
   // blur fires when the file selector pops up
   blur(element, init)
   // focus fires when they make their selection
   focus(element, init)
+
+  // treat empty array as if the user just closed the file upload dialog
+  if (files.length === 0) {
+    return
+  }
 
   // the event fired in the browser isn't actually an "input" or "change" event
   // but a new Event with a type set to "input" and "change"
@@ -66,6 +47,23 @@ function upload(element, fileOrFiles, init) {
   fireEvent.change(input, {
     target: {files: inputFiles},
     ...init,
+  })
+}
+
+function isAcceptableFile(file, accept) {
+  if (!accept) {
+    return true
+  }
+
+  const wildcards = ['audio/*', 'image/*', 'video/*']
+
+  return accept.split(',').some(acceptToken => {
+    if (accept[0] === '.') {
+      return file.name.endsWith(accept)
+    } else if (wildcards.includes(acceptToken)) {
+      return file.type.startsWith(acceptToken.substr(0, acceptToken.length - 1))
+    }
+    return file.type === acceptToken
   })
 }
 

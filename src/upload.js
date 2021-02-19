@@ -58,7 +58,8 @@ function isAcceptableFile(file, accept) {
   const wildcards = ['audio/*', 'image/*', 'video/*']
 
   return accept.split(',').some(acceptToken => {
-    if (accept[0] === '.') {
+    if (acceptToken[0] === '.') {
+      // tokens starting with a dot represent a file extension
       return file.name.endsWith(accept)
     } else if (wildcards.includes(acceptToken)) {
       return file.type.startsWith(acceptToken.substr(0, acceptToken.length - 1))

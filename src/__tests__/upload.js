@@ -183,7 +183,7 @@ test('should upload multiple files with accepted format', () => {
   const {element} = setup(`
     <input 
       type="file" 
-      accept="image/*,audio/*,text/csv" multiple 
+      accept="video/*,audio/*,.png" multiple 
     />
   `)
 

@@ -3,17 +3,18 @@ import {click} from './click'
 import {blur} from './blur'
 import {focus} from './focus'
 
-const isValidFileType = (acceptAttribute, type) => {
-  const acceptManyExtensions = /(video|audio|image)\/?\*/.test(acceptAttribute)
+const hasValidFileType = (acceptAttribute, type) => {
+  if (!acceptAttribute) {
+    return true
+  }
 
-  let isValidType
+  const acceptManyExtensions = /(video|audio|image)\/?\*/.test(acceptAttribute)
 
   if (acceptManyExtensions) {
     type = type.match(/\w+\/+/g)
-    isValidType = acceptAttribute.includes(type)
-  } else {
-    isValidType = acceptAttribute.includes(type)
   }
+
+  const isValidType = acceptAttribute.includes(type)
 
   return isValidType
 }
@@ -22,7 +23,7 @@ function upload(element, fileOrFiles, init) {
   const hasFileWithInvalidType =
     !Array.isArray(fileOrFiles) &&
     Boolean(element.accept) &&
-    !isValidFileType(element.accept, fileOrFiles.type)
+    !hasValidFileType(element.accept, fileOrFiles.type)
 
   if (hasFileWithInvalidType || element.disabled) return
 
@@ -30,20 +31,12 @@ function upload(element, fileOrFiles, init) {
 
   const input = element.tagName === 'LABEL' ? element.control : element
 
-  let files = []
-
-  if (Array.isArray(fileOrFiles)) {
-    files = element.accept
-      ? fileOrFiles.filter(file => isValidFileType(element.accept, file.type))
-      : fileOrFiles
-  } else {
-    files = [fileOrFiles]
-  }
+  const files = (Array.isArray(fileOrFiles) ? fileOrFiles : [fileOrFiles])
+    .filter(file => hasValidFileType(element.accept, file.type))
+    .slice(0, input.multiple ? undefined : 1)
 
   const hasFilesWithInvalidTypes = files.length === 0
   if (hasFilesWithInvalidTypes) return
-
-  files = files.slice(0, input.multiple ? undefined : 1)
 
   // blur fires when the file selector pops up
   blur(element, init)

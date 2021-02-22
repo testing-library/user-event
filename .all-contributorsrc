@@ -735,6 +735,16 @@
         "code",
         "test"
       ]
+    },
+    {
+      "login": "LauraBeatris",
+      "name": "Laura Beatris",
+      "avatar_url": "https://avatars.githubusercontent.com/u/48022589?v=4",
+      "profile": "http://laurabeatris.com",
+      "contributions": [
+        "code",
+        "test"
+      ]
     }
   ],
   "commitConvention": "none",

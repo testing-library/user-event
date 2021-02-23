@@ -271,11 +271,14 @@ test('types into the input', () => {
 })
 ```
 
-### `upload(element, file, [{ clickInit, changeInit }])`
+### `upload(element, file, [{ clickInit, changeInit }], [options])`
 
 Uploads file to an `<input>`. For uploading multiple files use `<input>` with
 `multiple` attribute and the second `upload` argument must be array then. Also
 it's possible to initialize click or change event with using third argument.
+
+If `options.applyAccept` is set to `true` and there is an `accept` attribute on
+the element, files that don't match will be discarded.
 
 ```jsx
 import React from 'react'

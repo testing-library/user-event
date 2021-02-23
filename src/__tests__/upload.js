@@ -164,54 +164,38 @@ test('should call onChange/input bubbling up the event when a file is selected',
   expect(onInputForm).toHaveBeenCalledTimes(1)
 })
 
-test('should upload file with accepted format', () => {
-  const file = new File(['hello'], 'hello.png', {type: 'image/png'})
-  const {element} = setup('<input type="file" accept="image/png" />')
-
-  userEvent.upload(element, file)
-
-  expect(element.files).toHaveLength(1)
-})
-
-test('should upload multiple files with accepted format', () => {
-  const files = [
-    new File(['hello'], 'hello.png', {type: 'image/png'}),
-    new File(['there'], 'there.jpg', {type: 'audio/mp3'}),
-    new File(['there'], 'there.csv', {type: 'text/csv'}),
-    new File(['there'], 'there.jpg', {type: 'video/mp4'}),
-  ]
-  const {element} = setup(`
+test.each([
+  [true, 'video/*,audio/*', 2],
+  [true, '.png', 1],
+  [true, 'text/csv', 1],
+  [true, '', 4],
+  [false, 'video/*', 4],
+])(
+  'should filter according to accept attribute applyAccept=%s, acceptAttribute=%s',
+  (applyAccept, acceptAttribute, expectedLength) => {
+    const files = [
+      new File(['hello'], 'hello.png', {type: 'image/png'}),
+      new File(['there'], 'there.jpg', {type: 'audio/mp3'}),
+      new File(['there'], 'there.csv', {type: 'text/csv'}),
+      new File(['there'], 'there.jpg', {type: 'video/mp4'}),
+    ]
+    const {element} = setup(`
     <input 
       type="file" 
-      accept="video/*,audio/*,.png" multiple 
+      accept="${acceptAttribute}" multiple 
     />
   `)
 
-  userEvent.upload(element, files)
+    userEvent.upload(element, files, undefined, {applyAccept})
 
-  expect(element.files).toHaveLength(3)
-})
+    expect(element.files).toHaveLength(expectedLength)
+  },
+)
 
-test('should not upload file with unaccepted format', () => {
-  const file = new File(['hello'], 'hello.png', {type: 'image/png'})
-  const {element} = setup('<input type="file" accept="image/jpg" />')
-
-  userEvent.upload(element, file)
-
-  expect(element.files).toHaveLength(0)
-})
-
-test('should not upload multiple files with unaccepted formats', () => {
-  const files = [
-    new File(['hello'], 'hello.txt', {type: 'text/plain'}),
-    new File(['there'], 'there.pdf', {type: 'application/pdf'}),
-    new File(['there'], 'there.png', {type: 'image/png'}),
-  ]
-  const {element} = setup(`
-    <input id="files" type="file" accept="video/*" multiple />
-  `)
-
-  userEvent.upload(element, files)
+test('should not trigger input event for empty list', () => {
+  const {element, eventWasFired} = setup('<input type="file"/>')
+  userEvent.upload(element, [])
 
   expect(element.files).toHaveLength(0)
+  expect(eventWasFired('input')).toBe(false)
 })

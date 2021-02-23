@@ -3,7 +3,7 @@ import {click} from './click'
 import {blur} from './blur'
 import {focus} from './focus'
 
-function upload(element, fileOrFiles, init) {
+function upload(element, fileOrFiles, init, {applyAccept = false} = {}) {
   if (element.disabled) return
 
   click(element, init)
@@ -11,7 +11,7 @@ function upload(element, fileOrFiles, init) {
   const input = element.tagName === 'LABEL' ? element.control : element
 
   const files = (Array.isArray(fileOrFiles) ? fileOrFiles : [fileOrFiles])
-    .filter(file => isAcceptableFile(file, element.accept))
+    .filter(file => !applyAccept || isAcceptableFile(file, element.accept))
     .slice(0, input.multiple ? undefined : 1)
 
   // blur fires when the file selector pops up

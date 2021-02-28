@@ -26,6 +26,10 @@ export interface IClickOptions {
   clickCount?: number
 }
 
+export interface IUploadOptions {
+  applyAccept?: boolean
+}
+
 declare const userEvent: {
   clear: (element: TargetElement) => void
   click: (
@@ -52,6 +56,7 @@ declare const userEvent: {
     element: TargetElement,
     files: FilesArgument,
     init?: UploadInitArgument,
+    options?: IUploadOptions,
   ) => void
   type: <T extends ITypeOpts>(
     element: TargetElement,

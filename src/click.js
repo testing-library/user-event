@@ -61,10 +61,7 @@ function clickElement(element, init, {clickCount}) {
       element,
       getMouseEventOptions('mousedown', init, clickCount),
     )
-    if (
-      continueDefaultHandling &&
-      element !== element.ownerDocument.activeElement
-    ) {
+    if (continueDefaultHandling) {
       const closestFocusable = findClosest(element, isFocusable)
       if (previousElement && !closestFocusable) {
         blur(previousElement, init)

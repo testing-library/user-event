@@ -745,6 +745,15 @@
         "code",
         "test"
       ]
+    },
+    {
+      "login": "just-boris",
+      "name": "Boris Serdiuk",
+      "avatar_url": "https://avatars.githubusercontent.com/u/812240?v=4",
+      "profile": "https://twitter.com/boriscoder",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "commitConvention": "none",

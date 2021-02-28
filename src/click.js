@@ -65,10 +65,11 @@ function clickElement(element, init, {clickCount}) {
       continueDefaultHandling &&
       element !== element.ownerDocument.activeElement
     ) {
-      if (previousElement && !isFocusable(element)) {
+      const closestFocusable = findClosest(element, isFocusable)
+      if (previousElement && !closestFocusable) {
         blur(previousElement, init)
-      } else {
-        focus(element, init)
+      } else if (closestFocusable) {
+        focus(closestFocusable, init)
       }
     }
   }
@@ -82,6 +83,16 @@ function clickElement(element, init, {clickCount}) {
     const parentLabel = element.closest('label')
     if (parentLabel?.control) focus(parentLabel.control, init)
   }
+}
+
+function findClosest(el, callback) {
+  do {
+    if (callback(el)) {
+      return el
+    }
+    el = el.parentElement
+  } while (el && el !== document.body)
+  return undefined
 }
 
 function click(element, init, {skipHover = false, clickCount = 0} = {}) {

@@ -442,3 +442,20 @@ test('calls FocusEvents with relatedTarget', () => {
     element0,
   )
 })
+
+test('move focus to closest focusable element', () => {
+  const {element} = setup(`
+    <div tabIndex="0">
+      <div>this is not focusable</div>
+      <button>this is focusable</button>
+    </div>
+  `)
+
+  document.body.focus()
+  userEvent.click(element.children[1])
+  expect(element.children[1]).toHaveFocus()
+
+  document.body.focus()
+  userEvent.click(element.children[0])
+  expect(element).toHaveFocus()
+})

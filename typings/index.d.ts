@@ -89,6 +89,8 @@ export enum specialChars {
   escape = '{esc}',
   delete = '{del}',
   backspace = '{backspace}',
+  home = '{home}',
+  end = '{end}',
   selectAll = '{selectall}',
   space = '{space}',
   whitespace = ' ',

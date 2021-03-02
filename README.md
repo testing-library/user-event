@@ -693,6 +693,9 @@ Thanks goes to these people ([emoji key][emojis]):
     <td align="center"><a href="https://twitter.com/boriscoder"><img src="https://avatars.githubusercontent.com/u/812240?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Boris Serdiuk</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3Ajust-boris" title="Bug reports">🐛</a></td>
     <td align="center"><a href="https://bozdoz.com"><img src="https://avatars.githubusercontent.com/u/1410985?v=4?s=100" width="100px;" alt=""/><br /><sub><b>bozdoz</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=bozdoz" title="Documentation">📖</a></td>
   </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/jKatt"><img src="https://avatars.githubusercontent.com/u/5550790?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Jan Kattelans</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=jKatt" title="Code">💻</a></td>
+  </tr>
 </table>
 
 <!-- markdownlint-restore -->

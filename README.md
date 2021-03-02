@@ -691,6 +691,7 @@ Thanks goes to these people ([emoji key][emojis]):
     <td align="center"><a href="https://benadamstyles.com"><img src="https://avatars.githubusercontent.com/u/4380655?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Ben Styles</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=benadamstyles" title="Code">💻</a> <a href="https://github.com/testing-library/user-event/commits?author=benadamstyles" title="Tests">⚠️</a></td>
     <td align="center"><a href="http://laurabeatris.com"><img src="https://avatars.githubusercontent.com/u/48022589?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Laura Beatris</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=LauraBeatris" title="Code">💻</a> <a href="https://github.com/testing-library/user-event/commits?author=LauraBeatris" title="Tests">⚠️</a></td>
     <td align="center"><a href="https://twitter.com/boriscoder"><img src="https://avatars.githubusercontent.com/u/812240?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Boris Serdiuk</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3Ajust-boris" title="Bug reports">🐛</a></td>
+    <td align="center"><a href="https://bozdoz.com"><img src="https://avatars.githubusercontent.com/u/1410985?v=4?s=100" width="100px;" alt=""/><br /><sub><b>bozdoz</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=bozdoz" title="Documentation">📖</a></td>
   </tr>
 </table>
 

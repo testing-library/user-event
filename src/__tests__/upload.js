@@ -192,10 +192,30 @@ test.each([
   },
 )
 
-test('should not trigger input event for empty list', () => {
-  const {element, eventWasFired} = setup('<input type="file"/>')
-  userEvent.upload(element, [])
+test('should not trigger input event when selected files are the same', () => {
+  const {element, eventWasFired, clearEventCalls} = setup(
+    '<input type="file" multiple/>',
+  )
+  const files = [
+    new File(['hello'], 'hello.png', {type: 'image/png'}),
+    new File(['there'], 'there.png', {type: 'image/png'}),
+  ]
 
-  expect(element.files).toHaveLength(0)
+  userEvent.upload(element, [])
   expect(eventWasFired('input')).toBe(false)
+  expect(element.files).toHaveLength(0)
+
+  userEvent.upload(element, files)
+  expect(eventWasFired('input')).toBe(true)
+  expect(element.files).toHaveLength(2)
+
+  clearEventCalls()
+
+  userEvent.upload(element, files)
+  expect(eventWasFired('input')).toBe(false)
+  expect(element.files).toHaveLength(2)
+
+  userEvent.upload(element, [])
+  expect(eventWasFired('input')).toBe(true)
+  expect(element.files).toHaveLength(0)
 })

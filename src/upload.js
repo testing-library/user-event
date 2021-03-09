@@ -19,8 +19,11 @@ function upload(element, fileOrFiles, init, {applyAccept = false} = {}) {
   // focus fires when they make their selection
   focus(element, init)
 
-  // treat empty array as if the user just closed the file upload dialog
-  if (files.length === 0) {
+  // do not fire an input event if the file selection does not change
+  if (
+    files.length === input.files.length &&
+    files.every((f, i) => f === input.files.item(i))
+  ) {
     return
   }
 

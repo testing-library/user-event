@@ -772,6 +772,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "schoeneu",
+      "name": "schoeneu",
+      "avatar_url": "https://avatars.githubusercontent.com/u/3261341?v=4",
+      "profile": "https://github.com/schoeneu",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "commitConvention": "none",

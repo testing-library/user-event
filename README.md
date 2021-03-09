@@ -271,11 +271,14 @@ test('types into the input', () => {
 })
 ```
 
-### `upload(element, file, [{ clickInit, changeInit }])`
+### `upload(element, file, [{ clickInit, changeInit }], [options])`
 
 Uploads file to an `<input>`. For uploading multiple files use `<input>` with
 `multiple` attribute and the second `upload` argument must be array then. Also
 it's possible to initialize click or change event with using third argument.
+
+If `options.applyAccept` is set to `true` and there is an `accept` attribute on
+the element, files that don't match will be discarded.
 
 ```jsx
 import React from 'react'
@@ -533,6 +536,8 @@ method.
 | arrowRight | `{arrowright}` |
 | arrowDown  | `{arrowdown}`  |
 | arrowUp    | `{arrowup}`    |
+| home       | `{home}`       |
+| end        | `{end}`        |
 | enter      | `{enter}`      |
 | escape     | `{esc}`        |
 | delete     | `{del}`        |
@@ -683,6 +688,13 @@ Thanks goes to these people ([emoji key][emojis]):
     <td align="center"><a href="https://github.com/vasilii-kovalev"><img src="https://avatars0.githubusercontent.com/u/10310491?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Vasilii Kovalev</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=vasilii-kovalev" title="Code">💻</a> <a href="https://github.com/testing-library/user-event/commits?author=vasilii-kovalev" title="Documentation">📖</a></td>
     <td align="center"><a href="https://www.daleseo.com"><img src="https://avatars1.githubusercontent.com/u/5466341?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Dale Seo</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=daleseo" title="Documentation">📖</a></td>
     <td align="center"><a href="http://www.alex-boyce.me/"><img src="https://avatars.githubusercontent.com/u/4050934?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Alex Boyce</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=curiosity26" title="Code">💻</a></td>
+    <td align="center"><a href="https://benadamstyles.com"><img src="https://avatars.githubusercontent.com/u/4380655?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Ben Styles</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=benadamstyles" title="Code">💻</a> <a href="https://github.com/testing-library/user-event/commits?author=benadamstyles" title="Tests">⚠️</a></td>
+    <td align="center"><a href="http://laurabeatris.com"><img src="https://avatars.githubusercontent.com/u/48022589?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Laura Beatris</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=LauraBeatris" title="Code">💻</a> <a href="https://github.com/testing-library/user-event/commits?author=LauraBeatris" title="Tests">⚠️</a></td>
+    <td align="center"><a href="https://twitter.com/boriscoder"><img src="https://avatars.githubusercontent.com/u/812240?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Boris Serdiuk</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3Ajust-boris" title="Bug reports">🐛</a></td>
+    <td align="center"><a href="https://bozdoz.com"><img src="https://avatars.githubusercontent.com/u/1410985?v=4?s=100" width="100px;" alt=""/><br /><sub><b>bozdoz</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=bozdoz" title="Documentation">📖</a></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/jKatt"><img src="https://avatars.githubusercontent.com/u/5550790?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Jan Kattelans</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=jKatt" title="Code">💻</a></td>
   </tr>
 </table>
 

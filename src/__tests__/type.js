@@ -1121,43 +1121,43 @@ test('can type into an input with type `time`', () => {
   const {element, getEventSnapshot} = setup('<input type="time" />')
   userEvent.type(element, '01:05')
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
-  Events fired on: input[value="01:05"]
-  
-  input[value=""] - pointerover
-  input[value=""] - pointerenter
-  input[value=""] - mouseover: Left (0)
-  input[value=""] - mouseenter: Left (0)
-  input[value=""] - pointermove
-  input[value=""] - mousemove: Left (0)
-  input[value=""] - pointerdown
-  input[value=""] - mousedown: Left (0)
-  input[value=""] - focus
-  input[value=""] - focusin
-  input[value=""] - pointerup
-  input[value=""] - mouseup: Left (0)
-  input[value=""] - click: Left (0)
-  input[value=""] - keydown: 0 (48)
-  input[value=""] - keypress: 0 (48)
-  input[value=""] - keyup: 0 (48)
-  input[value=""] - keydown: 1 (49)
-  input[value=""] - keypress: 1 (49)
-  input[value=""] - keyup: 1 (49)
-  input[value=""] - keydown: : (58)
-  input[value=""] - keypress: : (58)
-  input[value=""] - keyup: : (58)
-  input[value=""] - keydown: 0 (48)
-  input[value=""] - keypress: 0 (48)
-  input[value="01:00"] - input
-    "{CURSOR}" -> "{CURSOR}01:00"
-  input[value="01:00"] - change
-  input[value="01:00"] - keyup: 0 (48)
-  input[value="01:00"] - keydown: 5 (53)
-  input[value="01:00"] - keypress: 5 (53)
-  input[value="01:05"] - input
-    "{CURSOR}01:00" -> "{CURSOR}01:05"
-  input[value="01:05"] - change
-  input[value="01:05"] - keyup: 5 (53)
-  `)
+      Events fired on: input[value="01:05"]
+
+      input[value=""] - pointerover
+      input[value=""] - pointerenter
+      input[value=""] - mouseover: Left (0)
+      input[value=""] - mouseenter: Left (0)
+      input[value=""] - pointermove
+      input[value=""] - mousemove: Left (0)
+      input[value=""] - pointerdown
+      input[value=""] - mousedown: Left (0)
+      input[value=""] - focus
+      input[value=""] - focusin
+      input[value=""] - pointerup
+      input[value=""] - mouseup: Left (0)
+      input[value=""] - click: Left (0)
+      input[value=""] - keydown: 0 (48)
+      input[value=""] - keypress: 0 (48)
+      input[value=""] - keyup: 0 (48)
+      input[value=""] - keydown: 1 (49)
+      input[value=""] - keypress: 1 (49)
+      input[value=""] - keyup: 1 (49)
+      input[value=""] - keydown: : (58)
+      input[value=""] - keypress: : (58)
+      input[value=""] - keyup: : (58)
+      input[value=""] - keydown: 0 (48)
+      input[value=""] - keypress: 0 (48)
+      input[value="01:00"] - input
+        "{CURSOR}" -> "{CURSOR}01:00"
+      input[value="01:00"] - change
+      input[value="01:00"] - keyup: 0 (48)
+      input[value="01:00"] - keydown: 5 (53)
+      input[value="01:00"] - keypress: 5 (53)
+      input[value="01:05"] - input
+        "{CURSOR}01:00" -> "{CURSOR}01:05"
+      input[value="01:05"] - change
+      input[value="01:05"] - keyup: 5 (53)
+    `)
   expect(element).toHaveValue('01:05')
 })
 
@@ -1165,40 +1165,40 @@ test('can type into an input with type `time` without ":"', () => {
   const {element, getEventSnapshot} = setup('<input type="time" />')
   userEvent.type(element, '0105')
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
-  Events fired on: input[value="01:05"]
-  
-  input[value=""] - pointerover
-  input[value=""] - pointerenter
-  input[value=""] - mouseover: Left (0)
-  input[value=""] - mouseenter: Left (0)
-  input[value=""] - pointermove
-  input[value=""] - mousemove: Left (0)
-  input[value=""] - pointerdown
-  input[value=""] - mousedown: Left (0)
-  input[value=""] - focus
-  input[value=""] - focusin
-  input[value=""] - pointerup
-  input[value=""] - mouseup: Left (0)
-  input[value=""] - click: Left (0)
-  input[value=""] - keydown: 0 (48)
-  input[value=""] - keypress: 0 (48)
-  input[value=""] - keyup: 0 (48)
-  input[value=""] - keydown: 1 (49)
-  input[value=""] - keypress: 1 (49)
-  input[value=""] - keyup: 1 (49)
-  input[value=""] - keydown: 0 (48)
-  input[value=""] - keypress: 0 (48)
-  input[value="01:00"] - input
-    "{CURSOR}" -> "{CURSOR}01:00"
-  input[value="01:00"] - change
-  input[value="01:00"] - keyup: 0 (48)
-  input[value="01:00"] - keydown: 5 (53)
-  input[value="01:00"] - keypress: 5 (53)
-  input[value="01:05"] - input
-    "{CURSOR}01:00" -> "{CURSOR}01:05"
-  input[value="01:05"] - change
-  input[value="01:05"] - keyup: 5 (53)
-  `)
+      Events fired on: input[value="01:05"]
+
+      input[value=""] - pointerover
+      input[value=""] - pointerenter
+      input[value=""] - mouseover: Left (0)
+      input[value=""] - mouseenter: Left (0)
+      input[value=""] - pointermove
+      input[value=""] - mousemove: Left (0)
+      input[value=""] - pointerdown
+      input[value=""] - mousedown: Left (0)
+      input[value=""] - focus
+      input[value=""] - focusin
+      input[value=""] - pointerup
+      input[value=""] - mouseup: Left (0)
+      input[value=""] - click: Left (0)
+      input[value=""] - keydown: 0 (48)
+      input[value=""] - keypress: 0 (48)
+      input[value=""] - keyup: 0 (48)
+      input[value=""] - keydown: 1 (49)
+      input[value=""] - keypress: 1 (49)
+      input[value=""] - keyup: 1 (49)
+      input[value=""] - keydown: 0 (48)
+      input[value=""] - keypress: 0 (48)
+      input[value="01:00"] - input
+        "{CURSOR}" -> "{CURSOR}01:00"
+      input[value="01:00"] - change
+      input[value="01:00"] - keyup: 0 (48)
+      input[value="01:00"] - keydown: 5 (53)
+      input[value="01:00"] - keypress: 5 (53)
+      input[value="01:05"] - input
+        "{CURSOR}01:00" -> "{CURSOR}01:05"
+      input[value="01:05"] - change
+      input[value="01:05"] - keyup: 5 (53)
+    `)
   expect(element).toHaveValue('01:05')
 })
 
@@ -1208,7 +1208,7 @@ test('can type more a number higher than 60 minutes into an input `time` and the
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value="23:59"]
-    
+
     input[value=""] - pointerover
     input[value=""] - pointerenter
     input[value=""] - mouseover: Left (0)
@@ -1254,7 +1254,7 @@ test('can type letters into an input `time` and they are ignored', () => {
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value="16:36"]
-    
+
     input[value=""] - pointerover
     input[value=""] - pointerenter
     input[value=""] - mouseover: Left (0)
@@ -1493,5 +1493,24 @@ test('{arrowup} fires keyup/keydown events', () => {
     input[value=""] - click: Left (0)
     input[value=""] - keydown: ArrowUp (38)
     input[value=""] - keyup: ArrowUp (38)
+  `)
+})
+
+test('{enter} fires click on links', () => {
+  const {element, getEventSnapshot} = setup('<a href="#">link</a>')
+
+  element?.focus()
+
+  userEvent.type(element, '{enter}', {skipClick: true})
+
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
+    Events fired on: a
+
+    a - focus
+    a - focusin
+    a - keydown: Enter (13)
+    a - keypress: Enter (13)
+    a - click: Left (0)
+    a - keyup: Enter (13)
   `)
 })

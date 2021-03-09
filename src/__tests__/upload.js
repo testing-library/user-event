@@ -163,3 +163,39 @@ test('should call onChange/input bubbling up the event when a file is selected',
   expect(onInputInput).toHaveBeenCalledTimes(1)
   expect(onInputForm).toHaveBeenCalledTimes(1)
 })
+
+test.each([
+  [true, 'video/*,audio/*', 2],
+  [true, '.png', 1],
+  [true, 'text/csv', 1],
+  [true, '', 4],
+  [false, 'video/*', 4],
+])(
+  'should filter according to accept attribute applyAccept=%s, acceptAttribute=%s',
+  (applyAccept, acceptAttribute, expectedLength) => {
+    const files = [
+      new File(['hello'], 'hello.png', {type: 'image/png'}),
+      new File(['there'], 'there.jpg', {type: 'audio/mp3'}),
+      new File(['there'], 'there.csv', {type: 'text/csv'}),
+      new File(['there'], 'there.jpg', {type: 'video/mp4'}),
+    ]
+    const {element} = setup(`
+    <input 
+      type="file" 
+      accept="${acceptAttribute}" multiple 
+    />
+  `)
+
+    userEvent.upload(element, files, undefined, {applyAccept})
+
+    expect(element.files).toHaveLength(expectedLength)
+  },
+)
+
+test('should not trigger input event for empty list', () => {
+  const {element, eventWasFired} = setup('<input type="file"/>')
+  userEvent.upload(element, [])
+
+  expect(element.files).toHaveLength(0)
+  expect(eventWasFired('input')).toBe(false)
+})

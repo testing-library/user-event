@@ -725,6 +725,53 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "benadamstyles",
+      "name": "Ben Styles",
+      "avatar_url": "https://avatars.githubusercontent.com/u/4380655?v=4",
+      "profile": "https://benadamstyles.com",
+      "contributions": [
+        "code",
+        "test"
+      ]
+    },
+    {
+      "login": "LauraBeatris",
+      "name": "Laura Beatris",
+      "avatar_url": "https://avatars.githubusercontent.com/u/48022589?v=4",
+      "profile": "http://laurabeatris.com",
+      "contributions": [
+        "code",
+        "test"
+      ]
+    },
+    {
+      "login": "just-boris",
+      "name": "Boris Serdiuk",
+      "avatar_url": "https://avatars.githubusercontent.com/u/812240?v=4",
+      "profile": "https://twitter.com/boriscoder",
+      "contributions": [
+        "bug"
+      ]
+    },
+    {
+      "login": "bozdoz",
+      "name": "bozdoz",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1410985?v=4",
+      "profile": "https://bozdoz.com",
+      "contributions": [
+        "doc"
+      ]
+    },
+    {
+      "login": "jKatt",
+      "name": "Jan Kattelans",
+      "avatar_url": "https://avatars.githubusercontent.com/u/5550790?v=4",
+      "profile": "https://github.com/jKatt",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "commitConvention": "none",

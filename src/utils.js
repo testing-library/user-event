@@ -293,6 +293,19 @@ function isClickableInput(element) {
   )
 }
 
+function isVisible(element) {
+  const getComputedStyle = getWindowFromNode(element).getComputedStyle
+
+  for(; element && element.ownerDocument; element = element.parentNode) {
+    const display = getComputedStyle(element).display
+    if (display === 'none') {
+      return false
+    }
+  }
+
+  return true
+}
+
 function eventWrapper(cb) {
   let result
   getConfig().eventWrapper(() => {
@@ -367,4 +380,5 @@ export {
   getSelectionRange,
   isContentEditable,
   isInstanceOfElement,
+  isVisible,
 }

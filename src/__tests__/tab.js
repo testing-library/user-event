@@ -17,7 +17,7 @@ test('fires events when tabbing between two elements', () => {
   userEvent.tab()
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: div
-    
+
     input#a[value=""] - keydown: Tab (9)
     input#a[value=""] - focusout
     input#b[value=""] - focusin
@@ -45,7 +45,7 @@ test('does not change focus if default prevented on keydown', () => {
   userEvent.tab()
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: div
-    
+
     input#a[value=""] - keydown: Tab (9)
     input#a[value=""] - keyup: Tab (9)
   `)
@@ -416,6 +416,26 @@ test('should not focus disabled elements', () => {
 
   userEvent.tab()
   expect(five).toHaveFocus()
+})
+
+test('should not focus elements inside a hidden parent', () => {
+  setup(`
+    <div>
+      <input data-testid="one" />
+      <div hidden="">
+        <button>click</button>
+      </div>
+      <input data-testid="three" />
+    </div>`)
+
+  const one = document.querySelector('[data-testid="one"]')
+  const three = document.querySelector('[data-testid="three"]')
+
+  userEvent.tab()
+  expect(one).toHaveFocus()
+
+  userEvent.tab()
+  expect(three).toHaveFocus()
 })
 
 test('should keep focus on the document if there are no enabled, focusable elements', () => {

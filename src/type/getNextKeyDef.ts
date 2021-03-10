@@ -1,0 +1,95 @@
+import {keyboardKey, modernTypeOptions} from './types'
+
+/**
+ * Get the next key from keyMap
+ *
+ * Keys can be referenced by `{key}` or `{special}` as well as physical locations per `[code]`.
+ * Everything else will be interpreted as a typed character - e.g. `a`.
+ * Brackets `{` and `[` can be escaped by doubling - e.g. `foo[[bar` translates to `foo[bar`.
+ * Keeping the key pressed can be written as `{key>}`.
+ * Modifiers like `{shift}` imply being kept pressed. This can be turned of per `{shift/}`.
+ */
+export function getNextKeyDef(
+  text: string,
+  options: modernTypeOptions,
+): {
+  key: keyboardKey
+  consumedLength: number
+  releasePrevious: boolean
+  releaseSelf: boolean
+  press: boolean
+} {
+  const startBracket = ['{', '['].includes(text[0]) ? text[0] : ''
+  const startModifier = text[1] === '/' ? '/' : ''
+
+  const descriptorStart = startBracket.length + startModifier.length
+  const descriptor =
+    text[descriptorStart] === startBracket
+      ? startBracket
+      : text.slice().match(/^\w+/)?.[0]
+
+  // istanbul ignore if
+  if (!descriptor) {
+    throw new Error(
+      `Unexpected character: "${text[descriptorStart]}" - Expected key descriptor`,
+    )
+  }
+
+  const descriptorEnd = descriptorStart + descriptor.length
+  const endModifier =
+    descriptor !== startBracket && ['/', '>'].includes(text[descriptorEnd])
+      ? text[descriptorEnd]
+      : ''
+
+  const endBracket =
+    descriptor === startBracket ? '' : startBracket === '{' ? '}' : ']'
+
+  // istanbul ignore if
+  if (endBracket && text[descriptorEnd + endModifier.length] !== endBracket) {
+    throw new Error(
+      `Unexpected character: "${
+        text[descriptorEnd + endModifier.length]
+      }" - Expected closing bracket`,
+    )
+  }
+
+  const modifiers = {
+    consumedLength: [
+      startBracket,
+      startModifier,
+      descriptor,
+      endModifier,
+      endBracket,
+    ]
+      .map(c => c.length)
+      .reduce((a, b) => a + b),
+
+    releasePrevious: startModifier === '/',
+    releaseSelf: endModifier === '/',
+    press: endModifier === '>',
+  }
+
+  if (!startBracket || (startBracket === '{' && descriptor.length === 1)) {
+    return {
+      ...modifiers,
+      key: options.keyboardMap.find(k => k.key === descriptor) ?? {
+        key: descriptor,
+        code: 'Unknown',
+      },
+    }
+  } else if (startBracket === '{') {
+    return {
+      ...modifiers,
+      key: options.keyboardMap.find(
+        k => k.key?.toLowerCase() === descriptor.toLowerCase(),
+      ) ?? {key: descriptor, code: 'Unknown'},
+    }
+  } else {
+    return {
+      ...modifiers,
+      key: options.keyboardMap.find(
+        k => k.code?.toLowerCase() === descriptor.toLowerCase(),
+      ) ?? {key: 'Unknown', code: descriptor},
+    }
+  }
+}

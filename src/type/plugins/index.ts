@@ -1,5 +1,5 @@
-import { handleSelectall } from "type/specialCharCallbackMap/handleSelectall"
 import { behaviorPlugin } from "../types"
+import { isInstanceOfElement } from "../../utils"
 import * as arrowKeys from './arrow'
 import * as controlKeys from './control'
 import * as characterKeys from './character'
@@ -7,10 +7,12 @@ import * as functionalKeys from './functional'
 
 export const replaceBehavior: behaviorPlugin[] = [
     {
-        matches: (keyDef) => keyDef.key === 'selectall',
+        matches: (keyDef, element) => keyDef.key === 'selectall' && (
+            isInstanceOfElement(element, 'HTMLInputElement')
+            || isInstanceOfElement(element, 'HTMLTextAreaElement')
+        ),
         handle: (keyDef, element) => {
-            handleSelectall({currentElement: () => element})
-            return false
+            (element as HTMLInputElement).select()
         },
     },
 ]

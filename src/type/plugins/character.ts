@@ -45,15 +45,17 @@ export const keydownBehavior: behaviorPlugin[] = [
                 currentElement: () => element,
             })
 
-            if (isInputElement
-                && (element as HTMLInputElement).type === 'date'
-                && isValidDateValue(element, newValue)
-            ) {
-                fireEvent.change(element, {
-                    target: { value: newValue },
-                })
+            if (newValue !== oldValue) {
+                if(isInputElement
+                    && (element as HTMLInputElement).type === 'date'
+                    && isValidDateValue(element, newValue)
+                ) {
+                    fireEvent.change(element, {
+                        target: { value: newValue },
+                    })
+                }
+                fireChangeForInputTimeIfValid(() => element, oldValue, newTypeValue)
             }
-            fireChangeForInputTimeIfValid(() => element, oldValue, newTypeValue)
 
             if (newValue === oldValue) {
                 state.carryChar += keyDef.key

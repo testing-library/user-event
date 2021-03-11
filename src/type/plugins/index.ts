@@ -22,6 +22,7 @@ export const keydownBehavior: behaviorPlugin[] = [
 ]
 
 export const keypressBehavior: behaviorPlugin[] = [
+    ...functionalKeys.keypressBehavior,
     ...characterKeys.keypressBehavior,
 ]
 

@@ -116,4 +116,22 @@ export const keypressBehavior: behaviorPlugin[] = [
             })
         },
     },
+    {
+        matches: (keyDef, element) => keyDef.key === 'Enter' && (
+            isInstanceOfElement(element, 'HTMLTextAreaElement')
+            || isContentEditable(element)
+        ),
+        handle: (keyDef, element) => {
+            const { newValue, newSelectionStart } = calculateNewValue('\n', element as HTMLElement)
+
+            fireInputEventIfNeeded({
+                newValue,
+                newSelectionStart,
+                eventOverrides: {
+                    inputType: 'insertLineBreak',
+                },
+                currentElement: () => element,
+            })
+        },
+    },
 ]

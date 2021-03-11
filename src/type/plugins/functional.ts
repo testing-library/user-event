@@ -4,7 +4,7 @@
  */
 
 import { fireEvent } from "@testing-library/dom"
-import { getValue } from "../../utils"
+import { getValue, isClickableInput, isInstanceOfElement } from "../../utils"
 import { getKeyEventProps } from "../getKeyEventProps"
 import { fireInputEventIfNeeded } from "../shared"
 import { behaviorPlugin } from "../types"
@@ -58,6 +58,35 @@ export const keydownBehavior: behaviorPlugin[] = [
                 state.carryValue = getValue(element) === newValue ? undefined : newValue
             }
         }
+    },
+]
+
+export const keypressBehavior: behaviorPlugin[] = [
+    {
+        matches: (keyDef, element) => keyDef.key === 'Enter' && (isClickableInput(element) ||
+            // Links with href defined should handle Enter the same as a click
+            isInstanceOfElement(element, 'HTMLAnchorElement') &&
+                Boolean((element as HTMLAnchorElement).href)
+        ),
+        handle: (keyDef, element) => {
+            fireEvent.click(element)
+        },
+    },
+    {
+        matches: (keyDef, element) => {
+            return keyDef.key === 'Enter' && isInstanceOfElement(element, 'HTMLInputElement')
+        },
+        handle: (keyDef, element) => {
+            const form = (element as HTMLInputElement).form
+
+            if (form && (
+                form.querySelectorAll('input').length === 1 ||
+                form.querySelector('input[type="submit"]') ||
+                form.querySelector('button[type="submit"]')
+            )){
+                fireEvent.submit(form)
+            }
+        },
     },
 ]
 

@@ -127,7 +127,7 @@ async function modernTypeImplementation(
   if (!releasePrevious) {
     const unpreventedKeypress = keydown(keyDef, getCurrentElement, options, state)
 
-    if (unpreventedKeypress && keyDef.key?.length === 1 || keyDef.key === 'Enter') {
+    if (unpreventedKeypress && (keyDef.key?.length === 1 || keyDef.key === 'Enter')) {
       keypress(keyDef, getCurrentElement, options, state)
     }
 

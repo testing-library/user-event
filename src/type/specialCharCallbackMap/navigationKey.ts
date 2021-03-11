@@ -47,7 +47,7 @@ export function navigationKey(key: keyof typeof keys): callback {
   }
 }
 
-function getSelectionRange(element: HTMLInputElement, key: string) {
+export function getSelectionRange(element: HTMLInputElement, key: string) {
   const {selectionStart, selectionEnd} = element
 
   // istanbul ignore if

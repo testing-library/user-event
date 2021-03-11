@@ -1,7 +1,9 @@
 import { handleSelectall } from "type/specialCharCallbackMap/handleSelectall"
 import { behaviorPlugin } from "../types"
-import * as functionalKeys from './functional'
+import * as arrowKeys from './arrow'
+import * as controlKeys from './control'
 import * as characterKeys from './character'
+import * as functionalKeys from './functional'
 
 export const replaceKeydownBehavior: behaviorPlugin[] = [
     {
@@ -18,6 +20,8 @@ export const preKeydownBehavior: behaviorPlugin[] = [
 ]
 
 export const keydownBehavior: behaviorPlugin[] = [
+    ...arrowKeys.keydownBehavior,
+    ...controlKeys.keydownBehavior,
     ...functionalKeys.keydownBehavior,
 ]
 

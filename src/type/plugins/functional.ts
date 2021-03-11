@@ -73,9 +73,7 @@ export const keypressBehavior: behaviorPlugin[] = [
         },
     },
     {
-        matches: (keyDef, element) => {
-            return keyDef.key === 'Enter' && isInstanceOfElement(element, 'HTMLInputElement')
-        },
+        matches: (keyDef, element) => keyDef.key === 'Enter' && isInstanceOfElement(element, 'HTMLInputElement'),
         handle: (keyDef, element) => {
             const form = (element as HTMLInputElement).form
 

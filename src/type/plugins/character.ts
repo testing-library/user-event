@@ -3,38 +3,50 @@
  */
 
 import { fireEvent } from "@testing-library/dom";
-import { getKeyEventProps } from "type/getKeyEventProps";
 import { fireChangeForInputTimeIfValid, fireInputEventIfNeeded } from "type/shared";
 import { behaviorPlugin } from "type/types";
 import { buildTimeValue, calculateNewValue, getValue, isContentEditable, isInstanceOfElement, isValidDateValue, isValidInputTimeValue } from "utils";
 
-export const keydownBehavior: behaviorPlugin[] = [
+export const keypressBehavior: behaviorPlugin[] = [
     {
-        matches: (keyDef, element) => keyDef.key?.length === 1 && (
-            isInstanceOfElement(element, 'HTMLInputElement')
-            || isInstanceOfElement(element, 'HTMLTextAreaElement')
-            || isContentEditable(element)
-        ),
+        matches: (keyDef, element) => keyDef.key?.length === 1 && isInstanceOfElement(element, 'HTMLInputElement') && (element as HTMLInputElement).type === 'time',
         handle: (keyDef, element, options, state) => {
-            const keyPressResult = fireEvent.keyPress(element, getKeyEventProps(keyDef, state))
-            if (!keyPressResult) {
-                return
+            let newEntry = (keyDef.key as string)
+
+            const textToBeTyped = (state.carryValue ?? '') + newEntry
+            const timeNewEntry = buildTimeValue(textToBeTyped)
+            if (isValidInputTimeValue(element, timeNewEntry)) {
+                newEntry = timeNewEntry
             }
 
-            const isInputElement = isInstanceOfElement(element, 'HTMLInputElement')
+            const { newValue, newSelectionStart } = calculateNewValue(newEntry, element as HTMLElement)
 
-            const oldValue = getValue(element)
+            const { prevValue } = fireInputEventIfNeeded({
+                newValue,
+                newSelectionStart,
+                eventOverrides: {
+                    data: keyDef.key,
+                    inputType: 'insertText',
+                },
+                currentElement: () => element,
+            })
 
-            let newTypeValue = (state.carryValue ?? '') + (keyDef.key as string)
+            fireChangeForInputTimeIfValid(() => element, prevValue, timeNewEntry)
 
-            if (isInputElement && (element as HTMLInputElement).type === 'time') {
-                const timeNewEntry = buildTimeValue(newTypeValue)
-                if (isValidInputTimeValue(element, timeNewEntry)) {
-                    newTypeValue = timeNewEntry
-                }
+            state.carryValue = textToBeTyped
+        },
+    },
+    {
+        matches: (keyDef, element) => keyDef.key?.length === 1 && isInstanceOfElement(element, 'HTMLInputElement') && (element as HTMLInputElement).type === 'date',
+        handle: (keyDef, element, options, state) => {
+            let newEntry = (keyDef.key as string)
+
+            const textToBeTyped = (state.carryValue ?? '') + newEntry
+            if (isValidDateValue(element, textToBeTyped)) {
+                newEntry = textToBeTyped
             }
 
-            const { newValue, newSelectionStart } = calculateNewValue(newTypeValue, element as HTMLElement)
+            const { newValue, newSelectionStart } = calculateNewValue(newEntry, element as HTMLElement)
 
             fireInputEventIfNeeded({
                 newValue,
@@ -46,20 +58,35 @@ export const keydownBehavior: behaviorPlugin[] = [
                 currentElement: () => element,
             })
 
-            if (isInputElement && (element as HTMLInputElement).type === 'date') {
-                if (newValue === oldValue) {
-                    state.carryValue = newTypeValue
-                } else if (isValidDateValue(element, newValue)) {
-                    fireEvent.change(element, {
-                        target: { value: newValue },
-                    })
-                }
+            if (isValidDateValue(element, textToBeTyped)) {
+                fireEvent.change(element, {
+                    target: { value: textToBeTyped },
+                })
+            }
+
+            state.carryValue = textToBeTyped
+        },
+    },
+    {
+        matches: (keyDef, element) => keyDef.key?.length === 1 && isInstanceOfElement(element, 'HTMLInputElement') && (element as HTMLInputElement).type === 'number',
+        handle: (keyDef, element, options, state) => {
+            if (!/[\d.\-e]/.test(keyDef.key as string)) {
                 return
             }
 
-            if (isInputElement && (element as HTMLInputElement).type === 'time') {
-                fireChangeForInputTimeIfValid(() => element, oldValue, newTypeValue)
-            }
+            const oldValue = state.carryValue ?? getValue(element) ?? ''
+
+            const { newValue, newSelectionStart } = calculateNewValue(keyDef.key as string, element as HTMLElement, oldValue)
+
+            fireInputEventIfNeeded({
+                newValue,
+                newSelectionStart,
+                eventOverrides: {
+                    data: keyDef.key,
+                    inputType: 'insertText',
+                },
+                currentElement: () => element,
+            })
 
             const appliedValue = getValue(element)
             if (appliedValue === newValue) {
@@ -68,5 +95,25 @@ export const keydownBehavior: behaviorPlugin[] = [
                 state.carryValue = newValue
             }
         },
-    }
+    },
+    {
+        matches: (keyDef, element) => keyDef.key?.length === 1 && (
+            isInstanceOfElement(element, 'HTMLInputElement')
+            || isInstanceOfElement(element, 'HTMLTextAreaElement')
+            || isContentEditable(element)
+        ),
+        handle: (keyDef, element) => {
+            const { newValue, newSelectionStart } = calculateNewValue(keyDef.key as string, element as HTMLElement)
+
+            fireInputEventIfNeeded({
+                newValue,
+                newSelectionStart,
+                eventOverrides: {
+                    data: keyDef.key,
+                    inputType: 'insertText',
+                },
+                currentElement: () => element,
+            })
+        },
+    },
 ]

@@ -6,12 +6,13 @@ import {isValidInputTimeValue} from './isValidInputTimeValue'
 export function calculateNewValue(
   newEntry: string,
   element: HTMLElement,
+  value = getValue(element),
+  selectionRange = getSelectionRange(element),
 ): {
   newValue: string
   newSelectionStart: number
 } {
-  const {selectionStart, selectionEnd} = getSelectionRange(element)
-  const value = getValue(element)
+  const {selectionStart, selectionEnd} = selectionRange
 
   // can't use .maxLength property because of a jsdom bug:
   // https://github.com/jsdom/jsdom/issues/2927

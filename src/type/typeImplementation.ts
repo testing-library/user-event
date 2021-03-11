@@ -125,7 +125,11 @@ async function modernTypeImplementation(
   }
 
   if (!releasePrevious) {
-    keydown(keyDef, getCurrentElement, options, state)
+    const unpreventedKeypress = keydown(keyDef, getCurrentElement, options, state)
+
+    if (unpreventedKeypress && keyDef.key?.length === 1 || keyDef.key === 'Enter') {
+      keypress(keyDef, getCurrentElement, options, state)
+    }
 
     if (releaseSelf) {
       keyup(keyDef, getCurrentElement, options, state)
@@ -157,7 +161,7 @@ function keydown(
 
   const replace = applyPlugins(plugins.replaceKeydownBehavior, keyDef, element, options, state)
   if (replace) {
-    return
+    return false
   }
 
   applyPlugins(plugins.preKeydownBehavior, keyDef, element, options, state)
@@ -170,6 +174,23 @@ function keydown(
     // all default behavior like keypress/submit etc is applied to the currentElement
     applyPlugins(plugins.keydownBehavior, keyDef, getCurrentElement(), options, state)
   }
+
+  return unpreventedDefault
+}
+
+function keypress(
+  keyDef: keyboardKey,
+  getCurrentElement: () => Element,
+  options: modernTypeOptions,
+  state: keyboardState
+) {
+  const element = getCurrentElement()
+
+  const unpreventedDefault = fireEvent.keyPress(element, getKeyEventProps(keyDef, state))
+
+  if (unpreventedDefault) {
+    applyPlugins(plugins.keypressBehavior, keyDef, getCurrentElement(), options, state)
+  }
 }
 
 function keyup(
@@ -180,7 +201,13 @@ function keyup(
 ) {
   const element = getCurrentElement()
 
-  fireEvent.keyUp(element, getKeyEventProps(keyDef, state))
+  applyPlugins(plugins.preKeyupBehavior, keyDef, element, options, state)
+
+  const unpreventedDefault = fireEvent.keyUp(element, getKeyEventProps(keyDef, state))
+
+  if (unpreventedDefault) {
+    applyPlugins(plugins.keyupBehavior, keyDef, getCurrentElement(), options, state)
+  }
 
   state.pressed = state.pressed.filter(k => k === keyDef)
 

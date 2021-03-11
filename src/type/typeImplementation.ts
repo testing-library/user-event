@@ -119,20 +119,21 @@ async function modernTypeImplementation(
   const getCurrentElement = () => getActiveElement(document) ?? document.body
   const {keyDef, consumedLength, releasePrevious, releaseSelf} = getNextKeyDef(text, options)
 
-  if (releasePrevious || state.pressed.includes(keyDef)) {
-    // this should probably throw an error when trying to release a key that is not pressed
-    keyup(keyDef, getCurrentElement, options, state)
+  const pressed = state.pressed.find(p => p.keyDef === keyDef)
+
+  if (pressed) {
+    keyup(keyDef, getCurrentElement, options, state, pressed.unpreventedDefault)
   }
 
   if (!releasePrevious) {
-    const unpreventedKeypress = keydown(keyDef, getCurrentElement, options, state)
+    const unpreventedDefault = keydown(keyDef, getCurrentElement, options, state)
 
-    if (unpreventedKeypress && (keyDef.key?.length === 1 || keyDef.key === 'Enter')) {
+    if (unpreventedDefault && (keyDef.key?.length === 1 || keyDef.key === 'Enter')) {
       keypress(keyDef, getCurrentElement, options, state)
     }
 
     if (releaseSelf) {
-      keyup(keyDef, getCurrentElement, options, state)
+      keyup(keyDef, getCurrentElement, options, state, unpreventedDefault)
     }
   }
 
@@ -168,7 +169,7 @@ function keydown(
 
   const unpreventedDefault = fireEvent.keyDown(element, getKeyEventProps(keyDef, state))
 
-  state.pressed.push(keyDef)
+  state.pressed.push({keyDef, unpreventedDefault})
 
   if (unpreventedDefault) {
     // all default behavior like keypress/submit etc is applied to the currentElement
@@ -197,7 +198,8 @@ function keyup(
   keyDef: keyboardKey,
   getCurrentElement: () => Element,
   options: modernTypeOptions,
-  state: keyboardState
+  state: keyboardState,
+  unprevented: boolean,
 ) {
   const element = getCurrentElement()
 
@@ -205,11 +207,11 @@ function keyup(
 
   const unpreventedDefault = fireEvent.keyUp(element, getKeyEventProps(keyDef, state))
 
-  if (unpreventedDefault) {
+  if (unprevented && unpreventedDefault) {
     applyPlugins(plugins.keyupBehavior, keyDef, getCurrentElement(), options, state)
   }
 
-  state.pressed = state.pressed.filter(k => k === keyDef)
+  state.pressed = state.pressed.filter(k => k.keyDef !== keyDef)
 
   applyPlugins(plugins.postKeyupBehavior, keyDef, element, options, state)
 }

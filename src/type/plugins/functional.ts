@@ -103,6 +103,15 @@ export const preKeyupBehavior: behaviorPlugin[] = [
     })),
 ]
 
+export const keyupBehavior: behaviorPlugin[] = [
+    {
+        matches: (keyDef, element) => keyDef.key === ' ' && isClickableInput(element),
+        handle: (keyDef, element) => {
+            fireEvent.click(element)
+        }
+    },
+]
+
 export const postKeyupBehavior: behaviorPlugin[] = [
     // AltGraph produces an extra keyup for Control
     // The modifier does not change

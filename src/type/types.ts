@@ -2,7 +2,7 @@ export type keyboardState = {
   /*
       All keys that have been pressed and not been lifted up yet.
     */
-  pressed: keyboardKey[]
+  pressed: {keyDef: keyboardKey, unpreventedDefault: boolean}[]
 
   /*
       Active modifiers

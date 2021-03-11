@@ -11,8 +11,8 @@ export const replaceKeydownBehavior: behaviorPlugin[] = [
         handle: (keyDef, element) => {
             handleSelectall({currentElement: () => element})
             return false
-        }
-    }
+        },
+    },
 ]
 
 export const preKeydownBehavior: behaviorPlugin[] = [
@@ -35,6 +35,7 @@ export const preKeyupBehavior: behaviorPlugin[] = [
 ]
 
 export const keyupBehavior: behaviorPlugin[] = [
+    ...functionalKeys.keyupBehavior,
 ]
 
 export const postKeyupBehavior: behaviorPlugin[] = [

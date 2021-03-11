@@ -72,6 +72,12 @@ export async function typeImplementation(
     )
   }
 
+  // previous implementation did wait before the first character
+  // this probably can be removed
+  if (delay > 0) {
+    await wait(delay)
+  }
+
   await modernTypeImplementation(
     element.ownerDocument,
     text,

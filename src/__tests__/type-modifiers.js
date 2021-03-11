@@ -353,10 +353,11 @@ test('{shift}a{/shift}', () => {
   `)
 })
 
-test('{capslock}a{/capslock}', () => {
+test('{capslock}a{capslock}', () => {
   const {element, getEventSnapshot} = setup('<input />')
 
-  userEvent.type(element, '{capslock}a{/capslock}')
+  // The old behavior to treat {/capslock} like {capslock} makes no sense
+  userEvent.type(element, '{capslock}a{capslock}')
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value="a"]

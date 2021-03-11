@@ -150,6 +150,7 @@ function keydown(
 
   // clear carried characters when focus is moved
   if (element !== state.activeElement) {
+    state.carryValue = undefined
     state.carryChar = ''
   }
   state.activeElement = element

@@ -26,6 +26,12 @@ export type keyboardState = {
       If the last input char is '.', '-' or 'e',
       the IDL value attribute does not reflect the input value.
     */
+  carryValue?: string
+
+  /*
+      Carry over characters to following key handlers.
+      E.g. ^1
+    */
   carryChar: string
 }
 

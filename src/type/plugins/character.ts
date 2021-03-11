@@ -23,8 +23,9 @@ export const keydownBehavior: behaviorPlugin[] = [
 
             const isInputElement = isInstanceOfElement(element, 'HTMLInputElement')
 
-            const oldValue = getValue(element) ?? ''
-            let newTypeValue = state.carryChar + (keyDef.key as string)
+            const oldValue = getValue(element)
+
+            let newTypeValue = (state.carryValue ?? '') + (keyDef.key as string)
 
             if (isInputElement && (element as HTMLInputElement).type === 'time') {
                 const timeNewEntry = buildTimeValue(newTypeValue)
@@ -45,22 +46,26 @@ export const keydownBehavior: behaviorPlugin[] = [
                 currentElement: () => element,
             })
 
-            if (newValue !== oldValue) {
-                if(isInputElement
-                    && (element as HTMLInputElement).type === 'date'
-                    && isValidDateValue(element, newValue)
-                ) {
+            if (isInputElement && (element as HTMLInputElement).type === 'date') {
+                if (newValue === oldValue) {
+                    state.carryValue = newTypeValue
+                } else if (isValidDateValue(element, newValue)) {
                     fireEvent.change(element, {
                         target: { value: newValue },
                     })
                 }
+                return
+            }
+
+            if (isInputElement && (element as HTMLInputElement).type === 'time') {
                 fireChangeForInputTimeIfValid(() => element, oldValue, newTypeValue)
             }
 
-            if (newValue === oldValue) {
-                state.carryChar += keyDef.key
+            const appliedValue = getValue(element)
+            if (appliedValue === newValue) {
+                state.carryValue = undefined
             } else {
-                state.carryChar = ''
+                state.carryValue = newValue
             }
         },
     }

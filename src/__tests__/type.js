@@ -792,9 +792,7 @@ test('typing an invalid input value', () => {
   const {element} = setup('<input type="number" />')
   userEvent.type(element, '3-3')
 
-  // TODO: fix this bug
-  // THIS IS A BUG! It should be expect(element.value).toBe('')
-  expect(element).toHaveValue(-3)
+  expect(element).toHaveValue(null)
 
   // THIS IS A LIMITATION OF THE BROWSER
   // It is impossible to programmatically set an input

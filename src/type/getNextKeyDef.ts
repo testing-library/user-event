@@ -13,20 +13,20 @@ export function getNextKeyDef(
   text: string,
   options: modernTypeOptions,
 ): {
-  key: keyboardKey
+  keyDef: keyboardKey
   consumedLength: number
   releasePrevious: boolean
   releaseSelf: boolean
-  press: boolean
 } {
   const startBracket = ['{', '['].includes(text[0]) ? text[0] : ''
   const startModifier = text[1] === '/' ? '/' : ''
 
   const descriptorStart = startBracket.length + startModifier.length
-  const descriptor =
-    text[descriptorStart] === startBracket
+  const descriptor = startBracket
+    ? text[descriptorStart] === startBracket
       ? startBracket
       : text.slice().match(/^\w+/)?.[0]
+    : text[descriptorStart]
 
   // istanbul ignore if
   if (!descriptor) {
@@ -42,7 +42,7 @@ export function getNextKeyDef(
       : ''
 
   const endBracket =
-    descriptor === startBracket ? '' : startBracket === '{' ? '}' : ']'
+    (!startBracket || descriptor === startBracket) ? '' : startBracket === '{' ? '}' : ']'
 
   // istanbul ignore if
   if (endBracket && text[descriptorEnd + endModifier.length] !== endBracket) {
@@ -65,31 +65,39 @@ export function getNextKeyDef(
       .reduce((a, b) => a + b),
 
     releasePrevious: startModifier === '/',
-    releaseSelf: endModifier === '/',
-    press: endModifier === '>',
+    releaseSelf: hasReleaseSelf(startBracket, descriptor, endModifier),
   }
 
   if (!startBracket || (startBracket === '{' && descriptor.length === 1)) {
     return {
       ...modifiers,
-      key: options.keyboardMap.find(k => k.key === descriptor) ?? {
-        key: descriptor,
-        code: 'Unknown',
-      },
+      keyDef: options.keyboardMap.find(
+        k => k.key === descriptor,
+      ) ?? { key: descriptor, code: 'Unknown'},
     }
   } else if (startBracket === '{') {
     return {
       ...modifiers,
-      key: options.keyboardMap.find(
+      keyDef: options.keyboardMap.find(
         k => k.key?.toLowerCase() === descriptor.toLowerCase(),
       ) ?? {key: descriptor, code: 'Unknown'},
     }
   } else {
     return {
       ...modifiers,
-      key: options.keyboardMap.find(
+      keyDef: options.keyboardMap.find(
         k => k.code?.toLowerCase() === descriptor.toLowerCase(),
       ) ?? {key: 'Unknown', code: descriptor},
     }
   }
+}
+
+function hasReleaseSelf(startBracket: string, descriptor: string, endModifier: string) {
+  if (endModifier === '/' || !startBracket) {
+    return true
+  }
+  if (startBracket === '{' && ['alt', 'control', 'meta', 'shift'].includes(descriptor.toLowerCase())) {
+    return false
+  }
+  return endModifier === '>'
 }

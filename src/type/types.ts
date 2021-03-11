@@ -19,14 +19,14 @@ export type keyboardState = {
       The element the keyboard input is performed on.
       Some behavior might differ if the activeElement changes between corresponding keyboard events.
     */
-  activeElement: HTMLElement | null
+  activeElement: Element | null
 
   /*
       For HTMLInputElements type='number':
       If the last input char is '.', '-' or 'e',
       the IDL value attribute does not reflect the input value.
     */
-  carryChar?: string
+  carryChar: string
 }
 
 export type modernTypeOptions = {
@@ -58,4 +58,9 @@ export interface keyboardKey {
   altGr?: boolean
   /* Does the character in `key` require/imply a shiftKey to be pressed? */
   shift?: boolean
+}
+
+export interface behaviorPlugin {
+  matches: (keyDef: keyboardKey, element: Element, options: modernTypeOptions, state: keyboardState) => boolean,
+  handle: (keyDef: keyboardKey, element: Element, options: modernTypeOptions, state: keyboardState) => void,
 }

@@ -1,3 +1,4 @@
+import { fireEvent } from '@testing-library/dom'
 // TODO: wrap in asyncWrapper
 import {
   setSelectionRangeIfNecessary,
@@ -5,13 +6,13 @@ import {
   getValue,
   isContentEditable,
   getActiveElement,
-  isDisabled,
 } from '../utils'
 import {click} from '../click'
-import {modifierCallbackMap} from './modifierCallbackMap'
-import {specialCharCallbackMap} from './specialCharCallbackMap'
-import {typeCharacter} from './typeCharacter'
-import {callback, callbackPayload} from './callbacks'
+import { getNextKeyDef } from './getNextKeyDef'
+import type { modernTypeOptions, keyboardState, behaviorPlugin, keyboardKey } from './types'
+import * as plugins from './plugins'
+import { getKeyEventProps } from './getKeyEventProps'
+import { defaultKeyMap } from './keyMap'
 
 export interface typeOptions {
   delay?: number
@@ -71,125 +72,121 @@ export async function typeImplementation(
     )
   }
 
-  const eventCallbacks = queueCallbacks()
-  await runCallbacks(eventCallbacks)
-
-  function queueCallbacks() {
-    const callbacks = []
-    let remainingString = text
-
-    while (remainingString) {
-      const {
-        callback: cb,
-        remainingString: newRemainingString,
-      } = getNextCallback(remainingString, skipAutoClose)
-
-      callbacks.push(cb)
-      remainingString = newRemainingString
-    }
-
-    return callbacks
-  }
-
-  async function runCallbacks(callbacks: callback[]) {
-    const eventOverrides = {}
-    let prevWasMinus, prevWasPeriod, prevValue, typedValue
-    for (const cb of callbacks) {
-      if (delay > 0) await wait(delay)
-      if (!isDisabled(currentElement())) {
-        const returnValue: Partial<callbackPayload> | undefined = cb({
-          currentElement,
-          prevWasMinus,
-          prevWasPeriod,
-          prevValue,
-          eventOverrides,
-          typedValue,
-        })
-        Object.assign(eventOverrides, returnValue?.eventOverrides)
-        prevWasMinus = returnValue?.prevWasMinus
-        prevWasPeriod = returnValue?.prevWasPeriod
-        prevValue = returnValue?.prevValue
-        typedValue = returnValue?.typedValue
-      }
-    }
-  }
+  await modernTypeImplementation(
+    element.ownerDocument,
+    text,
+    {
+      delay,
+      autoModify: false,
+      keyboardMap: defaultKeyMap,
+      skipAutoClose
+    },
+    createKeyboardState(),
+  ).catch(e => console.error(e))
 }
 
 function wait(time?: number) {
   return new Promise<void>(resolve => setTimeout(() => resolve(), time))
 }
 
-type callbackPrep =
-  | {
-      callback: callback
-      remainingString: string
+function createKeyboardState(): keyboardState {
+  return {
+    activeElement: null,
+    pressed: [],
+    carryChar: '',
+    modifiers: {
+      alt: false,
+      caps: false,
+      ctrl: false,
+      meta: false,
+      shift: false,
+    },
+  }
+}
+
+async function modernTypeImplementation(
+  document: Document,
+  text: string,
+  options: modernTypeOptions,
+  state: keyboardState,
+): Promise<void> {
+  const currentElement = () => getActiveElement(document) ?? document.body
+  const {keyDef, consumedLength, releasePrevious, releaseSelf} = getNextKeyDef(text, options)
+
+  if (releasePrevious || state.pressed.includes(keyDef)) {
+    // this should probably throw an error when trying to release a key that is not pressed
+    keyup(keyDef, currentElement(), options, state)
+  }
+
+  if (!releasePrevious) {
+    keydown(keyDef, currentElement(), options, state)
+
+    if (releaseSelf) {
+      keyup(keyDef, currentElement(), options, state)
     }
-  | undefined
-
-function getNextCallback(
-  remainingString: string,
-  skipAutoClose: boolean,
-): NonNullable<callbackPrep> {
-  const modifierCallback = getModifierCallback(remainingString, skipAutoClose)
-  if (modifierCallback) {
-    return modifierCallback
   }
 
-  const specialCharCallback = getSpecialCharCallback(remainingString)
-  if (specialCharCallback) {
-    return specialCharCallback
-  }
-
-  return getTypeCallback(remainingString)
-}
-
-function getModifierCallback(
-  remainingString: string,
-  skipAutoClose: boolean,
-): callbackPrep {
-  const modifierKey = Object.keys(modifierCallbackMap).find(key =>
-    remainingString.startsWith(key),
-  )
-  if (!modifierKey) {
-    return undefined
-  }
-  const cb =
-    modifierCallbackMap[modifierKey as keyof typeof modifierCallbackMap]
-
-  // if this modifier has an associated "close" callback and the developer
-  // doesn't close it themselves, then we close it for them automatically
-  // Effectively if they send in: '{alt}a' then we type: '{alt}a{/alt}'
-  if (
-    !skipAutoClose &&
-    cb.closeName &&
-    !remainingString.includes(cb.closeName)
-  ) {
-    remainingString += cb.closeName
-  }
-  remainingString = remainingString.slice(modifierKey.length)
-  return {
-    callback: cb,
-    remainingString,
+  if (text.length > consumedLength) {
+    if (options.delay > 0) {
+      await wait(options.delay)
+    }
+    await modernTypeImplementation(document, text.slice(consumedLength), options, state)
   }
 }
 
-function getSpecialCharCallback(remainingString: string): callbackPrep {
-  const specialChar = Object.keys(specialCharCallbackMap).find(key =>
-    remainingString.startsWith(key),
-  )
-  if (!specialChar) {
-    return undefined
+function keydown(
+  keyDef: keyboardKey,
+  element: Element,
+  options: modernTypeOptions,
+  state: keyboardState
+) {
+  // clear carried characters when focus is moved
+  if (element !== state.activeElement) {
+    state.carryChar = ''
   }
-  return {
-    callback: specialCharCallbackMap[specialChar],
-    remainingString: remainingString.slice(specialChar.length),
+  state.activeElement = element
+
+  const replace = applyPlugins(plugins.replaceKeydownBehavior, keyDef, element, options, state)
+  if (replace) {
+    return
+  }
+
+  applyPlugins(plugins.preKeydownBehavior, keyDef, element, options, state)
+
+  const unpreventedDefault = fireEvent.keyDown(element, getKeyEventProps(keyDef, state))
+
+  state.pressed.push(keyDef)
+
+  if (unpreventedDefault) {
+    applyPlugins(plugins.keydownBehavior, keyDef, element, options, state)
   }
 }
 
-function getTypeCallback(remainingString: string): NonNullable<callbackPrep> {
-  const character = remainingString[0]
-  return {
-    callback: (context: callbackPayload) => typeCharacter(character, context),
-    remainingString: remainingString.slice(1),
+function keyup(
+  keyDef: keyboardKey,
+  element: Element,
+  options: modernTypeOptions,
+  state: keyboardState
+) {
+  fireEvent.keyUp(element, getKeyEventProps(keyDef, state))
+
+  state.pressed = state.pressed.filter(k => k === keyDef)
+
+  applyPlugins(plugins.postKeyupBehavior, keyDef, element, options, state)
+}
+
+function applyPlugins(
+  pluginCollection: behaviorPlugin[],
+  keyDef: keyboardKey,
+  element: Element,
+  options: modernTypeOptions,
+  state: keyboardState,
+): boolean {
+  const plugin = pluginCollection.find(p => p.matches(keyDef, element, options, state))
+
+  if (plugin) {
+    plugin.handle(keyDef, element, options, state)
   }
+
+  return !!plugin
 }

@@ -5,6 +5,8 @@
 
 import { behaviorPlugin } from "../types";
 import { getValue, isContentEditable, isInstanceOfElement, setSelectionRangeIfNecessary } from "../../utils";
+import { fireInputEventIfNeeded } from "../shared";
+import { calculateNewDeleteValue } from "./control/calculateNewDeleteValue";
 
 export const keydownBehavior: behaviorPlugin[] = [
     {
@@ -21,6 +23,19 @@ export const keydownBehavior: behaviorPlugin[] = [
                 const newPos = getValue(element)?.length ?? 0
                 setSelectionRangeIfNecessary(element, newPos, newPos)
             }
-        }
+        },
+    },
+    {
+        matches: (keyDef) => keyDef.key === 'Delete',
+        handle: (keDef, element) => {
+            fireInputEventIfNeeded({
+                ...calculateNewDeleteValue(element),
+                eventOverrides: {
+                    inputType: 'deleteContentForward',
+                },
+                currentElement: () => element,
+            })
+
+        },
     },
 ]

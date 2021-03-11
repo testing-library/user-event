@@ -227,12 +227,12 @@ The following special character strings are supported:
 Examples of usage with a selection range and `{space}` on button:
 
 ```jsx
-import React from "react";
-import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import React from 'react';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
-describe("Special characters examples", () => {
-  test("delete characters within the selectedRange", () => {
+describe('Special characters examples', () => {
+  test('delete characters within the selectedRange', () => {
     render(
       <div>
         <label htmlFor="my-input">Example:</label>
@@ -241,18 +241,18 @@ describe("Special characters examples", () => {
     );
     const input = screen.getByLabelText(/example/i);
     input.setSelectionRange(10, 13);
-    userEvent.type(input, "{backspace}good");
+    userEvent.type(input, '{backspace}good');
 
-    expect(input).toHaveValue("This is a good example");
+    expect(input).toHaveValue('This is a good example;');
   });
 
-  test("emit click on button for {space}", () => {
+  test('emit click on button for {space}', () => {
     const handleClick = jest.fn();
     const { getByRole } = render(<button onClick={handleClick}>foo</button>);
-    const button = getByRole("button");
+    const button = getByRole('button');
 
     button.focus();
-    userEvent.type(button, "{space}", { skipClick: true });
+    userEvent.type(button, '{space}', { skipClick: true });
 
     expect(handleClick).toHaveBeenCalledTimes(1);
   });

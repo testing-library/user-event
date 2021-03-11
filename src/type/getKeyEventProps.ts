@@ -13,6 +13,6 @@ export function getKeyEventProps(
         shiftKey: state.modifiers.shift,
 
         // deprecated
-        keyCode: keyDef.keyCode ?? keyDef.key?.charCodeAt(0),
+        keyCode: keyDef.keyCode ?? (keyDef.key?.length === 1 ? keyDef.key.charCodeAt(0) : undefined),
     }
 }

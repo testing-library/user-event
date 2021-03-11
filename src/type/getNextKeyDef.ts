@@ -74,10 +74,11 @@ export function getNextKeyDef(
       ) ?? { key: descriptor, code: 'Unknown'},
     }
   } else if (startBracket === '{') {
+    const key = mapLegacyKey(descriptor)
     return {
       ...modifiers,
       keyDef: options.keyboardMap.find(
-        k => k.key?.toLowerCase() === descriptor.toLowerCase(),
+        k => k.key?.toLowerCase() === key.toLowerCase(),
       ) ?? {key: descriptor, code: 'Unknown'},
     }
   } else {
@@ -94,8 +95,17 @@ function hasReleaseSelf(startBracket: string, descriptor: string, endModifier: s
   if (endModifier === '/' || !startBracket) {
     return true
   }
-  if (startBracket === '{' && ['alt', 'control', 'meta', 'shift'].includes(descriptor.toLowerCase())) {
+  if (startBracket === '{' && ['alt', 'ctrl', 'meta', 'shift'].includes(descriptor.toLowerCase())) {
     return false
   }
   return endModifier !== '>'
+}
+
+function mapLegacyKey(descriptor: string) {
+  return {
+    'ctrl': 'Control',
+    'del': 'Delete',
+    'esc': 'Escape',
+    'space': ' ',
+  }[descriptor] ?? descriptor
 }

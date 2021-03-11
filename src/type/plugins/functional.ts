@@ -12,10 +12,9 @@ import { calculateNewBackspaceValue } from "./functional/calculateBackspaceValue
 
 const modifierKeys = {
     'Alt': 'alt',
-    'CapsLock': 'caps',
     'Control': 'ctrl',
     'Shift': 'shift',
-    'OS': 'meta',
+    'Meta': 'meta',
 } as const
 
 export const preKeydownBehavior: behaviorPlugin[] = [
@@ -40,6 +39,12 @@ export const preKeydownBehavior: behaviorPlugin[] = [
 ]
 
 export const keydownBehavior: behaviorPlugin[] = [
+    {
+        matches: (keyDef) => keyDef.key === 'CapsLock',
+        handle: (keyDef, element, options, state) => {
+            state.modifiers.caps = !state.modifiers.caps
+        }
+    },
     {
         matches: (keyDef) => keyDef.key === 'Backspace',
         handle: (keyDef, element, options, state) => {

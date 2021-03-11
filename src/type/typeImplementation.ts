@@ -147,6 +147,10 @@ async function modernTypeImplementation(
       await wait(options.delay)
     }
     await modernTypeImplementation(document, text.slice(consumedLength), options, state)
+  } else if(!options.skipAutoClose) {
+    for (const k of state.pressed) {
+      keyup(k.keyDef, getCurrentElement, options, state, k.unpreventedDefault)
+    }
   }
 }
 

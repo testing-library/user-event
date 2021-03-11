@@ -5,7 +5,7 @@ import * as controlKeys from './control'
 import * as characterKeys from './character'
 import * as functionalKeys from './functional'
 
-export const replaceKeydownBehavior: behaviorPlugin[] = [
+export const replaceBehavior: behaviorPlugin[] = [
     {
         matches: (keyDef) => keyDef.key === 'selectall',
         handle: (keyDef, element) => {

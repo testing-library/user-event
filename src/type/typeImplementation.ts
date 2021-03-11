@@ -119,22 +119,27 @@ async function modernTypeImplementation(
   const getCurrentElement = () => getActiveElement(document) ?? document.body
   const {keyDef, consumedLength, releasePrevious, releaseSelf} = getNextKeyDef(text, options)
 
-  const pressed = state.pressed.find(p => p.keyDef === keyDef)
+  const replace = applyPlugins(plugins.replaceBehavior, keyDef, getCurrentElement(), options, state)
+  if (!replace) {
 
-  if (pressed) {
-    keyup(keyDef, getCurrentElement, options, state, pressed.unpreventedDefault)
-  }
+    const pressed = state.pressed.find(p => p.keyDef === keyDef)
 
-  if (!releasePrevious) {
-    const unpreventedDefault = keydown(keyDef, getCurrentElement, options, state)
-
-    if (unpreventedDefault && (keyDef.key?.length === 1 || keyDef.key === 'Enter')) {
-      keypress(keyDef, getCurrentElement, options, state)
+    if (pressed) {
+      keyup(keyDef, getCurrentElement, options, state, pressed.unpreventedDefault)
     }
 
-    if (releaseSelf) {
-      keyup(keyDef, getCurrentElement, options, state, unpreventedDefault)
+    if (!releasePrevious) {
+      const unpreventedDefault = keydown(keyDef, getCurrentElement, options, state)
+
+      if (unpreventedDefault && (keyDef.key?.length === 1 || keyDef.key === 'Enter')) {
+        keypress(keyDef, getCurrentElement, options, state)
+      }
+
+      if (releaseSelf) {
+        keyup(keyDef, getCurrentElement, options, state, unpreventedDefault)
+      }
     }
+
   }
 
   if (text.length > consumedLength) {
@@ -159,11 +164,6 @@ function keydown(
     state.carryChar = ''
   }
   state.activeElement = element
-
-  const replace = applyPlugins(plugins.replaceKeydownBehavior, keyDef, element, options, state)
-  if (replace) {
-    return false
-  }
 
   applyPlugins(plugins.preKeydownBehavior, keyDef, element, options, state)
 

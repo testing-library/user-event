@@ -25,13 +25,13 @@ export function getNextKeyDef(
   const descriptor = startBracket
     ? text[descriptorStart] === startBracket
       ? startBracket
-      : text.slice().match(/^\w+/)?.[0]
+      : text.slice(descriptorStart).match(/^\w+/)?.[0]
     : text[descriptorStart]
 
   // istanbul ignore if
   if (!descriptor) {
     throw new Error(
-      `Unexpected character: "${text[descriptorStart]}" - Expected key descriptor`,
+      `Expected key descriptor but found "${text[descriptorStart]}" in "${text}`,
     )
   }
 
@@ -47,9 +47,7 @@ export function getNextKeyDef(
   // istanbul ignore if
   if (endBracket && text[descriptorEnd + endModifier.length] !== endBracket) {
     throw new Error(
-      `Unexpected character: "${
-        text[descriptorEnd + endModifier.length]
-      }" - Expected closing bracket`,
+      `Expected closing bracket but found "${text[descriptorEnd + endModifier.length]}" in "${text}`,
     )
   }
 

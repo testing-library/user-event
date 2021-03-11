@@ -116,19 +116,19 @@ async function modernTypeImplementation(
   options: modernTypeOptions,
   state: keyboardState,
 ): Promise<void> {
-  const currentElement = () => getActiveElement(document) ?? document.body
+  const getCurrentElement = () => getActiveElement(document) ?? document.body
   const {keyDef, consumedLength, releasePrevious, releaseSelf} = getNextKeyDef(text, options)
 
   if (releasePrevious || state.pressed.includes(keyDef)) {
     // this should probably throw an error when trying to release a key that is not pressed
-    keyup(keyDef, currentElement(), options, state)
+    keyup(keyDef, getCurrentElement, options, state)
   }
 
   if (!releasePrevious) {
-    keydown(keyDef, currentElement(), options, state)
+    keydown(keyDef, getCurrentElement, options, state)
 
     if (releaseSelf) {
-      keyup(keyDef, currentElement(), options, state)
+      keyup(keyDef, getCurrentElement, options, state)
     }
   }
 
@@ -142,10 +142,12 @@ async function modernTypeImplementation(
 
 function keydown(
   keyDef: keyboardKey,
-  element: Element,
+  getCurrentElement: () => Element,
   options: modernTypeOptions,
   state: keyboardState
 ) {
+  const element = getCurrentElement()
+
   // clear carried characters when focus is moved
   if (element !== state.activeElement) {
     state.carryChar = ''
@@ -164,16 +166,19 @@ function keydown(
   state.pressed.push(keyDef)
 
   if (unpreventedDefault) {
-    applyPlugins(plugins.keydownBehavior, keyDef, element, options, state)
+    // all default behavior like keypress/submit etc is applied to the currentElement
+    applyPlugins(plugins.keydownBehavior, keyDef, getCurrentElement(), options, state)
   }
 }
 
 function keyup(
   keyDef: keyboardKey,
-  element: Element,
+  getCurrentElement: () => Element,
   options: modernTypeOptions,
   state: keyboardState
 ) {
+  const element = getCurrentElement()
+
   fireEvent.keyUp(element, getKeyEventProps(keyDef, state))
 
   state.pressed = state.pressed.filter(k => k === keyDef)

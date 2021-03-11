@@ -60,6 +60,8 @@ export interface keyboardKey {
   key?: string
   /* Location on the keyboard for keys with multiple representation */
   location?: DOM_KEY_LOCATION
+  /* keyCode for legacy support */
+  keyCode?: number
   /* Does the character in `key` require/imply AltRight to be pressed? */
   altGr?: boolean
   /* Does the character in `key` require/imply a shiftKey to be pressed? */

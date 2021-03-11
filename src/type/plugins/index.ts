@@ -18,6 +18,7 @@ export const preKeydownBehavior: behaviorPlugin[] = [
 ]
 
 export const keydownBehavior: behaviorPlugin[] = [
+    ...functionalKeys.keydownBehavior,
 ]
 
 export const keypressBehavior: behaviorPlugin[] = [

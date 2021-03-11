@@ -97,5 +97,5 @@ function hasReleaseSelf(startBracket: string, descriptor: string, endModifier: s
   if (startBracket === '{' && ['alt', 'control', 'meta', 'shift'].includes(descriptor.toLowerCase())) {
     return false
   }
-  return endModifier === '>'
+  return endModifier !== '>'
 }

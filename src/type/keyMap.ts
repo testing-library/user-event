@@ -23,6 +23,7 @@ export const defaultKeyMap: keyboardKey[] = [
   {code: 'MetaLeft', key: 'OS', location: DOM_KEY_LOCATION.LEFT},
   {code: 'MetaRight', key: 'OS', location: DOM_KEY_LOCATION.RIGHT},
   {code: 'CapsLock', key: 'CapsLock'},
+  {code: 'Backspace', key: 'Backspace', keyCode: 8},
 
   // TODO: add mappings
 ]

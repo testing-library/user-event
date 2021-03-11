@@ -4,8 +4,11 @@
  */
 
 import { fireEvent } from "@testing-library/dom"
-import { getKeyEventProps } from "type/getKeyEventProps"
+import { getValue } from "../../utils"
+import { getKeyEventProps } from "../getKeyEventProps"
+import { fireInputEventIfNeeded } from "../shared"
 import { behaviorPlugin } from "../types"
+import { calculateNewBackspaceValue } from "./functional/calculateBackspaceValue"
 
 const modifierKeys = {
     'Alt': 'alt',
@@ -33,6 +36,28 @@ export const preKeydownBehavior: behaviorPlugin[] = [
                 ?? {key: 'Control', code: 'Control'}
             fireEvent.keyDown(element, getKeyEventProps(ctrlKeyDef, state))
         },
+    },
+]
+
+export const keydownBehavior: behaviorPlugin[] = [
+    {
+        matches: (keyDef) => keyDef.key === 'Backspace',
+        handle: (keyDef, element, options, state) => {
+            const { newValue, newSelectionStart } = calculateNewBackspaceValue(element, state.carryValue)
+
+            fireInputEventIfNeeded({
+                newValue,
+                newSelectionStart,
+                eventOverrides: {
+                    inputType: 'deleteContentBackward',
+                },
+                currentElement: () => element,
+            })
+
+            if (state.carryValue) {
+                state.carryValue = getValue(element) === newValue ? undefined : newValue
+            }
+        }
     },
 ]
 

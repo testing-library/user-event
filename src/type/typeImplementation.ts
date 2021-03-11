@@ -11,7 +11,7 @@ import {click} from '../click'
 import { getNextKeyDef } from './getNextKeyDef'
 import type { modernTypeOptions, keyboardState, behaviorPlugin, keyboardKey } from './types'
 import * as plugins from './plugins'
-import { getKeyEventProps } from './getKeyEventProps'
+import { getKeyEventProps } from './getEventProps'
 import { defaultKeyMap } from './keyMap'
 
 export interface typeOptions {

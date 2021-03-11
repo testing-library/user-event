@@ -5,7 +5,7 @@
 
 import { fireEvent } from "@testing-library/dom"
 import { getValue, isClickableInput, isInstanceOfElement } from "../../utils"
-import { getKeyEventProps } from "../getKeyEventProps"
+import { getKeyEventProps, getMouseEventProps } from "../getEventProps"
 import { fireInputEventIfNeeded } from "../shared"
 import { behaviorPlugin } from "../types"
 import { calculateNewBackspaceValue } from "./functional/calculateBackspaceValue"
@@ -73,8 +73,8 @@ export const keypressBehavior: behaviorPlugin[] = [
             isInstanceOfElement(element, 'HTMLAnchorElement') &&
                 Boolean((element as HTMLAnchorElement).href)
         ),
-        handle: (keyDef, element) => {
-            fireEvent.click(element)
+        handle: (keyDef, element, options, state) => {
+            fireEvent.click(element, getMouseEventProps(state))
         },
     },
     {
@@ -106,9 +106,9 @@ export const preKeyupBehavior: behaviorPlugin[] = [
 export const keyupBehavior: behaviorPlugin[] = [
     {
         matches: (keyDef, element) => keyDef.key === ' ' && isClickableInput(element),
-        handle: (keyDef, element) => {
-            fireEvent.click(element)
-        }
+        handle: (keyDef, element, options, state) => {
+            fireEvent.click(element, getMouseEventProps(state))
+        },
     },
 ]
 

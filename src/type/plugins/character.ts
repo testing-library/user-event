@@ -12,7 +12,7 @@ export const keydownBehavior: behaviorPlugin[] = [
     {
         matches: (keyDef, element) => keyDef.key?.length === 1 && (
             isInstanceOfElement(element, 'HTMLInputElement')
-            || isInstanceOfElement(element, 'HTMLTextareaElement')
+            || isInstanceOfElement(element, 'HTMLTextAreaElement')
             || isContentEditable(element)
         ),
         handle: (keyDef, element, options, state) => {

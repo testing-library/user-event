@@ -1,13 +1,7 @@
-import {isInstanceOfElement} from '../misc'
-
-export function isValidDateValue(element: Element, value: string): boolean {
-  if (
-    !isInstanceOfElement(element, 'HTMLInputElement') ||
-    (element as HTMLInputElement).type !== 'date'
-  ) {
-    return false
-  }
-
+export function isValidDateValue(
+  element: HTMLInputElement & {type: 'date'},
+  value: string,
+): boolean {
   const clone = element.cloneNode() as HTMLInputElement
   clone.value = value
   return clone.value === value

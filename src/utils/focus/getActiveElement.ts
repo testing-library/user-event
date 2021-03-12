@@ -1,4 +1,4 @@
-import { isDisabled } from "../misc"
+import {isDisabled} from '../misc'
 
 export function getActiveElement(
   document: Document | ShadowRoot,
@@ -8,12 +8,11 @@ export function getActiveElement(
   if (activeElement?.shadowRoot) {
     return getActiveElement(activeElement.shadowRoot)
   } else {
-
     // Browser does not yield disabled elements as document.activeElement - jsdom does
     if (isDisabled(activeElement)) {
       return document.ownerDocument
-        // TODO: verify behavior in ShadowRoot
-        ? document.ownerDocument.body
+        ? // TODO: verify behavior in ShadowRoot
+          /* istanbul ignore next */ document.ownerDocument.body
         : document.body
     }
 

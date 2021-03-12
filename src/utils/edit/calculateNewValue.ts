@@ -48,16 +48,24 @@ export function calculateNewValue(
 
   if (
     (element as HTMLInputElement).type === 'date' &&
-    !isValidDateValue(element, newValue)
+    !isValidDateValue(element as HTMLInputElement & {type: 'date'}, newValue)
   ) {
     newValue = value as string
   }
 
   if (
     (element as HTMLInputElement).type === 'time' &&
-    !isValidInputTimeValue(element, newValue)
+    !isValidInputTimeValue(
+      element as HTMLInputElement & {type: 'time'},
+      newValue,
+    )
   ) {
-    if (isValidInputTimeValue(element, newEntry)) {
+    if (
+      isValidInputTimeValue(
+        element as HTMLInputElement & {type: 'time'},
+        newEntry,
+      )
+    ) {
       newValue = newEntry
     } else {
       newValue = value as string

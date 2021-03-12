@@ -3,11 +3,8 @@
  */
 
 import {fireEvent} from '@testing-library/dom'
-import {
-  fireChangeForInputTimeIfValid,
-  fireInputEventIfNeeded,
-} from 'type/shared'
-import {behaviorPlugin} from 'type/types'
+import {fireChangeForInputTimeIfValid, fireInputEventIfNeeded} from '../shared'
+import {behaviorPlugin} from '../types'
 import {
   buildTimeValue,
   calculateNewValue,
@@ -16,7 +13,7 @@ import {
   isInstanceOfElement,
   isValidDateValue,
   isValidInputTimeValue,
-} from 'utils'
+} from '../../utils'
 
 export const keypressBehavior: behaviorPlugin[] = [
   {

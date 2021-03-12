@@ -1,4 +1,4 @@
-import {getValue, setSelectionRangeIfNecessary} from '../../utils/edit'
+import {getValue, setSelectionRangeIfNecessary} from '../../utils'
 
 export function setSelectionRange({
   currentElement,

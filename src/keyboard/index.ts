@@ -1,0 +1,1 @@
+export {specialCharMap} from './specialCharMap'

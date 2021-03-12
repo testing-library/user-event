@@ -1,5 +1,5 @@
 import {fireEvent} from '@testing-library/dom'
-import {isValidInputTimeValue} from '../../utils/edit'
+import {isValidInputTimeValue} from '../../utils'
 
 export function fireChangeForInputTimeIfValid(
   el: HTMLInputElement & {type: 'time'},

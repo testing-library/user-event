@@ -1,4 +1,4 @@
-import {isDisabled} from '../misc'
+import {isDisabled} from '../misc/isDisabled'
 
 export function getActiveElement(
   document: Document | ShadowRoot,

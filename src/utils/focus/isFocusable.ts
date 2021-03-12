@@ -1,4 +1,4 @@
-import {isLabelWithInternallyDisabledControl} from '../misc'
+import {isLabelWithInternallyDisabledControl} from '../misc/isLabelWithInternallyDisabledControl'
 import {FOCUSABLE_SELECTOR} from './selector'
 
 export function isFocusable(element: Element): element is HTMLElement {

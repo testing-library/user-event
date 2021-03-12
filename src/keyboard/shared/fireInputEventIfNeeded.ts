@@ -1,7 +1,10 @@
 import {fireEvent} from '@testing-library/dom'
-import {isInstanceOfElement} from 'utils/misc'
-import {isClickableInput} from '../../utils/click'
-import {getValue, isContentEditable} from '../../utils/edit'
+import {
+  isInstanceOfElement,
+  isClickableInput,
+  getValue,
+  isContentEditable,
+} from '../../utils'
 import {setSelectionRange} from './setSelectionRange'
 
 export function fireInputEventIfNeeded({

@@ -19,5 +19,3 @@ export function type(
     return typeImplementation(element, text, {delay, ...options})
   }
 }
-
-export {specialCharMap} from './specialCharMap'

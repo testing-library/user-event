@@ -42,12 +42,18 @@ export function getNextKeyDef(
       : ''
 
   const endBracket =
-    (!startBracket || descriptor === startBracket) ? '' : startBracket === '{' ? '}' : ']'
+    !startBracket || descriptor === startBracket
+      ? ''
+      : startBracket === '{'
+      ? '}'
+      : ']'
 
   // istanbul ignore if
   if (endBracket && text[descriptorEnd + endModifier.length] !== endBracket) {
     throw new Error(
-      `Expected closing bracket but found "${text[descriptorEnd + endModifier.length]}" in "${text}`,
+      `Expected closing bracket but found "${
+        text[descriptorEnd + endModifier.length]
+      }" in "${text}`,
     )
   }
 
@@ -69,9 +75,10 @@ export function getNextKeyDef(
   if (isPrintableCharacter(startBracket, descriptor)) {
     return {
       ...modifiers,
-      keyDef: options.keyboardMap.find(
-        k => k.key === descriptor,
-      ) ?? { key: descriptor, code: 'Unknown'},
+      keyDef: options.keyboardMap.find(k => k.key === descriptor) ?? {
+        key: descriptor,
+        code: 'Unknown',
+      },
     }
   } else if (startBracket === '{') {
     const key = mapLegacyKey(descriptor)
@@ -91,25 +98,38 @@ export function getNextKeyDef(
   }
 }
 
-function hasReleaseSelf(startBracket: string, descriptor: string, endModifier: string) {
+function hasReleaseSelf(
+  startBracket: string,
+  descriptor: string,
+  endModifier: string,
+) {
   if (endModifier === '/' || !startBracket) {
     return true
   }
-  if (startBracket === '{' && ['alt', 'ctrl', 'meta', 'shift'].includes(descriptor.toLowerCase())) {
+  if (
+    startBracket === '{' &&
+    ['alt', 'ctrl', 'meta', 'shift'].includes(descriptor.toLowerCase())
+  ) {
     return false
   }
   return endModifier !== '>'
 }
 
 function mapLegacyKey(descriptor: string) {
-  return {
-    'ctrl': 'Control',
-    'del': 'Delete',
-    'esc': 'Escape',
-    'space': ' ',
-  }[descriptor] ?? descriptor
+  return (
+    {
+      ctrl: 'Control',
+      del: 'Delete',
+      esc: 'Escape',
+      space: ' ',
+    }[descriptor] ?? descriptor
+  )
 }
 
 function isPrintableCharacter(startBracket: string, descriptor: string) {
-  return !startBracket || startBracket === descriptor || startBracket === '{' && descriptor.length === 1
+  return (
+    !startBracket ||
+    startBracket === descriptor ||
+    (startBracket === '{' && descriptor.length === 1)
+  )
 }

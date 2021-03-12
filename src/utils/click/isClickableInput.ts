@@ -1,4 +1,4 @@
-import {isInstanceOfElement} from '../misc'
+import {isInstanceOfElement} from '../misc/isInstanceOfElement'
 
 const CLICKABLE_INPUT_TYPES = [
   'button',

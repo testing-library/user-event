@@ -2,7 +2,7 @@ export type keyboardState = {
   /*
       All keys that have been pressed and not been lifted up yet.
     */
-  pressed: {keyDef: keyboardKey, unpreventedDefault: boolean}[]
+  pressed: {keyDef: keyboardKey; unpreventedDefault: boolean}[]
 
   /*
       Active modifiers
@@ -69,6 +69,16 @@ export interface keyboardKey {
 }
 
 export interface behaviorPlugin {
-  matches: (keyDef: keyboardKey, element: Element, options: modernTypeOptions, state: keyboardState) => boolean,
-  handle: (keyDef: keyboardKey, element: Element, options: modernTypeOptions, state: keyboardState) => void,
+  matches: (
+    keyDef: keyboardKey,
+    element: Element,
+    options: modernTypeOptions,
+    state: keyboardState,
+  ) => boolean
+  handle: (
+    keyDef: keyboardKey,
+    element: Element,
+    options: modernTypeOptions,
+    state: keyboardState,
+  ) => void
 }

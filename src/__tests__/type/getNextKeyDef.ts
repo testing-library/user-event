@@ -1,6 +1,6 @@
-import {getNextKeyDef} from 'type/getNextKeyDef'
-import {defaultKeyMap} from 'type/keyMap'
-import {keyboardKey, modernTypeOptions} from 'type/types'
+import {getNextKeyDef} from 'keyboard/getNextKeyDef'
+import {defaultKeyMap} from 'keyboard/keyMap'
+import {keyboardKey, modernTypeOptions} from 'keyboard/types'
 
 const options: modernTypeOptions = {
   keyboardMap: defaultKeyMap,

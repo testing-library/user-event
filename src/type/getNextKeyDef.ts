@@ -66,7 +66,7 @@ export function getNextKeyDef(
     releaseSelf: hasReleaseSelf(startBracket, descriptor, endModifier),
   }
 
-  if (!startBracket || (startBracket === '{' && descriptor.length === 1)) {
+  if (isPrintableCharacter(startBracket, descriptor)) {
     return {
       ...modifiers,
       keyDef: options.keyboardMap.find(
@@ -108,4 +108,8 @@ function mapLegacyKey(descriptor: string) {
     'esc': 'Escape',
     'space': ' ',
   }[descriptor] ?? descriptor
+}
+
+function isPrintableCharacter(startBracket: string, descriptor: string) {
+  return !startBracket || startBracket === descriptor || startBracket === '{' && descriptor.length === 1
 }

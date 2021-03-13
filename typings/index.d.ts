@@ -13,7 +13,7 @@ export interface ITabUserOptions {
   focusTrap?: Document | Element
 }
 
-export type TargetElement = Element | Window
+export type TargetElement = Element
 
 export type FilesArgument = File | File[]
 
@@ -28,7 +28,7 @@ export interface IUploadOptions {
 
 declare const userEvent: {
   clear: (element: TargetElement) => void
-  click: click
+  click: typeof click
   dblClick: (
     element: TargetElement,
     init?: MouseEventInit,
@@ -50,8 +50,8 @@ declare const userEvent: {
     init?: UploadInitArgument,
     options?: IUploadOptions,
   ) => void
-  type: type
-  keyboard: keyboard
+  type: typeof type
+  keyboard: typeof keyboard
   tab: (userOpts?: ITabUserOptions) => void
   paste: (
     element: TargetElement,

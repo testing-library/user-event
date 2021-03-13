@@ -52,7 +52,8 @@ change the state of the checkbox.
   - [`click(element, eventInit, options)`](#clickelement-eventinit-options)
   - [`dblClick(element, eventInit, options)`](#dblclickelement-eventinit-options)
   - [`type(element, text, [options])`](#typeelement-text-options)
-  - [`upload(element, file, [{ clickInit, changeInit }])`](#uploadelement-file--clickinit-changeinit-)
+  - [`keyboard(text, options)`](#keyboardtext-options)
+  - [`upload(element, file, [{ clickInit, changeInit }], [options])`](#uploadelement-file--clickinit-changeinit--options)
   - [`clear(element)`](#clearelement)
   - [`selectOptions(element, values)`](#selectoptionselement-values)
   - [`deselectOptions(element, values)`](#deselectoptionselement-values)
@@ -178,10 +179,6 @@ are typed. By default it's 0. You can use this option if your component has a
 different behavior for fast or slow users. If you do this, you need to make sure
 to `await`!
 
-> To be clear, `userEvent.type` _always_ returns a promise, but you _only_ need
-> to `await` the promise it returns if you're using the `delay` option.
-> Otherwise everything runs synchronously and you can ignore the promise.
-
 `type` will click the element before typing. To disable this, set the
 `skipClick` option to `true`.
 
@@ -270,6 +267,76 @@ test('types into the input', () => {
   expect(input.value).toBe('13:58')
 })
 ```
+
+### `keyboard(text, options)`
+
+Simulates the keyboard events described by `text`. This is similar to
+`userEvent.type()` but without any clicking or changing the selection range.
+
+> You should use `userEvent.keyboard` if you want to just simulate pressing
+> buttons on the keyboard. You should use `userEvent.type` if you just want to
+> conveniently insert some text into an input field or textarea.
+
+Keystrokes can be described:
+
+- Per printable character
+  ```js
+  userEvent.keyboard('foo') // translates to: f, o, o
+  ```
+  The brackets `{` and `[` are used as special character and can be referenced
+  by doubling them.
+  ```js
+  userEvent.keyboard('{{a[[') // translates to: {, a, [
+  ```
+- Per
+  [KeyboardEvent.key](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key)
+  (only supports alphanumeric values of `key`)
+  ```js
+  userEvent.keyboard('{Shift}{f}{o}{o}') // translates to: Shift, f, o, o
+  ```
+  This does not keep any key pressed. So `Shift` will be lifted before pressing
+  `f`.
+- Per
+  [KeyboardEvent.code](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/code)
+  ```js
+  userEvent.keyboard('[ShiftLeft]{f}{o}{o}') // translates to: Shift, f, o, o
+  ```
+- Per legacy `userEvent.type` modifier/specialChar The modifiers like `{shift}`
+  (note the lowercase) will automatically be kept pressed, just like before. You
+  can cancel this behavior by adding a `/` to the end of the descriptor.
+  ```js
+  userEvent.keyboard('{shift}{ctrl/}a{shift}') // translates to: Shift(down), Control(down+up), a, Shift(up)
+  ```
+
+Keys can be kept pressed by adding a `>` to the end of the descriptor - and
+lifted by adding a `/` to the beginning of the descriptor:
+
+```js
+userEvent.keyboard('{Shift>}A{/Shift}') // translates to: Shift(down), A, Shift(up)
+```
+
+`userEvent.keyboard` returns a keyboard state that can be used to continue
+keyboard operations.
+
+```js
+const keyboardState = userEvent.keyboard('[ControlLeft>]') // keydown [ControlLeft]
+// ... inspect some changes ...
+userEvent.keyboard('a', {keyboardState}) // press [KeyA] with active ctrlKey modifier
+```
+
+The mapping of `key` to `code` is performed by a
+[default key map](https://github.com/testing-library/user-event/blob/master/src/keyboard/keyMap.ts)
+portraying a "default" US-keyboard. You can provide your own local keyboard
+mapping per option.
+
+```js
+userEvent.keyboard('?', {keyboardMap: myOwnLocaleKeyboardMap})
+```
+
+> Future versions might try to interpolate the modifiers needed to reach a
+> printable key on the keyboard. E.g. Automatically pressing `{Shift}` when
+> CapsLock is not active and `A` is referenced. If you don't wish this behavior,
+> you can pass `autoModify: false` when using `userEvent.keyboard` in your code.
 
 ### `upload(element, file, [{ clickInit, changeInit }], [options])`
 

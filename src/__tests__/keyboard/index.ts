@@ -101,3 +101,31 @@ it('error in async', async () => {
     'Expected key descriptor but found "!" in "{!"',
   )
 })
+
+it('continue typing with state', () => {
+  const {element, getEventSnapshot, clearEventCalls} = setup('<input/>')
+  ;(element as HTMLInputElement).focus()
+  clearEventCalls()
+
+  const state = userEvent.keyboard('[ShiftRight>]')
+
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
+    Events fired on: input[value=""]
+
+    input[value=""] - keydown: Shift (16) {shift}
+  `)
+  clearEventCalls()
+
+  userEvent.keyboard('F[/ShiftRight]', {keyboardState: state})
+
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
+    Events fired on: input[value="F"]
+
+    input[value=""] - keydown: F (70) {shift}
+    input[value=""] - keypress: F (70) {shift}
+    input[value="F"] - input
+      "{CURSOR}" -> "F{CURSOR}"
+    input[value="F"] - keyup: F (70) {shift}
+    input[value="F"] - keyup: Shift (16)
+  `)
+})

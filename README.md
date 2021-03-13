@@ -299,7 +299,7 @@ Keystrokes can be described:
 - Per
   [KeyboardEvent.code](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/code)
   ```js
-  userEvent.keyboard('[ShiftLeft]{f}{o}{o}') // translates to: Shift, f, o, o
+  userEvent.keyboard('[ShiftLeft][KeyF][KeyO][KeyO]') // translates to: Shift, f, o, o
   ```
 - Per legacy `userEvent.type` modifier/specialChar The modifiers like `{shift}`
   (note the lowercase) will automatically be kept pressed, just like before. You

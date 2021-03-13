@@ -78,28 +78,34 @@ it('type asynchronous', async () => {
   `)
 })
 
-it('error in sync', async () => {
-  const err = jest.spyOn(console, 'error')
-  err.mockImplementation(() => {})
+describe('error', () => {
+  afterEach(() => {
+    ;(console.error as jest.MockedFunction<typeof console.error>).mockClear()
+  })
 
-  userEvent.keyboard('{!')
+  it('error in sync', async () => {
+    const err = jest.spyOn(console, 'error')
+    err.mockImplementation(() => {})
 
-  // the catch will be asynchronous
-  await Promise.resolve()
+    userEvent.keyboard('{!')
 
-  expect(err).toHaveBeenCalledWith(expect.any(Error))
-  expect(err.mock.calls[0][0]).toHaveProperty(
-    'message',
-    'Expected key descriptor but found "!" in "{!"',
-  )
-})
+    // the catch will be asynchronous
+    await Promise.resolve()
 
-it('error in async', async () => {
-  const promise = userEvent.keyboard('{!', {delay: 1})
+    expect(err).toHaveBeenCalledWith(expect.any(Error))
+    expect(err.mock.calls[0][0]).toHaveProperty(
+      'message',
+      'Expected key descriptor but found "!" in "{!"',
+    )
+  })
 
-  return expect(promise).rejects.toThrowError(
-    'Expected key descriptor but found "!" in "{!"',
-  )
+  it('error in async', async () => {
+    const promise = userEvent.keyboard('{!', {delay: 1})
+
+    return expect(promise).rejects.toThrowError(
+      'Expected key descriptor but found "!" in "{!"',
+    )
+  })
 })
 
 it('continue typing with state', () => {

@@ -803,10 +803,10 @@ test('typing an invalid input value', () => {
 
 test('should not throw error if we are trying to call type on an element without a value', () => {
   const {element} = setup('<div />')
-  expect.assertions(0)
-  return userEvent
-    .type(element, "I'm only a div :(")
-    .catch(e => expect(e).toBeUndefined())
+
+  return expect(userEvent.type(element, ':(', {delay: 1})).resolves.toBe(
+    undefined,
+  )
 })
 
 test('typing on button should not alter its value', () => {
@@ -847,8 +847,10 @@ test('typing on input type submit should not alter its value', () => {
 
 test('typing on input type file should not result in an error', () => {
   const {element} = setup('<input type="file" />')
-  expect.assertions(0)
-  return userEvent.type(element, 'bar').catch(e => expect(e).toBeUndefined())
+
+  return expect(userEvent.type(element, 'bar', {delay: 1})).resolves.toBe(
+    undefined,
+  )
 })
 
 test('should submit a form containing multiple text inputs and an input of type submit', () => {

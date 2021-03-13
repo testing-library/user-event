@@ -1,23 +1,23 @@
+import {fireEvent} from '@testing-library/dom'
 import {getActiveElement, wait} from '../utils'
 import {getNextKeyDef} from './getNextKeyDef'
 import {
   behaviorPlugin,
   keyboardKey,
   keyboardState,
-  modernTypeOptions,
+  keyboardOptions,
 } from './types'
 import * as plugins from './plugins'
-import {fireEvent} from '@testing-library/dom'
 import {getKeyEventProps} from './getEventProps'
 
 export async function keyboardImplementation(
-  document: Document,
   text: string,
-  options: modernTypeOptions,
+  options: keyboardOptions,
   state: keyboardState,
 ): Promise<void> {
-  const getCurrentElement = () =>
-    getActiveElement(document) ?? /* istanbul ignore next */ document.body
+  const {document} = options
+  const getCurrentElement = () => getActive(document)
+
   const {keyDef, consumedLength, releasePrevious, releaseSelf} = getNextKeyDef(
     text,
     options,
@@ -68,23 +68,26 @@ export async function keyboardImplementation(
     if (options.delay > 0) {
       await wait(options.delay)
     }
-    await keyboardImplementation(
-      document,
-      text.slice(consumedLength),
-      options,
-      state,
-    )
-  } else if (!options.skipAutoClose) {
-    for (const k of state.pressed) {
-      keyup(k.keyDef, getCurrentElement, options, state, k.unpreventedDefault)
-    }
+    return keyboardImplementation(text.slice(consumedLength), options, state)
+  }
+  return void undefined
+}
+
+function getActive(document: Document): Element {
+  return getActiveElement(document) ?? /* istanbul ignore next */ document.body
+}
+
+export function releaseAllKeys(options: keyboardOptions, state: keyboardState) {
+  const getCurrentElement = () => getActive(options.document)
+  for (const k of state.pressed) {
+    keyup(k.keyDef, getCurrentElement, options, state, k.unpreventedDefault)
   }
 }
 
 function keydown(
   keyDef: keyboardKey,
   getCurrentElement: () => Element,
-  options: modernTypeOptions,
+  options: keyboardOptions,
   state: keyboardState,
 ) {
   const element = getCurrentElement()
@@ -122,7 +125,7 @@ function keydown(
 function keypress(
   keyDef: keyboardKey,
   getCurrentElement: () => Element,
-  options: modernTypeOptions,
+  options: keyboardOptions,
   state: keyboardState,
 ) {
   const element = getCurrentElement()
@@ -146,7 +149,7 @@ function keypress(
 function keyup(
   keyDef: keyboardKey,
   getCurrentElement: () => Element,
-  options: modernTypeOptions,
+  options: keyboardOptions,
   state: keyboardState,
   unprevented: boolean,
 ) {
@@ -178,7 +181,7 @@ function applyPlugins(
   pluginCollection: behaviorPlugin[],
   keyDef: keyboardKey,
   element: Element,
-  options: modernTypeOptions,
+  options: keyboardOptions,
   state: keyboardState,
 ): boolean {
   const plugin = pluginCollection.find(p =>

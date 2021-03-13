@@ -8,9 +8,7 @@ import {
   wait,
 } from '../utils'
 import {click} from '../click'
-import type {keyboardState} from '../keyboard/types'
-import {defaultKeyMap} from '../keyboard/keyMap'
-import {keyboardImplementation} from '../keyboard/keyboardImplementation'
+import {keyboardImplementationWrapper} from '../keyboard'
 
 export interface typeOptions {
   delay?: number
@@ -30,7 +28,7 @@ export async function typeImplementation(
     initialSelectionStart = undefined,
     initialSelectionEnd = undefined,
   }: typeOptions & {delay: number},
-) {
+): Promise<void> {
   // TODO: properly type guard
   // we use this workaround for now to prevent changing behavior
   if ((element as {disabled?: boolean}).disabled) return
@@ -76,33 +74,16 @@ export async function typeImplementation(
     await wait(delay)
   }
 
-  await keyboardImplementation(
-    element.ownerDocument,
-    text,
-    {
-      delay,
-      autoModify: false,
-      keyboardMap: defaultKeyMap,
-      skipAutoClose,
-    },
-    createKeyboardState(),
-  ).catch(
-    // istanbul ignore next
-    e => console.error(e),
-  )
-}
+  const {promise, releaseAllKeys} = keyboardImplementationWrapper(text, {
+    delay,
+    document: element.ownerDocument,
+  })
 
-function createKeyboardState(): keyboardState {
-  return {
-    activeElement: null,
-    pressed: [],
-    carryChar: '',
-    modifiers: {
-      alt: false,
-      caps: false,
-      ctrl: false,
-      meta: false,
-      shift: false,
-    },
+  if (delay > 0) {
+    await promise
+  }
+
+  if (!skipAutoClose) {
+    releaseAllKeys()
   }
 }

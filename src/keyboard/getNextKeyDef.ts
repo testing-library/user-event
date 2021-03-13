@@ -1,4 +1,4 @@
-import {keyboardKey, modernTypeOptions} from './types'
+import {keyboardKey, keyboardOptions} from './types'
 
 /**
  * Get the next key from keyMap
@@ -11,7 +11,7 @@ import {keyboardKey, modernTypeOptions} from './types'
  */
 export function getNextKeyDef(
   text: string,
-  options: modernTypeOptions,
+  options: keyboardOptions,
 ): {
   keyDef: keyboardKey
   consumedLength: number
@@ -31,7 +31,7 @@ export function getNextKeyDef(
   // istanbul ignore if
   if (!descriptor) {
     throw new Error(
-      `Expected key descriptor but found "${text[descriptorStart]}" in "${text}`,
+      `Expected key descriptor but found "${text[descriptorStart]}" in "${text}"`,
     )
   }
 
@@ -53,7 +53,7 @@ export function getNextKeyDef(
     throw new Error(
       `Expected closing bracket but found "${
         text[descriptorEnd + endModifier.length]
-      }" in "${text}`,
+      }" in "${text}"`,
     )
   }
 

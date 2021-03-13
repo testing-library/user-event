@@ -12,4 +12,4 @@ export const specialCharMap = {
   selectAll: '{selectall}',
   space: '{space}',
   whitespace: ' ',
-}
+} as const

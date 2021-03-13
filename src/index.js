@@ -6,6 +6,7 @@ import {hover, unhover} from './hover'
 import {upload} from './upload'
 import {selectOptions, deselectOptions} from './select-options'
 import {paste} from './paste'
+import {keyboard} from './keyboard'
 
 const userEvent = {
   click,
@@ -19,6 +20,7 @@ const userEvent = {
   selectOptions,
   deselectOptions,
   paste,
+  keyboard,
 }
 
 export default userEvent

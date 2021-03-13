@@ -1,12 +1,12 @@
 import {getNextKeyDef} from 'keyboard/getNextKeyDef'
 import {defaultKeyMap} from 'keyboard/keyMap'
-import {keyboardKey, modernTypeOptions} from 'keyboard/types'
+import {keyboardKey, keyboardOptions} from 'keyboard/types'
 
-const options: modernTypeOptions = {
+const options: keyboardOptions = {
+  document,
   keyboardMap: defaultKeyMap,
   autoModify: false,
   delay: 123,
-  skipAutoClose: false,
 }
 
 test('reference key per code', () => {

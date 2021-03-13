@@ -8,5 +8,4 @@ userEvent.type(element, 'foo', {delay: 1}).then(
   function handleSucces(_nothing: void) {},
   function handleError(_error: Error) {},
 )
-// @ts-expect-error No delay returns void
 userEvent.type(element, 'foo') as NotVoid

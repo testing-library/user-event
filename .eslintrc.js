@@ -9,5 +9,6 @@ module.exports = {
   },
   rules: {
     'testing-library/no-dom-import': 0,
+    '@typescript-eslint/non-nullable-type-assertion-style': 0,
   },
 }

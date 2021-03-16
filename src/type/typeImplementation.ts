@@ -1,4 +1,3 @@
-// TODO: wrap in asyncWrapper
 import {
   setSelectionRangeIfNecessary,
   getSelectionRange,

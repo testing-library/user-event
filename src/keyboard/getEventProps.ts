@@ -9,7 +9,7 @@ export function getKeyEventProps(keyDef: keyboardKey, state: keyboardState) {
     metaKey: state.modifiers.meta,
     shiftKey: state.modifiers.shift,
 
-    // deprecated
+    /** @deprecated use code instead */
     keyCode:
       keyDef.keyCode ??
       // istanbul ignore next

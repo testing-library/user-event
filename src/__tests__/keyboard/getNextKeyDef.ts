@@ -1,3 +1,4 @@
+import cases from 'jest-in-case'
 import {getNextKeyDef} from 'keyboard/getNextKeyDef'
 import {defaultKeyMap} from 'keyboard/keyMap'
 import {keyboardKey, keyboardOptions} from 'keyboard/types'
@@ -9,130 +10,69 @@ const options: keyboardOptions = {
   delay: 123,
 }
 
-test('reference key per code', () => {
-  expect(getNextKeyDef('[ControlLeft]foo', options)).toEqual(
-    expect.objectContaining({
-      keyDef: expect.objectContaining({
-        key: 'Control',
-        code: 'ControlLeft',
-      }) as keyboardKey,
-    }),
-  )
-  expect(getNextKeyDef('[Foo]foo', options)).toEqual(
-    expect.objectContaining({
-      keyDef: expect.objectContaining({
-        key: 'Unknown',
-        code: 'Foo',
-      }) as keyboardKey,
-    }),
-  )
-})
+cases(
+  'reference key per',
+  ({text, key, code}) => {
+    expect(getNextKeyDef(`${text}foo`, options)).toEqual(
+      expect.objectContaining({
+        keyDef: expect.objectContaining({
+          key,
+          code,
+        }) as keyboardKey,
+      }),
+    )
+  },
+  {
+    code: {text: '[ControlLeft]', key: 'Control', code: 'ControlLeft'},
+    'unimplemented code': {text: '[Foo]', key: 'Unknown', code: 'Foo'},
+    key: {text: '{Control}', key: 'Control', code: 'ControlLeft'},
+    'unimplemented key': {text: '{Foo}', key: 'Foo', code: 'Unknown'},
+    'legacy modifier': {text: '{ctrl}', key: 'Control', code: 'ControlLeft'},
+    'printable character': {text: 'a', key: 'a', code: 'KeyA'},
+    '{ as printable': {text: '{{', key: '{', code: 'Unknown'},
+    '[ as printable': {text: '[[', key: '[', code: 'Unknown'},
+  },
+)
 
-test('reference key per key', () => {
-  expect(getNextKeyDef('{Control}foo', options)).toEqual(
-    expect.objectContaining({
-      keyDef: expect.objectContaining({
-        key: 'Control',
-        code: 'ControlLeft',
-      }) as keyboardKey,
-    }),
-  )
-  expect(getNextKeyDef('{Foo}foo', options)).toEqual(
-    expect.objectContaining({
-      keyDef: expect.objectContaining({
-        key: 'Foo',
-        code: 'Unknown',
-      }) as keyboardKey,
-    }),
-  )
-})
-
-test('reference per legacy modifier', () => {
-  expect(getNextKeyDef('{ctrl}foo', options)).toEqual(
-    expect.objectContaining({
-      keyDef: expect.objectContaining({
-        key: 'Control',
-        code: 'ControlLeft',
-      }) as keyboardKey,
-    }),
-  )
-})
-
-test('reference per printable character', () => {
-  expect(getNextKeyDef('afoo', options)).toEqual(
-    expect.objectContaining({
-      keyDef: expect.objectContaining({
-        key: 'a',
-        code: 'KeyA',
-      }) as keyboardKey,
-    }),
-  )
-})
-
-test('reference bracket as printable character', () => {
-  expect(getNextKeyDef('{{foo', options)).toEqual(
-    expect.objectContaining({
-      keyDef: expect.objectContaining({
-        key: '{',
-        code: 'Unknown',
-      }) as keyboardKey,
-    }),
-  )
-  expect(getNextKeyDef('[[foo', options)).toEqual(
-    expect.objectContaining({
-      keyDef: expect.objectContaining({
-        key: '[',
-        code: 'Unknown',
-      }) as keyboardKey,
-    }),
-  )
-})
-
-test('release previously pressed key', () => {
-  expect(getNextKeyDef('{Control}foo', options)).toEqual(
-    expect.objectContaining({
-      releasePrevious: false,
-    }),
-  )
-  expect(getNextKeyDef('{/Control}foo', options)).toEqual(
-    expect.objectContaining({
-      releasePrevious: true,
-    }),
-  )
-  expect(getNextKeyDef('[/ControlLeft]foo', options)).toEqual(
-    expect.objectContaining({
-      releasePrevious: true,
-    }),
-  )
-})
-
-test('keep key pressed', () => {
-  expect(getNextKeyDef('{Control}foo', options)).toEqual(
-    expect.objectContaining({
-      releaseSelf: true,
-    }),
-  )
-  expect(getNextKeyDef('{Control>}foo', options)).toEqual(
-    expect.objectContaining({
-      releaseSelf: false,
-    }),
-  )
-  expect(getNextKeyDef('[ControlLeft>]foo', options)).toEqual(
-    expect.objectContaining({
-      releaseSelf: false,
-    }),
-  )
-})
-
-test('autopress legacy modifiers', () => {
-  expect(getNextKeyDef('{ctrl}foo', options)).toEqual(
-    expect.objectContaining({
-      releaseSelf: false,
-    }),
-  )
-  expect(getNextKeyDef('{ctrl/}foo', options)).toEqual(
-    expect.objectContaining({
-      releaseSelf: true,
-    }),
-  )
-})
+cases(
+  'modifiers',
+  ({text, modifiers}) => {
+    expect(getNextKeyDef(`${text}foo`, options)).toEqual(
+      expect.objectContaining(modifiers),
+    )
+  },
+  {
+    'no releasePrevious': {
+      text: '{Control}',
+      modifiers: {releasePrevious: false},
+    },
+    'releasePrevious per key': {
+      text: '{/Control}',
+      modifiers: {releasePrevious: true},
+    },
+    'releasePrevious per code': {
+      text: '[/ControlLeft]',
+      modifiers: {releasePrevious: true},
+    },
+    'default releaseSelf': {
+      text: '{Control}',
+      modifiers: {releaseSelf: true},
+    },
+    'keep key pressed per key': {
+      text: '{Control>}',
+      modifiers: {releaseSelf: false},
+    },
+    'keep key pressed per code': {
+      text: '[Control>]',
+      modifiers: {releaseSelf: false},
+    },
+    'no releaseSelf on legacy modifier': {
+      text: '{ctrl}',
+      modifiers: {releaseSelf: false},
+    },
+    'release legacy modifier': {
+      text: '{ctrl/}',
+      modifiers: {releaseSelf: true},
+    },
+  },
+)

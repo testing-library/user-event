@@ -1,4 +1,4 @@
-import {getSelectionRange, getValue} from 'utils'
+import {getSelectionRange, getValue} from '../../../utils'
 
 // yes, calculateNewBackspaceValue and calculateNewValue look extremely similar
 // and you may be tempted to create a shared abstraction.

@@ -246,7 +246,7 @@ test('should delay the typing when opts.delay is not 0', async () => {
   await userEvent.type(element, text, {delay})
 
   expect(onInput).toHaveBeenCalledTimes(text.length)
-  for (let index = 1; index < inputValues.length; index++) {
+  for (let index = 2; index < inputValues.length; index++) {
     const {timestamp, value} = inputValues[index]
     expect(timestamp - inputValues[index - 1].timestamp).toBeGreaterThanOrEqual(
       delay,

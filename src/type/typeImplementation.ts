@@ -4,7 +4,6 @@ import {
   getValue,
   isContentEditable,
   getActiveElement,
-  wait,
 } from '../utils'
 import {click} from '../click'
 import {keyboardImplementationWrapper} from '../keyboard'
@@ -65,12 +64,6 @@ export async function typeImplementation(
       initialSelectionStart ?? value.length,
       initialSelectionEnd ?? value.length,
     )
-  }
-
-  // previous implementation did wait before the first character
-  // this probably can be removed
-  if (delay > 0) {
-    await wait(delay)
   }
 
   const {promise, releaseAllKeys} = keyboardImplementationWrapper(text, {

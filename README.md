@@ -305,7 +305,7 @@ Keystrokes can be described:
   (note the lowercase) will automatically be kept pressed, just like before. You
   can cancel this behavior by adding a `/` to the end of the descriptor.
   ```js
-  userEvent.keyboard('{shift}{ctrl/}a{shift}') // translates to: Shift(down), Control(down+up), a, Shift(up)
+  userEvent.keyboard('{shift}{ctrl/}a{/shift}') // translates to: Shift(down), Control(down+up), a, Shift(up)
   ```
 
 Keys can be kept pressed by adding a `>` to the end of the descriptor - and

@@ -246,7 +246,7 @@ test('should delay the typing when opts.delay is not 0', async () => {
   await userEvent.type(element, text, {delay})
 
   expect(onInput).toHaveBeenCalledTimes(text.length)
-  for (let index = 1; index < inputValues.length; index++) {
+  for (let index = 2; index < inputValues.length; index++) {
     const {timestamp, value} = inputValues[index]
     expect(timestamp - inputValues[index - 1].timestamp).toBeGreaterThanOrEqual(
       delay,
@@ -792,9 +792,7 @@ test('typing an invalid input value', () => {
   const {element} = setup('<input type="number" />')
   userEvent.type(element, '3-3')
 
-  // TODO: fix this bug
-  // THIS IS A BUG! It should be expect(element.value).toBe('')
-  expect(element).toHaveValue(-3)
+  expect(element).toHaveValue(null)
 
   // THIS IS A LIMITATION OF THE BROWSER
   // It is impossible to programmatically set an input
@@ -805,10 +803,10 @@ test('typing an invalid input value', () => {
 
 test('should not throw error if we are trying to call type on an element without a value', () => {
   const {element} = setup('<div />')
-  expect.assertions(0)
-  return userEvent
-    .type(element, "I'm only a div :(")
-    .catch(e => expect(e).toBeUndefined())
+
+  return expect(userEvent.type(element, ':(', {delay: 1})).resolves.toBe(
+    undefined,
+  )
 })
 
 test('typing on button should not alter its value', () => {
@@ -849,8 +847,10 @@ test('typing on input type submit should not alter its value', () => {
 
 test('typing on input type file should not result in an error', () => {
   const {element} = setup('<input type="file" />')
-  expect.assertions(0)
-  return userEvent.type(element, 'bar').catch(e => expect(e).toBeUndefined())
+
+  return expect(userEvent.type(element, 'bar', {delay: 1})).resolves.toBe(
+    undefined,
+  )
 })
 
 test('should submit a form containing multiple text inputs and an input of type submit', () => {

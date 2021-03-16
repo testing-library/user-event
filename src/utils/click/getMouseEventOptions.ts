@@ -22,7 +22,7 @@ const BUTTON_NAMES = {
   secondary: 2,
 } as const
 
-function translateButtonNumber(value: number, from: 'buttons' | 'button') {
+function translateButtonNumber(value: number, from: 'button' | 'buttons') {
   const [mapIn, mapOut] =
     from === 'button'
       ? [BUTTON_NAMES, BUTTONS_NAMES]
@@ -39,7 +39,7 @@ function translateButtonNumber(value: number, from: 'buttons' | 'button') {
 function convertMouseButtons(
   event: string,
   init: MouseEventInit,
-  property: 'buttons' | 'button',
+  property: 'button' | 'buttons',
 ): number {
   if (!isMousePressEvent(event)) {
     return 0

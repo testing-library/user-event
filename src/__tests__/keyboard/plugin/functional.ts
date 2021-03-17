@@ -74,3 +74,88 @@ test('backspace to valid value', () => {
     input[value="5"] - keyup: Backspace (8)
   `)
 })
+
+test('trigger click event on [Enter] keydown on HTMLAnchorElement', () => {
+  const {element, getEventSnapshot, getEvents} = setup(
+    `<a href="example.com" target="_blank"/>`,
+  )
+  ;(element as HTMLAnchorElement).focus()
+
+  userEvent.keyboard('[Enter]')
+
+  expect(getEvents('click')).toHaveLength(1)
+  expect(getEvents('click')[0]).toHaveProperty('detail', 0)
+
+  // this snapshot should probably not contain a keypress event
+  // see https://github.com/testing-library/user-event/issues/589
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
+    Events fired on: a
+
+    a - focus
+    a - focusin
+    a - keydown: Enter (13)
+    a - keypress: Enter (13)
+    a - click: Left (0)
+    a - keyup: Enter (13)
+  `)
+})
+
+test('trigger click event on [Enter] keypress on HTMLButtonElement', () => {
+  const {element, getEventSnapshot, getEvents} = setup(`<button/>`)
+  ;(element as HTMLButtonElement).focus()
+
+  userEvent.keyboard('[Enter]')
+
+  expect(getEvents('click')).toHaveLength(1)
+  expect(getEvents('click')[0]).toHaveProperty('detail', 0)
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
+    Events fired on: button
+
+    button - focus
+    button - focusin
+    button - keydown: Enter (13)
+    button - keypress: Enter (13)
+    button - click: Left (0)
+    button - keyup: Enter (13)
+  `)
+})
+
+test('trigger click event on [Space] keyup on HTMLButtonElement', () => {
+  const {element, getEventSnapshot, getEvents} = setup(`<button/>`)
+  ;(element as HTMLButtonElement).focus()
+
+  userEvent.keyboard('[Space]')
+
+  expect(getEvents('click')).toHaveLength(1)
+  expect(getEvents('click')[0]).toHaveProperty('detail', 0)
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
+    Events fired on: button
+
+    button - focus
+    button - focusin
+    button - keydown: (32)
+    button - keypress: (32)
+    button - keyup: (32)
+    button - click: Left (0)
+  `)
+})
+
+test('trigger click event on [Space] keyup on HTMLInputElement type=button', () => {
+  const {element, getEventSnapshot, getEvents} = setup(`<button/>`)
+  ;(element as HTMLButtonElement).focus()
+
+  userEvent.keyboard('[Space]')
+
+  expect(getEvents('click')).toHaveLength(1)
+  expect(getEvents('click')[0]).toHaveProperty('detail', 0)
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
+    Events fired on: button
+
+    button - focus
+    button - focusin
+    button - keydown: (32)
+    button - keypress: (32)
+    button - keyup: (32)
+    button - click: Left (0)
+  `)
+})

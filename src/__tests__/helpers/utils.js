@@ -241,7 +241,10 @@ function addListeners(element, {eventHandlers = {}} = {}) {
     generalListener.mockClear()
     eventHandlerCalls.current = []
   }
-  const getEvents = () => generalListener.mock.calls.map(([e]) => e)
+  const getEvents = type =>
+    generalListener.mock.calls
+      .map(([e]) => e)
+      .filter(e => !type || e.type === type)
   const eventWasFired = eventType => getEvents().some(e => e.type === eventType)
 
   function getClickEventsSnapshot() {

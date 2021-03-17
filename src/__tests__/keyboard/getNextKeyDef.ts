@@ -19,6 +19,16 @@ cases(
           key,
           code,
         }) as keyboardKey,
+        consumedLength: text.length,
+      }),
+    )
+    expect(getNextKeyDef(`${text}/foo`, options)).toEqual(
+      expect.objectContaining({
+        keyDef: expect.objectContaining({
+          key,
+          code,
+        }) as keyboardKey,
+        consumedLength: text.length,
       }),
     )
   },
@@ -29,6 +39,7 @@ cases(
     'unimplemented key': {text: '{Foo}', key: 'Foo', code: 'Unknown'},
     'legacy modifier': {text: '{ctrl}', key: 'Control', code: 'ControlLeft'},
     'printable character': {text: 'a', key: 'a', code: 'KeyA'},
+    'modifiers as printable characters': {text: '/', key: '/', code: 'Unknown'},
     '{ as printable': {text: '{{', key: '{', code: 'Unknown'},
     '[ as printable': {text: '[[', key: '[', code: 'Unknown'},
   },

@@ -19,7 +19,7 @@ export function getNextKeyDef(
   releaseSelf: boolean
 } {
   const startBracket = ['{', '['].includes(text[0]) ? text[0] : ''
-  const startModifier = text[1] === '/' ? '/' : ''
+  const startModifier = startBracket && text[1] === '/' ? '/' : ''
 
   const descriptorStart = startBracket.length + startModifier.length
   const descriptor = startBracket
@@ -37,7 +37,9 @@ export function getNextKeyDef(
 
   const descriptorEnd = descriptorStart + descriptor.length
   const endModifier =
-    descriptor !== startBracket && ['/', '>'].includes(text[descriptorEnd])
+    startBracket &&
+    descriptor !== startBracket &&
+    ['/', '>'].includes(text[descriptorEnd])
       ? text[descriptorEnd]
       : ''
 

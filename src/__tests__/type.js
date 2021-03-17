@@ -1514,3 +1514,11 @@ test('{enter} fires click on links', () => {
     a - keyup: Enter (13)
   `)
 })
+
+test('type non-alphanumeric characters', () => {
+  const {element} = setup(`<input/>`)
+
+  userEvent.type(element, 'https://test.local')
+
+  expect(element).toHaveValue('https://test.local')
+})

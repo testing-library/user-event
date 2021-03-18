@@ -16,7 +16,10 @@ export function calculateNewValue(
 
   // can't use .maxLength property because of a jsdom bug:
   // https://github.com/jsdom/jsdom/issues/2927
-  const maxLength = Number(element.getAttribute('maxlength') ?? -1)
+  //
+  // '' is a valid value in DOM with the same meaning as -1, not 0 => use ||
+  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+  const maxLength = Number(element.getAttribute('maxlength') || -1)
 
   let newValue: string, newSelectionStart: number
 

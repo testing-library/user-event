@@ -14,10 +14,6 @@ export function calculateNewValue(
 } {
   const {selectionStart, selectionEnd} = selectionRange
 
-  // can't use .maxLength property because of a jsdom bug:
-  // https://github.com/jsdom/jsdom/issues/2927
-  const maxLength = Number(element.getAttribute('maxlength') ?? -1)
-
   let newValue: string, newSelectionStart: number
 
   if (selectionStart === null) {
@@ -72,7 +68,11 @@ export function calculateNewValue(
     }
   }
 
-  if (!supportsMaxLength(element) || maxLength < 0) {
+  // can't use .maxLength property because of a jsdom bug:
+  // https://github.com/jsdom/jsdom/issues/2927
+  const maxLength = getSanitizedMaxLength(element)
+
+  if (maxLength === undefined) {
     return {
       newValue,
       newSelectionStart,
@@ -84,6 +84,16 @@ export function calculateNewValue(
         newSelectionStart > maxLength ? maxLength : newSelectionStart,
     }
   }
+}
+
+function getSanitizedMaxLength(element: Element) {
+  if (!supportsMaxLength(element)) {
+    return undefined
+  }
+
+  const attr = element.getAttribute('maxlength') ?? ''
+
+  return /^\d+$/.test(attr) && Number(attr) >= 0 ? Number(attr) : undefined
 }
 
 function supportsMaxLength(element: Element) {

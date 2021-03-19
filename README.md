@@ -764,6 +764,7 @@ Thanks goes to these people ([emoji key][emojis]):
     <td align="center"><a href="https://github.com/jKatt"><img src="https://avatars.githubusercontent.com/u/5550790?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Jan Kattelans</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=jKatt" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/schoeneu"><img src="https://avatars.githubusercontent.com/u/3261341?v=4?s=100" width="100px;" alt=""/><br /><sub><b>schoeneu</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3Aschoeneu" title="Bug reports">🐛</a></td>
     <td align="center"><a href="https://github.com/mkapal"><img src="https://avatars.githubusercontent.com/u/6420535?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Martin Kapal</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3Amkapal" title="Bug reports">🐛</a></td>
+    <td align="center"><a href="https://gr.linkedin.com/in/bastakis"><img src="https://avatars.githubusercontent.com/u/1146626?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Stavros</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3Asstauross" title="Bug reports">🐛</a></td>
   </tr>
 </table>
 

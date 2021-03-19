@@ -459,3 +459,17 @@ test('move focus to closest focusable element', () => {
   userEvent.click(element.children[0])
   expect(element).toHaveFocus()
 })
+
+test('right click fires `contextmenu` instead of `click', () => {
+  const {element, getEvents, clearEventCalls} = setup(`<button/>`)
+
+  userEvent.click(element)
+  expect(getEvents('click')).toHaveLength(1)
+  expect(getEvents('contextmenu')).toHaveLength(0)
+
+  clearEventCalls()
+
+  userEvent.click(element, {buttons: 2})
+  expect(getEvents('contextmenu')).toHaveLength(1)
+  expect(getEvents('click')).toHaveLength(0)
+})

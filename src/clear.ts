@@ -29,8 +29,10 @@ function clear(element: Element) {
 
   type(element, '{selectall}{del}', {
     delay: 0,
-    initialSelectionStart: el.selectionStart ?? undefined,
-    initialSelectionEnd: el.selectionEnd ?? undefined,
+    initialSelectionStart:
+      el.selectionStart ?? /* istanbul ignore next */ undefined,
+    initialSelectionEnd:
+      el.selectionEnd ?? /* istanbul ignore next */ undefined,
   })
 
   if (elementType !== 'textarea') {

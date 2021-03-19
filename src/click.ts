@@ -26,8 +26,8 @@ export declare interface clickOptions {
 
 function clickLabel(
   label: HTMLLabelElement,
-  init?: MouseEventInit,
-  {clickCount}: clickOptions = {},
+  init: MouseEventInit | undefined,
+  {clickCount}: clickOptions,
 ) {
   if (isLabelWithInternallyDisabledControl(label)) return
 
@@ -47,8 +47,8 @@ function clickLabel(
 
 function clickBooleanElement(
   element: HTMLInputElement,
-  init?: MouseEventInit,
-  {clickCount}: clickOptions = {},
+  init: MouseEventInit | undefined,
+  {clickCount}: clickOptions,
 ) {
   fireEvent.pointerDown(element, init)
   if (!element.disabled) {
@@ -70,8 +70,8 @@ function clickBooleanElement(
 
 function clickElement(
   element: Element,
-  init?: MouseEventInit,
-  {clickCount}: clickOptions = {},
+  init: MouseEventInit | undefined,
+  {clickCount}: clickOptions,
 ) {
   const previousElement = getPreviouslyFocusedElement(element)
   fireEvent.pointerDown(element, init)

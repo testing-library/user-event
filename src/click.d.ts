@@ -4,7 +4,9 @@ export declare interface clickOptions {
 }
 
 export declare function click(
-  element: TargetElement,
+  element: Element,
   init?: MouseEventInit,
   options?: clickOptions,
 ): void
+
+export declare function dblClick(element: Element, init?: MouseEventInit): void

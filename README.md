@@ -248,7 +248,7 @@ The following is an example of usage of this library with
 `<input type="time" />`
 
 ```jsx
-import React from 'react
+import React from 'react'
 import {render, screen} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 

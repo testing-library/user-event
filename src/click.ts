@@ -38,7 +38,7 @@ function clickLabel(
   )
   fireEvent.pointerUp(label, init)
   fireEvent.mouseUp(label, getMouseEventOptions('mouseup', init, clickCount))
-  fireEvent.click(label, getMouseEventOptions('click', init, clickCount))
+  fireClick(label, getMouseEventOptions('click', init, clickCount))
   // clicking the label will trigger a click of the label.control
   // however, it will not focus the label.control so we have to do it
   // ourselves.
@@ -64,7 +64,7 @@ function clickBooleanElement(
       element,
       getMouseEventOptions('mouseup', init, clickCount),
     )
-    fireEvent.click(element, getMouseEventOptions('click', init, clickCount))
+    fireClick(element, getMouseEventOptions('click', init, clickCount))
   }
 }
 
@@ -95,7 +95,7 @@ function clickElement(
       element,
       getMouseEventOptions('mouseup', init, clickCount),
     )
-    fireEvent.click(element, getMouseEventOptions('click', init, clickCount))
+    fireClick(element, getMouseEventOptions('click', init, clickCount))
     const parentLabel = element.closest('label')
     if (parentLabel?.control) focus(parentLabel.control)
   }
@@ -130,6 +130,14 @@ function click(
     }
   } else {
     clickElement(element, init, {clickCount})
+  }
+}
+
+function fireClick(element: Element, mouseEventOptions: MouseEventInit) {
+  if (mouseEventOptions.button === 2) {
+    fireEvent.contextMenu(element, mouseEventOptions)
+  } else {
+    fireEvent.click(element, mouseEventOptions)
   }
 }
 

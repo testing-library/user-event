@@ -219,3 +219,19 @@ test('should not trigger input event when selected files are the same', () => {
   expect(eventWasFired('input')).toBe(true)
   expect(element.files).toHaveLength(0)
 })
+
+test('input.files implements iterable', () => {
+  const {element, getEvents} = setup(`<input type="file" multiple/>`)
+  const files = [
+    new File(['hello'], 'hello.png', {type: 'image/png'}),
+    new File(['there'], 'there.png', {type: 'image/png'}),
+  ]
+
+  userEvent.upload(element, files)
+  const eventTargetFiles = getEvents('input')[0].target.files
+
+  expect(eventTargetFiles).toBe(element.files)
+  expect(eventTargetFiles).not.toEqual(files)
+
+  expect(Array.from(eventTargetFiles)).toEqual(files)
+})

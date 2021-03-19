@@ -47,10 +47,19 @@ function upload(
   // the event fired in the browser isn't actually an "input" or "change" event
   // but a new Event with a type set to "input" and "change"
   // Kinda odd...
-  const inputFiles: FileList = {
+  const inputFiles: FileList & Iterable<File> = {
     ...files,
     length: files.length,
     item: (index: number) => files[index],
+    [Symbol.iterator]() {
+      let i = 0
+      return {
+        next: () => ({
+          done: i >= files.length,
+          value: files[i++],
+        }),
+      }
+    },
   }
 
   fireEvent(

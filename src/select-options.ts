@@ -1,11 +1,16 @@
 import {createEvent, getConfig, fireEvent} from '@testing-library/dom'
-import {isInstanceOfElement} from './utils'
+import {isDisabled, isInstanceOfElement} from './utils'
 import {click} from './click'
 import {focus} from './focus'
 import {hover, unhover} from './hover'
 
-function selectOptionsBase(newValue, select, values, init) {
-  if (!newValue && !select.multiple) {
+function selectOptionsBase(
+  newValue: boolean,
+  select: Element,
+  values: HTMLElement | HTMLElement[] | string[] | string,
+  init?: MouseEventInit,
+) {
+  if (!newValue && !(select as HTMLSelectElement).multiple) {
     throw getConfig().getElementError(
       `Unable to deselect an option in a non-multiple select. Use selectOptions to change the selection instead.`,
       select,
@@ -17,28 +22,30 @@ function selectOptionsBase(newValue, select, values, init) {
   )
   const selectedOptions = valArray
     .map(val => {
-      if (allOptions.includes(val)) {
+      if (typeof val !== 'string' && allOptions.includes(val)) {
         return val
       } else {
         const matchingOption = allOptions.find(
-          o => o.value === val || o.innerHTML === val,
+          o =>
+            (o as HTMLInputElement | HTMLTextAreaElement).value === val ||
+            o.innerHTML === val,
         )
         if (matchingOption) {
           return matchingOption
         } else {
           throw getConfig().getElementError(
-            `Value "${val}" not found in options`,
+            `Value "${String(val)}" not found in options`,
             select,
           )
         }
       }
     })
-    .filter(option => !option.disabled)
+    .filter(option => !isDisabled(option))
 
-  if (select.disabled || !selectedOptions.length) return
+  if (isDisabled(select) || !selectedOptions.length) return
 
   if (isInstanceOfElement(select, 'HTMLSelectElement')) {
-    if (select.multiple) {
+    if ((select as HTMLSelectElement).multiple) {
       for (const option of selectedOptions) {
         // events fired for multiple select are weird. Can't use hover...
         fireEvent.pointerOver(option, init)
@@ -49,17 +56,17 @@ function selectOptionsBase(newValue, select, values, init) {
         fireEvent.mouseMove(option, init)
         fireEvent.pointerDown(option, init)
         fireEvent.mouseDown(option, init)
-        focus(select, init)
+        focus(select)
         fireEvent.pointerUp(option, init)
         fireEvent.mouseUp(option, init)
-        selectOption(option)
+        selectOption(option as HTMLOptionElement)
         fireEvent.click(option, init)
       }
     } else if (selectedOptions.length === 1) {
       // the click to open the select options
       click(select, init)
 
-      selectOption(selectedOptions[0])
+      selectOption(selectedOptions[0] as HTMLOptionElement)
 
       // the browser triggers another click event on the select for the click on the option
       // this second click has no 'down' phase
@@ -89,7 +96,7 @@ function selectOptionsBase(newValue, select, values, init) {
     )
   }
 
-  function selectOption(option) {
+  function selectOption(option: HTMLOptionElement) {
     option.selected = newValue
     fireEvent(
       select,

@@ -3,15 +3,25 @@ import {
   setSelectionRangeIfNecessary,
   calculateNewValue,
   eventWrapper,
+  isDisabled,
 } from './utils'
 
+interface pasteOptions {
+  initialSelectionStart?: number
+  initialSelectionEnd?: number
+}
+
 function paste(
-  element,
-  text,
-  init,
-  {initialSelectionStart, initialSelectionEnd} = {},
+  element: HTMLInputElement | HTMLTextAreaElement,
+  text: string,
+  init?: MouseEventInit,
+  {initialSelectionStart, initialSelectionEnd}: pasteOptions = {},
 ) {
-  if (element.disabled) return
+  if (isDisabled(element)) {
+    return
+  }
+
+  // TODO: implement for contenteditable
   if (typeof element.value === 'undefined') {
     throw new TypeError(
       `the current element is of type ${element.tagName} and doesn't have a valid value`,
@@ -43,10 +53,16 @@ function paste(
       inputType: 'insertFromPaste',
       target: {value: newValue},
     })
-    setSelectionRangeIfNecessary(element, {
-      newSelectionStart,
-      newSelectionEnd: newSelectionStart,
-    })
+    setSelectionRangeIfNecessary(
+      element,
+
+      // TODO: investigate why the selection caused by invalid parameters was expected
+      ({
+        newSelectionStart,
+        selectionEnd: newSelectionStart,
+      } as unknown) as number,
+      ({} as unknown) as number,
+    )
   }
 }
 

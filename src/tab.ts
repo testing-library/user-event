@@ -1,9 +1,19 @@
 import {fireEvent} from '@testing-library/dom'
-import {getActiveElement, FOCUSABLE_SELECTOR, isVisible} from './utils'
+import {
+  getActiveElement,
+  FOCUSABLE_SELECTOR,
+  isVisible,
+  isDisabled,
+} from './utils'
 import {focus} from './focus'
 import {blur} from './blur'
 
-function getNextElement(currentIndex, shift, elements, focusTrap) {
+function getNextElement(
+  currentIndex: number,
+  shift: boolean,
+  elements: Element[],
+  focusTrap?: Document | Element,
+) {
   if (focusTrap === document && currentIndex === 0 && shift) {
     return document.body
   } else if (
@@ -19,7 +29,12 @@ function getNextElement(currentIndex, shift, elements, focusTrap) {
   }
 }
 
-function tab({shift = false, focusTrap} = {}) {
+interface tabOptions {
+  shift?: boolean
+  focusTrap?: Document | Element
+}
+
+function tab({shift = false, focusTrap}: tabOptions = {}) {
   const previousElement = getActiveElement(focusTrap?.ownerDocument ?? document)
 
   if (!focusTrap) {
@@ -28,14 +43,13 @@ function tab({shift = false, focusTrap} = {}) {
 
   const focusableElements = focusTrap.querySelectorAll(FOCUSABLE_SELECTOR)
 
-  const enabledElements = [...focusableElements].filter(
+  const enabledElements = Array.from(focusableElements).filter(
     el =>
       el === previousElement ||
       (el.getAttribute('tabindex') !== '-1' &&
-        !el.disabled &&
+        !isDisabled(el) &&
         // Hidden elements are not tabable
-        isVisible(el)
-      ),
+        isVisible(el)),
   )
 
   if (enabledElements.length === 0) return
@@ -51,8 +65,8 @@ function tab({shift = false, focusTrap} = {}) {
         return a.idx - b.idx
       }
 
-      const tabIndexA = a.el.getAttribute('tabindex')
-      const tabIndexB = b.el.getAttribute('tabindex')
+      const tabIndexA = Number(a.el.getAttribute('tabindex'))
+      const tabIndexB = Number(b.el.getAttribute('tabindex'))
 
       const diff = tabIndexA - tabIndexB
 
@@ -60,20 +74,22 @@ function tab({shift = false, focusTrap} = {}) {
     })
     .map(({el}) => el)
 
-  const checkedRadio = {}
-  let prunedElements = []
-  orderedElements.forEach(el => {
+  // TODO: verify/remove type casts
+
+  const checkedRadio: Record<string, HTMLInputElement> = {}
+  let prunedElements: HTMLInputElement[] = []
+  orderedElements.forEach(currentElement => {
     // For radio groups keep only the active radio
     // If there is no active radio, keep only the checked radio
     // If there is no checked radio, treat like everything else
+
+    const el = currentElement as HTMLInputElement
+
     if (el.type === 'radio' && el.name) {
       // If the active element is part of the group, add only that
-      if (
-        previousElement &&
-        previousElement.type === el.type &&
-        previousElement.name === el.name
-      ) {
-        if (el === previousElement) {
+      const prev = previousElement as HTMLInputElement | null
+      if (prev && prev.type === el.type && prev.name === el.name) {
+        if (el === prev) {
           prunedElements.push(el)
         }
         return
@@ -90,7 +106,7 @@ function tab({shift = false, focusTrap} = {}) {
       }
 
       // If we already found the checked one, skip
-      if (checkedRadio[el.name]) {
+      if (typeof checkedRadio[el.name] !== 'undefined') {
         return
       }
     }

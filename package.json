@@ -3,7 +3,6 @@
   "version": "0.0.0-semantically-released",
   "description": "Fire events the same way the user does",
   "main": "dist/index.js",
-  "typings": "typings/index.d.ts",
   "keywords": [
     "react-testing-library",
     "dom-testing-library",
@@ -25,8 +24,7 @@
   },
   "homepage": "https://github.com/testing-library/user-event#readme",
   "files": [
-    "dist",
-    "typings/index.d.ts"
+    "dist"
   ],
   "scripts": {
     "build": "kcd-scripts build",
@@ -36,7 +34,7 @@
     "test:debug": "kcd-scripts --inspect-brk test --runInBand",
     "test:update": "npm test -- --updateSnapshot --coverage",
     "validate": "kcd-scripts validate",
-    "typecheck": "kcd-scripts typecheck --build typings"
+    "typecheck": "kcd-scripts typecheck"
   },
   "dependencies": {
     "@babel/runtime": "^7.12.5"

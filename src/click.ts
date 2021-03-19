@@ -3,12 +3,14 @@ import {
   getMouseEventOptions,
   isLabelWithInternallyDisabledControl,
   isFocusable,
+  isDisabled,
+  isInstanceOfElement,
 } from './utils'
 import {hover} from './hover'
 import {blur} from './blur'
 import {focus} from './focus'
 
-function getPreviouslyFocusedElement(element) {
+function getPreviouslyFocusedElement(element: Element) {
   const focusedElement = element.ownerDocument.activeElement
   const wasAnotherElementFocused =
     focusedElement &&
@@ -17,7 +19,16 @@ function getPreviouslyFocusedElement(element) {
   return wasAnotherElementFocused ? focusedElement : null
 }
 
-function clickLabel(label, init, {clickCount}) {
+export declare interface clickOptions {
+  skipHover?: boolean
+  clickCount?: number
+}
+
+function clickLabel(
+  label: HTMLLabelElement,
+  init: MouseEventInit | undefined,
+  {clickCount}: clickOptions,
+) {
   if (isLabelWithInternallyDisabledControl(label)) return
 
   fireEvent.pointerDown(label, init)
@@ -34,7 +45,11 @@ function clickLabel(label, init, {clickCount}) {
   if (label.control) focus(label.control)
 }
 
-function clickBooleanElement(element, init, clickCount) {
+function clickBooleanElement(
+  element: HTMLInputElement,
+  init: MouseEventInit | undefined,
+  {clickCount}: clickOptions,
+) {
   fireEvent.pointerDown(element, init)
   if (!element.disabled) {
     fireEvent.mouseDown(
@@ -42,7 +57,7 @@ function clickBooleanElement(element, init, clickCount) {
       getMouseEventOptions('mousedown', init, clickCount),
     )
   }
-  focus(element, init)
+  focus(element)
   fireEvent.pointerUp(element, init)
   if (!element.disabled) {
     fireEvent.mouseUp(
@@ -53,10 +68,14 @@ function clickBooleanElement(element, init, clickCount) {
   }
 }
 
-function clickElement(element, init, {clickCount}) {
+function clickElement(
+  element: Element,
+  init: MouseEventInit | undefined,
+  {clickCount}: clickOptions,
+) {
   const previousElement = getPreviouslyFocusedElement(element)
   fireEvent.pointerDown(element, init)
-  if (!element.disabled) {
+  if (!isDisabled(element)) {
     const continueDefaultHandling = fireEvent.mouseDown(
       element,
       getMouseEventOptions('mousedown', init, clickCount),
@@ -64,25 +83,26 @@ function clickElement(element, init, {clickCount}) {
     if (continueDefaultHandling) {
       const closestFocusable = findClosest(element, isFocusable)
       if (previousElement && !closestFocusable) {
-        blur(previousElement, init)
+        blur(previousElement)
       } else if (closestFocusable) {
-        focus(closestFocusable, init)
+        focus(closestFocusable)
       }
     }
   }
   fireEvent.pointerUp(element, init)
-  if (!element.disabled) {
+  if (!isDisabled(element)) {
     fireEvent.mouseUp(
       element,
       getMouseEventOptions('mouseup', init, clickCount),
     )
     fireEvent.click(element, getMouseEventOptions('click', init, clickCount))
     const parentLabel = element.closest('label')
-    if (parentLabel?.control) focus(parentLabel.control, init)
+    if (parentLabel?.control) focus(parentLabel.control)
   }
 }
 
-function findClosest(el, callback) {
+function findClosest(element: Element, callback: (e: Element) => boolean) {
+  let el: Element | null = element
   do {
     if (callback(el)) {
       return el
@@ -92,25 +112,28 @@ function findClosest(el, callback) {
   return undefined
 }
 
-function click(element, init, {skipHover = false, clickCount = 0} = {}) {
+function click(
+  element: Element,
+  init?: MouseEventInit,
+  {skipHover = false, clickCount = 0}: clickOptions = {},
+) {
   if (!skipHover) hover(element, init)
-  switch (element.tagName) {
-    case 'LABEL':
-      clickLabel(element, init, {clickCount})
-      break
-    case 'INPUT':
-      if (element.type === 'checkbox' || element.type === 'radio') {
-        clickBooleanElement(element, init, {clickCount})
-      } else {
-        clickElement(element, init, {clickCount})
-      }
-      break
-    default:
-      clickElement(element, init, {clickCount})
+
+  if (isInstanceOfElement(element, 'HTMLLabelElement')) {
+    clickLabel(element as HTMLLabelElement, init, {clickCount})
+  } else if (isInstanceOfElement(element, 'HTMLInputElement')) {
+    const el = element as HTMLInputElement
+    if (el.type === 'checkbox' || el.type === 'radio') {
+      clickBooleanElement(el, init, {clickCount})
+    } else {
+      clickElement(el, init, {clickCount})
+    }
+  } else {
+    clickElement(element, init, {clickCount})
   }
 }
 
-function dblClick(element, init) {
+function dblClick(element: Element, init?: MouseEventInit) {
   hover(element, init)
   click(element, init, {skipHover: true, clickCount: 0})
   click(element, init, {skipHover: true, clickCount: 1})

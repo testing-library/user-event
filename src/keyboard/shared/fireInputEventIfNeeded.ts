@@ -4,6 +4,7 @@ import {
   isClickableInput,
   getValue,
   isContentEditable,
+  hasSelection,
 } from '../../utils'
 import {setSelectionRange} from './setSelectionRange'
 
@@ -28,7 +29,7 @@ export function fireInputEventIfNeeded({
     el &&
     !isReadonly(el) &&
     !isClickableInput(el) &&
-    newValue !== prevValue
+    (newValue !== prevValue || hasSelection(el))
   ) {
     if (isContentEditable(el)) {
       fireEvent.input(el, {

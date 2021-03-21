@@ -287,6 +287,49 @@ test('should replace selected text', () => {
   expect(element).toHaveValue('hello friend')
 })
 
+// https://github.com/testing-library/user-event/issues/583
+test('should replace selected text when selected text equals first value of text to be typed', () => {
+  const {element, getEventSnapshot} = setup('<input type="text" value="a" />')
+  element.select()
+  userEvent.type(element, 'abc')
+
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
+    Events fired on: input[value="abc"]
+
+    input[value="a"] - select
+    input[value="a"] - pointerover
+    input[value="a"] - pointerenter
+    input[value="a"] - mouseover: Left (0)
+    input[value="a"] - mouseenter: Left (0)
+    input[value="a"] - pointermove
+    input[value="a"] - mousemove: Left (0)
+    input[value="a"] - pointerdown
+    input[value="a"] - mousedown: Left (0)
+    input[value="a"] - focus
+    input[value="a"] - focusin
+    input[value="a"] - pointerup
+    input[value="a"] - mouseup: Left (0)
+    input[value="a"] - click: Left (0)
+    input[value="a"] - keydown: a (97)
+    input[value="a"] - keypress: a (97)
+    input[value="a"] - input
+    input[value="a"] - select
+    input[value="a"] - keyup: a (97)
+    input[value="a"] - keydown: b (98)
+    input[value="a"] - keypress: b (98)
+    input[value="ab"] - input
+      "a{CURSOR}" -> "ab{CURSOR}"
+    input[value="ab"] - keyup: b (98)
+    input[value="ab"] - keydown: c (99)
+    input[value="ab"] - keypress: c (99)
+    input[value="abc"] - input
+      "ab{CURSOR}" -> "abc{CURSOR}"
+    input[value="abc"] - keyup: c (99)
+  `)
+
+  expect(element).toHaveValue('abc')
+})
+
 test('does not continue firing events when disabled during typing', () => {
   const {element} = setup('<input />', {
     eventHandlers: {input: e => (e.target.disabled = true)},
@@ -1015,43 +1058,43 @@ test('can type into an input with type `time`', () => {
   const {element, getEventSnapshot} = setup('<input type="time" />')
   userEvent.type(element, '01:05')
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
-      Events fired on: input[value="01:05"]
+    Events fired on: input[value="01:05"]
 
-      input[value=""] - pointerover
-      input[value=""] - pointerenter
-      input[value=""] - mouseover: Left (0)
-      input[value=""] - mouseenter: Left (0)
-      input[value=""] - pointermove
-      input[value=""] - mousemove: Left (0)
-      input[value=""] - pointerdown
-      input[value=""] - mousedown: Left (0)
-      input[value=""] - focus
-      input[value=""] - focusin
-      input[value=""] - pointerup
-      input[value=""] - mouseup: Left (0)
-      input[value=""] - click: Left (0)
-      input[value=""] - keydown: 0 (48)
-      input[value=""] - keypress: 0 (48)
-      input[value=""] - keyup: 0 (48)
-      input[value=""] - keydown: 1 (49)
-      input[value=""] - keypress: 1 (49)
-      input[value=""] - keyup: 1 (49)
-      input[value=""] - keydown: : (58)
-      input[value=""] - keypress: : (58)
-      input[value=""] - keyup: : (58)
-      input[value=""] - keydown: 0 (48)
-      input[value=""] - keypress: 0 (48)
-      input[value="01:00"] - input
-        "{CURSOR}" -> "{CURSOR}01:00"
-      input[value="01:00"] - change
-      input[value="01:00"] - keyup: 0 (48)
-      input[value="01:00"] - keydown: 5 (53)
-      input[value="01:00"] - keypress: 5 (53)
-      input[value="01:05"] - input
-        "{CURSOR}01:00" -> "{CURSOR}01:05"
-      input[value="01:05"] - change
-      input[value="01:05"] - keyup: 5 (53)
-    `)
+    input[value=""] - pointerover
+    input[value=""] - pointerenter
+    input[value=""] - mouseover: Left (0)
+    input[value=""] - mouseenter: Left (0)
+    input[value=""] - pointermove
+    input[value=""] - mousemove: Left (0)
+    input[value=""] - pointerdown
+    input[value=""] - mousedown: Left (0)
+    input[value=""] - focus
+    input[value=""] - focusin
+    input[value=""] - pointerup
+    input[value=""] - mouseup: Left (0)
+    input[value=""] - click: Left (0)
+    input[value=""] - keydown: 0 (48)
+    input[value=""] - keypress: 0 (48)
+    input[value=""] - keyup: 0 (48)
+    input[value=""] - keydown: 1 (49)
+    input[value=""] - keypress: 1 (49)
+    input[value=""] - keyup: 1 (49)
+    input[value=""] - keydown: : (58)
+    input[value=""] - keypress: : (58)
+    input[value=""] - keyup: : (58)
+    input[value=""] - keydown: 0 (48)
+    input[value=""] - keypress: 0 (48)
+    input[value="01:00"] - input
+      "{CURSOR}" -> "{CURSOR}01:00"
+    input[value="01:00"] - change
+    input[value="01:00"] - keyup: 0 (48)
+    input[value="01:00"] - keydown: 5 (53)
+    input[value="01:00"] - keypress: 5 (53)
+    input[value="01:05"] - input
+      "{CURSOR}01:00" -> "{CURSOR}01:05"
+    input[value="01:05"] - change
+    input[value="01:05"] - keyup: 5 (53)
+  `)
   expect(element).toHaveValue('01:05')
 })
 
@@ -1059,40 +1102,40 @@ test('can type into an input with type `time` without ":"', () => {
   const {element, getEventSnapshot} = setup('<input type="time" />')
   userEvent.type(element, '0105')
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
-      Events fired on: input[value="01:05"]
+    Events fired on: input[value="01:05"]
 
-      input[value=""] - pointerover
-      input[value=""] - pointerenter
-      input[value=""] - mouseover: Left (0)
-      input[value=""] - mouseenter: Left (0)
-      input[value=""] - pointermove
-      input[value=""] - mousemove: Left (0)
-      input[value=""] - pointerdown
-      input[value=""] - mousedown: Left (0)
-      input[value=""] - focus
-      input[value=""] - focusin
-      input[value=""] - pointerup
-      input[value=""] - mouseup: Left (0)
-      input[value=""] - click: Left (0)
-      input[value=""] - keydown: 0 (48)
-      input[value=""] - keypress: 0 (48)
-      input[value=""] - keyup: 0 (48)
-      input[value=""] - keydown: 1 (49)
-      input[value=""] - keypress: 1 (49)
-      input[value=""] - keyup: 1 (49)
-      input[value=""] - keydown: 0 (48)
-      input[value=""] - keypress: 0 (48)
-      input[value="01:00"] - input
-        "{CURSOR}" -> "{CURSOR}01:00"
-      input[value="01:00"] - change
-      input[value="01:00"] - keyup: 0 (48)
-      input[value="01:00"] - keydown: 5 (53)
-      input[value="01:00"] - keypress: 5 (53)
-      input[value="01:05"] - input
-        "{CURSOR}01:00" -> "{CURSOR}01:05"
-      input[value="01:05"] - change
-      input[value="01:05"] - keyup: 5 (53)
-    `)
+    input[value=""] - pointerover
+    input[value=""] - pointerenter
+    input[value=""] - mouseover: Left (0)
+    input[value=""] - mouseenter: Left (0)
+    input[value=""] - pointermove
+    input[value=""] - mousemove: Left (0)
+    input[value=""] - pointerdown
+    input[value=""] - mousedown: Left (0)
+    input[value=""] - focus
+    input[value=""] - focusin
+    input[value=""] - pointerup
+    input[value=""] - mouseup: Left (0)
+    input[value=""] - click: Left (0)
+    input[value=""] - keydown: 0 (48)
+    input[value=""] - keypress: 0 (48)
+    input[value=""] - keyup: 0 (48)
+    input[value=""] - keydown: 1 (49)
+    input[value=""] - keypress: 1 (49)
+    input[value=""] - keyup: 1 (49)
+    input[value=""] - keydown: 0 (48)
+    input[value=""] - keypress: 0 (48)
+    input[value="01:00"] - input
+      "{CURSOR}" -> "{CURSOR}01:00"
+    input[value="01:00"] - change
+    input[value="01:00"] - keyup: 0 (48)
+    input[value="01:00"] - keydown: 5 (53)
+    input[value="01:00"] - keypress: 5 (53)
+    input[value="01:05"] - input
+      "{CURSOR}01:00" -> "{CURSOR}01:05"
+    input[value="01:05"] - change
+    input[value="01:05"] - keyup: 5 (53)
+  `)
   expect(element).toHaveValue('01:05')
 })
 

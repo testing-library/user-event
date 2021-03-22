@@ -143,7 +143,10 @@ function tab({shift = false, focusTrap}: tabOptions = {}) {
 
   if (continueToTab) {
     if (nextElement === document.body) {
-      blur(previousElement)
+      /* istanbul ignore else */
+      if (previousElement) {
+        blur(previousElement)
+      }
     } else {
       focus(nextElement)
     }

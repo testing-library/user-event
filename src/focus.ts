@@ -1,6 +1,6 @@
 import {getActiveElement, isFocusable, eventWrapper} from './utils'
 
-function focus(element) {
+function focus(element: Element) {
   if (!isFocusable(element)) return
 
   const isAlreadyActive = getActiveElement(element.ownerDocument) === element

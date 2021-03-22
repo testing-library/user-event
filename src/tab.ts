@@ -143,7 +143,9 @@ function tab({shift = false, focusTrap}: tabOptions = {}) {
 
   if (continueToTab) {
     if (nextElement === document.body) {
-      blur(previousElement)
+      if (previousElement) {
+        blur(previousElement)
+      }
     } else {
       focus(nextElement)
     }

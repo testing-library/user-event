@@ -165,17 +165,22 @@ export const keypressBehavior: behaviorPlugin[] = [
       keyDef.key === 'Enter' &&
       (isInstanceOfElement(element, 'HTMLTextAreaElement') ||
         isContentEditable(element)),
-    handle: (keyDef, element) => {
+    handle: (keyDef, element, options, state) => {
       const {newValue, newSelectionStart} = calculateNewValue(
         '\n',
         element as HTMLElement,
       )
 
+      const inputType =
+        isContentEditable(element) && !state.modifiers.shift
+          ? 'insertParagraph'
+          : 'insertLineBreak'
+
       fireInputEventIfNeeded({
         newValue,
         newSelectionStart,
         eventOverrides: {
-          inputType: 'insertLineBreak',
+          inputType,
         },
         currentElement: () => element,
       })

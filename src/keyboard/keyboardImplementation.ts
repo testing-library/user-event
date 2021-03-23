@@ -51,10 +51,7 @@ export async function keyboardImplementation(
         state,
       )
 
-      if (
-        unpreventedDefault &&
-        (keyDef.key?.length === 1 || keyDef.key === 'Enter')
-      ) {
+      if (unpreventedDefault && hasKeyPress(keyDef, state)) {
         keypress(keyDef, getCurrentElement, options, state)
       }
 
@@ -193,4 +190,12 @@ function applyPlugins(
   }
 
   return !!plugin
+}
+
+function hasKeyPress(keyDef: keyboardKey, state: keyboardState) {
+  return (
+    (keyDef.key?.length === 1 || keyDef.key === 'Enter') &&
+    !state.modifiers.ctrl &&
+    !state.modifiers.alt
+  )
 }

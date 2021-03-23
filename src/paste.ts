@@ -14,7 +14,7 @@ interface pasteOptions {
 function paste(
   element: HTMLInputElement | HTMLTextAreaElement,
   text: string,
-  init?: MouseEventInit,
+  init?: ClipboardEventInit,
   {initialSelectionStart, initialSelectionEnd}: pasteOptions = {},
 ) {
   if (isDisabled(element)) {

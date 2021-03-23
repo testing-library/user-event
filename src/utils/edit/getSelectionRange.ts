@@ -8,10 +8,9 @@ export function getSelectionRange(
 } {
   if (isContentEditable(element)) {
     const selection = element.ownerDocument.getSelection()
-    const range = selection?.getRangeAt(0)
 
-    // istanbul ignore else
-    if (range) {
+    if (selection?.rangeCount) {
+      const range = selection.getRangeAt(0)
       return {
         selectionStart: range.startOffset,
         selectionEnd: range.endOffset,

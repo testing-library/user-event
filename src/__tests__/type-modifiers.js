@@ -235,7 +235,7 @@ test('{alt}a{/alt}', () => {
   userEvent.type(element, '{alt}a{/alt}')
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
-    Events fired on: input[value="a"]
+    Events fired on: input[value=""]
 
     input[value=""] - pointerover
     input[value=""] - pointerenter
@@ -252,11 +252,8 @@ test('{alt}a{/alt}', () => {
     input[value=""] - click: Left (0)
     input[value=""] - keydown: Alt (18) {alt}
     input[value=""] - keydown: a (97) {alt}
-    input[value=""] - keypress: a (97) {alt}
-    input[value="a"] - input
-      "{CURSOR}" -> "a{CURSOR}"
-    input[value="a"] - keyup: a (97) {alt}
-    input[value="a"] - keyup: Alt (18)
+    input[value=""] - keyup: a (97) {alt}
+    input[value=""] - keyup: Alt (18)
   `)
 })
 
@@ -297,7 +294,7 @@ test('{ctrl}a{/ctrl}', () => {
   userEvent.type(element, '{ctrl}a{/ctrl}')
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
-    Events fired on: input[value="a"]
+    Events fired on: input[value=""]
 
     input[value=""] - pointerover
     input[value=""] - pointerenter
@@ -314,11 +311,8 @@ test('{ctrl}a{/ctrl}', () => {
     input[value=""] - click: Left (0)
     input[value=""] - keydown: Control (17) {ctrl}
     input[value=""] - keydown: a (97) {ctrl}
-    input[value=""] - keypress: a (97) {ctrl}
-    input[value="a"] - input
-      "{CURSOR}" -> "a{CURSOR}"
-    input[value="a"] - keyup: a (97) {ctrl}
-    input[value="a"] - keyup: Control (17)
+    input[value=""] - keyup: a (97) {ctrl}
+    input[value=""] - keyup: Control (17)
   `)
 })
 
@@ -896,7 +890,7 @@ test('{meta}{alt}{ctrl}a{/ctrl}{/alt}{/meta}', () => {
   userEvent.type(element, '{meta}{alt}{ctrl}a{/ctrl}{/alt}{/meta}')
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
-    Events fired on: input[value="a"]
+    Events fired on: input[value=""]
 
     input[value=""] - pointerover
     input[value=""] - pointerenter
@@ -915,13 +909,10 @@ test('{meta}{alt}{ctrl}a{/ctrl}{/alt}{/meta}', () => {
     input[value=""] - keydown: Alt (18) {alt}{meta}
     input[value=""] - keydown: Control (17) {alt}{meta}{ctrl}
     input[value=""] - keydown: a (97) {alt}{meta}{ctrl}
-    input[value=""] - keypress: a (97) {alt}{meta}{ctrl}
-    input[value="a"] - input
-      "{CURSOR}" -> "a{CURSOR}"
-    input[value="a"] - keyup: a (97) {alt}{meta}{ctrl}
-    input[value="a"] - keyup: Control (17) {alt}{meta}
-    input[value="a"] - keyup: Alt (18) {meta}
-    input[value="a"] - keyup: Meta (93)
+    input[value=""] - keyup: a (97) {alt}{meta}{ctrl}
+    input[value=""] - keyup: Control (17) {alt}{meta}
+    input[value=""] - keyup: Alt (18) {meta}
+    input[value=""] - keyup: Meta (93)
   `)
 })
 
@@ -1123,7 +1114,7 @@ test('any remaining type modifiers are automatically released at the end', () =>
   userEvent.type(element, '{meta}{alt}{ctrl}a{/alt}')
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
-    Events fired on: input[value="a"]
+    Events fired on: input[value=""]
 
     input[value=""] - pointerover
     input[value=""] - pointerenter
@@ -1142,13 +1133,10 @@ test('any remaining type modifiers are automatically released at the end', () =>
     input[value=""] - keydown: Alt (18) {alt}{meta}
     input[value=""] - keydown: Control (17) {alt}{meta}{ctrl}
     input[value=""] - keydown: a (97) {alt}{meta}{ctrl}
-    input[value=""] - keypress: a (97) {alt}{meta}{ctrl}
-    input[value="a"] - input
-      "{CURSOR}" -> "a{CURSOR}"
-    input[value="a"] - keyup: a (97) {alt}{meta}{ctrl}
-    input[value="a"] - keyup: Alt (18) {meta}{ctrl}
-    input[value="a"] - keyup: Meta (93) {ctrl}
-    input[value="a"] - keyup: Control (17)
+    input[value=""] - keyup: a (97) {alt}{meta}{ctrl}
+    input[value=""] - keyup: Alt (18) {meta}{ctrl}
+    input[value=""] - keyup: Meta (93) {ctrl}
+    input[value=""] - keyup: Control (17)
   `)
 })
 

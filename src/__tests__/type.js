@@ -1399,3 +1399,12 @@ test('move selection with arrows', () => {
     selectionStart: 1,
   })
 })
+
+test('overwrite selection with same value', () => {
+  const {element} = setup(`<input value="1"/>`)
+  element.select()
+
+  userEvent.type(element, '11123')
+
+  expect(element).toHaveValue('11123')
+})

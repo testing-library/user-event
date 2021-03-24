@@ -8,6 +8,7 @@ import {behaviorPlugin} from '../types'
 import {
   buildTimeValue,
   calculateNewValue,
+  getSpaceUntilMaxLength,
   getValue,
   isClickableInput,
   isContentEditable,
@@ -44,7 +45,6 @@ export const keypressBehavior: behaviorPlugin[] = [
       // this check was provided by fireInputEventIfNeeded
       // TODO: verify if it is even needed by this handler
       if (prevValue !== newValue) {
-
         fireInputEvent(element as HTMLInputElement, {
           newValue,
           newSelectionStart,
@@ -53,7 +53,6 @@ export const keypressBehavior: behaviorPlugin[] = [
             inputType: 'insertText',
           },
         })
-
       }
 
       fireChangeForInputTimeIfValid(
@@ -90,7 +89,6 @@ export const keypressBehavior: behaviorPlugin[] = [
       // this check was provided by fireInputEventIfNeeded
       // TODO: verify if it is even needed by this handler
       if (prevValue !== newValue) {
-
         fireInputEvent(element as HTMLInputElement, {
           newValue,
           newSelectionStart,
@@ -99,7 +97,6 @@ export const keypressBehavior: behaviorPlugin[] = [
             inputType: 'insertText',
           },
         })
-
       }
 
       if (isValidToBeTyped) {
@@ -149,9 +146,10 @@ export const keypressBehavior: behaviorPlugin[] = [
   {
     matches: (keyDef, element) =>
       keyDef.key?.length === 1 &&
-      (isElementType(element, ['input', 'textarea'], {readOnly: false}) &&
-        !isClickableInput(element) ||
-        isContentEditable(element)),
+      ((isElementType(element, ['input', 'textarea'], {readOnly: false}) &&
+        !isClickableInput(element)) ||
+        isContentEditable(element)) &&
+      getSpaceUntilMaxLength(element) !== 0,
     handle: (keyDef, element) => {
       const {newValue, newSelectionStart} = calculateNewValue(
         keyDef.key as string,
@@ -171,7 +169,9 @@ export const keypressBehavior: behaviorPlugin[] = [
   {
     matches: (keyDef, element) =>
       keyDef.key === 'Enter' &&
-      (isElementType(element, 'textarea', {readOnly: false}) || isContentEditable(element)),
+      (isElementType(element, 'textarea', {readOnly: false}) ||
+        isContentEditable(element)) &&
+      getSpaceUntilMaxLength(element) !== 0,
     handle: (keyDef, element, options, state) => {
       const {newValue, newSelectionStart} = calculateNewValue(
         '\n',

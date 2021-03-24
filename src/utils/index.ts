@@ -10,6 +10,7 @@ export * from './edit/isContentEditable'
 export * from './edit/isEditable'
 export * from './edit/isValidDateValue'
 export * from './edit/isValidInputTimeValue'
+export * from './edit/maxLength'
 export * from './edit/selectionRange'
 
 export * from './focus/getActiveElement'

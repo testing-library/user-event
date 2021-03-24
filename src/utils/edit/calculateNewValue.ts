@@ -1,4 +1,3 @@
-import {isElementType} from '../misc/isElementType'
 import {getSelectionRange} from './selectionRange'
 import {getValue} from './getValue'
 import {isValidDateValue} from './isValidDateValue'
@@ -69,46 +68,8 @@ export function calculateNewValue(
     }
   }
 
-  // can't use .maxLength property because of a jsdom bug:
-  // https://github.com/jsdom/jsdom/issues/2927
-  const maxLength = getSanitizedMaxLength(element)
-
-  if (maxLength === undefined) {
-    return {
-      newValue,
-      newSelectionStart,
-    }
-  } else {
-    return {
-      newValue: newValue.slice(0, maxLength),
-      newSelectionStart:
-        newSelectionStart > maxLength ? maxLength : newSelectionStart,
-    }
+  return {
+    newValue,
+    newSelectionStart,
   }
-}
-
-function getSanitizedMaxLength(element: Element) {
-  if (!supportsMaxLength(element)) {
-    return undefined
-  }
-
-  const attr = element.getAttribute('maxlength') ?? ''
-
-  return /^\d+$/.test(attr) && Number(attr) >= 0 ? Number(attr) : undefined
-}
-
-function supportsMaxLength(element: Element) {
-  if (isElementType(element, 'textarea')) return true
-
-  if (isElementType(element, 'input')) {
-    const type = element.getAttribute('type')
-
-    // Missing value default is "text"
-    if (!type) return true
-
-    // https://html.spec.whatwg.org/multipage/input.html#concept-input-apply
-    if (type.match(/email|password|search|telephone|text|url/)) return true
-  }
-
-  return false
 }

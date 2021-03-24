@@ -31,19 +31,22 @@ export function fireInputEventIfNeeded({
     !isClickableInput(el) &&
     newValue !== prevValue
   ) {
+    // apply the changes before firing the input event, so that input handlers can access the altered dom and selection
     if (isContentEditable(el)) {
-      fireEvent.input(el, {
-        target: {textContent: newValue},
-        ...eventOverrides,
-      })
+      el.textContent = newValue
+    } else /* istanbul ignore else */ if (isElementType(el, ['input', 'textarea'])) {
+      el.value = newValue
     } else {
-      fireEvent.input(el, {
-        target: {value: newValue},
-        ...eventOverrides,
-      })
+      // TODO: properly type guard
+      throw new Error('Invalid Element')
     }
-
     setSelectionRangeAfterInput(el, newValue, newSelectionStart)
+
+    fireEvent.input(el, {
+      ...eventOverrides,
+    })
+
+    setSelectionRangeAfterInputHandler(el, newValue)
   }
 
   return {prevValue}
@@ -58,6 +61,13 @@ function setSelectionRangeAfterInput(
   newValue: string,
   newSelectionStart: number,
 ) {
+  setSelectionRange(element, newSelectionStart, newSelectionStart)
+}
+
+function setSelectionRangeAfterInputHandler(
+  element: Element,
+  newValue: string
+) {
   // if we *can* change the selection start, then we will if the new value
   // is the same as the current value (so it wasn't programatically changed
   // when the fireEvent.input was triggered).
@@ -67,12 +77,9 @@ function setSelectionRangeAfterInput(
   const value = getValue(element) as string
 
   // don't apply this workaround on elements that don't necessarily report the visible value - e.g. number
-  if (
-    value === newValue ||
-    (value === '' && hasUnreliableEmptyValue(element))
-  ) {
-    setSelectionRange(element, newSelectionStart, newSelectionStart)
-  } else {
+  // TODO: this could probably be only applied when there is keyboardState.carryValue
+  const expectedValue = value === newValue || (value === '' && hasUnreliableEmptyValue(element))
+  if(!expectedValue) {
     // If the currentValue is different than the expected newValue and we *can*
     // change the selection range, than we should set it to the length of the
     // currentValue to ensure that the browser behavior is mimicked.

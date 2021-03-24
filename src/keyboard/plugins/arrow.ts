@@ -4,7 +4,7 @@
  */
 
 import {behaviorPlugin} from '../types'
-import {isElementType, setSelectionRangeIfNecessary} from '../../utils'
+import {getSelectionRange, isElementType, setSelectionRange} from '../../utils'
 
 export const keydownBehavior: behaviorPlugin[] = [
   {
@@ -13,7 +13,7 @@ export const keydownBehavior: behaviorPlugin[] = [
       (keyDef.key === 'ArrowLeft' || keyDef.key === 'ArrowRight') &&
       isElementType(element, 'input'),
     handle: (keyDef, element) => {
-      const {selectionStart, selectionEnd} = element as HTMLInputElement
+      const {selectionStart, selectionEnd} = getSelectionRange(element)
 
       const direction = keyDef.key === 'ArrowLeft' ? -1 : 1
 
@@ -24,7 +24,7 @@ export const keydownBehavior: behaviorPlugin[] = [
           ? selectionStart
           : selectionEnd) ?? /* istanbul ignore next */ 0
 
-      setSelectionRangeIfNecessary(element, newPos, newPos)
+      setSelectionRange(element, newPos, newPos)
     },
   },
 ]

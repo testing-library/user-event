@@ -130,7 +130,6 @@ it('continue typing with state', () => {
     input[value=""] - keydown: F (70) {shift}
     input[value=""] - keypress: F (70) {shift}
     input[value="F"] - input
-      "{CURSOR}" -> "F{CURSOR}"
     input[value="F"] - keyup: F (70) {shift}
     input[value="F"] - keyup: Shift (16)
   `)

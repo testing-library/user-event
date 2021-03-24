@@ -1,6 +1,6 @@
 import {fireEvent} from '@testing-library/dom'
 import {
-  setSelectionRangeIfNecessary,
+  setSelectionRange,
   calculateNewValue,
   eventWrapper,
   isDisabled,
@@ -38,7 +38,7 @@ function paste(
   // initialSelectionEnd is if you have an input with a value and want to
   // explicitely start typing with the cursor at 0. Not super common.
   if (element.selectionStart === 0 && element.selectionEnd === 0) {
-    setSelectionRangeIfNecessary(
+    setSelectionRange(
       element,
       initialSelectionStart ?? element.value.length,
       initialSelectionEnd ?? element.value.length,
@@ -53,7 +53,7 @@ function paste(
       inputType: 'insertFromPaste',
       target: {value: newValue},
     })
-    setSelectionRangeIfNecessary(
+    setSelectionRange(
       element,
 
       // TODO: investigate why the selection caused by invalid parameters was expected

@@ -27,12 +27,10 @@ test('honors maxlength', () => {
     input[value=""] - keydown: 1 (49)
     input[value=""] - keypress: 1 (49)
     input[value="1"] - input
-      "{CURSOR}" -> "1{CURSOR}"
     input[value="1"] - keyup: 1 (49)
     input[value="1"] - keydown: 2 (50)
     input[value="1"] - keypress: 2 (50)
     input[value="12"] - input
-      "1{CURSOR}" -> "12{CURSOR}"
     input[value="12"] - keyup: 2 (50)
     input[value="12"] - keydown: 3 (51)
     input[value="12"] - keypress: 3 (51)
@@ -63,17 +61,14 @@ test('honors maxlength="" as if there was no maxlength', () => {
     input[value=""] - keydown: 1 (49)
     input[value=""] - keypress: 1 (49)
     input[value="1"] - input
-      "{CURSOR}" -> "1{CURSOR}"
     input[value="1"] - keyup: 1 (49)
     input[value="1"] - keydown: 2 (50)
     input[value="1"] - keypress: 2 (50)
     input[value="12"] - input
-      "1{CURSOR}" -> "12{CURSOR}"
     input[value="12"] - keyup: 2 (50)
     input[value="12"] - keydown: 3 (51)
     input[value="12"] - keypress: 3 (51)
     input[value="123"] - input
-      "12{CURSOR}" -> "123{CURSOR}"
     input[value="123"] - keyup: 3 (51)
   `)
 })

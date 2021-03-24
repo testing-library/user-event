@@ -4,7 +4,7 @@
  */
 
 import {fireEvent} from '@testing-library/dom'
-import {getValue, isClickableInput, isInstanceOfElement} from '../../utils'
+import {getValue, isClickableInput, isElementType} from '../../utils'
 import {getKeyEventProps, getMouseEventProps} from '../getEventProps'
 import {fireInputEventIfNeeded} from '../shared'
 import {behaviorPlugin} from '../types'
@@ -78,16 +78,14 @@ export const keypressBehavior: behaviorPlugin[] = [
       keyDef.key === 'Enter' &&
       (isClickableInput(element) ||
         // Links with href defined should handle Enter the same as a click
-        (isInstanceOfElement(element, 'HTMLAnchorElement') &&
-          Boolean((element as HTMLAnchorElement).href))),
+        (isElementType(element, 'a') && Boolean(element.href))),
     handle: (keyDef, element, options, state) => {
       fireEvent.click(element, getMouseEventProps(state))
     },
   },
   {
     matches: (keyDef, element) =>
-      keyDef.key === 'Enter' &&
-      isInstanceOfElement(element, 'HTMLInputElement'),
+      keyDef.key === 'Enter' && isElementType(element, 'input'),
     handle: (keyDef, element) => {
       const form = (element as HTMLInputElement).form
 

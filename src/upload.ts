@@ -2,7 +2,7 @@ import {fireEvent, createEvent} from '@testing-library/dom'
 import {click} from './click'
 import {blur} from './blur'
 import {focus} from './focus'
-import {isDisabled, isInstanceOfElement} from './utils'
+import {isDisabled, isElementType} from './utils'
 
 interface uploadInit {
   clickInit?: MouseEventInit
@@ -23,9 +23,9 @@ function upload(
 
   click(element, init?.clickInit)
 
-  const input = isInstanceOfElement(element, 'HTMLLabelElement')
-    ? ((element as HTMLLabelElement).control as HTMLInputElement)
-    : (element as HTMLInputElement)
+  const input = isElementType(element, 'label')
+    ? (element.control as HTMLInputElement)
+    : element
 
   const files = (Array.isArray(fileOrFiles) ? fileOrFiles : [fileOrFiles])
     .filter(file => !applyAccept || isAcceptableFile(file, input.accept))

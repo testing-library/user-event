@@ -1,4 +1,4 @@
-import {isInstanceOfElement} from '../misc/isInstanceOfElement'
+import {isElementType} from '../misc/isElementType'
 
 const CLICKABLE_INPUT_TYPES = [
   'button',
@@ -11,8 +11,8 @@ const CLICKABLE_INPUT_TYPES = [
 
 export function isClickableInput(element: Element): boolean {
   return (
-    element.tagName === 'BUTTON' ||
-    (isInstanceOfElement(element, 'HTMLInputElement') &&
-      CLICKABLE_INPUT_TYPES.includes((element as HTMLInputElement).type))
+    isElementType(element, 'button') ||
+    (isElementType(element, 'input') &&
+      CLICKABLE_INPUT_TYPES.includes(element.type))
   )
 }

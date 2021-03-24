@@ -1,3 +1,4 @@
+import {isElementType} from 'utils/misc/isElementType'
 import {getSelectionRange} from './getSelectionRange'
 import {getValue} from './getValue'
 import {isValidDateValue} from './isValidDateValue'
@@ -97,9 +98,9 @@ function getSanitizedMaxLength(element: Element) {
 }
 
 function supportsMaxLength(element: Element) {
-  if (element.tagName === 'TEXTAREA') return true
+  if (isElementType(element, 'textarea')) return true
 
-  if (element.tagName === 'INPUT') {
+  if (isElementType(element, 'input')) {
     const type = element.getAttribute('type')
 
     // Missing value default is "text"

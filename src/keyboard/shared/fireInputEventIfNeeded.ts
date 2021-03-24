@@ -1,6 +1,6 @@
 import {fireEvent} from '@testing-library/dom'
 import {
-  isInstanceOfElement,
+  isElementType,
   isClickableInput,
   getValue,
   isContentEditable,
@@ -53,11 +53,5 @@ export function fireInputEventIfNeeded({
 }
 
 function isReadonly(element: Element): boolean {
-  if (
-    !isInstanceOfElement(element, 'HTMLInputElement') &&
-    !isInstanceOfElement(element, 'HTMLTextAreaElement')
-  ) {
-    return false
-  }
-  return (element as HTMLInputElement | HTMLTextAreaElement).readOnly
+  return isElementType(element, ['input', 'textarea'], {readOnly: true})
 }

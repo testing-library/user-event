@@ -1,75 +1,44 @@
-import { screen } from '@testing-library/dom'
-import {isInstanceOfElement, isVisible} from '../utils'
+import {screen} from '@testing-library/dom'
+import {isElementType, isVisible} from '../utils'
 import {setup} from './helpers/utils'
 
-// isInstanceOfElement can be removed once the peerDependency for @testing-library/dom is bumped to a version that includes https://github.com/testing-library/dom-testing-library/pull/885
-describe('check element type per isInstanceOfElement', () => {
-  let defaultViewDescriptor, spanDescriptor
-  beforeAll(() => {
-    defaultViewDescriptor = Object.getOwnPropertyDescriptor(
-      Object.getPrototypeOf(global.document),
-      'defaultView',
-    )
-    spanDescriptor = Object.getOwnPropertyDescriptor(
-      global.window,
-      'HTMLSpanElement',
-    )
-  })
-  afterEach(() => {
-    Object.defineProperty(
-      Object.getPrototypeOf(global.document),
-      'defaultView',
-      defaultViewDescriptor,
-    )
-    Object.defineProperty(global.window, 'HTMLSpanElement', spanDescriptor)
+describe('check element type per namespace, tagname and props', () => {
+  test('check in HTML document', () => {
+    const {elements} = setup(`<input readonly="true"/><textarea/>`)
+
+    expect(isElementType(elements[0], 'input')).toBe(true)
+    expect(isElementType(elements[0], 'input', {readOnly: false})).toBe(false)
+    expect(isElementType(elements[1], 'input')).toBe(false)
+    expect(isElementType(elements[1], ['input', 'textarea'])).toBe(true)
+    expect(
+      isElementType(elements[1], ['input', 'textarea'], {readOnly: false}),
+    ).toBe(true)
   })
 
-  test('check in regular jest environment', () => {
-    const {element} = setup(`<span></span>`)
-
-    expect(element.ownerDocument.defaultView).toEqual(
-      expect.objectContaining({
-        HTMLSpanElement: expect.any(Function),
-      }),
+  test('check in XML document', () => {
+    // const {element} = setup(`<input readonly="true"/>`)
+    const dom = new DOMParser().parseFromString(
+      `
+      <root xmlns="http://example.com/foo">
+        <input readonly="true"/>
+        <input xmlns="http://www.w3.org/1999/xhtml" readonly="true"/>
+      </root>
+    `,
+      'application/xml',
     )
+    const xmlInput = dom.getElementsByTagNameNS(
+      'http://example.com/foo',
+      'input',
+    )[0]
+    const htmlInput = dom.getElementsByTagNameNS(
+      'http://www.w3.org/1999/xhtml',
+      'input',
+    )[0]
 
-    expect(isInstanceOfElement(element, 'HTMLSpanElement')).toBe(true)
-    expect(isInstanceOfElement(element, 'HTMLDivElement')).toBe(false)
-  })
-
-  test('check in detached document', () => {
-    const {element} = setup(`<span></span>`)
-
-    Object.defineProperty(
-      Object.getPrototypeOf(element.ownerDocument),
-      'defaultView',
-      {value: null},
-    )
-
-    expect(element.ownerDocument.defaultView).toBe(null)
-
-    expect(isInstanceOfElement(element, 'HTMLSpanElement')).toBe(true)
-    expect(isInstanceOfElement(element, 'HTMLDivElement')).toBe(false)
-  })
-
-  test('check in environment not providing constructors on window', () => {
-    const {element} = setup(`<span></span>`)
-
-    delete global.window.HTMLSpanElement
-
-    expect(element.ownerDocument.defaultView.HTMLSpanElement).toBe(undefined)
-
-    expect(isInstanceOfElement(element, 'HTMLSpanElement')).toBe(true)
-    expect(isInstanceOfElement(element, 'HTMLDivElement')).toBe(false)
-  })
-
-  test('throw error if element is not created by HTML*Element constructor', () => {
-    const doc = new Document()
-
-    // constructor is global.Element
-    const element = doc.createElement('span')
-
-    expect(() => isInstanceOfElement(element, 'HTMLSpanElement')).toThrow()
+    expect(isElementType(xmlInput, 'input')).toBe(false)
+    expect(isElementType(htmlInput, 'input')).toBe(true)
+    expect(isElementType(htmlInput, 'input', {readOnly: true})).toBe(true)
+    expect(isElementType(htmlInput, 'input', {readOnly: false})).toBe(false)
   })
 })
 

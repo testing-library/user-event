@@ -1,4 +1,5 @@
 import {eventMap} from '@testing-library/dom/dist/event-map'
+import {isElementType} from '../../utils'
 // this is pretty helpful:
 // https://codesandbox.io/s/quizzical-worker-eo909
 
@@ -126,7 +127,7 @@ function addEventListener(el, type, listener, options) {
 }
 
 function getElementValue(element) {
-  if (element.tagName === 'SELECT' && element.multiple) {
+  if (isElementType(element, 'select') && element.multiple) {
     return JSON.stringify(Array.from(element.selectedOptions).map(o => o.value))
   } else if (element.getAttribute('role') === 'listbox') {
     return JSON.stringify(
@@ -137,7 +138,7 @@ function getElementValue(element) {
   } else if (
     element.type === 'checkbox' ||
     element.type === 'radio' ||
-    element.tagName === 'BUTTON'
+    isElementType(element, 'button')
   ) {
     // handled separately
     return null
@@ -156,7 +157,7 @@ function getElementDisplayName(element) {
     element.htmlFor ? `[for="${element.htmlFor}"]` : null,
     value ? `[value=${value}]` : null,
     hasChecked ? `[checked=${element.checked}]` : null,
-    element.tagName === 'OPTION' ? `[selected=${element.selected}]` : null,
+    isElementType(element, 'option') ? `[selected=${element.selected}]` : null,
     element.getAttribute('role') === 'option'
       ? `[aria-selected=${element.getAttribute('aria-selected')}]`
       : null,
@@ -197,7 +198,7 @@ function addListeners(element, {eventHandlers = {}} = {}) {
     })
   }
   // prevent default of submits in tests
-  if (element.tagName === 'FORM') {
+  if (isElementType(element, 'form')) {
     addEventListener(element, 'submit', e => e.preventDefault())
   }
 

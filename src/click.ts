@@ -4,7 +4,7 @@ import {
   isLabelWithInternallyDisabledControl,
   isFocusable,
   isDisabled,
-  isInstanceOfElement,
+  isElementType,
 } from './utils'
 import {hover} from './hover'
 import {blur} from './blur'
@@ -119,14 +119,13 @@ function click(
 ) {
   if (!skipHover) hover(element, init)
 
-  if (isInstanceOfElement(element, 'HTMLLabelElement')) {
-    clickLabel(element as HTMLLabelElement, init, {clickCount})
-  } else if (isInstanceOfElement(element, 'HTMLInputElement')) {
-    const el = element as HTMLInputElement
-    if (el.type === 'checkbox' || el.type === 'radio') {
-      clickBooleanElement(el, init, {clickCount})
+  if (isElementType(element, 'label')) {
+    clickLabel(element, init, {clickCount})
+  } else if (isElementType(element, 'input')) {
+    if (element.type === 'checkbox' || element.type === 'radio') {
+      clickBooleanElement(element, init, {clickCount})
     } else {
-      clickElement(el, init, {clickCount})
+      clickElement(element, init, {clickCount})
     }
   } else {
     clickElement(element, init, {clickCount})

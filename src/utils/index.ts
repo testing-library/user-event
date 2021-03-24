@@ -15,7 +15,7 @@ export * from './focus/isFocusable'
 export * from './focus/selector'
 
 export * from './misc/eventWrapper'
-export * from './misc/isInstanceOfElement'
+export * from './misc/isElementType'
 export * from './misc/isLabelWithInternallyDisabledControl'
 export * from './misc/isVisible'
 export * from './misc/isDisabled'

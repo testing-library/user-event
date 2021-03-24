@@ -7,7 +7,7 @@ import {behaviorPlugin} from '../types'
 import {
   getValue,
   isContentEditable,
-  isInstanceOfElement,
+  isElementType,
   setSelectionRangeIfNecessary,
 } from '../../utils'
 import {fireInputEventIfNeeded} from '../shared'
@@ -17,8 +17,7 @@ export const keydownBehavior: behaviorPlugin[] = [
   {
     matches: (keyDef, element) =>
       (keyDef.key === 'Home' || keyDef.key === 'End') &&
-      (isInstanceOfElement(element, 'HTMLInputElement') ||
-        isInstanceOfElement(element, 'HTMLTextAreaElement') ||
+      (isElementType(element, ['input', 'textarea']) ||
         isContentEditable(element)),
     handle: (keyDef, element) => {
       // This could probably been improved by collapsing a selection range

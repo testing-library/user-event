@@ -10,7 +10,7 @@ import {
   calculateNewValue,
   getValue,
   isContentEditable,
-  isInstanceOfElement,
+  isElementType,
   isValidDateValue,
   isValidInputTimeValue,
 } from '../../utils'
@@ -19,8 +19,7 @@ export const keypressBehavior: behaviorPlugin[] = [
   {
     matches: (keyDef, element) =>
       keyDef.key?.length === 1 &&
-      isInstanceOfElement(element, 'HTMLInputElement') &&
-      (element as HTMLInputElement).type === 'time',
+      isElementType(element, 'input', {type: 'time'}),
     handle: (keyDef, element, options, state) => {
       let newEntry = keyDef.key as string
 
@@ -62,8 +61,7 @@ export const keypressBehavior: behaviorPlugin[] = [
   {
     matches: (keyDef, element) =>
       keyDef.key?.length === 1 &&
-      isInstanceOfElement(element, 'HTMLInputElement') &&
-      (element as HTMLInputElement).type === 'date',
+      isElementType(element, 'input', {type: 'date'}),
     handle: (keyDef, element, options, state) => {
       let newEntry = keyDef.key as string
 
@@ -103,8 +101,7 @@ export const keypressBehavior: behaviorPlugin[] = [
   {
     matches: (keyDef, element) =>
       keyDef.key?.length === 1 &&
-      isInstanceOfElement(element, 'HTMLInputElement') &&
-      (element as HTMLInputElement).type === 'number',
+      isElementType(element, 'input', {type: 'number'}),
     handle: (keyDef, element, options, state) => {
       if (!/[\d.\-e]/.test(keyDef.key as string)) {
         return
@@ -140,8 +137,7 @@ export const keypressBehavior: behaviorPlugin[] = [
   {
     matches: (keyDef, element) =>
       keyDef.key?.length === 1 &&
-      (isInstanceOfElement(element, 'HTMLInputElement') ||
-        isInstanceOfElement(element, 'HTMLTextAreaElement') ||
+      (isElementType(element, ['input', 'textarea']) ||
         isContentEditable(element)),
     handle: (keyDef, element) => {
       const {newValue, newSelectionStart} = calculateNewValue(
@@ -163,8 +159,7 @@ export const keypressBehavior: behaviorPlugin[] = [
   {
     matches: (keyDef, element) =>
       keyDef.key === 'Enter' &&
-      (isInstanceOfElement(element, 'HTMLTextAreaElement') ||
-        isContentEditable(element)),
+      (isElementType(element, 'textarea') || isContentEditable(element)),
     handle: (keyDef, element, options, state) => {
       const {newValue, newSelectionStart} = calculateNewValue(
         '\n',

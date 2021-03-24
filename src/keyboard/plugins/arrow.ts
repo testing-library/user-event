@@ -4,14 +4,14 @@
  */
 
 import {behaviorPlugin} from '../types'
-import {isInstanceOfElement, setSelectionRangeIfNecessary} from '../../utils'
+import {isElementType, setSelectionRangeIfNecessary} from '../../utils'
 
 export const keydownBehavior: behaviorPlugin[] = [
   {
     // TODO: implement for textarea and contentEditable
     matches: (keyDef, element) =>
       (keyDef.key === 'ArrowLeft' || keyDef.key === 'ArrowRight') &&
-      isInstanceOfElement(element, 'HTMLInputElement'),
+      isElementType(element, 'input'),
     handle: (keyDef, element) => {
       const {selectionStart, selectionEnd} = element as HTMLInputElement
 

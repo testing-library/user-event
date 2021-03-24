@@ -1,4 +1,4 @@
-import {isElementType} from 'utils/misc/isElementType'
+import {isElementType} from '../misc/isElementType'
 import {getSelectionRange} from './selectionRange'
 import {getValue} from './getValue'
 import {isValidDateValue} from './isValidDateValue'

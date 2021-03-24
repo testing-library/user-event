@@ -17,7 +17,7 @@ type InputWithInternalSelection = HTMLInputElement & {
   }
 }
 
-function hasSelectionSupport(
+export function hasSelectionSupport(
   element: Element,
 ): element is
   | HTMLTextAreaElement

@@ -6,6 +6,7 @@ import {
   hasUnreliableEmptyValue,
   isContentEditable,
   setSelectionRange,
+  hasSelectionSupport,
 } from '../../utils'
 
 export function fireInputEventIfNeeded({
@@ -37,8 +38,14 @@ export function fireInputEventIfNeeded({
         ...eventOverrides,
       })
     } else {
+      const newSelection = hasSelectionSupport(el)
+        ? {selectionStart: newSelectionStart, selectionEnd: newSelectionStart}
+        : undefined
       fireEvent.input(el, {
-        target: {value: newValue},
+        target: {
+          value: newValue,
+          ...newSelection,
+        },
         ...eventOverrides,
       })
     }

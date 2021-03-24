@@ -1,5 +1,5 @@
 import {behaviorPlugin} from '../types'
-import {isElementType} from '../../utils'
+import {isElementType, setSelectionRange} from '../../utils'
 import * as arrowKeys from './arrow'
 import * as controlKeys from './control'
 import * as characterKeys from './character'
@@ -10,8 +10,15 @@ export const replaceBehavior: behaviorPlugin[] = [
     matches: (keyDef, element) =>
       keyDef.key === 'selectall' &&
       isElementType(element, ['input', 'textarea']),
-    handle: (keyDef, element) => {
-      ;(element as HTMLInputElement).select()
+    handle: (keyDef, element, options, state) => {
+      setSelectionRange(
+        element,
+        0,
+        (
+          state.carryValue ??
+          (element as HTMLInputElement | HTMLTextAreaElement).value
+        ).length,
+      )
     },
   },
 ]

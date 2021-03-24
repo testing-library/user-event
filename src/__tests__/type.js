@@ -1416,3 +1416,11 @@ test('type non-alphanumeric characters', () => {
 
   expect(element).toHaveValue('https://test.local')
 })
+
+test('use {selectall} on <input type="number"/>', () => {
+  const {element} = setup(`<input type="number" value="0"/>`)
+
+  userEvent.type(element, '123{selectall}{backspace}4')
+
+  expect(element).toHaveValue(4)
+})

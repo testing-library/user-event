@@ -24,7 +24,6 @@ test('clears text', () => {
     input[value="hello"] - select
     input[value="hello"] - keydown: Delete (46)
     input[value=""] - input
-      "{SELECTION}hello{/SELECTION}" -> "{CURSOR}"
     input[value=""] - keyup: Delete (46)
   `)
 })

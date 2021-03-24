@@ -24,17 +24,14 @@ test('types text in input', () => {
     input[value=""] - keydown: S (83)
     input[value=""] - keypress: S (83)
     input[value="S"] - input
-      "{CURSOR}" -> "S{CURSOR}"
     input[value="S"] - keyup: S (83)
     input[value="S"] - keydown: u (117)
     input[value="S"] - keypress: u (117)
     input[value="Su"] - input
-      "S{CURSOR}" -> "Su{CURSOR}"
     input[value="Su"] - keyup: u (117)
     input[value="Su"] - keydown: p (112)
     input[value="Su"] - keypress: p (112)
     input[value="Sup"] - input
-      "Su{CURSOR}" -> "Sup{CURSOR}"
     input[value="Sup"] - keyup: p (112)
   `)
 })
@@ -50,17 +47,14 @@ test('can skip the initial click', () => {
     input[value=""] - keydown: S (83)
     input[value=""] - keypress: S (83)
     input[value="S"] - input
-      "{CURSOR}" -> "S{CURSOR}"
     input[value="S"] - keyup: S (83)
     input[value="S"] - keydown: u (117)
     input[value="S"] - keypress: u (117)
     input[value="Su"] - input
-      "S{CURSOR}" -> "Su{CURSOR}"
     input[value="Su"] - keyup: u (117)
     input[value="Su"] - keydown: p (112)
     input[value="Su"] - keypress: p (112)
     input[value="Sup"] - input
-      "Su{CURSOR}" -> "Sup{CURSOR}"
     input[value="Sup"] - keyup: p (112)
   `)
 })
@@ -91,17 +85,14 @@ test('types text inside custom element', () => {
     input[value=""] - keydown: S (83)
     input[value=""] - keypress: S (83)
     input[value="S"] - input
-      "{CURSOR}" -> "S{CURSOR}"
     input[value="S"] - keyup: S (83)
     input[value="S"] - keydown: u (117)
     input[value="S"] - keypress: u (117)
     input[value="Su"] - input
-      "S{CURSOR}" -> "Su{CURSOR}"
     input[value="Su"] - keyup: u (117)
     input[value="Su"] - keydown: p (112)
     input[value="Su"] - keypress: p (112)
     input[value="Sup"] - input
-      "Su{CURSOR}" -> "Sup{CURSOR}"
     input[value="Sup"] - keyup: p (112)
   `)
 })
@@ -128,17 +119,14 @@ test('types text in textarea', () => {
     textarea[value=""] - keydown: S (83)
     textarea[value=""] - keypress: S (83)
     textarea[value="S"] - input
-      "{CURSOR}" -> "S{CURSOR}"
     textarea[value="S"] - keyup: S (83)
     textarea[value="S"] - keydown: u (117)
     textarea[value="S"] - keypress: u (117)
     textarea[value="Su"] - input
-      "S{CURSOR}" -> "Su{CURSOR}"
     textarea[value="Su"] - keyup: u (117)
     textarea[value="Su"] - keydown: p (112)
     textarea[value="Su"] - keypress: p (112)
     textarea[value="Sup"] - input
-      "Su{CURSOR}" -> "Sup{CURSOR}"
     textarea[value="Sup"] - keyup: p (112)
   `)
 })
@@ -339,12 +327,11 @@ test('typing into a controlled input works', () => {
     input[value=""] - keydown: 2 (50)
     input[value=""] - keypress: 2 (50)
     input[value="2"] - input
-      "{CURSOR}" -> "$2{CURSOR}"
+      "2{CURSOR}" -> "$2{CURSOR}"
     input[value="$2"] - keyup: 2 (50)
     input[value="$2"] - keydown: 3 (51)
     input[value="$2"] - keypress: 3 (51)
     input[value="$23"] - input
-      "$2{CURSOR}" -> "$23{CURSOR}"
     input[value="$23"] - keyup: 3 (51)
   `)
 })
@@ -375,9 +362,8 @@ test('typing in the middle of a controlled input works', () => {
     input[value="$23"] - click: Left (0)
     input[value="$23"] - keydown: 1 (49)
     input[value="$23"] - keypress: 1 (49)
-    input[value="$213"] - input
-      "$2{CURSOR}3" -> "$213{CURSOR}"
     input[value="$213"] - select
+    input[value="$213"] - input
     input[value="$213"] - keyup: 1 (49)
   `)
 })
@@ -417,8 +403,9 @@ test('ignored {backspace} in controlled input', () => {
     input[value="$23"] - mouseup: Left (0)
     input[value="$23"] - click: Left (0)
     input[value="$23"] - keydown: Backspace (8)
+    input[value="23"] - select
     input[value="23"] - input
-      "\${CURSOR}23" -> "$23{CURSOR}"
+      "{CURSOR}23" -> "$23{CURSOR}"
     input[value="$23"] - keyup: Backspace (8)
     input[value="$23"] - pointerover
     input[value="$23"] - pointerenter
@@ -434,7 +421,6 @@ test('ignored {backspace} in controlled input', () => {
     input[value="$23"] - keydown: 4 (52)
     input[value="$23"] - keypress: 4 (52)
     input[value="$234"] - input
-      "$23{CURSOR}" -> "$234{CURSOR}"
     input[value="$234"] - keyup: 4 (52)
   `)
 })
@@ -472,12 +458,10 @@ test('typing in a textarea with existing text', () => {
     textarea[value="Hello, "] - keydown: 1 (49)
     textarea[value="Hello, "] - keypress: 1 (49)
     textarea[value="Hello, 1"] - input
-      "Hello, {CURSOR}" -> "Hello, 1{CURSOR}"
     textarea[value="Hello, 1"] - keyup: 1 (49)
     textarea[value="Hello, 1"] - keydown: 2 (50)
     textarea[value="Hello, 1"] - keypress: 2 (50)
     textarea[value="Hello, 12"] - input
-      "Hello, 1{CURSOR}" -> "Hello, 12{CURSOR}"
     textarea[value="Hello, 12"] - keyup: 2 (50)
   `)
   expect(element).toHaveValue('Hello, 12')
@@ -511,15 +495,13 @@ test('accepts an initialSelectionStart and initialSelectionEnd', () => {
     textarea[value="Hello, "] - click: Left (0)
     textarea[value="Hello, "] - keydown: 1 (49)
     textarea[value="Hello, "] - keypress: 1 (49)
-    textarea[value="1Hello, "] - input
-      "{CURSOR}Hello, " -> "1Hello, {CURSOR}"
     textarea[value="1Hello, "] - select
+    textarea[value="1Hello, "] - input
     textarea[value="1Hello, "] - keyup: 1 (49)
     textarea[value="1Hello, "] - keydown: 2 (50)
     textarea[value="1Hello, "] - keypress: 2 (50)
-    textarea[value="12Hello, "] - input
-      "1{CURSOR}Hello, " -> "12Hello, {CURSOR}"
     textarea[value="12Hello, "] - select
+    textarea[value="12Hello, "] - input
     textarea[value="12Hello, "] - keyup: 2 (50)
   `)
   expect(element).toHaveValue('12Hello, ')
@@ -584,7 +566,6 @@ test('can type into an input with type `date`', () => {
     input[value=""] - keydown: 9 (57)
     input[value=""] - keypress: 9 (57)
     input[value="2020-06-29"] - input
-      "{CURSOR}" -> "{CURSOR}2020-06-29"
     input[value="2020-06-29"] - change
     input[value="2020-06-29"] - keyup: 9 (57)
   `)
@@ -623,7 +604,6 @@ test('can type "-" into number inputs', () => {
     input[value=""] - keydown: 3 (51)
     input[value=""] - keypress: 3 (51)
     input[value="-3"] - input
-      "{CURSOR}" -> "{CURSOR}-3"
     input[value="-3"] - keyup: 3 (51)
   `)
 })
@@ -653,17 +633,14 @@ test('can type "." into number inputs', () => {
     input[value=""] - keydown: 3 (51)
     input[value=""] - keypress: 3 (51)
     input[value="3"] - input
-      "{CURSOR}" -> "{CURSOR}3"
     input[value="3"] - keyup: 3 (51)
     input[value="3"] - keydown: . (46)
     input[value="3"] - keypress: . (46)
     input[value=""] - input
-      "{CURSOR}3" -> "{CURSOR}"
     input[value=""] - keyup: . (46)
     input[value=""] - keydown: 3 (51)
     input[value=""] - keypress: 3 (51)
     input[value="3.3"] - input
-      "{CURSOR}" -> "{CURSOR}3.3"
     input[value="3.3"] - keyup: 3 (51)
   `)
 })
@@ -939,16 +916,14 @@ test('navigation key: {arrowleft} and {arrowright} moves the cursor', () => {
     input[value=""] - keydown: b (98)
     input[value=""] - keypress: b (98)
     input[value="b"] - input
-      "{CURSOR}" -> "b{CURSOR}"
     input[value="b"] - keyup: b (98)
     input[value="b"] - keydown: ArrowLeft (37)
     input[value="b"] - select
     input[value="b"] - keyup: ArrowLeft (37)
     input[value="b"] - keydown: a (97)
     input[value="b"] - keypress: a (97)
-    input[value="ab"] - input
-      "{CURSOR}b" -> "ab{CURSOR}"
     input[value="ab"] - select
+    input[value="ab"] - input
     input[value="ab"] - keyup: a (97)
     input[value="ab"] - keydown: ArrowRight (39)
     input[value="ab"] - select
@@ -956,7 +931,6 @@ test('navigation key: {arrowleft} and {arrowright} moves the cursor', () => {
     input[value="ab"] - keydown: c (99)
     input[value="ab"] - keypress: c (99)
     input[value="abc"] - input
-      "ab{CURSOR}" -> "abc{CURSOR}"
     input[value="abc"] - keyup: c (99)
   `)
 })
@@ -983,22 +957,19 @@ test('navigation key: {home} and {end} moves the cursor', () => {
     input[value=""] - keydown: c (99)
     input[value=""] - keypress: c (99)
     input[value="c"] - input
-      "{CURSOR}" -> "c{CURSOR}"
     input[value="c"] - keyup: c (99)
     input[value="c"] - keydown: Home (36)
     input[value="c"] - select
     input[value="c"] - keyup: Home (36)
     input[value="c"] - keydown: a (97)
     input[value="c"] - keypress: a (97)
-    input[value="ac"] - input
-      "{CURSOR}c" -> "ac{CURSOR}"
     input[value="ac"] - select
+    input[value="ac"] - input
     input[value="ac"] - keyup: a (97)
     input[value="ac"] - keydown: b (98)
     input[value="ac"] - keypress: b (98)
-    input[value="abc"] - input
-      "a{CURSOR}c" -> "abc{CURSOR}"
     input[value="abc"] - select
+    input[value="abc"] - input
     input[value="abc"] - keyup: b (98)
     input[value="abc"] - keydown: End (35)
     input[value="abc"] - select
@@ -1006,7 +977,6 @@ test('navigation key: {home} and {end} moves the cursor', () => {
     input[value="abc"] - keydown: d (100)
     input[value="abc"] - keypress: d (100)
     input[value="abcd"] - input
-      "abc{CURSOR}" -> "abcd{CURSOR}"
     input[value="abcd"] - keyup: d (100)
   `)
 })
@@ -1015,43 +985,41 @@ test('can type into an input with type `time`', () => {
   const {element, getEventSnapshot} = setup('<input type="time" />')
   userEvent.type(element, '01:05')
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
-      Events fired on: input[value="01:05"]
+    Events fired on: input[value="01:05"]
 
-      input[value=""] - pointerover
-      input[value=""] - pointerenter
-      input[value=""] - mouseover: Left (0)
-      input[value=""] - mouseenter: Left (0)
-      input[value=""] - pointermove
-      input[value=""] - mousemove: Left (0)
-      input[value=""] - pointerdown
-      input[value=""] - mousedown: Left (0)
-      input[value=""] - focus
-      input[value=""] - focusin
-      input[value=""] - pointerup
-      input[value=""] - mouseup: Left (0)
-      input[value=""] - click: Left (0)
-      input[value=""] - keydown: 0 (48)
-      input[value=""] - keypress: 0 (48)
-      input[value=""] - keyup: 0 (48)
-      input[value=""] - keydown: 1 (49)
-      input[value=""] - keypress: 1 (49)
-      input[value=""] - keyup: 1 (49)
-      input[value=""] - keydown: : (58)
-      input[value=""] - keypress: : (58)
-      input[value=""] - keyup: : (58)
-      input[value=""] - keydown: 0 (48)
-      input[value=""] - keypress: 0 (48)
-      input[value="01:00"] - input
-        "{CURSOR}" -> "{CURSOR}01:00"
-      input[value="01:00"] - change
-      input[value="01:00"] - keyup: 0 (48)
-      input[value="01:00"] - keydown: 5 (53)
-      input[value="01:00"] - keypress: 5 (53)
-      input[value="01:05"] - input
-        "{CURSOR}01:00" -> "{CURSOR}01:05"
-      input[value="01:05"] - change
-      input[value="01:05"] - keyup: 5 (53)
-    `)
+    input[value=""] - pointerover
+    input[value=""] - pointerenter
+    input[value=""] - mouseover: Left (0)
+    input[value=""] - mouseenter: Left (0)
+    input[value=""] - pointermove
+    input[value=""] - mousemove: Left (0)
+    input[value=""] - pointerdown
+    input[value=""] - mousedown: Left (0)
+    input[value=""] - focus
+    input[value=""] - focusin
+    input[value=""] - pointerup
+    input[value=""] - mouseup: Left (0)
+    input[value=""] - click: Left (0)
+    input[value=""] - keydown: 0 (48)
+    input[value=""] - keypress: 0 (48)
+    input[value=""] - keyup: 0 (48)
+    input[value=""] - keydown: 1 (49)
+    input[value=""] - keypress: 1 (49)
+    input[value=""] - keyup: 1 (49)
+    input[value=""] - keydown: : (58)
+    input[value=""] - keypress: : (58)
+    input[value=""] - keyup: : (58)
+    input[value=""] - keydown: 0 (48)
+    input[value=""] - keypress: 0 (48)
+    input[value="01:00"] - input
+    input[value="01:00"] - change
+    input[value="01:00"] - keyup: 0 (48)
+    input[value="01:00"] - keydown: 5 (53)
+    input[value="01:00"] - keypress: 5 (53)
+    input[value="01:05"] - input
+    input[value="01:05"] - change
+    input[value="01:05"] - keyup: 5 (53)
+  `)
   expect(element).toHaveValue('01:05')
 })
 
@@ -1059,40 +1027,38 @@ test('can type into an input with type `time` without ":"', () => {
   const {element, getEventSnapshot} = setup('<input type="time" />')
   userEvent.type(element, '0105')
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
-      Events fired on: input[value="01:05"]
+    Events fired on: input[value="01:05"]
 
-      input[value=""] - pointerover
-      input[value=""] - pointerenter
-      input[value=""] - mouseover: Left (0)
-      input[value=""] - mouseenter: Left (0)
-      input[value=""] - pointermove
-      input[value=""] - mousemove: Left (0)
-      input[value=""] - pointerdown
-      input[value=""] - mousedown: Left (0)
-      input[value=""] - focus
-      input[value=""] - focusin
-      input[value=""] - pointerup
-      input[value=""] - mouseup: Left (0)
-      input[value=""] - click: Left (0)
-      input[value=""] - keydown: 0 (48)
-      input[value=""] - keypress: 0 (48)
-      input[value=""] - keyup: 0 (48)
-      input[value=""] - keydown: 1 (49)
-      input[value=""] - keypress: 1 (49)
-      input[value=""] - keyup: 1 (49)
-      input[value=""] - keydown: 0 (48)
-      input[value=""] - keypress: 0 (48)
-      input[value="01:00"] - input
-        "{CURSOR}" -> "{CURSOR}01:00"
-      input[value="01:00"] - change
-      input[value="01:00"] - keyup: 0 (48)
-      input[value="01:00"] - keydown: 5 (53)
-      input[value="01:00"] - keypress: 5 (53)
-      input[value="01:05"] - input
-        "{CURSOR}01:00" -> "{CURSOR}01:05"
-      input[value="01:05"] - change
-      input[value="01:05"] - keyup: 5 (53)
-    `)
+    input[value=""] - pointerover
+    input[value=""] - pointerenter
+    input[value=""] - mouseover: Left (0)
+    input[value=""] - mouseenter: Left (0)
+    input[value=""] - pointermove
+    input[value=""] - mousemove: Left (0)
+    input[value=""] - pointerdown
+    input[value=""] - mousedown: Left (0)
+    input[value=""] - focus
+    input[value=""] - focusin
+    input[value=""] - pointerup
+    input[value=""] - mouseup: Left (0)
+    input[value=""] - click: Left (0)
+    input[value=""] - keydown: 0 (48)
+    input[value=""] - keypress: 0 (48)
+    input[value=""] - keyup: 0 (48)
+    input[value=""] - keydown: 1 (49)
+    input[value=""] - keypress: 1 (49)
+    input[value=""] - keyup: 1 (49)
+    input[value=""] - keydown: 0 (48)
+    input[value=""] - keypress: 0 (48)
+    input[value="01:00"] - input
+    input[value="01:00"] - change
+    input[value="01:00"] - keyup: 0 (48)
+    input[value="01:00"] - keydown: 5 (53)
+    input[value="01:00"] - keypress: 5 (53)
+    input[value="01:05"] - input
+    input[value="01:05"] - change
+    input[value="01:05"] - keyup: 5 (53)
+  `)
   expect(element).toHaveValue('01:05')
 })
 
@@ -1128,13 +1094,11 @@ test('can type more a number higher than 60 minutes into an input `time` and the
     input[value=""] - keydown: 9 (57)
     input[value=""] - keypress: 9 (57)
     input[value="23:09"] - input
-      "{CURSOR}" -> "{CURSOR}23:09"
     input[value="23:09"] - change
     input[value="23:09"] - keyup: 9 (57)
     input[value="23:09"] - keydown: 0 (48)
     input[value="23:09"] - keypress: 0 (48)
     input[value="23:59"] - input
-      "{CURSOR}23:09" -> "{CURSOR}23:59"
     input[value="23:59"] - change
     input[value="23:59"] - keyup: 0 (48)
   `)
@@ -1180,13 +1144,11 @@ test('can type letters into an input `time` and they are ignored', () => {
     input[value=""] - keydown: 3 (51)
     input[value=""] - keypress: 3 (51)
     input[value="16:03"] - input
-      "{CURSOR}" -> "{CURSOR}16:03"
     input[value="16:03"] - change
     input[value="16:03"] - keyup: 3 (51)
     input[value="16:03"] - keydown: 6 (54)
     input[value="16:03"] - keypress: 6 (54)
     input[value="16:36"] - input
-      "{CURSOR}16:03" -> "{CURSOR}16:36"
     input[value="16:36"] - change
     input[value="16:36"] - keyup: 6 (54)
     input[value="16:36"] - keydown: a (97)
@@ -1232,13 +1194,11 @@ test('can type a digit bigger in the hours section, bigger than 2 and it shows t
     input[value=""] - keydown: 2 (50)
     input[value=""] - keypress: 2 (50)
     input[value="09:02"] - input
-      "{CURSOR}" -> "{CURSOR}09:02"
     input[value="09:02"] - change
     input[value="09:02"] - keyup: 2 (50)
     input[value="09:02"] - keydown: 5 (53)
     input[value="09:02"] - keypress: 5 (53)
     input[value="09:25"] - input
-      "{CURSOR}09:02" -> "{CURSOR}09:25"
     input[value="09:25"] - change
     input[value="09:25"] - keyup: 5 (53)
   `)
@@ -1278,13 +1238,11 @@ test('can type two digits in the hours section, equals to 24 and it shows the ho
     input[value=""] - keydown: 5 (53)
     input[value=""] - keypress: 5 (53)
     input[value="23:05"] - input
-      "{CURSOR}" -> "{CURSOR}23:05"
     input[value="23:05"] - change
     input[value="23:05"] - keyup: 5 (53)
     input[value="23:05"] - keydown: 2 (50)
     input[value="23:05"] - keypress: 2 (50)
     input[value="23:52"] - input
-      "{CURSOR}23:05" -> "{CURSOR}23:52"
     input[value="23:52"] - change
     input[value="23:52"] - keyup: 2 (50)
   `)
@@ -1324,13 +1282,11 @@ test('can type two digits in the hours section, bigger than 24 and less than 30,
     input[value=""] - keydown: 5 (53)
     input[value=""] - keypress: 5 (53)
     input[value="23:05"] - input
-      "{CURSOR}" -> "{CURSOR}23:05"
     input[value="23:05"] - change
     input[value="23:05"] - keyup: 5 (53)
     input[value="23:05"] - keydown: 2 (50)
     input[value="23:05"] - keypress: 2 (50)
     input[value="23:52"] - input
-      "{CURSOR}23:05" -> "{CURSOR}23:52"
     input[value="23:52"] - change
     input[value="23:52"] - keyup: 2 (50)
   `)

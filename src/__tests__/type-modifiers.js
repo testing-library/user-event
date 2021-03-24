@@ -63,11 +63,9 @@ test('a{backspace}', () => {
     input[value=""] - keydown: a (97)
     input[value=""] - keypress: a (97)
     input[value="a"] - input
-      "{CURSOR}" -> "a{CURSOR}"
     input[value="a"] - keyup: a (97)
     input[value="a"] - keydown: Backspace (8)
     input[value=""] - input
-      "a{CURSOR}" -> "{CURSOR}"
     input[value=""] - keyup: Backspace (8)
   `)
 })
@@ -96,7 +94,6 @@ test('{backspace}a', () => {
     input[value=""] - keydown: a (97)
     input[value=""] - keypress: a (97)
     input[value="a"] - input
-      "{CURSOR}" -> "a{CURSOR}"
     input[value="a"] - keyup: a (97)
   `)
 })
@@ -125,9 +122,8 @@ test('{backspace} triggers typing the backspace character and deletes the charac
     input[value="yo"] - mouseup: Left (0)
     input[value="yo"] - click: Left (0)
     input[value="yo"] - keydown: Backspace (8)
-    input[value="o"] - input
-      "y{CURSOR}o" -> "o{CURSOR}"
     input[value="o"] - select
+    input[value="o"] - input
     input[value="o"] - keyup: Backspace (8)
   `)
 })
@@ -214,9 +210,8 @@ test('{backspace} deletes the selected range', () => {
     input[value="Hi there"] - mouseup: Left (0)
     input[value="Hi there"] - click: Left (0)
     input[value="Hi there"] - keydown: Backspace (8)
-    input[value="Here"] - input
-      "H{SELECTION}i th{/SELECTION}ere" -> "Here{CURSOR}"
     input[value="Here"] - select
+    input[value="Here"] - input
     input[value="Here"] - keyup: Backspace (8)
   `)
 })
@@ -282,7 +277,6 @@ test('{meta}a{/meta}', () => {
     input[value=""] - keydown: a (97) {meta}
     input[value=""] - keypress: a (97) {meta}
     input[value="a"] - input
-      "{CURSOR}" -> "a{CURSOR}"
     input[value="a"] - keyup: a (97) {meta}
     input[value="a"] - keyup: Meta (93)
   `)
@@ -341,7 +335,6 @@ test('{shift}a{/shift}', () => {
     input[value=""] - keydown: a (97) {shift}
     input[value=""] - keypress: a (97) {shift}
     input[value="a"] - input
-      "{CURSOR}" -> "a{CURSOR}"
     input[value="a"] - keyup: a (97) {shift}
     input[value="a"] - keyup: Shift (16)
   `)
@@ -374,7 +367,6 @@ test('{capslock}a{capslock}', () => {
     input[value=""] - keydown: a (97)
     input[value=""] - keypress: a (97)
     input[value="a"] - input
-      "{CURSOR}" -> "a{CURSOR}"
     input[value="a"] - keyup: a (97)
     input[value="a"] - keydown: CapsLock (20)
     input[value="a"] - keyup: CapsLock (20)
@@ -405,7 +397,6 @@ test('a{enter}', () => {
     input[value=""] - keydown: a (97)
     input[value=""] - keypress: a (97)
     input[value="a"] - input
-      "{CURSOR}" -> "a{CURSOR}"
     input[value="a"] - keyup: a (97)
     input[value="a"] - keydown: Enter (13)
     input[value="a"] - keypress: Enter (13)
@@ -673,7 +664,6 @@ test('{space} on an input', () => {
     input[value=""] - keydown: (32)
     input[value=""] - keypress: (32)
     input[value=" "] - input
-      "{CURSOR}" -> " {CURSOR}"
     input[value=" "] - keyup: (32)
   `)
 })
@@ -792,7 +782,6 @@ test('{enter} on a textarea', () => {
     textarea[value=""] - keydown: Enter (13)
     textarea[value=""] - keypress: Enter (13)
     textarea[value="\\n"] - input
-      "{CURSOR}" -> "\\n{CURSOR}"
     textarea[value="\\n"] - keyup: Enter (13)
   `)
 })
@@ -976,9 +965,8 @@ test('{del} at the start of the input', () => {
     input[value="hello"] - mouseup: Left (0)
     input[value="hello"] - click: Left (0)
     input[value="hello"] - keydown: Delete (46)
-    input[value="ello"] - input
-      "{CURSOR}hello" -> "ello{CURSOR}"
     input[value="ello"] - select
+    input[value="ello"] - input
     input[value="ello"] - keyup: Delete (46)
   `)
 })
@@ -1040,9 +1028,8 @@ test('{del} in the middle of the input', () => {
     input[value="hello"] - click: Left (0)
     input[value="hello"] - select
     input[value="hello"] - keydown: Delete (46)
-    input[value="helo"] - input
-      "he{CURSOR}llo" -> "helo{CURSOR}"
     input[value="helo"] - select
+    input[value="helo"] - input
     input[value="helo"] - keyup: Delete (46)
   `)
 })
@@ -1075,9 +1062,8 @@ test('{del} with a selection range', () => {
     input[value="hello"] - click: Left (0)
     input[value="hello"] - select
     input[value="hello"] - keydown: Delete (46)
-    input[value="hlo"] - input
-      "h{SELECTION}el{/SELECTION}lo" -> "hlo{CURSOR}"
     input[value="hlo"] - select
+    input[value="hlo"] - input
     input[value="hlo"] - keyup: Delete (46)
   `)
 })
@@ -1165,7 +1151,6 @@ test('modifiers will not be closed if skipAutoClose is enabled', () => {
     input[value=""] - keydown: a (97) {meta}
     input[value=""] - keypress: a (97) {meta}
     input[value="a"] - input
-      "{CURSOR}" -> "a{CURSOR}"
     input[value="a"] - keyup: a (97) {meta}
   `)
 })

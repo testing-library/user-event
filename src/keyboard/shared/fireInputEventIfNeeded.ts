@@ -6,7 +6,6 @@ import {
   hasUnreliableEmptyValue,
   isContentEditable,
   setSelectionRange,
-  hasSelectionSupport,
 } from '../../utils'
 
 export function fireInputEventIfNeeded({
@@ -35,8 +34,11 @@ export function fireInputEventIfNeeded({
     // apply the changes before firing the input event, so that input handlers can access the altered dom and selection
     if (isContentEditable(el)) {
       el.textContent = newValue
-    } else if (isElementType(el, ['input', 'textarea'])) {
+    } else /* istanbul ignore else */ if (isElementType(el, ['input', 'textarea'])) {
       el.value = newValue
+    } else {
+      // TODO: properly type guard
+      throw new Error('Invalid Element')
     }
     setSelectionRangeAfterInput(el, newValue, newSelectionStart)
 

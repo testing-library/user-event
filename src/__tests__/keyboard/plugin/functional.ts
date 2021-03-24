@@ -54,12 +54,10 @@ test('backspace to valid value', () => {
     input[value=""] - keydown: 5 (53)
     input[value=""] - keypress: 5 (53)
     input[value="5"] - input
-      "{CURSOR}" -> "{CURSOR}5"
     input[value="5"] - keyup: 5 (53)
     input[value="5"] - keydown: e (101)
     input[value="5"] - keypress: e (101)
     input[value=""] - input
-      "{CURSOR}5" -> "{CURSOR}"
     input[value=""] - keyup: e (101)
     input[value=""] - keydown: - (45)
     input[value=""] - keypress: - (45)
@@ -70,7 +68,6 @@ test('backspace to valid value', () => {
     input[value=""] - keyup: Backspace (8)
     input[value=""] - keydown: Backspace (8)
     input[value="5"] - input
-      "{CURSOR}" -> "{CURSOR}5"
     input[value="5"] - keyup: Backspace (8)
   `)
 })

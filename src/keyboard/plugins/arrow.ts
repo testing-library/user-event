@@ -4,7 +4,7 @@
  */
 
 import {behaviorPlugin} from '../types'
-import {isElementType, setSelectionRangeIfNecessary} from '../../utils'
+import {isElementType, setSelectionRange} from '../../utils'
 
 export const keydownBehavior: behaviorPlugin[] = [
   {
@@ -24,7 +24,7 @@ export const keydownBehavior: behaviorPlugin[] = [
           ? selectionStart
           : selectionEnd) ?? /* istanbul ignore next */ 0
 
-      setSelectionRangeIfNecessary(element, newPos, newPos)
+      setSelectionRange(element, newPos, newPos)
     },
   },
 ]

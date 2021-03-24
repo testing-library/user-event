@@ -8,7 +8,7 @@ import {
   getValue,
   isContentEditable,
   isElementType,
-  setSelectionRangeIfNecessary,
+  setSelectionRange,
 } from '../../utils'
 import {fireInputEventIfNeeded} from '../shared'
 import {calculateNewDeleteValue} from './control/calculateNewDeleteValue'
@@ -22,10 +22,10 @@ export const keydownBehavior: behaviorPlugin[] = [
     handle: (keyDef, element) => {
       // This could probably been improved by collapsing a selection range
       if (keyDef.key === 'Home') {
-        setSelectionRangeIfNecessary(element, 0, 0)
+        setSelectionRange(element, 0, 0)
       } else {
         const newPos = getValue(element)?.length ?? /* istanbul ignore next */ 0
-        setSelectionRangeIfNecessary(element, newPos, newPos)
+        setSelectionRange(element, newPos, newPos)
       }
     },
   },

@@ -1380,3 +1380,22 @@ test('use {selectall} on <input type="number"/>', () => {
 
   expect(element).toHaveValue(4)
 })
+
+test('move selection with arrows', () => {
+  const {element} = setup(`<input/>`)
+  let targetProperties
+  element.addEventListener('input', e => {
+    targetProperties = {
+      value: e.target.value,
+      selectionStart: e.target.selectionStart,
+    }
+  })
+
+  userEvent.type(element, 'abc{ArrowLeft}{ArrowLeft}{ArrowRight}{Backspace}')
+
+  expect(element).toHaveValue('ac')
+  expect(targetProperties).toEqual({
+    value: 'ac',
+    selectionStart: 1,
+  })
+})

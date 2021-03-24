@@ -3,12 +3,13 @@
  */
 
 import {fireEvent} from '@testing-library/dom'
-import {fireChangeForInputTimeIfValid, fireInputEventIfNeeded} from '../shared'
+import {fireChangeForInputTimeIfValid, fireInputEvent} from '../shared'
 import {behaviorPlugin} from '../types'
 import {
   buildTimeValue,
   calculateNewValue,
   getValue,
+  isClickableInput,
   isContentEditable,
   isElementType,
   isValidDateValue,
@@ -19,7 +20,7 @@ export const keypressBehavior: behaviorPlugin[] = [
   {
     matches: (keyDef, element) =>
       keyDef.key?.length === 1 &&
-      isElementType(element, 'input', {type: 'time'}),
+      isElementType(element, 'input', {type: 'time', readOnly: false}),
     handle: (keyDef, element, options, state) => {
       let newEntry = keyDef.key as string
 
@@ -38,16 +39,22 @@ export const keypressBehavior: behaviorPlugin[] = [
         newEntry,
         element as HTMLElement,
       )
+      const prevValue = getValue(element)
 
-      const {prevValue} = fireInputEventIfNeeded({
-        newValue,
-        newSelectionStart,
-        eventOverrides: {
-          data: keyDef.key,
-          inputType: 'insertText',
-        },
-        currentElement: () => element,
-      })
+      // this check was provided by fireInputEventIfNeeded
+      // TODO: verify if it is even needed by this handler
+      if (prevValue !== newValue) {
+
+        fireInputEvent(element as HTMLInputElement, {
+          newValue,
+          newSelectionStart,
+          eventOverrides: {
+            data: keyDef.key,
+            inputType: 'insertText',
+          },
+        })
+
+      }
 
       fireChangeForInputTimeIfValid(
         element as HTMLInputElement & {type: 'time'},
@@ -61,7 +68,7 @@ export const keypressBehavior: behaviorPlugin[] = [
   {
     matches: (keyDef, element) =>
       keyDef.key?.length === 1 &&
-      isElementType(element, 'input', {type: 'date'}),
+      isElementType(element, 'input', {type: 'date', readOnly: false}),
     handle: (keyDef, element, options, state) => {
       let newEntry = keyDef.key as string
 
@@ -78,16 +85,22 @@ export const keypressBehavior: behaviorPlugin[] = [
         newEntry,
         element as HTMLElement,
       )
+      const prevValue = getValue(element)
 
-      fireInputEventIfNeeded({
-        newValue,
-        newSelectionStart,
-        eventOverrides: {
-          data: keyDef.key,
-          inputType: 'insertText',
-        },
-        currentElement: () => element,
-      })
+      // this check was provided by fireInputEventIfNeeded
+      // TODO: verify if it is even needed by this handler
+      if (prevValue !== newValue) {
+
+        fireInputEvent(element as HTMLInputElement, {
+          newValue,
+          newSelectionStart,
+          eventOverrides: {
+            data: keyDef.key,
+            inputType: 'insertText',
+          },
+        })
+
+      }
 
       if (isValidToBeTyped) {
         fireEvent.change(element, {
@@ -101,7 +114,7 @@ export const keypressBehavior: behaviorPlugin[] = [
   {
     matches: (keyDef, element) =>
       keyDef.key?.length === 1 &&
-      isElementType(element, 'input', {type: 'number'}),
+      isElementType(element, 'input', {type: 'number', readOnly: false}),
     handle: (keyDef, element, options, state) => {
       if (!/[\d.\-e]/.test(keyDef.key as string)) {
         return
@@ -116,14 +129,13 @@ export const keypressBehavior: behaviorPlugin[] = [
         oldValue,
       )
 
-      fireInputEventIfNeeded({
+      fireInputEvent(element as HTMLInputElement, {
         newValue,
         newSelectionStart,
         eventOverrides: {
           data: keyDef.key,
           inputType: 'insertText',
         },
-        currentElement: () => element,
       })
 
       const appliedValue = getValue(element)
@@ -137,7 +149,8 @@ export const keypressBehavior: behaviorPlugin[] = [
   {
     matches: (keyDef, element) =>
       keyDef.key?.length === 1 &&
-      (isElementType(element, ['input', 'textarea']) ||
+      (isElementType(element, ['input', 'textarea'], {readOnly: false}) &&
+        !isClickableInput(element) ||
         isContentEditable(element)),
     handle: (keyDef, element) => {
       const {newValue, newSelectionStart} = calculateNewValue(
@@ -145,21 +158,20 @@ export const keypressBehavior: behaviorPlugin[] = [
         element as HTMLElement,
       )
 
-      fireInputEventIfNeeded({
+      fireInputEvent(element as HTMLElement, {
         newValue,
         newSelectionStart,
         eventOverrides: {
           data: keyDef.key,
           inputType: 'insertText',
         },
-        currentElement: () => element,
       })
     },
   },
   {
     matches: (keyDef, element) =>
       keyDef.key === 'Enter' &&
-      (isElementType(element, 'textarea') || isContentEditable(element)),
+      (isElementType(element, 'textarea', {readOnly: false}) || isContentEditable(element)),
     handle: (keyDef, element, options, state) => {
       const {newValue, newSelectionStart} = calculateNewValue(
         '\n',
@@ -171,13 +183,12 @@ export const keypressBehavior: behaviorPlugin[] = [
           ? 'insertParagraph'
           : 'insertLineBreak'
 
-      fireInputEventIfNeeded({
+      fireInputEvent(element as HTMLElement, {
         newValue,
         newSelectionStart,
         eventOverrides: {
           inputType,
         },
-        currentElement: () => element,
       })
     },
   },

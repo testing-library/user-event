@@ -4,9 +4,9 @@
  */
 
 import {fireEvent} from '@testing-library/dom'
-import {getValue, isClickableInput, isElementType} from '../../utils'
+import {getValue, isClickableInput, isCursorAtStart, isEditable, isElementType} from '../../utils'
 import {getKeyEventProps, getMouseEventProps} from '../getEventProps'
-import {fireInputEventIfNeeded} from '../shared'
+import {fireInputEvent} from '../shared'
 import {behaviorPlugin} from '../types'
 import {calculateNewBackspaceValue} from './functional/calculateBackspaceValue'
 
@@ -49,20 +49,19 @@ export const keydownBehavior: behaviorPlugin[] = [
     },
   },
   {
-    matches: keyDef => keyDef.key === 'Backspace',
+    matches: (keyDef, element) => keyDef.key === 'Backspace' && isEditable(element) && !isCursorAtStart(element),
     handle: (keyDef, element, options, state) => {
       const {newValue, newSelectionStart} = calculateNewBackspaceValue(
         element,
         state.carryValue,
       )
 
-      fireInputEventIfNeeded({
+      fireInputEvent(element as HTMLElement, {
         newValue,
         newSelectionStart,
         eventOverrides: {
           inputType: 'deleteContentBackward',
         },
-        currentElement: () => element,
       })
 
       if (state.carryValue) {

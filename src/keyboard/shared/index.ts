@@ -1,3 +1,3 @@
 export * from './fireChangeForInputTimeIfValid'
-export * from './fireInputEventIfNeeded'
+export * from './fireInputEvent'
 export * from './setSelectionRange'

@@ -1,4 +1,4 @@
-import {isElementType} from 'utils/misc/isElementType'
+import {isElementType} from '../misc/isElementType'
 
 enum unreliableValueInputTypes {
   'number' = 'number',

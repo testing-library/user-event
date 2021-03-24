@@ -1,8 +1,7 @@
 import {
-  setSelectionRangeIfNecessary,
+  setSelectionRange,
   getSelectionRange,
   getValue,
-  isContentEditable,
   getActiveElement,
 } from '../utils'
 import {click} from '../click'
@@ -33,16 +32,6 @@ export async function typeImplementation(
 
   if (!skipClick) click(element)
 
-  if (isContentEditable(element)) {
-    const selection = document.getSelection()
-    // istanbul ignore else
-    if (selection && selection.rangeCount === 0) {
-      const range = document.createRange()
-      range.setStart(element, 0)
-      range.setEnd(element, 0)
-      selection.addRange(range)
-    }
-  }
   // The focused element could change between each event, so get the currently active element each time
   const currentElement = () => getActiveElement(element.ownerDocument)
 
@@ -59,7 +48,7 @@ export async function typeImplementation(
   const {selectionStart, selectionEnd} = getSelectionRange(element)
 
   if (value != null && selectionStart === 0 && selectionEnd === 0) {
-    setSelectionRangeIfNecessary(
+    setSelectionRange(
       currentElement() as Element,
       initialSelectionStart ?? value.length,
       initialSelectionEnd ?? value.length,

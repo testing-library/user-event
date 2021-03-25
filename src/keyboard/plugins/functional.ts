@@ -4,11 +4,16 @@
  */
 
 import {fireEvent} from '@testing-library/dom'
-import {getValue, isClickableInput, isCursorAtStart, isEditable, isElementType} from '../../utils'
+import {
+  calculateNewValue,
+  isClickableInput,
+  isCursorAtStart,
+  isEditable,
+  isElementType,
+} from '../../utils'
 import {getKeyEventProps, getMouseEventProps} from '../getEventProps'
-import {fireInputEvent} from '../shared'
+import {carryValue, fireInputEvent} from '../shared'
 import {behaviorPlugin} from '../types'
-import {calculateNewBackspaceValue} from './functional/calculateBackspaceValue'
 
 const modifierKeys = {
   Alt: 'alt',
@@ -49,11 +54,17 @@ export const keydownBehavior: behaviorPlugin[] = [
     },
   },
   {
-    matches: (keyDef, element) => keyDef.key === 'Backspace' && isEditable(element) && !isCursorAtStart(element),
+    matches: (keyDef, element) =>
+      keyDef.key === 'Backspace' &&
+      isEditable(element) &&
+      !isCursorAtStart(element),
     handle: (keyDef, element, options, state) => {
-      const {newValue, newSelectionStart} = calculateNewBackspaceValue(
-        element,
+      const {newValue, newSelectionStart} = calculateNewValue(
+        '',
+        element as HTMLElement,
         state.carryValue,
+        undefined,
+        'backward',
       )
 
       fireInputEvent(element as HTMLElement, {
@@ -64,9 +75,7 @@ export const keydownBehavior: behaviorPlugin[] = [
         },
       })
 
-      if (state.carryValue) {
-        state.carryValue = getValue(element) === newValue ? undefined : newValue
-      }
+      carryValue(element, state, newValue)
     },
   },
 ]

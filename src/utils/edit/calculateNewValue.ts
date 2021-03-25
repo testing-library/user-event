@@ -6,47 +6,45 @@ import {isValidInputTimeValue} from './isValidInputTimeValue'
 export function calculateNewValue(
   newEntry: string,
   element: HTMLElement,
-  value = getValue(element),
+  value = getValue(element) ?? /* istanbul ignore next */ '',
   selectionRange = getSelectionRange(element),
+  deleteContent?: 'backward' | 'forward',
 ): {
   newValue: string
   newSelectionStart: number
 } {
-  const {selectionStart, selectionEnd} = selectionRange
+  const selectionStart =
+    selectionRange.selectionStart === null
+      ? value.length
+      : selectionRange.selectionStart
+  const selectionEnd =
+    selectionRange.selectionEnd === null
+      ? value.length
+      : selectionRange.selectionEnd
 
-  let newValue: string, newSelectionStart: number
+  const prologEnd = Math.max(
+    0,
+    selectionStart === selectionEnd && deleteContent === 'backward'
+      ? selectionStart - 1
+      : selectionStart,
+  )
+  const prolog = value.substring(0, prologEnd)
+  const epilogStart = Math.min(
+    value.length,
+    selectionStart === selectionEnd && deleteContent === 'forward'
+      ? selectionEnd + 1
+      : selectionEnd,
+  )
+  const epilog = value.substring(epilogStart, value.length)
 
-  if (selectionStart === null) {
-    // at the end of an input type that does not support selection ranges
-    // https://github.com/testing-library/user-event/issues/316#issuecomment-639744793
-    newValue = `${value}${newEntry}`
-    newSelectionStart = newValue.length
-  } else if (selectionStart === selectionEnd) {
-    if (selectionStart === 0) {
-      // at the beginning of the input
-      newValue = `${newEntry}${value}`
-    } else if (selectionStart === value?.length) {
-      // at the end of the input
-      newValue = `${value}${newEntry}`
-    } else {
-      // in the middle of the input
-      newValue = `${value?.slice(0, selectionStart)}${newEntry}${value?.slice(
-        selectionEnd,
-      )}`
-    }
-    newSelectionStart = selectionStart + newEntry.length
-  } else {
-    // we have something selected
-    const firstPart = `${value?.slice(0, selectionStart)}${newEntry}`
-    newValue = `${firstPart}${value?.slice(selectionEnd as number)}`
-    newSelectionStart = firstPart.length
-  }
+  let newValue = `${prolog}${newEntry}${epilog}`
+  const newSelectionStart = prologEnd + newEntry.length
 
   if (
     (element as HTMLInputElement).type === 'date' &&
     !isValidDateValue(element as HTMLInputElement & {type: 'date'}, newValue)
   ) {
-    newValue = value as string
+    newValue = value
   }
 
   if (
@@ -64,7 +62,7 @@ export function calculateNewValue(
     ) {
       newValue = newEntry
     } else {
-      newValue = value as string
+      newValue = value
     }
   }
 

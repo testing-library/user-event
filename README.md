@@ -767,6 +767,7 @@ Thanks goes to these people ([emoji key][emojis]):
     <td align="center"><a href="https://gr.linkedin.com/in/bastakis"><img src="https://avatars.githubusercontent.com/u/1146626?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Stavros</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3Asstauross" title="Bug reports">🐛</a></td>
     <td align="center"><a href="https://github.com/geoffroymounier"><img src="https://avatars.githubusercontent.com/u/24386870?v=4?s=100" width="100px;" alt=""/><br /><sub><b>geoffroymounier</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3Ageoffroymounier" title="Bug reports">🐛</a></td>
     <td align="center"><a href="https://fergusmcdonald.com"><img src="https://avatars.githubusercontent.com/u/3115675?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Fergus McDonald</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=fergusmcdonald" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/robin-ambachtsheer"><img src="https://avatars.githubusercontent.com/u/2611873?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Robin Ambachtsheer</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3Arobin-ambachtsheer" title="Bug reports">🐛</a></td>
   </tr>
 </table>
 

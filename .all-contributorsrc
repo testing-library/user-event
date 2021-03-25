@@ -817,6 +817,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "robin-ambachtsheer",
+      "name": "Robin Ambachtsheer",
+      "avatar_url": "https://avatars.githubusercontent.com/u/2611873?v=4",
+      "profile": "https://github.com/robin-ambachtsheer",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "commitConvention": "none",

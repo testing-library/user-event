@@ -1,4 +1,4 @@
-import {getValue, hasUnreliableEmptyValue} from 'utils'
+import {getValue, hasUnreliableEmptyValue} from '../../utils'
 import {keyboardState} from '../types'
 
 export function carryValue(

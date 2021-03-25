@@ -126,6 +126,18 @@ export const keypressBehavior: behaviorPlugin[] = [
         oldValue,
       )
 
+      // the browser allows some invalid input but not others
+      // it allows up to two '-' at any place before any 'e' or one directly following 'e'
+      // it allows one '.' at any place before e
+      const valueParts = newValue.split('e', 2)
+      if (
+        Number(newValue.match(/-/g)?.length) > 2 ||
+        Number(newValue.match(/\./g)?.length) > 1 ||
+        (valueParts[1] && !/^-?\d*$/.test(valueParts[1]))
+      ) {
+        return
+      }
+
       fireInputEvent(element as HTMLInputElement, {
         newValue,
         newSelectionStart,

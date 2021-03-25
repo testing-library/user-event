@@ -25,3 +25,23 @@ test('type [Enter] in contenteditable', () => {
   expect(getEvents('input')[2]).toHaveProperty('inputType', 'insertParagraph')
   expect(getEvents('input')[6]).toHaveProperty('inputType', 'insertLineBreak')
 })
+
+test.each([
+  ['1e--5', 1e-5, undefined, 4],
+  ['1--e--5', null, '1--e5', 5],
+  ['.-1.-e--5', null, '.-1-e5', 6],
+  ['1.5e--5', 1.5e-5, undefined, 6],
+  ['1e5-', 1e5, undefined, 3],
+])(
+  'type invalid values into <input type="number"/>',
+  (text, expectedValue, expectedCarryValue, expectedInputEvents) => {
+    const {element, getEvents} = setup(`<input type="number"/>`)
+    ;(element as HTMLInputElement).focus()
+
+    const state = userEvent.keyboard(text)
+
+    expect(element).toHaveValue(expectedValue)
+    expect(state).toHaveProperty('carryValue', expectedCarryValue)
+    expect(getEvents('input')).toHaveLength(expectedInputEvents)
+  },
+)

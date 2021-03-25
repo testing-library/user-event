@@ -1,5 +1,6 @@
 import {fireEvent} from '@testing-library/dom'
 import {
+  getSpaceUntilMaxLength,
   setSelectionRange,
   calculateNewValue,
   eventWrapper,
@@ -47,23 +48,27 @@ function paste(
 
   fireEvent.paste(element, init)
 
-  if (!element.readOnly) {
-    const {newValue, newSelectionStart} = calculateNewValue(text, element)
-    fireEvent.input(element, {
-      inputType: 'insertFromPaste',
-      target: {value: newValue},
-    })
-    setSelectionRange(
-      element,
-
-      // TODO: investigate why the selection caused by invalid parameters was expected
-      ({
-        newSelectionStart,
-        selectionEnd: newSelectionStart,
-      } as unknown) as number,
-      ({} as unknown) as number,
-    )
+  if (element.readOnly) {
+    return
   }
+
+  text = text.substr(0, getSpaceUntilMaxLength(element))
+
+  const {newValue, newSelectionStart} = calculateNewValue(text, element)
+  fireEvent.input(element, {
+    inputType: 'insertFromPaste',
+    target: {value: newValue},
+  })
+  setSelectionRange(
+    element,
+
+    // TODO: investigate why the selection caused by invalid parameters was expected
+    ({
+      newSelectionStart,
+      selectionEnd: newSelectionStart,
+    } as unknown) as number,
+    ({} as unknown) as number,
+  )
 }
 
 export {paste}

@@ -47,7 +47,10 @@ export async function typeImplementation(
 
   const {selectionStart, selectionEnd} = getSelectionRange(element)
 
-  if (value != null && selectionStart === 0 && selectionEnd === 0) {
+  if (value != null &&
+      (selectionStart === null || selectionStart === 0) &&
+      (selectionEnd === null || selectionEnd === 0)
+  ) {
     setSelectionRange(
       currentElement() as Element,
       initialSelectionStart ?? value.length,

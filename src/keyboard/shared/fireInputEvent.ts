@@ -1,64 +1,46 @@
 import {fireEvent} from '@testing-library/dom'
 import {
   isElementType,
-  isClickableInput,
   getValue,
   hasUnreliableEmptyValue,
   isContentEditable,
   setSelectionRange,
 } from '../../utils'
 
-export function fireInputEventIfNeeded({
-  currentElement,
-  newValue,
-  newSelectionStart,
-  eventOverrides,
-}: {
-  currentElement: () => Element | null
-  newValue: string
-  newSelectionStart: number
-  eventOverrides: Partial<Parameters<typeof fireEvent>[1]> & {
-    [k: string]: unknown
-  }
-}): {
-  prevValue: string | null
-} {
-  const el = currentElement()
-  const prevValue = getValue(el)
-  if (
-    el &&
-    !isReadonly(el) &&
-    !isClickableInput(el) &&
-    newValue !== prevValue
-  ) {
-    // apply the changes before firing the input event, so that input handlers can access the altered dom and selection
-    if (isContentEditable(el)) {
-      el.textContent = newValue
-    } else /* istanbul ignore else */ if (isElementType(el, ['input', 'textarea'])) {
-      el.value = newValue
-    } else {
-      // TODO: properly type guard
-      throw new Error('Invalid Element')
+export function fireInputEvent(
+  element: HTMLElement,
+  {
+    newValue,
+    newSelectionStart,
+    eventOverrides,
+  }: {
+    newValue: string
+    newSelectionStart: number
+    eventOverrides: Partial<Parameters<typeof fireEvent>[1]> & {
+      [k: string]: unknown
     }
-    setSelectionRangeAfterInput(el, newValue, newSelectionStart)
-
-    fireEvent.input(el, {
-      ...eventOverrides,
-    })
-
-    setSelectionRangeAfterInputHandler(el, newValue)
+  },
+) {
+  // apply the changes before firing the input event, so that input handlers can access the altered dom and selection
+  if (isContentEditable(element)) {
+    element.textContent = newValue
+  } else /* istanbul ignore else */ if (isElementType(element, ['input', 'textarea'])) {
+    element.value = newValue
+  } else {
+    // TODO: properly type guard
+    throw new Error('Invalid Element')
   }
+  setSelectionRangeAfterInput(element, newSelectionStart)
 
-  return {prevValue}
-}
+  fireEvent.input(element, {
+    ...eventOverrides,
+  })
 
-function isReadonly(element: Element): boolean {
-  return isElementType(element, ['input', 'textarea'], {readOnly: true})
+  setSelectionRangeAfterInputHandler(element, newValue)
 }
 
 function setSelectionRangeAfterInput(
   element: Element,
-  newValue: string,
   newSelectionStart: number,
 ) {
   setSelectionRange(element, newSelectionStart, newSelectionStart)

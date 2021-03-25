@@ -46,3 +46,14 @@ test('press [End] in contenteditable', () => {
   expect(selection).toHaveProperty('focusNode', element?.firstChild)
   expect(selection).toHaveProperty('focusOffset', 10)
 })
+
+test('use [Delete] on number input', () => {
+  const {element} = setup(`<input type="number"/>`)
+
+  userEvent.type(
+    element as HTMLInputElement,
+    '1e-5[ArrowLeft][Delete]6[ArrowLeft][ArrowLeft][ArrowLeft][Delete][Delete]',
+  )
+
+  expect(element).toHaveValue(16)
+})

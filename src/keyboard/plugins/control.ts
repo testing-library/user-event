@@ -5,13 +5,15 @@
 
 import {behaviorPlugin} from '../types'
 import {
+  calculateNewValue,
   getValue,
   isContentEditable,
+  isCursorAtEnd,
+  isEditable,
   isElementType,
   setSelectionRange,
 } from '../../utils'
-import {fireInputEventIfNeeded} from '../shared'
-import {calculateNewDeleteValue} from './control/calculateNewDeleteValue'
+import {carryValue, fireInputEvent} from '../shared'
 
 export const keydownBehavior: behaviorPlugin[] = [
   {
@@ -30,15 +32,26 @@ export const keydownBehavior: behaviorPlugin[] = [
     },
   },
   {
-    matches: keyDef => keyDef.key === 'Delete',
-    handle: (keDef, element) => {
-      fireInputEventIfNeeded({
-        ...calculateNewDeleteValue(element),
+    matches: (keyDef, element) =>
+      keyDef.key === 'Delete' && isEditable(element) && !isCursorAtEnd(element),
+    handle: (keDef, element, options, state) => {
+      const {newValue, newSelectionStart} = calculateNewValue(
+        '',
+        element as HTMLElement,
+        state.carryValue,
+        undefined,
+        'forward',
+      )
+
+      fireInputEvent(element as HTMLElement, {
+        newValue,
+        newSelectionStart,
         eventOverrides: {
           inputType: 'deleteContentForward',
         },
-        currentElement: () => element,
       })
+
+      carryValue(element, state, newValue)
     },
   },
 ]

@@ -38,9 +38,9 @@ function setupSelect({
   form.innerHTML = `
     <select
       name="select"
+      style="pointer-events: ${pointerEvents}"
       ${disabled ? 'disabled' : ''}
       ${multiple ? 'multiple' : ''}
-      style={"pointer-events: ${pointerEvents}"}
     >
       <option value="1" ${disabledOptions ? 'disabled' : ''}>1</option>
       <option value="2" ${disabledOptions ? 'disabled' : ''}>2</option>

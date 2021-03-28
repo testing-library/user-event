@@ -5,6 +5,7 @@ import {
   isFocusable,
   isDisabled,
   isElementType,
+  isElementClickable,
 } from './utils'
 import {hover} from './hover'
 import {blur} from './blur'
@@ -117,6 +118,7 @@ function click(
   init?: MouseEventInit,
   {skipHover = false, clickCount = 0}: clickOptions = {},
 ) {
+  if (!isElementClickable(element)) return
   if (!skipHover) hover(element, init)
 
   if (isElementType(element, 'label')) {

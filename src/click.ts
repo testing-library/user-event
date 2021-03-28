@@ -5,7 +5,7 @@ import {
   isFocusable,
   isDisabled,
   isElementType,
-  isElementClickable,
+  hasPointerEvents,
 } from './utils'
 import {hover} from './hover'
 import {blur} from './blur'
@@ -118,7 +118,7 @@ function click(
   init?: MouseEventInit,
   {skipHover = false, clickCount = 0}: clickOptions = {},
 ) {
-  if (!isElementClickable(element)) return
+  if (!hasPointerEvents(element)) return
   if (!skipHover) hover(element, init)
 
   if (isElementType(element, 'label')) {
@@ -143,6 +143,7 @@ function fireClick(element: Element, mouseEventOptions: MouseEventInit) {
 }
 
 function dblClick(element: Element, init?: MouseEventInit) {
+  if (!hasPointerEvents(element)) return
   hover(element, init)
   click(element, init, {skipHover: true, clickCount: 0})
   click(element, init, {skipHover: true, clickCount: 1})

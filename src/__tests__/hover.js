@@ -122,3 +122,13 @@ test('fires non-bubbling events on parents for unhover', () => {
     DIV: mouseleave"
   `)
 })
+
+test('fires no events when hovering element with pointer-events set to none', () => {
+  const {element, getEventSnapshot} = setup(
+    `<div style="pointer-events: none"></div>`,
+  )
+  userEvent.hover(element)
+  expect(getEventSnapshot()).toMatchInlineSnapshot(
+    `No events were fired on: div`,
+  )
+})

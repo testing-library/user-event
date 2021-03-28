@@ -1,6 +1,6 @@
 import {getWindowFromNode} from '@testing-library/dom/dist/helpers'
 
-export function isElementClickable(element: Element): boolean {
+export function hasPointerEvents(element: Element): boolean {
   const window = getWindowFromNode(element)
 
   for (

@@ -1,5 +1,5 @@
 import {createEvent, getConfig, fireEvent} from '@testing-library/dom'
-import {isDisabled, isElementType} from './utils'
+import {hasPointerEvents, isDisabled, isElementType} from './utils'
 import {click} from './click'
 import {focus} from './focus'
 import {hover, unhover} from './hover'
@@ -10,6 +10,7 @@ function selectOptionsBase(
   values: HTMLElement | HTMLElement[] | string[] | string,
   init?: MouseEventInit,
 ) {
+  if (!hasPointerEvents(select)) return
   if (!newValue && !(select as HTMLSelectElement).multiple) {
     throw getConfig().getElementError(
       `Unable to deselect an option in a non-multiple select. Use selectOptions to change the selection instead.`,

@@ -32,6 +32,7 @@ function setupSelect({
   disabled = false,
   disabledOptions = false,
   multiple = false,
+  pointerEvents = 'auto',
 } = {}) {
   const form = document.createElement('form')
   form.innerHTML = `
@@ -39,6 +40,7 @@ function setupSelect({
       name="select"
       ${disabled ? 'disabled' : ''}
       ${multiple ? 'multiple' : ''}
+      style={"pointer-events: ${pointerEvents}"}
     >
       <option value="1" ${disabledOptions ? 'disabled' : ''}>1</option>
       <option value="2" ${disabledOptions ? 'disabled' : ''}>2</option>

@@ -45,39 +45,57 @@ function selectOptionsBase(
   if (isDisabled(select) || !selectedOptions.length) return
 
   if (isElementType(select, 'select')) {
-    if (!hasPointerEvents(select)) return
     if (select.multiple) {
       for (const option of selectedOptions) {
+        const withPointerEvents = hasPointerEvents(option)
+
         // events fired for multiple select are weird. Can't use hover...
-        fireEvent.pointerOver(option, init)
-        fireEvent.pointerEnter(select, init)
-        fireEvent.mouseOver(option)
-        fireEvent.mouseEnter(select)
-        fireEvent.pointerMove(option, init)
-        fireEvent.mouseMove(option, init)
-        fireEvent.pointerDown(option, init)
-        fireEvent.mouseDown(option, init)
+        if (withPointerEvents) {
+          fireEvent.pointerOver(option, init)
+          fireEvent.pointerEnter(select, init)
+          fireEvent.mouseOver(option)
+          fireEvent.mouseEnter(select)
+          fireEvent.pointerMove(option, init)
+          fireEvent.mouseMove(option, init)
+          fireEvent.pointerDown(option, init)
+          fireEvent.mouseDown(option, init)
+        }
+
         focus(select)
-        fireEvent.pointerUp(option, init)
-        fireEvent.mouseUp(option, init)
+
+        if (withPointerEvents) {
+          fireEvent.pointerUp(option, init)
+          fireEvent.mouseUp(option, init)
+        }
+
         selectOption(option as HTMLOptionElement)
-        fireEvent.click(option, init)
+
+        if (withPointerEvents) {
+          fireEvent.click(option, init)
+        }
       }
     } else if (selectedOptions.length === 1) {
+      const withPointerEvents = hasPointerEvents(select)
       // the click to open the select options
-      click(select, init)
+      if (withPointerEvents) {
+        click(select, init)
+      } else {
+        focus(select)
+      }
 
       selectOption(selectedOptions[0] as HTMLOptionElement)
 
       // the browser triggers another click event on the select for the click on the option
       // this second click has no 'down' phase
-      fireEvent.pointerOver(select, init)
-      fireEvent.pointerEnter(select, init)
-      fireEvent.mouseOver(select)
-      fireEvent.mouseEnter(select)
-      fireEvent.pointerUp(select, init)
-      fireEvent.mouseUp(select, init)
-      fireEvent.click(select, init)
+      if (withPointerEvents) {
+        fireEvent.pointerOver(select, init)
+        fireEvent.pointerEnter(select, init)
+        fireEvent.mouseOver(select)
+        fireEvent.mouseEnter(select)
+        fireEvent.pointerUp(select, init)
+        fireEvent.mouseUp(select, init)
+        fireEvent.click(select, init)
+      }
     } else {
       throw getConfig().getElementError(
         `Cannot select multiple options on a non-multiple select`,

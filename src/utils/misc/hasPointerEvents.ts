@@ -10,7 +10,7 @@ export function hasPointerEvents(element: Element): boolean {
   ) {
     const pointerEvents = window.getComputedStyle(el).pointerEvents
     if (pointerEvents && !['inherit', 'unset'].includes(pointerEvents)) {
-       return pointerEvents === 'none' ? false : true
+      return pointerEvents !== 'none'
     }
   }
 

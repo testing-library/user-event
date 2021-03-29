@@ -85,9 +85,9 @@ function selectOptionsBase(
 
       selectOption(selectedOptions[0] as HTMLOptionElement)
 
-      // the browser triggers another click event on the select for the click on the option
-      // this second click has no 'down' phase
       if (withPointerEvents) {
+        // the browser triggers another click event on the select for the click on the option
+        // this second click has no 'down' phase
         fireEvent.pointerOver(select, init)
         fireEvent.pointerEnter(select, init)
         fireEvent.mouseOver(select)

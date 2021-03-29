@@ -219,7 +219,7 @@ test('should call onChange/input bubbling up the event when a new option is sele
   expect(onInputForm).toHaveBeenCalledTimes(1)
 })
 
-test('fire no events when select has disabled pointer events', () => {
+test('fire no pointer events when select has disabled pointer events', () => {
   const {select, options, getEventSnapshot} = setupSelect({
     pointerEvents: 'none',
   })

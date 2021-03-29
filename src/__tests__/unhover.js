@@ -39,7 +39,7 @@ test('no events fired on labels that contain disabled controls', () => {
   )
 })
 
-test.skip('fires no events when unhover element with pointer-events set to none', () => {
+test('fires no events when unhover element with pointer-events set to none', () => {
   const {element, getEventSnapshot} = setup(
     `<div style="pointer-events: none"></div>`,
   )

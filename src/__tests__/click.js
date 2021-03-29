@@ -474,7 +474,7 @@ test('right click fires `contextmenu` instead of `click', () => {
   expect(getEvents('click')).toHaveLength(0)
 })
 
-test.skip('fires no events when clicking element with pointer-events set to none', () => {
+test('fires no events when clicking element with pointer-events set to none', () => {
   const {element, getEventSnapshot} = setup(
     `<div style="pointer-events: none"></div>`,
   )
@@ -482,4 +482,51 @@ test.skip('fires no events when clicking element with pointer-events set to none
   expect(getEventSnapshot()).toMatchInlineSnapshot(
     `No events were fired on: div`,
   )
+})
+
+test('fires events when', () => {
+  const {element, getEventSnapshot} = setup(
+    `<div style="pointer-events: none">
+    <input style="pointer-events: initial"/>
+    <input style="pointer-events: inherit"/>
+  </div>`,
+  )
+
+  const firstInput = element.children[0]
+  const secondInput = element.children[1]
+  userEvent.click(firstInput)
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
+    Events fired on: div
+
+    input[value=""] - pointerover
+    div - pointerenter
+    input[value=""] - mouseover: Left (0)
+    div - mouseenter: Left (0)
+    input[value=""] - pointermove
+    input[value=""] - mousemove: Left (0)
+    input[value=""] - pointerdown
+    input[value=""] - mousedown: Left (0)
+    input[value=""] - focusin
+    input[value=""] - pointerup
+    input[value=""] - mouseup: Left (0)
+    input[value=""] - click: Left (0)
+  `)
+
+  userEvent.click(secondInput)
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
+    Events fired on: div
+
+    input[value=""] - pointerover
+    div - pointerenter
+    input[value=""] - mouseover: Left (0)
+    div - mouseenter: Left (0)
+    input[value=""] - pointermove
+    input[value=""] - mousemove: Left (0)
+    input[value=""] - pointerdown
+    input[value=""] - mousedown: Left (0)
+    input[value=""] - focusin
+    input[value=""] - pointerup
+    input[value=""] - mouseup: Left (0)
+    input[value=""] - click: Left (0)
+  `)
 })

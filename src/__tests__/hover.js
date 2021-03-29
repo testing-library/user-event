@@ -123,7 +123,7 @@ test('fires non-bubbling events on parents for unhover', () => {
   `)
 })
 
-test('fires no events when hovering element with pointer-events set to none', () => {
+test.skip('fires no events when hovering element with pointer-events set to none', () => {
   const {element, getEventSnapshot} = setup(
     `<div style="pointer-events: none"></div>`,
   )

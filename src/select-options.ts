@@ -10,7 +10,6 @@ function selectOptionsBase(
   values: HTMLElement | HTMLElement[] | string[] | string,
   init?: MouseEventInit,
 ) {
-  if (!hasPointerEvents(select)) return
   if (!newValue && !(select as HTMLSelectElement).multiple) {
     throw getConfig().getElementError(
       `Unable to deselect an option in a non-multiple select. Use selectOptions to change the selection instead.`,
@@ -46,6 +45,7 @@ function selectOptionsBase(
   if (isDisabled(select) || !selectedOptions.length) return
 
   if (isElementType(select, 'select')) {
+    if (!hasPointerEvents(select)) return
     if (select.multiple) {
       for (const option of selectedOptions) {
         // events fired for multiple select are weird. Can't use hover...

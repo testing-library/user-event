@@ -281,7 +281,7 @@ test('fires mouse events with custom buttons property', () => {
   `)
 })
 
-test('fires no events when dblClick element with pointer-events set to none', () => {
+test.skip('fires no events when dblClick element with pointer-events set to none', () => {
   const {element, getEventSnapshot} = setup(
     `<div style="pointer-events: none"></div>`,
   )

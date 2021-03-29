@@ -9,8 +9,8 @@ export function hasPointerEvents(element: Element): boolean {
     el = el.parentElement
   ) {
     const pointerEvents = window.getComputedStyle(el).pointerEvents
-    if (pointerEvents === 'none') {
-      return false
+    if (pointerEvents && ['inherit', 'unset'].includes(pointerEvents)) {
+       return pointerEvents === 'none' ? false : true
     }
   }
 

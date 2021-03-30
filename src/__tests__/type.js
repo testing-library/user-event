@@ -1410,22 +1410,30 @@ test('overwrite selection with same value', () => {
   expect(element).toHaveValue('11123')
 })
 
-test.each([
-  ['foo', '[{', 'Unable to find the "window"'],
-  [document.body, '[{', 'Expected key descriptor but found "{"'],
-])(
-  'catch promise rejections and report to the console on synchronous calls',
-  async (element, text, errorMessage) => {
-    const errLog = jest.spyOn(console, 'error').mockImplementationOnce(() => {})
+describe('promise rejections', () => {
+  afterEach(() => {
+    console.error.mockReset()
+  })
 
-    userEvent.type(element, text)
+  test.each([
+    ['foo', '[{', 'Unable to find the "window"'],
+    [document.body, '[{', 'Expected key descriptor but found "{"'],
+  ])(
+    'catch promise rejections and report to the console on synchronous calls',
+    async (element, text, errorMessage) => {
+      const errLog = jest
+        .spyOn(console, 'error')
+        .mockImplementationOnce(() => {})
 
-    await wait(1)
+      userEvent.type(element, text)
 
-    expect(errLog).toBeCalledWith(
-      expect.objectContaining({
-        message: expect.stringMatching(errorMessage),
-      }),
-    )
-  },
-)
+      await wait(1)
+
+      expect(errLog).toBeCalledWith(
+        expect.objectContaining({
+          message: expect.stringMatching(errorMessage),
+        }),
+      )
+    },
+  )
+})

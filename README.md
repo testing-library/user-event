@@ -769,6 +769,9 @@ Thanks goes to these people ([emoji key][emojis]):
     <td align="center"><a href="https://fergusmcdonald.com"><img src="https://avatars.githubusercontent.com/u/3115675?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Fergus McDonald</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=fergusmcdonald" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/robin-ambachtsheer"><img src="https://avatars.githubusercontent.com/u/2611873?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Robin Ambachtsheer</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3Arobin-ambachtsheer" title="Bug reports">🐛</a></td>
   </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/MohitPopli"><img src="https://avatars.githubusercontent.com/u/17976072?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Mohit</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3AMohitPopli" title="Bug reports">🐛</a> <a href="https://github.com/testing-library/user-event/commits?author=MohitPopli" title="Code">💻</a> <a href="https://github.com/testing-library/user-event/commits?author=MohitPopli" title="Tests">⚠️</a></td>
+  </tr>
 </table>
 
 <!-- markdownlint-restore -->

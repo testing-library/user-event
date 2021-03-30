@@ -47,9 +47,10 @@ export async function typeImplementation(
 
   const {selectionStart, selectionEnd} = getSelectionRange(element)
 
-  if (value != null &&
-      (selectionStart === null || selectionStart === 0) &&
-      (selectionEnd === null || selectionEnd === 0)
+  if (
+    value != null &&
+    (selectionStart === null || selectionStart === 0) &&
+    (selectionEnd === null || selectionEnd === 0)
   ) {
     setSelectionRange(
       currentElement() as Element,
@@ -70,4 +71,7 @@ export async function typeImplementation(
   if (!skipAutoClose) {
     releaseAllKeys()
   }
+
+  // eslint-disable-next-line consistent-return -- we need to return the internal Promise so that it is catchable if we don't await
+  return promise
 }

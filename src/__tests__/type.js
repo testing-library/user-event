@@ -1,4 +1,5 @@
 import userEvent from '../'
+import {wait} from '../utils'
 import {setup, addListeners} from './helpers/utils'
 import './helpers/custom-element'
 
@@ -1407,4 +1408,32 @@ test('overwrite selection with same value', () => {
   userEvent.type(element, '11123')
 
   expect(element).toHaveValue('11123')
+})
+
+describe('promise rejections', () => {
+  afterEach(() => {
+    console.error.mockReset()
+  })
+
+  test.each([
+    ['foo', '[{', 'Unable to find the "window"'],
+    [document.body, '[{', 'Expected key descriptor but found "{"'],
+  ])(
+    'catch promise rejections and report to the console on synchronous calls',
+    async (element, text, errorMessage) => {
+      const errLog = jest
+        .spyOn(console, 'error')
+        .mockImplementationOnce(() => {})
+
+      userEvent.type(element, text)
+
+      await wait(1)
+
+      expect(errLog).toBeCalledWith(
+        expect.objectContaining({
+          message: expect.stringMatching(errorMessage),
+        }),
+      )
+    },
+  )
 })

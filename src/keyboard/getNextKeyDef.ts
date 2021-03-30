@@ -28,10 +28,9 @@ export function getNextKeyDef(
       : text.slice(descriptorStart).match(/^\w+/)?.[0]
     : text[descriptorStart]
 
-  // istanbul ignore if
   if (!descriptor) {
     throw new Error(
-      `Expected key descriptor but found "${text[descriptorStart]}" in "${text}"`,
+      getErrorMessage('key descriptor', text[descriptorStart], text),
     )
   }
 
@@ -50,12 +49,13 @@ export function getNextKeyDef(
       ? '}'
       : ']'
 
-  // istanbul ignore if
   if (endBracket && text[descriptorEnd + endModifier.length] !== endBracket) {
     throw new Error(
-      `Expected closing bracket but found "${
-        text[descriptorEnd + endModifier.length]
-      }" in "${text}"`,
+      getErrorMessage(
+        'closing bracket',
+        text[descriptorEnd + endModifier.length],
+        text,
+      ),
     )
   }
 
@@ -134,4 +134,12 @@ function isPrintableCharacter(startBracket: string, descriptor: string) {
     startBracket === descriptor ||
     (startBracket === '{' && descriptor.length === 1)
   )
+}
+
+function getErrorMessage(
+  expected: string,
+  found: string | undefined,
+  text: string,
+) {
+  return `Expected ${expected} but found "${found ?? ''}" in "${text}"`
 }

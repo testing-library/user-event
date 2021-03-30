@@ -218,3 +218,44 @@ test('should call onChange/input bubbling up the event when a new option is sele
   expect(onInputSelect).toHaveBeenCalledTimes(1)
   expect(onInputForm).toHaveBeenCalledTimes(1)
 })
+
+test('fire no pointer events when select has disabled pointer events', () => {
+  const {select, options, getEventSnapshot} = setupSelect({
+    pointerEvents: 'none',
+  })
+  userEvent.selectOptions(select, '2')
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
+    Events fired on: select[name="select"][value="2"]
+
+    select[name="select"][value="1"] - focus
+    select[name="select"][value="1"] - focusin
+    select[name="select"][value="2"] - input
+    select[name="select"][value="2"] - change
+  `)
+  const [o1, o2, o3] = options
+  expect(o1.selected).toBe(false)
+  expect(o2.selected).toBe(true)
+  expect(o3.selected).toBe(false)
+})
+
+test('fire no pointer events when multiple select has disabled pointer events', () => {
+  const {select, options, getEventSnapshot} = setupSelect({
+    multiple: true,
+    pointerEvents: 'none',
+  })
+  userEvent.selectOptions(select, ['2', '3'])
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
+    Events fired on: select[name="select"][value=["2","3"]]
+
+    select[name="select"][value=[]] - focus
+    select[name="select"][value=[]] - focusin
+    select[name="select"][value=["2"]] - input
+    select[name="select"][value=["2"]] - change
+    select[name="select"][value=["2","3"]] - input
+    select[name="select"][value=["2","3"]] - change
+  `)
+  const [o1, o2, o3] = options
+  expect(o1.selected).toBe(false)
+  expect(o2.selected).toBe(true)
+  expect(o3.selected).toBe(true)
+})

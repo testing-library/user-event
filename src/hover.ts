@@ -3,6 +3,7 @@ import {
   isLabelWithInternallyDisabledControl,
   getMouseEventOptions,
   isDisabled,
+  hasPointerEvents,
 } from './utils'
 
 // includes `element`
@@ -16,6 +17,7 @@ function getParentElements(element: Element) {
 }
 
 function hover(element: Element, init?: MouseEventInit) {
+  if (!hasPointerEvents(element)) return
   if (isLabelWithInternallyDisabledControl(element)) return
 
   const parentElements = getParentElements(element).reverse()
@@ -37,6 +39,7 @@ function hover(element: Element, init?: MouseEventInit) {
 }
 
 function unhover(element: Element, init?: MouseEventInit) {
+  if (!hasPointerEvents(element)) return
   if (isLabelWithInternallyDisabledControl(element)) return
 
   const parentElements = getParentElements(element)

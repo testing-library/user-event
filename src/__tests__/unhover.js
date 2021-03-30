@@ -38,3 +38,13 @@ test('no events fired on labels that contain disabled controls', () => {
     `No events were fired on: label`,
   )
 })
+
+test('fires no events when unhover element with pointer-events set to none', () => {
+  const {element, getEventSnapshot} = setup(
+    `<div style="pointer-events: none"></div>`,
+  )
+  userEvent.unhover(element)
+  expect(getEventSnapshot()).toMatchInlineSnapshot(
+    `No events were fired on: div`,
+  )
+})

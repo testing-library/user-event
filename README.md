@@ -771,6 +771,7 @@ Thanks goes to these people ([emoji key][emojis]):
   </tr>
   <tr>
     <td align="center"><a href="https://github.com/MohitPopli"><img src="https://avatars.githubusercontent.com/u/17976072?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Mohit</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3AMohitPopli" title="Bug reports">🐛</a> <a href="https://github.com/testing-library/user-event/commits?author=MohitPopli" title="Code">💻</a> <a href="https://github.com/testing-library/user-event/commits?author=MohitPopli" title="Tests">⚠️</a></td>
+    <td align="center"><a href="https://github.com/InExtremaRes"><img src="https://avatars.githubusercontent.com/u/1635491?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Daniel Contreras</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3AInExtremaRes" title="Bug reports">🐛</a></td>
   </tr>
 </table>
 

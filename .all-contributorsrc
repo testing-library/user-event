@@ -837,6 +837,15 @@
         "code",
         "test"
       ]
+    },
+    {
+      "login": "InExtremaRes",
+      "name": "Daniel Contreras",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1635491?v=4",
+      "profile": "https://github.com/InExtremaRes",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "commitConvention": "none",

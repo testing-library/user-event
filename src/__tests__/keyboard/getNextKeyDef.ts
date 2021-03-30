@@ -87,3 +87,24 @@ cases(
     },
   },
 )
+
+cases(
+  'errors',
+  ({text, expectedError}) => {
+    expect(() => getNextKeyDef(`${text}`, options)).toThrow(expectedError)
+  },
+  {
+    'invalid descriptor': {
+      text: '{!}',
+      expectedError: 'Expected key descriptor but found "!" in "{!}"',
+    },
+    'missing descriptor': {
+      text: '',
+      expectedError: 'Expected key descriptor but found "" in ""',
+    },
+    'missing closing bracket': {
+      text: '{a)',
+      expectedError: 'Expected closing bracket but found ")" in "{a)"',
+    },
+  },
+)

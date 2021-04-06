@@ -109,7 +109,7 @@ function findClosest(element: Element, callback: (e: Element) => boolean) {
       return el
     }
     el = el.parentElement
-  } while (el && el !== document.body)
+  } while (el && el !== element.ownerDocument.body)
   return undefined
 }
 

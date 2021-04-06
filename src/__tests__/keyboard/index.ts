@@ -92,7 +92,7 @@ describe('error', () => {
     // the catch will be asynchronous
     await Promise.resolve()
 
-    expect(err).toHaveBeenCalledWith(expect.any(Error))
+    expect(err).toHaveBeenCalledWith(expect.any(Error) as unknown)
     expect(err.mock.calls[0][0]).toHaveProperty(
       'message',
       'Expected key descriptor but found "!" in "{!"',

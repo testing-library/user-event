@@ -40,7 +40,7 @@ function tab({shift = false, focusTrap}: tabOptions = {}) {
   const previousElement = getActiveElement(doc)
 
   if (!focusTrap) {
-    focusTrap = document
+    focusTrap = doc
   }
 
   const focusableElements = focusTrap.querySelectorAll(FOCUSABLE_SELECTOR)

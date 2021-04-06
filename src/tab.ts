@@ -13,7 +13,7 @@ function getNextElement(
   currentIndex: number,
   shift: boolean,
   elements: Element[],
-  focusTrap?: Document | Element,
+  focusTrap: Document | Element,
 ) {
   if (isDocument(focusTrap) && currentIndex === 0 && shift) {
     return focusTrap.body

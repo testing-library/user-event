@@ -15,12 +15,10 @@ function getNextElement(
   elements: Element[],
   focusTrap: Document | Element,
 ) {
-  if (isDocument(focusTrap) && currentIndex === 0 && shift) {
-    return focusTrap.body
-  } else if (
+  if (
     isDocument(focusTrap) &&
-    currentIndex === elements.length - 1 &&
-    !shift
+    ((currentIndex === 0 && shift) ||
+      (currentIndex === elements.length - 1 && !shift))
   ) {
     return focusTrap.body
   } else {

@@ -21,11 +21,11 @@ function getNextElement(
       (currentIndex === elements.length - 1 && !shift))
   ) {
     return focusTrap.body
-  } else {
-    const nextIndex = shift ? currentIndex - 1 : currentIndex + 1
-    const defaultIndex = shift ? elements.length - 1 : 0
-    return elements[nextIndex] || elements[defaultIndex]
   }
+
+  const nextIndex = shift ? currentIndex - 1 : currentIndex + 1
+  const defaultIndex = shift ? elements.length - 1 : 0
+  return elements[nextIndex] || elements[defaultIndex]
 }
 
 interface tabOptions {

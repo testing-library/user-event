@@ -4,6 +4,7 @@ import {
   FOCUSABLE_SELECTOR,
   isVisible,
   isDisabled,
+  isDocument,
 } from './utils'
 import {focus} from './focus'
 import {blur} from './blur'
@@ -12,21 +13,19 @@ function getNextElement(
   currentIndex: number,
   shift: boolean,
   elements: Element[],
-  focusTrap?: Document | Element,
+  focusTrap: Document | Element,
 ) {
-  if (focusTrap === document && currentIndex === 0 && shift) {
-    return document.body
-  } else if (
-    focusTrap === document &&
-    currentIndex === elements.length - 1 &&
-    !shift
+  if (
+    isDocument(focusTrap) &&
+    ((currentIndex === 0 && shift) ||
+      (currentIndex === elements.length - 1 && !shift))
   ) {
-    return document.body
-  } else {
-    const nextIndex = shift ? currentIndex - 1 : currentIndex + 1
-    const defaultIndex = shift ? elements.length - 1 : 0
-    return elements[nextIndex] || elements[defaultIndex]
+    return focusTrap.body
   }
+
+  const nextIndex = shift ? currentIndex - 1 : currentIndex + 1
+  const defaultIndex = shift ? elements.length - 1 : 0
+  return elements[nextIndex] || elements[defaultIndex]
 }
 
 interface tabOptions {
@@ -35,10 +34,11 @@ interface tabOptions {
 }
 
 function tab({shift = false, focusTrap}: tabOptions = {}) {
-  const previousElement = getActiveElement(focusTrap?.ownerDocument ?? document)
+  const doc = focusTrap?.ownerDocument ?? document
+  const previousElement = getActiveElement(doc)
 
   if (!focusTrap) {
-    focusTrap = document
+    focusTrap = doc
   }
 
   const focusableElements = focusTrap.querySelectorAll(FOCUSABLE_SELECTOR)
@@ -142,7 +142,7 @@ function tab({shift = false, focusTrap}: tabOptions = {}) {
     !continueToTab && previousElement ? previousElement : nextElement
 
   if (continueToTab) {
-    if (nextElement === document.body) {
+    if (nextElement === doc.body) {
       /* istanbul ignore else */
       if (previousElement) {
         blur(previousElement)

@@ -846,6 +846,15 @@
       "contributions": [
         "bug"
       ]
+    },
+    {
+      "login": "loreanvictor",
+      "name": "Eugene Ghanizadeh",
+      "avatar_url": "https://avatars.githubusercontent.com/u/13572283?v=4",
+      "profile": "https://eugene.coding.blog",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "commitConvention": "none",

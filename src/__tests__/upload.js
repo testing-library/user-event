@@ -180,9 +180,9 @@ test.each([
       new File(['there'], 'there.jpg', {type: 'video/mp4'}),
     ]
     const {element} = setup(`
-    <input 
-      type="file" 
-      accept="${acceptAttribute}" multiple 
+    <input
+      type="file"
+      accept="${acceptAttribute}" multiple
     />
   `)
 
@@ -234,4 +234,13 @@ test('input.files implements iterable', () => {
   expect(eventTargetFiles).not.toEqual(files)
 
   expect(Array.from(eventTargetFiles)).toEqual(files)
+})
+
+test('should give error if we are trying to call upload on an invalid element', () => {
+  const {element} = setup('<div  />')
+  expect(() =>
+    userEvent.paste(element, "I'm only a div :("),
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"the current element is of type DIV and doesn't have a valid value"`,
+  )
 })

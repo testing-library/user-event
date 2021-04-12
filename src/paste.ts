@@ -13,7 +13,7 @@ interface pasteOptions {
 }
 
 function paste(
-  element: HTMLInputElement | HTMLTextAreaElement,
+  element: HTMLElement,
   text: string,
   init?: ClipboardEventInit,
   {initialSelectionStart, initialSelectionEnd}: pasteOptions = {},
@@ -23,7 +23,13 @@ function paste(
   }
 
   // TODO: implement for contenteditable
-  if (typeof element.value === 'undefined') {
+  if (
+    !(
+      element instanceof HTMLInputElement ||
+      element instanceof HTMLTextAreaElement
+    ) ||
+    typeof element.value === 'undefined'
+  ) {
     throw new TypeError(
       `the current element is of type ${element.tagName} and doesn't have a valid value`,
     )

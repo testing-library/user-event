@@ -14,11 +14,20 @@ interface uploadOptions {
 }
 
 function upload(
-  element: HTMLInputElement | HTMLLabelElement,
+  element: HTMLElement,
   fileOrFiles: File | File[],
   init?: uploadInit,
   {applyAccept = false}: uploadOptions = {},
 ) {
+  if (
+    !(
+      element instanceof HTMLInputElement || element instanceof HTMLLabelElement
+    )
+  ) {
+    throw new TypeError(
+      `the current element is of type ${element.tagName} and does not accept file uploads`,
+    )
+  }
   if (isDisabled(element)) return
 
   click(element, init?.clickInit)

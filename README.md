@@ -135,7 +135,8 @@ See the
 constructor documentation for more options.
 
 Note that `click` will trigger hover events before clicking. To disable this,
-set the `skipHover` option to `true`.
+set the `skipHover` option to `true`. Also note that trying to click an element
+with `user-events` being set to `"none"` (i.e. unclickable) will throw an eror.
 
 ### `dblClick(element, eventInit, options)`
 
@@ -256,11 +257,8 @@ test('types into the input', () => {
   render(
     <>
       <label for="time">Enter a time</label>
-      <input
-        type="time"
-        id="time"
-      />
-    </>
+      <input type="time" id="time" />
+    </>,
   )
   const input = screen.getByLabelText(/enter a time/i)
   userEvent.type(input, '13:58')

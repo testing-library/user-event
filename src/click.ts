@@ -120,7 +120,7 @@ function click(
 ) {
   if (!hasPointerEvents(element)) {
     throw new Error(
-      'unable to click element as it or a parent has pointer-events set to "none".',
+      'unable to click element as it has or inherits pointer-events set to "none".',
     )
   }
   if (!skipHover) hover(element, init)
@@ -149,7 +149,7 @@ function fireClick(element: Element, mouseEventOptions: MouseEventInit) {
 function dblClick(element: Element, init?: MouseEventInit) {
   if (!hasPointerEvents(element)) {
     throw new Error(
-      'unable to double-click element as it or a parent has pointer-events set to "none".',
+      'unable to double-click element as it has or inherits pointer-events set to "none".',
     )
   }
   hover(element, init)

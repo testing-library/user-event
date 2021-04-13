@@ -136,7 +136,7 @@ constructor documentation for more options.
 
 Note that `click` will trigger hover events before clicking. To disable this,
 set the `skipHover` option to `true`. Also note that trying to click an element
-with `user-events` being set to `"none"` (i.e. unclickable) will throw an error.
+with `pointer-events` being set to `"none"` (i.e. unclickable) will throw an error.
 
 ### `dblClick(element, eventInit, options)`
 

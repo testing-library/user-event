@@ -281,12 +281,9 @@ test('fires mouse events with custom buttons property', () => {
   `)
 })
 
-test('fires no events when dblClick element with pointer-events set to none', () => {
-  const {element, getEventSnapshot} = setup(
-    `<div style="pointer-events: none"></div>`,
-  )
-  userEvent.dblClick(element)
-  expect(getEventSnapshot()).toMatchInlineSnapshot(
-    `No events were fired on: div`,
+test('throws an error when dblClick element with pointer-events set to none', () => {
+  const {element} = setup(`<div style="pointer-events: none"></div>`)
+  expect(() => userEvent.dblClick(element)).toThrowError(
+    /unable to double-click/i,
   )
 })

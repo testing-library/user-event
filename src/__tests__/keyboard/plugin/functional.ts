@@ -158,7 +158,7 @@ test('trigger click event on [Space] keyup on HTMLInputElement type=button', () 
 })
 
 test('trigger change event on [Space] keyup on HTMLInputElement type=radio', () => {
-  const {element, getEventSnapshot, getEvents} = setup(`<input type="radio" />`)
+  const {element, getEventSnapshot} = setup(`<input type="radio" />`)
   ;(element as HTMLInputElement).focus()
 
   userEvent.keyboard('[Space]')

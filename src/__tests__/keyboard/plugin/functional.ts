@@ -148,29 +148,30 @@ test('trigger click event on [Space] keyup on HTMLInputElement type=button', () 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: button
 
-    button - focus
-    button - focusin
-    button - keydown: (32)
-    button - keypress: (32)
-    button - keyup: (32)
-    button - click: Left (0)
+    input[value=""] - focus
+    input[value=""] - focusin
+    input[value=""] - keydown: (32)
+    input[value=""] - keypress: (32)
+    input[value=""] - keyup: (32)
+    input[value=""] - click: Left (0)
   `)
 })
 
 test('trigger change event on [Space] keyup on HTMLInputElement type=radio', () => {
-  const {element, getEventSnapshot} = setup(`<input type="radio" />`)
+  const {element, getEventSnapshot, getEvents} = setup(`<input type="radio" />`)
   ;(element as HTMLInputElement).focus()
 
   userEvent.keyboard('[Space]')
 
+  expect(getEvents('change')).toHaveLength(1)
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: button
 
-    button - focus
-    button - focusin
-    button - keydown: (32)
-    button - keypress: (32)
-    button - keyup: (32)
-    button - click: Left (0)
+    input[checked=false] - focus
+    input[checked=false] - focusin
+    input[checked=false] - keydown: (32)
+    input[checked=false] - keypress: (32)
+    input[checked=false] - input
+    input[checked=false] - keyup: (32)
   `)
 })

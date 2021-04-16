@@ -146,7 +146,7 @@ test('trigger click event on [Space] keyup on HTMLInputElement type=button', () 
   expect(getEvents('click')).toHaveLength(1)
   expect(getEvents('click')[0]).toHaveProperty('detail', 0)
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
-    Events fired on: button
+    Events fired on: input[value=""]
 
     input[value=""] - focus
     input[value=""] - focusin
@@ -165,7 +165,7 @@ test('trigger change event on [Space] keyup on HTMLInputElement type=radio', () 
 
   expect(getEvents('change')).toHaveLength(1)
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
-    Events fired on: button
+    Events fired on: input[checked=false]
 
     input[checked=false] - focus
     input[checked=false] - focusin

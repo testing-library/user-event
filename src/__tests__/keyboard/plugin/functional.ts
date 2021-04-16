@@ -163,7 +163,6 @@ test('trigger change event on [Space] keyup on HTMLInputElement type=radio', () 
 
   userEvent.keyboard('[Space]')
 
-  expect(getEvents('change')).toHaveLength(1)
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: button
 

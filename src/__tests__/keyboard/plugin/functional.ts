@@ -138,13 +138,32 @@ test('trigger click event on [Space] keyup on HTMLButtonElement', () => {
 })
 
 test('trigger click event on [Space] keyup on HTMLInputElement type=button', () => {
-  const {element, getEventSnapshot, getEvents} = setup(`<button/>`)
+  const {element, getEventSnapshot, getEvents} = setup(`<input type="button" />`)
   ;(element as HTMLButtonElement).focus()
 
   userEvent.keyboard('[Space]')
 
   expect(getEvents('click')).toHaveLength(1)
   expect(getEvents('click')[0]).toHaveProperty('detail', 0)
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
+    Events fired on: button
+
+    button - focus
+    button - focusin
+    button - keydown: (32)
+    button - keypress: (32)
+    button - keyup: (32)
+    button - click: Left (0)
+  `)
+})
+
+test('trigger change event on [Space] keyup on HTMLInputElement type=radio', () => {
+  const {element, getEventSnapshot, getEvents} = setup(`<input type="radio" />`)
+  ;(element as HTMLInputElement).focus()
+
+  userEvent.keyboard('[Space]')
+
+  expect(getEvents('change')).toHaveLength(1)
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: button
 

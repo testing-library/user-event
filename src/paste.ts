@@ -5,11 +5,23 @@ import {
   calculateNewValue,
   eventWrapper,
   isDisabled,
+  isElementType,
 } from './utils'
 
 interface pasteOptions {
   initialSelectionStart?: number
   initialSelectionEnd?: number
+}
+
+function isPasteableElement(
+  element: HTMLElement,
+): element is HTMLInputElement | HTMLTextAreaElement {
+  return (
+    (isElementType(element, 'input') &&
+      element.type !== 'file' &&
+      element.type !== 'button') ||
+    isElementType(element, 'textarea')
+  )
 }
 
 function paste(
@@ -23,15 +35,9 @@ function paste(
   }
 
   // TODO: implement for contenteditable
-  if (
-    !(
-      element instanceof HTMLInputElement ||
-      element instanceof HTMLTextAreaElement
-    ) ||
-    typeof element.value === 'undefined'
-  ) {
+  if (!isPasteableElement(element)) {
     throw new TypeError(
-      `the current element is of type ${element.tagName} and doesn't have a valid value`,
+      `the current element is of type ${element.tagName} and does not support pasting`,
     )
   }
   eventWrapper(() => element.focus())

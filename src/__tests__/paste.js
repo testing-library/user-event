@@ -103,6 +103,6 @@ test('should give error if we are trying to call paste on an invalid element', (
   expect(() =>
     userEvent.paste(element, "I'm only a div :("),
   ).toThrowErrorMatchingInlineSnapshot(
-    `"the current element is of type DIV and doesn't have a valid value"`,
+    `"the current element is of type DIV and does not support pasting"`,
   )
 })

@@ -236,11 +236,18 @@ test('input.files implements iterable', () => {
   expect(Array.from(eventTargetFiles)).toEqual(files)
 })
 
-test('should give error if we are trying to call upload on an invalid element', () => {
-  const {element} = setup('<div  />')
+test('throw error if trying to use upload on an invalid element', () => {
+  const {elements} = setup('<div></div><label><input type="checkbox"/></label>')
+
   expect(() =>
-    userEvent.upload(element, "I'm only a div :("),
+    userEvent.upload(elements[0], "I'm only a div :("),
   ).toThrowErrorMatchingInlineSnapshot(
-    `"the current element is of type DIV and does not accept file uploads"`,
+    `"The given DIV element does not accept file uploads"`,
+  )
+
+  expect(() =>
+    userEvent.upload(elements[1], "I'm a checkbox :("),
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"The associated INPUT element does not accept file uploads"`,
   )
 })

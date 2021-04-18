@@ -100,9 +100,9 @@ test('should replace selected text all at once', () => {
 
 test('should give error if we are trying to call paste on an invalid element', () => {
   const {element} = setup('<div  />')
-  expect(() =>
-    userEvent.paste(element, "I'm only a div :("),
-  ).toThrowErrorMatchingInlineSnapshot(
-    `"the current element is of type DIV and does not support pasting"`,
-  )
+  expect(() => userEvent.paste(element, "I'm only a div :("))
+    .toThrowErrorMatchingInlineSnapshot(`
+    "The given DIV element is currently unsupported.
+          A PR extending this implementation would be very much welcome at https://github.com/testing-library/user-event"
+  `)
 })

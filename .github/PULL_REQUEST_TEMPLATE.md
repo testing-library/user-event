@@ -27,8 +27,8 @@ merge of your pull request!
 **Checklist**:
 <!-- Have you done all of these things?  -->
 
-<!-- add "N/A" to the end of each line that's irrelevant to your changes -->
-<!-- to check an item, place an "x" in the box like so: "- [x] Documentation" -->
+<!-- To check an item, place an "x" in the box like so: "- [x] Documentation" -->
+<!-- If the item is irrelevant to your changes, replace or fill the box with "N/A" -->
 
 - [ ] Documentation
 - [ ] Tests

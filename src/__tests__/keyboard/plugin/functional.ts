@@ -165,13 +165,16 @@ test('trigger change event on [Space] keyup on HTMLInputElement type=radio', () 
 
   expect(getEvents('change')).toHaveLength(1)
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
-    Events fired on: input[checked=false]
+    Events fired on: input[checked=true]
 
     input[checked=false] - focus
     input[checked=false] - focusin
     input[checked=false] - keydown: (32)
     input[checked=false] - keypress: (32)
-    input[checked=false] - input
     input[checked=false] - keyup: (32)
+    input[checked=true] - click: Left (0)
+      unchecked -> checked
+    input[checked=true] - input
+    input[checked=true] - change
   `)
 })

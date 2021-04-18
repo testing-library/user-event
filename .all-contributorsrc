@@ -761,7 +761,9 @@
       "avatar_url": "https://avatars.githubusercontent.com/u/1410985?v=4",
       "profile": "https://bozdoz.com",
       "contributions": [
-        "doc"
+        "doc",
+        "bug",
+        "test"
       ]
     },
     {
@@ -852,6 +854,15 @@
       "name": "Eugene Ghanizadeh",
       "avatar_url": "https://avatars.githubusercontent.com/u/13572283?v=4",
       "profile": "https://eugene.coding.blog",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "vicrep",
+      "name": "Victor Repkow",
+      "avatar_url": "https://avatars.githubusercontent.com/u/11432241?v=4",
+      "profile": "https://github.com/vicrep",
       "contributions": [
         "code"
       ]

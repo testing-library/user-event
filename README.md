@@ -135,7 +135,8 @@ See the
 constructor documentation for more options.
 
 Note that `click` will trigger hover events before clicking. To disable this,
-set the `skipHover` option to `true`.
+set the `skipHover` option to `true`. Also note that trying to click an element
+with `pointer-events` being set to `"none"` (i.e. unclickable) will throw an error.
 
 ### `dblClick(element, eventInit, options)`
 
@@ -256,11 +257,8 @@ test('types into the input', () => {
   render(
     <>
       <label for="time">Enter a time</label>
-      <input
-        type="time"
-        id="time"
-      />
-    </>
+      <input type="time" id="time" />
+    </>,
   )
   const input = screen.getByLabelText(/enter a time/i)
   userEvent.type(input, '13:58')
@@ -758,7 +756,7 @@ Thanks goes to these people ([emoji key][emojis]):
     <td align="center"><a href="https://benadamstyles.com"><img src="https://avatars.githubusercontent.com/u/4380655?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Ben Styles</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=benadamstyles" title="Code">💻</a> <a href="https://github.com/testing-library/user-event/commits?author=benadamstyles" title="Tests">⚠️</a></td>
     <td align="center"><a href="http://laurabeatris.com"><img src="https://avatars.githubusercontent.com/u/48022589?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Laura Beatris</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=LauraBeatris" title="Code">💻</a> <a href="https://github.com/testing-library/user-event/commits?author=LauraBeatris" title="Tests">⚠️</a></td>
     <td align="center"><a href="https://twitter.com/boriscoder"><img src="https://avatars.githubusercontent.com/u/812240?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Boris Serdiuk</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3Ajust-boris" title="Bug reports">🐛</a></td>
-    <td align="center"><a href="https://bozdoz.com"><img src="https://avatars.githubusercontent.com/u/1410985?v=4?s=100" width="100px;" alt=""/><br /><sub><b>bozdoz</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=bozdoz" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://bozdoz.com"><img src="https://avatars.githubusercontent.com/u/1410985?v=4?s=100" width="100px;" alt=""/><br /><sub><b>bozdoz</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=bozdoz" title="Documentation">📖</a> <a href="https://github.com/testing-library/user-event/issues?q=author%3Abozdoz" title="Bug reports">🐛</a> <a href="https://github.com/testing-library/user-event/commits?author=bozdoz" title="Tests">⚠️</a></td>
   </tr>
   <tr>
     <td align="center"><a href="https://github.com/jKatt"><img src="https://avatars.githubusercontent.com/u/5550790?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Jan Kattelans</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=jKatt" title="Code">💻</a></td>
@@ -773,6 +771,7 @@ Thanks goes to these people ([emoji key][emojis]):
     <td align="center"><a href="https://github.com/MohitPopli"><img src="https://avatars.githubusercontent.com/u/17976072?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Mohit</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3AMohitPopli" title="Bug reports">🐛</a> <a href="https://github.com/testing-library/user-event/commits?author=MohitPopli" title="Code">💻</a> <a href="https://github.com/testing-library/user-event/commits?author=MohitPopli" title="Tests">⚠️</a></td>
     <td align="center"><a href="https://github.com/InExtremaRes"><img src="https://avatars.githubusercontent.com/u/1635491?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Daniel Contreras</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3AInExtremaRes" title="Bug reports">🐛</a></td>
     <td align="center"><a href="https://eugene.coding.blog"><img src="https://avatars.githubusercontent.com/u/13572283?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Eugene Ghanizadeh</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=loreanvictor" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/vicrep"><img src="https://avatars.githubusercontent.com/u/11432241?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Victor Repkow</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=vicrep" title="Code">💻</a></td>
   </tr>
 </table>
 

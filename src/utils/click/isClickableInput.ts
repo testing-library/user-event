@@ -7,6 +7,8 @@ const CLICKABLE_INPUT_TYPES = [
   'image',
   'reset',
   'submit',
+  'checkbox',
+  'radio',
 ]
 
 export function isClickableInput(element: Element): boolean {

@@ -474,12 +474,7 @@ test('right click fires `contextmenu` instead of `click', () => {
   expect(getEvents('click')).toHaveLength(0)
 })
 
-test('fires no events when clicking element with pointer-events set to none', () => {
-  const {element, getEventSnapshot} = setup(
-    `<div style="pointer-events: none"></div>`,
-  )
-  userEvent.click(element)
-  expect(getEventSnapshot()).toMatchInlineSnapshot(
-    `No events were fired on: div`,
-  )
+test('throws when clicking element with pointer-events set to none', () => {
+  const {element} = setup(`<div style="pointer-events: none"></div>`)
+  expect(() => userEvent.click(element)).toThrowError(/unable to click/i)
 })

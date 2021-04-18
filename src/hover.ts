@@ -17,7 +17,11 @@ function getParentElements(element: Element) {
 }
 
 function hover(element: Element, init?: MouseEventInit) {
-  if (!hasPointerEvents(element)) return
+  if (!hasPointerEvents(element)) {
+    throw new Error(
+      'unable to hover element as it has or inherits pointer-events set to "none".',
+    )
+  }
   if (isLabelWithInternallyDisabledControl(element)) return
 
   const parentElements = getParentElements(element).reverse()
@@ -39,7 +43,11 @@ function hover(element: Element, init?: MouseEventInit) {
 }
 
 function unhover(element: Element, init?: MouseEventInit) {
-  if (!hasPointerEvents(element)) return
+  if (!hasPointerEvents(element)) {
+    throw new Error(
+      'unable to unhover element as it has or inherits pointer-events set to "none".',
+    )
+  }
   if (isLabelWithInternallyDisabledControl(element)) return
 
   const parentElements = getParentElements(element)

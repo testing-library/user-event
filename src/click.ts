@@ -118,7 +118,11 @@ function click(
   init?: MouseEventInit,
   {skipHover = false, clickCount = 0}: clickOptions = {},
 ) {
-  if (!hasPointerEvents(element)) return
+  if (!hasPointerEvents(element)) {
+    throw new Error(
+      'unable to click element as it has or inherits pointer-events set to "none".',
+    )
+  }
   if (!skipHover) hover(element, init)
 
   if (isElementType(element, 'label')) {
@@ -143,7 +147,11 @@ function fireClick(element: Element, mouseEventOptions: MouseEventInit) {
 }
 
 function dblClick(element: Element, init?: MouseEventInit) {
-  if (!hasPointerEvents(element)) return
+  if (!hasPointerEvents(element)) {
+    throw new Error(
+      'unable to double-click element as it has or inherits pointer-events set to "none".',
+    )
+  }
   hover(element, init)
   click(element, init, {skipHover: true, clickCount: 0})
   click(element, init, {skipHover: true, clickCount: 1})

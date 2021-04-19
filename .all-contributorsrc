@@ -866,6 +866,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "GreenGremlin",
+      "name": "Jonathan Felchlin",
+      "avatar_url": "https://avatars.githubusercontent.com/u/647452?v=4",
+      "profile": "https://github.com/GreenGremlin",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "commitConvention": "none",

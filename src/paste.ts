@@ -5,6 +5,8 @@ import {
   calculateNewValue,
   eventWrapper,
   isDisabled,
+  isElementType,
+  editableInputTypes,
 } from './utils'
 
 interface pasteOptions {
@@ -12,22 +14,36 @@ interface pasteOptions {
   initialSelectionEnd?: number
 }
 
+function isSupportedElement(
+  element: HTMLElement,
+): element is
+  | HTMLTextAreaElement
+  | (HTMLInputElement & {type: editableInputTypes}) {
+  return (
+    (isElementType(element, 'input') &&
+      Boolean(editableInputTypes[element.type as editableInputTypes])) ||
+    isElementType(element, 'textarea')
+  )
+}
+
 function paste(
-  element: HTMLInputElement | HTMLTextAreaElement,
+  element: HTMLElement,
   text: string,
   init?: ClipboardEventInit,
   {initialSelectionStart, initialSelectionEnd}: pasteOptions = {},
 ) {
+  // TODO: implement for contenteditable
+  if (!isSupportedElement(element)) {
+    throw new TypeError(
+      `The given ${element.tagName} element is currently unsupported.
+      A PR extending this implementation would be very much welcome at https://github.com/testing-library/user-event`,
+    )
+  }
+
   if (isDisabled(element)) {
     return
   }
 
-  // TODO: implement for contenteditable
-  if (typeof element.value === 'undefined') {
-    throw new TypeError(
-      `the current element is of type ${element.tagName} and doesn't have a valid value`,
-    )
-  }
   eventWrapper(() => element.focus())
 
   // by default, a new element has it's selection start and end at 0

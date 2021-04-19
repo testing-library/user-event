@@ -14,18 +14,23 @@ interface uploadOptions {
 }
 
 function upload(
-  element: HTMLInputElement | HTMLLabelElement,
+  element: HTMLElement,
   fileOrFiles: File | File[],
   init?: uploadInit,
   {applyAccept = false}: uploadOptions = {},
 ) {
+  const input = isElementType(element, 'label') ? element.control : element
+
+  if (!input || !isElementType(input, 'input', {type: 'file'})) {
+    throw new TypeError(
+      `The ${input === element ? 'given' : 'associated'} ${
+        input?.tagName
+      } element does not accept file uploads`,
+    )
+  }
   if (isDisabled(element)) return
 
   click(element, init?.clickInit)
-
-  const input = isElementType(element, 'label')
-    ? (element.control as HTMLInputElement)
-    : element
 
   const files = (Array.isArray(fileOrFiles) ? fileOrFiles : [fileOrFiles])
     .filter(file => !applyAccept || isAcceptableFile(file, input.accept))

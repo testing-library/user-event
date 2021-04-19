@@ -180,9 +180,9 @@ test.each([
       new File(['there'], 'there.jpg', {type: 'video/mp4'}),
     ]
     const {element} = setup(`
-    <input 
-      type="file" 
-      accept="${acceptAttribute}" multiple 
+    <input
+      type="file"
+      accept="${acceptAttribute}" multiple
     />
   `)
 
@@ -234,4 +234,20 @@ test('input.files implements iterable', () => {
   expect(eventTargetFiles).not.toEqual(files)
 
   expect(Array.from(eventTargetFiles)).toEqual(files)
+})
+
+test('throw error if trying to use upload on an invalid element', () => {
+  const {elements} = setup('<div></div><label><input type="checkbox"/></label>')
+
+  expect(() =>
+    userEvent.upload(elements[0], "I'm only a div :("),
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"The given DIV element does not accept file uploads"`,
+  )
+
+  expect(() =>
+    userEvent.upload(elements[1], "I'm a checkbox :("),
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"The associated INPUT element does not accept file uploads"`,
+  )
 })

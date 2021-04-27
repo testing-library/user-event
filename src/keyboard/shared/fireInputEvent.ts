@@ -38,7 +38,7 @@ export function fireInputEvent(
     ...eventOverrides,
   })
 
-  setSelectionRangeAfterInputHandler(element, newValue)
+  setSelectionRangeAfterInputHandler(element, newValue, newSelectionStart)
 }
 
 function setSelectionRangeAfterInput(
@@ -51,6 +51,7 @@ function setSelectionRangeAfterInput(
 function setSelectionRangeAfterInputHandler(
   element: Element,
   newValue: string,
+  newSelectionStart: number,
 ) {
   // if we *can* change the selection start, then we will if the new value
   // is the same as the current value (so it wasn't programatically changed
@@ -62,13 +63,16 @@ function setSelectionRangeAfterInputHandler(
 
   // don't apply this workaround on elements that don't necessarily report the visible value - e.g. number
   // TODO: this could probably be only applied when there is keyboardState.carryValue
-  const expectedValue =
-    value === newValue || (value === '' && hasUnreliableEmptyValue(element))
-  if (!expectedValue) {
-    // If the currentValue is different than the expected newValue and we *can*
-    // change the selection range, than we should set it to the length of the
-    // currentValue to ensure that the browser behavior is mimicked.
-    setSelectionRange(element, value.length, value.length)
+  const isUnreliableValue = value === '' && hasUnreliableEmptyValue(element)
+
+  if (!isUnreliableValue) {
+    const isExpectedValue = value === newValue
+
+    // If the value was changed in the input handler,
+    // mimic the browser behavior and move the cursor to the end
+    const newCursor = isExpectedValue ? newSelectionStart : value.length
+
+    setSelectionRange(element, newCursor, newCursor)
   }
 }
 

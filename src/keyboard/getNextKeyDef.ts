@@ -141,5 +141,7 @@ function getErrorMessage(
   found: string | undefined,
   text: string,
 ) {
-  return `Expected ${expected} but found "${found ?? ''}" in "${text}"`
+  return `Expected ${expected} but found "${found ?? ''}" in "${text}"
+    See https://github.com/testing-library/user-event/blob/master/README.md#keyboardtext-options
+    for more information about how userEvent parses your input.`
 }

@@ -5,6 +5,7 @@ import {
   hasUnreliableEmptyValue,
   isContentEditable,
   setSelectionRange,
+  getSelectionRange,
 } from '../../utils'
 
 export function fireInputEvent(
@@ -38,7 +39,7 @@ export function fireInputEvent(
     ...eventOverrides,
   })
 
-  setSelectionRangeAfterInputHandler(element, newValue)
+  setSelectionRangeAfterInputHandler(element, newValue, newSelectionStart)
 }
 
 function setSelectionRangeAfterInput(
@@ -51,24 +52,21 @@ function setSelectionRangeAfterInput(
 function setSelectionRangeAfterInputHandler(
   element: Element,
   newValue: string,
+  newSelectionStart: number,
 ) {
-  // if we *can* change the selection start, then we will if the new value
-  // is the same as the current value (so it wasn't programatically changed
-  // when the fireEvent.input was triggered).
-  // The reason we have to do this at all is because it actually *is*
-  // programmatically changed by fireEvent.input, so we have to simulate the
-  // browser's default behavior
   const value = getValue(element) as string
 
   // don't apply this workaround on elements that don't necessarily report the visible value - e.g. number
   // TODO: this could probably be only applied when there is keyboardState.carryValue
-  const expectedValue =
-    value === newValue || (value === '' && hasUnreliableEmptyValue(element))
-  if (!expectedValue) {
-    // If the currentValue is different than the expected newValue and we *can*
-    // change the selection range, than we should set it to the length of the
-    // currentValue to ensure that the browser behavior is mimicked.
-    setSelectionRange(element, value.length, value.length)
+  const isUnreliableValue = value === '' && hasUnreliableEmptyValue(element)
+
+  if (!isUnreliableValue && value === newValue) {
+    const {selectionStart} = getSelectionRange(element)
+    if (selectionStart === value.length) {
+      // The value was changed as expected, but the cursor was moved to the end
+      // TODO: this could probably be only applied when we work around a framework setter on the element in applyNative
+      setSelectionRange(element, newSelectionStart, newSelectionStart)
+    }
   }
 }
 

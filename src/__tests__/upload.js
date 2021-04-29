@@ -251,3 +251,15 @@ test('throw error if trying to use upload on an invalid element', () => {
     `"The associated INPUT element does not accept file uploads"`,
   )
 })
+
+test('apply init options', () => {
+  const {element, getEvents} = setup('<input type="file"/>')
+
+  userEvent.upload(element, new File([], 'hello.png'), {
+    clickInit: {shiftKey: true},
+    changeInit: {cancelable: true},
+  })
+
+  expect(getEvents('click')[0]).toHaveProperty('shiftKey', true)
+  expect(getEvents('change')[0]).toHaveProperty('cancelable', true)
+})

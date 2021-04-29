@@ -875,6 +875,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "sydneyjodon-wk",
+      "name": "sydneyjodon-wk",
+      "avatar_url": "https://avatars.githubusercontent.com/u/51122966?v=4",
+      "profile": "https://github.com/sydneyjodon-wk",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "commitConvention": "none",

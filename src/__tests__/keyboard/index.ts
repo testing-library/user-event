@@ -95,7 +95,7 @@ describe('error', () => {
     expect(err).toHaveBeenCalledWith(expect.any(Error) as unknown)
     expect(err.mock.calls[0][0]).toHaveProperty(
       'message',
-      'Expected key descriptor but found "!" in "{!"',
+      expect.stringContaining('Expected key descriptor but found "!" in "{!"'),
     )
   })
 

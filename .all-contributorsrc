@@ -875,6 +875,24 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "sydneyjodon-wk",
+      "name": "sydneyjodon-wk",
+      "avatar_url": "https://avatars.githubusercontent.com/u/51122966?v=4",
+      "profile": "https://github.com/sydneyjodon-wk",
+      "contributions": [
+        "bug"
+      ]
+    },
+    {
+      "login": "codepath2019",
+      "name": "Charles Magic Woo",
+      "avatar_url": "https://avatars.githubusercontent.com/u/49729798?v=4",
+      "profile": "https://github.com/codepath2019",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "commitConvention": "none",

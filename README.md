@@ -773,6 +773,8 @@ Thanks goes to these people ([emoji key][emojis]):
     <td align="center"><a href="https://eugene.coding.blog"><img src="https://avatars.githubusercontent.com/u/13572283?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Eugene Ghanizadeh</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=loreanvictor" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/vicrep"><img src="https://avatars.githubusercontent.com/u/11432241?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Victor Repkow</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=vicrep" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/GreenGremlin"><img src="https://avatars.githubusercontent.com/u/647452?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Jonathan Felchlin</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=GreenGremlin" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/sydneyjodon-wk"><img src="https://avatars.githubusercontent.com/u/51122966?v=4?s=100" width="100px;" alt=""/><br /><sub><b>sydneyjodon-wk</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3Asydneyjodon-wk" title="Bug reports">🐛</a></td>
+    <td align="center"><a href="https://github.com/codepath2019"><img src="https://avatars.githubusercontent.com/u/49729798?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Charles Magic Woo</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3Acodepath2019" title="Bug reports">🐛</a></td>
   </tr>
 </table>
 

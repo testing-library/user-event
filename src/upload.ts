@@ -6,7 +6,7 @@ import {isDisabled, isElementType} from './utils'
 
 interface uploadInit {
   clickInit?: MouseEventInit
-  changeInit?: Event
+  changeInit?: EventInit
 }
 
 interface uploadOptions {
@@ -74,13 +74,12 @@ function upload(
       bubbles: true,
       cancelable: false,
       composed: true,
-      ...init,
     }),
   )
 
   fireEvent.change(input, {
     target: {files: inputFiles},
-    ...init,
+    ...init?.changeInit,
   })
 }
 

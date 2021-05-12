@@ -96,6 +96,11 @@ export function setSelectionRange(
     }
   }
 
+  // Moving the selection inside <input> or <textarea> does not alter the document Selection.
+  if (isElementType(element, 'input') || isElementType(element, 'textarea')) {
+    return
+  }
+
   const range = element.ownerDocument.createRange()
   range.selectNodeContents(element)
 
@@ -107,13 +112,7 @@ export function setSelectionRange(
 
   const selection = element.ownerDocument.getSelection()
   // istanbul ignore else
-  if (
-    selection &&
-    // Skip setting the range for <input> and <textarea> because
-    // the parent <div> will be selected.
-    !isElementType(element, 'input') &&
-    !isElementType(element, 'textarea')
-  ) {
+  if (selection) {
     selection.removeAllRanges()
     selection.addRange(range)
   }

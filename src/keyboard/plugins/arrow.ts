@@ -8,10 +8,10 @@ import {getSelectionRange, isElementType, setSelectionRange} from '../../utils'
 
 export const keydownBehavior: behaviorPlugin[] = [
   {
-    // TODO: implement for textarea and contentEditable
+    // TODO: implement for contentEditable
     matches: (keyDef, element) =>
       (keyDef.key === 'ArrowLeft' || keyDef.key === 'ArrowRight') &&
-      isElementType(element, 'input'),
+      isElementType(element, ['input', 'textarea']),
     handle: (keyDef, element) => {
       const {selectionStart, selectionEnd} = getSelectionRange(element)
 

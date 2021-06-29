@@ -243,6 +243,35 @@ test('delete characters within the selectedRange', () => {
 })
 ```
 
+By default, the `selectionStart` and `selectionEnd` properties of new input
+elements are 0, even when a value is set. In this case, `type` changes the
+selection range so that it types at the end of the current value.
+
+To force typing at the start of an input element that has a value, use the
+`initialSelectionStart` and `initialSelectionEnd` options:
+
+```jsx
+import React from 'react'
+import {render, screen} from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+
+test('type at start of the current value', () => {
+  render(
+    <div>
+      <label htmlFor="my-input">Example:</label>
+      <input id="my-input" type="text" value="World" />
+    </div>,
+  )
+  const input = screen.getByLabelText(/example/i)
+  userEvent.type(input, 'Hello ', {
+    initialSelectionStart: input.selectionStart,
+    initialSelectionEnd: input.selectionEnd,
+  })
+
+  expect(input).toHaveValue('Hello World')
+})
+```
+
 #### <input type="time" /> support
 
 The following is an example of usage of this library with

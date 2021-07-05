@@ -102,7 +102,7 @@ test('should give error if we are trying to call paste on an invalid element', (
   const {element} = setup('<div  />')
   expect(() => userEvent.paste(element, "I'm only a div :("))
     .toThrowErrorMatchingInlineSnapshot(`
-    "The given DIV element is currently unsupported.
-          A PR extending this implementation would be very much welcome at https://github.com/testing-library/user-event"
+    The given DIV element is currently unsupported.
+          A PR extending this implementation would be very much welcome at https://github.com/testing-library/user-event
   `)
 })

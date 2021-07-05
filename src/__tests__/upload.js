@@ -242,13 +242,13 @@ test('throw error if trying to use upload on an invalid element', () => {
   expect(() =>
     userEvent.upload(elements[0], "I'm only a div :("),
   ).toThrowErrorMatchingInlineSnapshot(
-    `"The given DIV element does not accept file uploads"`,
+    `The given DIV element does not accept file uploads`,
   )
 
   expect(() =>
     userEvent.upload(elements[1], "I'm a checkbox :("),
   ).toThrowErrorMatchingInlineSnapshot(
-    `"The associated INPUT element does not accept file uploads"`,
+    `The associated INPUT element does not accept file uploads`,
   )
 })
 

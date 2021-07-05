@@ -1,3 +1,4 @@
+/* eslint-disable testing-library/no-node-access */
 import {eventMap} from '@testing-library/dom/dist/event-map'
 import {isElementType} from '../../utils'
 // this is pretty helpful:

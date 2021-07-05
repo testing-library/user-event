@@ -89,6 +89,6 @@ test('non-inputs/textareas are currently unsupported', () => {
   const {element} = setup('<div />')
 
   expect(() => userEvent.clear(element)).toThrowErrorMatchingInlineSnapshot(
-    `"clear currently only supports input and textarea elements."`,
+    `clear currently only supports input and textarea elements.`,
   )
 })

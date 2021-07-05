@@ -232,6 +232,7 @@ test('should delay the typing when opts.delay is not 0', async () => {
 
   const text = 'Hello, world!'
   const delay = 10
+  // eslint-disable-next-line testing-library/no-await-sync-events
   await userEvent.type(element, text, {delay})
 
   expect(onInput).toHaveBeenCalledTimes(text.length)

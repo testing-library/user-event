@@ -1,3 +1,4 @@
 {
-  "sandboxes": ["vbcvs"]
+  "sandboxes": ["vbcvs"],
+  "node": "12"
 }

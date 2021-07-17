@@ -70,15 +70,15 @@ test('fires non-bubbling events on parents for hover', () => {
   userEvent.hover(button)
 
   expect(calls.join('\n')).toMatchInlineSnapshot(`
-    "BUTTON: pointerover
-    DIV: pointerover
-    DIV: pointerenter
-    BUTTON: pointerenter
-    BUTTON: mouseover
-    DIV: mouseover
-    DIV: mouseenter
-    BUTTON: mouseenter"
-  `)
+BUTTON: pointerover
+DIV: pointerover
+DIV: pointerenter
+BUTTON: pointerenter
+BUTTON: mouseover
+DIV: mouseover
+DIV: mouseenter
+BUTTON: mouseenter
+`)
 })
 
 test('fires non-bubbling events on parents for unhover', () => {
@@ -112,15 +112,15 @@ test('fires non-bubbling events on parents for unhover', () => {
   userEvent.unhover(button)
 
   expect(calls.join('\n')).toMatchInlineSnapshot(`
-    "BUTTON: pointerout
-    DIV: pointerout
-    BUTTON: pointerleave
-    DIV: pointerleave
-    BUTTON: mouseout
-    DIV: mouseout
-    BUTTON: mouseleave
-    DIV: mouseleave"
-  `)
+BUTTON: pointerout
+DIV: pointerout
+BUTTON: pointerleave
+DIV: pointerleave
+BUTTON: mouseout
+DIV: mouseout
+BUTTON: mouseleave
+DIV: mouseleave
+`)
 })
 
 test('throws when hovering element with pointer-events set to none', () => {

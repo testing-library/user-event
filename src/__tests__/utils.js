@@ -1,3 +1,4 @@
+/* eslint-disable testing-library/no-node-access */
 import {screen} from '@testing-library/dom'
 import {isElementType, isVisible} from '../utils'
 import {setup} from './helpers/utils'

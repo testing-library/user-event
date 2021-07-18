@@ -6,7 +6,7 @@
     height="80"
     width="80"
     alt="dog"
-    src="https://raw.githubusercontent.com/testing-library/user-event/master/other/dog.png"
+    src="https://raw.githubusercontent.com/testing-library/user-event/main/other/dog.png"
   />
 </a>
 
@@ -136,7 +136,8 @@ constructor documentation for more options.
 
 Note that `click` will trigger hover events before clicking. To disable this,
 set the `skipHover` option to `true`. Also note that trying to click an element
-with `pointer-events` being set to `"none"` (i.e. unclickable) will throw an error.
+with `pointer-events` being set to `"none"` (i.e. unclickable) will throw an
+error.
 
 ### `dblClick(element, eventInit, options)`
 
@@ -323,7 +324,7 @@ userEvent.keyboard('a', {keyboardState}) // press [KeyA] with active ctrlKey mod
 ```
 
 The mapping of `key` to `code` is performed by a
-[default key map](https://github.com/testing-library/user-event/blob/master/src/keyboard/keyMap.ts)
+[default key map](https://github.com/testing-library/user-event/blob/main/src/keyboard/keyMap.ts)
 portraying a "default" US-keyboard. You can provide your own local keyboard
 mapping per option.
 
@@ -796,7 +797,7 @@ MIT
 <!-- prettier-ignore-start -->
 [npm]: https://www.npmjs.com
 [node]: https://nodejs.org
-[build-badge]: https://img.shields.io/github/workflow/status/testing-library/user-event/validate/master?logo=github&style=flat-square
+[build-badge]: https://img.shields.io/github/workflow/status/testing-library/user-event/validate/main?logo=github&style=flat-square
 [build]: https://github.com/testing-library/user-event/actions?query=workflow%3Avalidate
 [coverage-badge]: https://img.shields.io/codecov/c/github/testing-library/user-event.svg?style=flat-square
 [coverage]: https://codecov.io/github/testing-library/user-event
@@ -805,11 +806,11 @@ MIT
 [downloads-badge]: https://img.shields.io/npm/dm/@testing-library/user-event.svg?style=flat-square
 [npmtrends]: http://www.npmtrends.com/@testing-library/user-event
 [license-badge]: https://img.shields.io/npm/l/@testing-library/user-event.svg?style=flat-square
-[license]: https://github.com/testing-library/user-event/blob/master/LICENSE
+[license]: https://github.com/testing-library/user-event/blob/main/LICENSE
 [prs-badge]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square
 [prs]: http://makeapullrequest.com
 [coc-badge]: https://img.shields.io/badge/code%20of-conduct-ff69b4.svg?style=flat-square
-[coc]: https://github.com/testing-library/user-event/blob/master/other/CODE_OF_CONDUCT.md
+[coc]: https://github.com/testing-library/user-event/blob/main/other/CODE_OF_CONDUCT.md
 [emojis]: https://github.com/all-contributors/all-contributors#emoji-key
 [all-contributors]: https://github.com/all-contributors/all-contributors
 [all-contributors-badge]: https://img.shields.io/github/all-contributors/testing-library/user-event?color=orange&style=flat-square

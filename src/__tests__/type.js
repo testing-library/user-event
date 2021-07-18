@@ -232,6 +232,7 @@ test('should delay the typing when opts.delay is not 0', async () => {
 
   const text = 'Hello, world!'
   const delay = 10
+  // eslint-disable-next-line testing-library/no-await-sync-events
   await userEvent.type(element, text, {delay})
 
   expect(onInput).toHaveBeenCalledTimes(text.length)
@@ -895,7 +896,7 @@ test('should not type inside a contenteditable=false div', () => {
   `)
 })
 
-test('navigation key: {arrowleft} and {arrowright} moves the cursor', () => {
+test('navigation key: {arrowleft} and {arrowright} moves the cursor for <input>', () => {
   const {element, getEventSnapshot} = setup('<input />')
   userEvent.type(element, 'b{arrowleft}a{arrowright}c')
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
@@ -933,6 +934,47 @@ test('navigation key: {arrowleft} and {arrowright} moves the cursor', () => {
     input[value="ab"] - keypress: c (99)
     input[value="abc"] - input
     input[value="abc"] - keyup: c (99)
+  `)
+})
+
+test('navigation key: {arrowleft} and {arrowright} moves the cursor for <textarea>', () => {
+  const {element, getEventSnapshot} = setup('<textarea></textarea>')
+  userEvent.type(element, 'b{arrowleft}a{arrowright}c')
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
+    Events fired on: textarea[value="abc"]
+
+    textarea[value=""] - pointerover
+    textarea[value=""] - pointerenter
+    textarea[value=""] - mouseover: Left (0)
+    textarea[value=""] - mouseenter: Left (0)
+    textarea[value=""] - pointermove
+    textarea[value=""] - mousemove: Left (0)
+    textarea[value=""] - pointerdown
+    textarea[value=""] - mousedown: Left (0)
+    textarea[value=""] - focus
+    textarea[value=""] - focusin
+    textarea[value=""] - pointerup
+    textarea[value=""] - mouseup: Left (0)
+    textarea[value=""] - click: Left (0)
+    textarea[value=""] - keydown: b (98)
+    textarea[value=""] - keypress: b (98)
+    textarea[value="b"] - input
+    textarea[value="b"] - keyup: b (98)
+    textarea[value="b"] - keydown: ArrowLeft (37)
+    textarea[value="b"] - select
+    textarea[value="b"] - keyup: ArrowLeft (37)
+    textarea[value="b"] - keydown: a (97)
+    textarea[value="b"] - keypress: a (97)
+    textarea[value="ab"] - select
+    textarea[value="ab"] - input
+    textarea[value="ab"] - keyup: a (97)
+    textarea[value="ab"] - keydown: ArrowRight (39)
+    textarea[value="ab"] - select
+    textarea[value="ab"] - keyup: ArrowRight (39)
+    textarea[value="ab"] - keydown: c (99)
+    textarea[value="ab"] - keypress: c (99)
+    textarea[value="abc"] - input
+    textarea[value="abc"] - keyup: c (99)
   `)
 })
 

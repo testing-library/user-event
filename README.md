@@ -776,6 +776,9 @@ Thanks goes to these people ([emoji key][emojis]):
     <td align="center"><a href="https://github.com/sydneyjodon-wk"><img src="https://avatars.githubusercontent.com/u/51122966?v=4?s=100" width="100px;" alt=""/><br /><sub><b>sydneyjodon-wk</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3Asydneyjodon-wk" title="Bug reports">🐛</a> <a href="https://github.com/testing-library/user-event/commits?author=sydneyjodon-wk" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/codepath2019"><img src="https://avatars.githubusercontent.com/u/49729798?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Charles Magic Woo</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3Acodepath2019" title="Bug reports">🐛</a></td>
   </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/mkurcius"><img src="https://avatars.githubusercontent.com/u/1613212?v=4?s=100" width="100px;" alt=""/><br /><sub><b>mkurcius</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=mkurcius" title="Code">💻</a></td>
+  </tr>
 </table>
 
 <!-- markdownlint-restore -->

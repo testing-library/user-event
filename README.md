@@ -32,7 +32,7 @@ From
 [testing-library/dom-testing-library#107](https://github.com/testing-library/dom-testing-library/issues/107):
 
 > [...] it is becoming apparent the need to express user actions on a web page
-> using a higher-level abstraction than `fireEvent`
+> using a higher-level abstraction than [`fireEvent`][fire-event]
 
 ## The solution
 
@@ -62,6 +62,7 @@ change the state of the checkbox.
   - [`unhover(element)`](#unhoverelement)
   - [`paste(element, text, eventInit, options)`](#pasteelement-text-eventinit-options)
   - [`specialChars`](#specialchars)
+- [Known limitations](#known-limitations)
 - [Issues](#issues)
   - [🐛 Bugs](#-bugs)
   - [💡 Feature Requests](#-feature-requests)
@@ -75,13 +76,13 @@ change the state of the checkbox.
 With NPM:
 
 ```sh
-npm install @testing-library/user-event @testing-library/dom --save-dev
+npm install --save-dev @testing-library/user-event @testing-library/dom
 ```
 
 With Yarn:
 
 ```sh
-yarn add @testing-library/user-event @testing-library/dom --dev
+yarn add --dev @testing-library/user-event @testing-library/dom
 ```
 
 Now simply import it in your tests:
@@ -97,8 +98,9 @@ const {default: userEvent} = require('@testing-library/user-event')
 ## API
 
 Note: All userEvent methods are synchronous with one exception: when `delay`
-with `userEvent.type` as described below). We also discourage using `userEvent`
-inside `before/after` blocks at all, for important reasons described in
+option used with `userEvent.type` as described below. We also discourage using
+`userEvent` inside `before/after` blocks at all, for important reasons described
+in
 ["Avoid Nesting When You're Testing"](https://kentcdodds.com/blog/avoid-nesting-when-youre-testing).
 
 ### `click(element, eventInit, options)`
@@ -244,7 +246,7 @@ test('delete characters within the selectedRange', () => {
 })
 ```
 
-#### <input type="time" /> support
+#### `<input type="time" />` support
 
 The following is an example of usage of this library with
 `<input type="time" />`
@@ -340,8 +342,8 @@ userEvent.keyboard('?', {keyboardMap: myOwnLocaleKeyboardMap})
 ### `upload(element, file, [{ clickInit, changeInit }], [options])`
 
 Uploads file to an `<input>`. For uploading multiple files use `<input>` with
-`multiple` attribute and the second `upload` argument must be array then. Also
-it's possible to initialize click or change event with using third argument.
+the `multiple` attribute and the second `upload` argument as an array. It's also
+possible to initialize a click or change event using a third argument.
 
 If `options.applyAccept` is set to `true` and there is an `accept` attribute on
 the element, files that don't match will be discarded.
@@ -401,8 +403,8 @@ import userEvent from '@testing-library/user-event'
 test('clear', () => {
   render(<textarea value="Hello, World!" />)
 
-  userEvent.clear(screen.getByRole('textbox', 'email'))
-  expect(screen.getByRole('textbox', 'email')).toHaveAttribute('value', '')
+  userEvent.clear(screen.getByRole('textbox'))
+  expect(screen.getByRole('textbox')).toHaveAttribute('value', '')
 })
 ```
 
@@ -418,24 +420,18 @@ import userEvent from '@testing-library/user-event'
 
 test('selectOptions', () => {
   render(
-    <select multiple data-testid="select-multiple">
-      <option data-testid="val1" value="1">
-        A
-      </option>
-      <option data-testid="val2" value="2">
-        B
-      </option>
-      <option data-testid="val3" value="3">
-        C
-      </option>
+    <select multiple>
+      <option value="1">A</option>
+      <option value="2">B</option>
+      <option value="3">C</option>
     </select>,
   )
 
-  userEvent.selectOptions(screen.getByTestId('select-multiple'), ['1', '3'])
+  userEvent.selectOptions(screen.getByRole('listbox'), ['1', '3'])
 
-  expect(screen.getByTestId('val1').selected).toBe(true)
-  expect(screen.getByTestId('val2').selected).toBe(false)
-  expect(screen.getByTestId('val3').selected).toBe(true)
+  expect(screen.getByRole('option', {name: 'A'}).selected).toBe(true)
+  expect(screen.getByRole('option', {name: 'B'}).selected).toBe(false)
+  expect(screen.getByRole('option', {name: 'C'}).selected).toBe(true)
 })
 ```
 
@@ -583,7 +579,8 @@ test('should paste text in input', () => {
   render(<MyInput />)
 
   const text = 'Hello, world!'
-  userEvent.paste(getByRole('textbox', {name: /paste your greeting/i}), text)
+  const element = getByRole('textbox', {name: /paste your greeting/i})
+  userEvent.paste(element, text)
   expect(element).toHaveValue(text)
 })
 ```
@@ -633,6 +630,11 @@ test('delete characters within the selectedRange', () => {
   expect(input).toHaveValue('This is a good example')
 })
 ```
+
+## Known limitations
+
+- No `<input type="color" />` support.
+  [#423](https://github.com/testing-library/user-event/issues/423#issuecomment-669368863)
 
 ## Issues
 
@@ -817,4 +819,5 @@ MIT
 [bugs]: https://github.com/testing-library/user-event/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+sort%3Acreated-desc+label%3Abug
 [requests]: https://github.com/testing-library/user-event/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+sort%3Areactions-%2B1-desc+label%3Aenhancement
 [good-first-issue]: https://github.com/testing-library/user-event/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+sort%3Areactions-%2B1-desc+label%3Aenhancement+label%3A%22good+first+issue%22
+[fire-event]: https://testing-library.com/docs/dom-testing-library/api-events#fireevent
 <!-- prettier-ignore-end -->

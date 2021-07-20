@@ -72,16 +72,6 @@ With Yarn:
 yarn add --dev @testing-library/user-event @testing-library/dom
 ```
 
-Now simply import it in your tests:
-
-```js
-import userEvent from '@testing-library/user-event'
-
-// or
-
-const {default: userEvent} = require('@testing-library/user-event')
-```
-
 ## Docs
 
 [**Read The Docs**](https://testing-library.com/docs/ecosystem-user-event) |

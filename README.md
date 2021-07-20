@@ -40,8 +40,6 @@ From
 as the user interacts with it. For example `userEvent.click(checkbox)` would
 change the state of the checkbox.
 
-**The library is still a work in progress and any help is appreciated.**
-
 ## Table of Contents
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->

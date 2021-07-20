@@ -26,6 +26,24 @@
 [![Code of Conduct][coc-badge]][coc]
 <!-- prettier-ignore-end -->
 
+## Table of Contents
+
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+- [The problem](#the-problem)
+- [The solution](#the-solution)
+- [Installation](#installation)
+- [Docs](#docs)
+- [Known limitations](#known-limitations)
+- [Issues](#issues)
+  - [🐛 Bugs](#-bugs)
+  - [💡 Feature Requests](#-feature-requests)
+- [Contributors ✨](#contributors-)
+- [LICENSE](#license)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ## The problem
 
 From
@@ -39,22 +57,6 @@ From
 `user-event` tries to simulate the real events that would happen in the browser
 as the user interacts with it. For example `userEvent.click(checkbox)` would
 change the state of the checkbox.
-
-## Table of Contents
-
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-
-- [Installation](#installation)
-- [Docs](#docs)
-- [Known limitations](#known-limitations)
-- [Issues](#issues)
-  - [🐛 Bugs](#-bugs)
-  - [💡 Feature Requests](#-feature-requests)
-- [Contributors ✨](#contributors-)
-- [LICENSE](#license)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Installation
 

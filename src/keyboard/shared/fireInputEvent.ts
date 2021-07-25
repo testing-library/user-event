@@ -25,7 +25,7 @@ export function fireInputEvent(
   // apply the changes before firing the input event, so that input handlers can access the altered dom and selection
   if (isContentEditable(element)) {
     applyNative(element, 'textContent', newValue)
-  } /* istanbul ignore else */ else if (
+  } else /* istanbul ignore else */ if (
     isElementType(element, ['input', 'textarea'])
   ) {
     applyNative(element, 'value', newValue)

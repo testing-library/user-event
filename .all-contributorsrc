@@ -903,6 +903,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "tf",
+      "name": "Tim Fischbach",
+      "avatar_url": "https://avatars.githubusercontent.com/u/26554?v=4",
+      "profile": "http://stderr.timfischbach.de",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "commitConvention": "none",

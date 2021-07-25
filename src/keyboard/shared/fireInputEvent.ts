@@ -70,6 +70,15 @@ function setSelectionRangeAfterInputHandler(
   }
 }
 
+const initial = Symbol('initial input value/textContent')
+const onBlur = Symbol('onBlur')
+declare global {
+  interface Element {
+    [initial]?: string
+    [onBlur]?: EventListener
+  }
+}
+
 /**
  * React tracks the changes on element properties.
  * This workaround tries to alter the DOM element without React noticing,
@@ -92,7 +101,38 @@ function applyNative<T extends Element, P extends keyof T>(
     Object.defineProperty(element, propName, nativeDescriptor)
   }
 
+  // Keep track of the initial value to determine if a change event should be dispatched.
+  // CONSTRAINT: We can not determine what happened between focus event and our first API call.
+  if (element[initial] === undefined) {
+    element[initial] = String(element[propName])
+  }
+
   element[propName] = propValue
+
+  // Add an event listener for the blur event to the capture phase on the window.
+  // CONSTRAINT: Currently there is no cross-platform solution to unshift the event handler stack.
+  // Our change event might occur after other event handlers on the blur event have been processed.
+  if (!element[onBlur]) {
+    element.ownerDocument.defaultView?.addEventListener(
+      'blur',
+      (element[onBlur] = () => {
+        const initV = element[initial]
+
+        // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+        delete element[onBlur]
+        // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+        delete element[initial]
+
+        if (String(element[propName]) !== initV) {
+          fireEvent.change(element)
+        }
+      }),
+      {
+        capture: true,
+        once: true,
+      },
+    )
+  }
 
   if (descriptor) {
     Object.defineProperty(element, propName, descriptor)

@@ -4,7 +4,7 @@
 
 import {fireEvent} from '@testing-library/dom'
 import {fireChangeForInputTimeIfValid, fireInputEvent} from '../shared'
-import {behaviorPlugin} from '../types'
+import {behaviorPlugin, keyboardState} from '../types'
 import {
   buildTimeValue,
   calculateNewValue,
@@ -147,12 +147,65 @@ export const keypressBehavior: behaviorPlugin[] = [
         },
       })
 
-      const appliedValue = getValue(element)
-      if (appliedValue === newValue) {
-        state.carryValue = undefined
-      } else {
-        state.carryValue = newValue
-      }
+      setCarryValue(element, state, newValue)
+    },
+  },
+  {
+    matches: (keyDef, element) =>
+      keyDef.key?.length === 1 &&
+      isElementType(element, 'input', {type: 'email', readOnly: false}),
+    handle: (keyDef, element, options, state) => {
+      const oldValue =
+        state.carryValue ?? getValue(element) ?? /* istanbul ignore next */ ''
+
+      const {newValue, newSelectionStart} = calculateNewValue(
+        keyDef.key as string,
+        element as HTMLElement,
+        oldValue,
+      )
+
+      fireInputEvent(element as HTMLElement, {
+        newValue,
+        newSelectionStart,
+        eventOverrides: {
+          data: keyDef.key,
+          inputType: 'insertText',
+        },
+      })
+
+      setCarryValue(element, state, newValue)
+    },
+  },
+  {
+    matches: (keyDef, element) =>
+      keyDef.key?.length === 1 && isElementType(element, 'input', {type: 'url', readOnly: false}
+      ),
+    handle: (keyDef, element, options, state) => {
+      const oldValue =
+        state.carryValue ?? getValue(element) ?? /* istanbul ignore next */ ''
+
+      const selectionRange = oldValue.endsWith(" ") ? {
+        selectionStart: null,
+        selectionEnd: null
+      } : undefined
+
+      const {newValue, newSelectionStart} = calculateNewValue(
+        keyDef.key as string,
+        element as HTMLElement,
+        oldValue,
+        selectionRange
+      )
+
+      fireInputEvent(element as HTMLElement, {
+        newValue,
+        newSelectionStart,
+        eventOverrides: {
+          data: keyDef.key,
+          inputType: 'insertText',
+        },
+      })
+
+      setCarryValue(element, state, newValue)
     },
   },
   {
@@ -205,3 +258,12 @@ export const keypressBehavior: behaviorPlugin[] = [
     },
   },
 ]
+
+function setCarryValue(element: Element, state: keyboardState, newValue: string) {
+  const appliedValue = getValue(element)
+  if (appliedValue === newValue) {
+    state.carryValue = undefined
+  } else {
+    state.carryValue = newValue
+  }
+}

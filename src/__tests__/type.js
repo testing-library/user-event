@@ -1479,3 +1479,94 @@ describe('promise rejections', () => {
     },
   )
 })
+
+// https://github.com/testing-library/user-event/issues/479
+test('can type "{space}" into email inputs', () => {
+  const {element, getEventSnapshot} = setup('<input type="email" />')
+  userEvent.type(element, 's{space}s')
+  expect(element).toHaveValue('s s')
+
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
+    Events fired on: input[value="s s"]
+    
+    input[value=""] - pointerover
+    input[value=""] - pointerenter
+    input[value=""] - mouseover: Left (0)
+    input[value=""] - mouseenter: Left (0)
+    input[value=""] - pointermove
+    input[value=""] - mousemove: Left (0)
+    input[value=""] - pointerdown
+    input[value=""] - mousedown: Left (0)
+    input[value=""] - focus
+    input[value=""] - focusin
+    input[value=""] - pointerup
+    input[value=""] - mouseup: Left (0)
+    input[value=""] - click: Left (0)
+    input[value=""] - keydown: s (115)
+    input[value=""] - keypress: s (115)
+    input[value="s"] - input
+    input[value="s"] - keyup: s (115)
+    input[value="s"] - keydown: (32)
+    input[value="s"] - keypress: (32)
+    input[value="s"] - input
+    input[value="s"] - keyup: (32)
+    input[value="s"] - keydown: s (115)
+    input[value="s"] - keypress: s (115)
+    input[value="s s"] - input
+    input[value="s s"] - keyup: s (115)
+`)
+})
+
+// https://github.com/testing-library/user-event/issues/479
+test('can type "{space}" into url inputs', () => {
+  const {element, getEventSnapshot} = setup('<input type="url" />')
+  userEvent.type(element, 's{space}s.com')
+  expect(element).toHaveValue('s s.com')
+
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
+Events fired on: input[value="s s.com"]
+
+input[value=""] - pointerover
+input[value=""] - pointerenter
+input[value=""] - mouseover: Left (0)
+input[value=""] - mouseenter: Left (0)
+input[value=""] - pointermove
+input[value=""] - mousemove: Left (0)
+input[value=""] - pointerdown
+input[value=""] - mousedown: Left (0)
+input[value=""] - focus
+input[value=""] - focusin
+input[value=""] - pointerup
+input[value=""] - mouseup: Left (0)
+input[value=""] - click: Left (0)
+input[value=""] - keydown: s (115)
+input[value=""] - keypress: s (115)
+input[value="s"] - input
+input[value="s"] - keyup: s (115)
+input[value="s"] - keydown: (32)
+input[value="s"] - keypress: (32)
+input[value="s"] - select
+input[value="s"] - input
+input[value="s"] - keyup: (32)
+input[value="s"] - keydown: s (115)
+input[value="s"] - keypress: s (115)
+input[value="s s"] - input
+input[value="s s"] - keyup: s (115)
+input[value="s s"] - keydown: . (46)
+input[value="s s"] - keypress: . (46)
+input[value="s s."] - input
+input[value="s s."] - keyup: . (46)
+input[value="s s."] - keydown: c (99)
+input[value="s s."] - keypress: c (99)
+input[value="s s.c"] - input
+input[value="s s.c"] - keyup: c (99)
+input[value="s s.c"] - keydown: o (111)
+input[value="s s.c"] - keypress: o (111)
+input[value="s s.co"] - input
+input[value="s s.co"] - keyup: o (111)
+input[value="s s.co"] - keydown: m (109)
+input[value="s s.co"] - keypress: m (109)
+input[value="s s.com"] - input
+input[value="s s.com"] - keyup: m (109)
+`)
+})

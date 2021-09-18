@@ -35,14 +35,14 @@ export async function typeImplementation(
   // The focused element could change between each event, so get the currently active element each time
   const currentElement = () => getActiveElement(element.ownerDocument)
 
-  // by default, a new element has it's selection start and end at 0
+  // by default, a new element has its selection start and end at 0
   // but most of the time when people call "type", they expect it to type
   // at the end of the current input value. So, if the selection start
   // and end are both the default of 0, then we'll go ahead and change
   // them to the length of the current value.
   // the only time it would make sense to pass the initialSelectionStart or
   // initialSelectionEnd is if you have an input with a value and want to
-  // explicitely start typing with the cursor at 0. Not super common.
+  // explicitly start typing with the cursor at 0. Not super common.
   const value = getValue(currentElement())
 
   const {selectionStart, selectionEnd} = getSelectionRange(element)

@@ -9,6 +9,7 @@ import {keyboardKey, keyboardOptions} from './types'
  * Keeping the key pressed can be written as `{key>}`.
  * Modifiers like `{shift}` imply being kept pressed. This can be turned of per `{shift/}`.
  */
+// eslint-disable-next-line complexity
 export function getNextKeyDef(
   text: string,
   options: keyboardOptions,
@@ -17,9 +18,18 @@ export function getNextKeyDef(
   consumedLength: number
   releasePrevious: boolean
   releaseSelf: boolean
+  fireKeyDownTimes: number
 } {
-  const startBracket = ['{', '['].includes(text[0]) ? text[0] : ''
-  const startModifier = startBracket && text[1] === '/' ? '/' : ''
+  const bracketDict: {[key: string]: string | undefined} = {
+    '{': '}',
+    '[': ']',
+  }
+  const startModifiers = ['/']
+  const endModifiers = ['/', '>']
+
+  const startBracket = text[0] in bracketDict ? text[0] : ''
+  const startModifier =
+    startBracket && startModifiers.includes(text[1]) ? text[1] : ''
 
   const descriptorStart = startBracket.length + startModifier.length
   const descriptor = startBracket
@@ -38,25 +48,25 @@ export function getNextKeyDef(
   const endModifier =
     startBracket &&
     descriptor !== startBracket &&
-    ['/', '>'].includes(text[descriptorEnd])
+    endModifiers.includes(text[descriptorEnd])
       ? text[descriptorEnd]
       : ''
 
-  const endBracket =
-    !startBracket || descriptor === startBracket
-      ? ''
-      : startBracket === '{'
-      ? '}'
-      : ']'
+  const endBracket = bracketDict[startBracket] ?? ''
 
-  if (endBracket && text[descriptorEnd + endModifier.length] !== endBracket) {
-    throw new Error(
-      getErrorMessage(
-        'closing bracket',
-        text[descriptorEnd + endModifier.length],
-        text,
-      ),
-    )
+  let repeatModifier = ''
+  if (endBracket) {
+    let charPosition = descriptorEnd + endModifier.length
+
+    while (text[charPosition] !== endBracket || !text[charPosition]) {
+      const maybeNumber = parseInt(text[charPosition], 10)
+      if (isNaN(maybeNumber)) {
+        throw new Error('expected number')
+      }
+
+      repeatModifier += text[charPosition]
+      charPosition++
+    }
   }
 
   const modifiers = {
@@ -65,6 +75,7 @@ export function getNextKeyDef(
       startModifier,
       descriptor,
       endModifier,
+      repeatModifier,
       endBracket,
     ]
       .map(c => c.length)
@@ -72,6 +83,7 @@ export function getNextKeyDef(
 
     releasePrevious: startModifier === '/',
     releaseSelf: hasReleaseSelf(startBracket, descriptor, endModifier),
+    fireKeyDownTimes: repeatModifier ? parseInt(repeatModifier, 10) : 0,
   }
 
   if (isPrintableCharacter(startBracket, descriptor)) {

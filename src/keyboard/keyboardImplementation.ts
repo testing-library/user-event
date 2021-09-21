@@ -18,10 +18,13 @@ export async function keyboardImplementation(
   const {document} = options
   const getCurrentElement = () => getActive(document)
 
-  const {keyDef, consumedLength, releasePrevious, releaseSelf} = getNextKeyDef(
-    text,
-    options,
-  )
+  const {
+    keyDef,
+    consumedLength,
+    releasePrevious,
+    releaseSelf,
+    fireKeyDownTimes,
+  } = getNextKeyDef(text, options)
 
   const replace = applyPlugins(
     plugins.replaceBehavior,
@@ -32,7 +35,6 @@ export async function keyboardImplementation(
   )
   if (!replace) {
     const pressed = state.pressed.find(p => p.keyDef === keyDef)
-
     if (pressed) {
       keyup(
         keyDef,
@@ -48,11 +50,20 @@ export async function keyboardImplementation(
         keyDef,
         getCurrentElement,
         options,
-        state,
+        fireKeyDownTimes > (state.fireKeyDownTimes || 1)
+          ? {...state, fireKeyDownTimes}
+          : state,
       )
 
       if (unpreventedDefault && hasKeyPress(keyDef, state)) {
-        keypress(keyDef, getCurrentElement, options, state)
+        keypress(
+          keyDef,
+          getCurrentElement,
+          options,
+          fireKeyDownTimes > (state.fireKeyDownTimes || 1)
+            ? {...state, fireKeyDownTimes}
+            : state,
+        )
       }
 
       if (releaseSelf) {
@@ -65,6 +76,7 @@ export async function keyboardImplementation(
     if (options.delay > 0) {
       await wait(options.delay)
     }
+
     return keyboardImplementation(text.slice(consumedLength), options, state)
   }
   return void undefined
@@ -98,12 +110,18 @@ function keydown(
 
   applyPlugins(plugins.preKeydownBehavior, keyDef, element, options, state)
 
-  const unpreventedDefault = fireEvent.keyDown(
-    element,
-    getKeyEventProps(keyDef, state),
-  )
+  const fire = () => fireEvent.keyDown(element, getKeyEventProps(keyDef, state))
+  const unpreventedDefault = fire()
+  const push = () => state.pressed.push({keyDef, unpreventedDefault})
+  push()
 
-  state.pressed.push({keyDef, unpreventedDefault})
+  let times = state.fireKeyDownTimes - 1
+
+  while (times) {
+    fire()
+    push()
+    times--
+  }
 
   if (unpreventedDefault) {
     // all default behavior like keypress/submit etc is applied to the currentElement

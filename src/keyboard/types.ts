@@ -36,6 +36,11 @@ export type keyboardState = {
       E.g. ^1
     */
   carryChar: string
+
+  /**
+      Number of times key down event will be triggered
+   */
+  fireKeyDownTimes: number
 }
 
 export type keyboardOptions = {

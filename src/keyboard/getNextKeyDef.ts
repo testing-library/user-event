@@ -52,7 +52,10 @@ export function getNextKeyDef(
       ? text[descriptorEnd]
       : ''
 
-  const endBracket = bracketDict[startBracket] ?? ''
+  const endBracket =
+    !startBracket || descriptor === startBracket
+      ? ''
+      : bracketDict[startBracket] ?? ''
 
   const repeatModifier = getRepeatModifier(
     text,
@@ -117,7 +120,13 @@ function getRepeatModifier(
     while (text[charPosition] !== endBracket || !text[charPosition]) {
       const maybeNumber = parseInt(text[charPosition], 10)
       if (isNaN(maybeNumber)) {
-        throw new Error('expected number')
+        throw new Error(
+          getErrorMessage(
+            'number or closing bracket',
+            text[charPosition],
+            text,
+          ),
+        )
       }
 
       repeatModifier += text[charPosition]

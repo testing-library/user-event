@@ -104,7 +104,18 @@ cases(
     },
     'missing closing bracket': {
       text: '{a)',
-      expectedError: 'Expected closing bracket but found ")" in "{a)"',
+      expectedError:
+        'Expected number or closing bracket but found ")" in "{a)"',
+    },
+    'missing repeat modifier': {
+      text: '{a>e}',
+      expectedError:
+        'Expected number or closing bracket but found "e" in "{a>e}"',
+    },
+    'missing bracket in repeat modifier': {
+      text: '{a>3)',
+      expectedError:
+        'Expected number or closing bracket but found ")" in "{a>3)"',
     },
   },
 )

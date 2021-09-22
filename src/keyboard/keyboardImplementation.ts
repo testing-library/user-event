@@ -1,4 +1,4 @@
-import {fireEvent, FireObjectFunction} from '@testing-library/dom'
+import {fireEvent} from '@testing-library/dom'
 import {getActiveElement, wait} from '../utils'
 import {getNextKeyDef} from './getNextKeyDef'
 import {
@@ -94,7 +94,7 @@ export function releaseAllKeys(options: keyboardOptions, state: keyboardState) {
 }
 
 function fireOnceOrMore(
-  cb: FireObjectFunction,
+  cb: (element: Document | Element | Window | Node, options?: {}) => boolean,
   state: keyboardState,
   keyDef: keyboardKey,
   element: Element,

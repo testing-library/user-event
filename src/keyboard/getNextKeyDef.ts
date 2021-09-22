@@ -9,7 +9,7 @@ import {keyboardKey, keyboardOptions} from './types'
  * Keeping the key pressed can be written as `{key>}`.
  * Modifiers like `{shift}` imply being kept pressed. This can be turned of per `{shift/}`.
  */
-// eslint-disable-next-line complexity
+
 export function getNextKeyDef(
   text: string,
   options: keyboardOptions,
@@ -54,20 +54,12 @@ export function getNextKeyDef(
 
   const endBracket = bracketDict[startBracket] ?? ''
 
-  let repeatModifier = ''
-  if (endBracket) {
-    let charPosition = descriptorEnd + endModifier.length
-
-    while (text[charPosition] !== endBracket || !text[charPosition]) {
-      const maybeNumber = parseInt(text[charPosition], 10)
-      if (isNaN(maybeNumber)) {
-        throw new Error('expected number')
-      }
-
-      repeatModifier += text[charPosition]
-      charPosition++
-    }
-  }
+  const repeatModifier = getRepeatModifier(
+    text,
+    descriptorEnd,
+    endModifier,
+    endBracket,
+  )
 
   const modifiers = {
     consumedLength: [
@@ -110,6 +102,30 @@ export function getNextKeyDef(
       ) ?? {key: 'Unknown', code: descriptor},
     }
   }
+}
+
+function getRepeatModifier(
+  text: string,
+  descriptorEnd: number,
+  endModifier: string,
+  endBracket: string,
+) {
+  let repeatModifier = ''
+  if (endBracket) {
+    let charPosition = descriptorEnd + endModifier.length
+
+    while (text[charPosition] !== endBracket || !text[charPosition]) {
+      const maybeNumber = parseInt(text[charPosition], 10)
+      if (isNaN(maybeNumber)) {
+        throw new Error('expected number')
+      }
+
+      repeatModifier += text[charPosition]
+      charPosition++
+    }
+  }
+
+  return repeatModifier
 }
 
 function hasReleaseSelf(

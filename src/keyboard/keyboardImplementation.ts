@@ -1,4 +1,4 @@
-import {fireEvent} from '@testing-library/dom'
+import {fireEvent, FireObjectFunction} from '@testing-library/dom'
 import {getActiveElement, wait} from '../utils'
 import {getNextKeyDef} from './getNextKeyDef'
 import {
@@ -93,6 +93,30 @@ export function releaseAllKeys(options: keyboardOptions, state: keyboardState) {
   }
 }
 
+function fireOnceOrMore(
+  cb: FireObjectFunction,
+  state: keyboardState,
+  keyDef: keyboardKey,
+  element: Element,
+): boolean {
+  const fire = () => cb(element, getKeyEventProps(keyDef, state))
+  const unpreventedDefault = fire()
+  const push = () => {
+    state.pressed.push({keyDef, unpreventedDefault})
+  }
+  push()
+
+  let times = state.fireKeyDownTimes - 1
+
+  while (times) {
+    fire()
+    push()
+    times--
+  }
+
+  return unpreventedDefault
+}
+
 function keydown(
   keyDef: keyboardKey,
   getCurrentElement: () => Element,
@@ -110,18 +134,12 @@ function keydown(
 
   applyPlugins(plugins.preKeydownBehavior, keyDef, element, options, state)
 
-  const fire = () => fireEvent.keyDown(element, getKeyEventProps(keyDef, state))
-  const unpreventedDefault = fire()
-  const push = () => state.pressed.push({keyDef, unpreventedDefault})
-  push()
-
-  let times = state.fireKeyDownTimes - 1
-
-  while (times) {
-    fire()
-    push()
-    times--
-  }
+  const unpreventedDefault = fireOnceOrMore(
+    fireEvent.keyDown,
+    state,
+    keyDef,
+    element,
+  )
 
   if (unpreventedDefault) {
     // all default behavior like keypress/submit etc is applied to the currentElement
@@ -144,10 +162,11 @@ function keypress(
   state: keyboardState,
 ) {
   const element = getCurrentElement()
-
-  const unpreventedDefault = fireEvent.keyPress(
+  const unpreventedDefault = fireOnceOrMore(
+    fireEvent.keyPress,
+    state,
+    keyDef,
     element,
-    getKeyEventProps(keyDef, state),
   )
 
   if (unpreventedDefault) {

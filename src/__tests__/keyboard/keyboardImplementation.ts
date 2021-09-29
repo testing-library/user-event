@@ -17,7 +17,7 @@ test('no character input if `altKey` or `ctrlKey` is pressed', () => {
 })
 
 describe('fire events', () => {
-  it('_a', () => {
+  it('fires event with releasing key twice', () => {
     const {element, getEventSnapshot, clearEventCalls} = setup(`<input/>`)
 
     ;(element as HTMLInputElement).focus()
@@ -65,8 +65,6 @@ input[value="a"] - input
 Events fired on: input[value="a"]
 
 input[value=""] - keydown: a (97)
-input[value=""] - keydown: a (97)
-input[value=""] - keypress: a (97)
 input[value=""] - keypress: a (97)
 input[value="a"] - input
 `)
@@ -80,14 +78,16 @@ input[value="a"] - input
     userEvent.keyboard('{a>2}{/a}')
 
     expect(getEventSnapshot()).toMatchInlineSnapshot(`
-Events fired on: input[value="a"]
+Events fired on: input[value="aa"]
 
 input[value=""] - keydown: a (97)
-input[value=""] - keydown: a (97)
-input[value=""] - keypress: a (97)
 input[value=""] - keypress: a (97)
 input[value="a"] - input
 input[value="a"] - keyup: a (97)
+input[value="a"] - keydown: a (97)
+input[value="a"] - keypress: a (97)
+input[value="aa"] - input
+input[value="aa"] - keyup: a (97)
 `)
   })
 
@@ -96,26 +96,35 @@ input[value="a"] - keyup: a (97)
     ;(element as HTMLInputElement).focus()
     clearEventCalls()
 
-    userEvent.keyboard('{a>2}{b>2}{c>2}')
+    userEvent.keyboard('{a>2}{/a}{b>2}{/b}{c>2}{/c}')
 
     expect(getEventSnapshot()).toMatchInlineSnapshot(`
-Events fired on: input[value="abc"]
+Events fired on: input[value="aabbcc"]
 
 input[value=""] - keydown: a (97)
-input[value=""] - keydown: a (97)
-input[value=""] - keypress: a (97)
 input[value=""] - keypress: a (97)
 input[value="a"] - input
-input[value="a"] - keydown: b (98)
-input[value="a"] - keydown: b (98)
-input[value="a"] - keypress: b (98)
-input[value="a"] - keypress: b (98)
-input[value="ab"] - input
-input[value="ab"] - keydown: c (99)
-input[value="ab"] - keydown: c (99)
-input[value="ab"] - keypress: c (99)
-input[value="ab"] - keypress: c (99)
-input[value="abc"] - input
+input[value="a"] - keyup: a (97)
+input[value="a"] - keydown: a (97)
+input[value="a"] - keypress: a (97)
+input[value="aa"] - input
+input[value="aa"] - keyup: a (97)
+input[value="aa"] - keydown: b (98)
+input[value="aa"] - keypress: b (98)
+input[value="aab"] - input
+input[value="aab"] - keyup: b (98)
+input[value="aab"] - keydown: b (98)
+input[value="aab"] - keypress: b (98)
+input[value="aabb"] - input
+input[value="aabb"] - keyup: b (98)
+input[value="aabb"] - keydown: c (99)
+input[value="aabb"] - keypress: c (99)
+input[value="aabbc"] - input
+input[value="aabbc"] - keyup: c (99)
+input[value="aabbc"] - keydown: c (99)
+input[value="aabbc"] - keypress: c (99)
+input[value="aabbcc"] - input
+input[value="aabbcc"] - keyup: c (99)
 `)
   })
 
@@ -127,25 +136,27 @@ input[value="abc"] - input
     userEvent.keyboard('{a>2}{b>2}{/a}{/b}{c>2}')
 
     expect(getEventSnapshot()).toMatchInlineSnapshot(`
-Events fired on: input[value="abc"]
+Events fired on: input[value="aabbc"]
 
 input[value=""] - keydown: a (97)
-input[value=""] - keydown: a (97)
-input[value=""] - keypress: a (97)
 input[value=""] - keypress: a (97)
 input[value="a"] - input
-input[value="a"] - keydown: b (98)
-input[value="a"] - keydown: b (98)
-input[value="a"] - keypress: b (98)
-input[value="a"] - keypress: b (98)
-input[value="ab"] - input
-input[value="ab"] - keyup: a (97)
-input[value="ab"] - keyup: b (98)
-input[value="ab"] - keydown: c (99)
-input[value="ab"] - keydown: c (99)
-input[value="ab"] - keypress: c (99)
-input[value="ab"] - keypress: c (99)
-input[value="abc"] - input
+input[value="a"] - keyup: a (97)
+input[value="a"] - keydown: a (97)
+input[value="a"] - keypress: a (97)
+input[value="aa"] - input
+input[value="aa"] - keydown: b (98)
+input[value="aa"] - keypress: b (98)
+input[value="aab"] - input
+input[value="aab"] - keyup: b (98)
+input[value="aab"] - keydown: b (98)
+input[value="aab"] - keypress: b (98)
+input[value="aabb"] - input
+input[value="aabb"] - keyup: a (97)
+input[value="aabb"] - keyup: b (98)
+input[value="aabb"] - keydown: c (99)
+input[value="aabb"] - keypress: c (99)
+input[value="aabbc"] - input
 `)
   })
 
@@ -157,17 +168,19 @@ input[value="abc"] - input
     userEvent.keyboard('{a>2}b')
 
     expect(getEventSnapshot()).toMatchInlineSnapshot(`
-Events fired on: input[value="ab"]
+Events fired on: input[value="aab"]
 
 input[value=""] - keydown: a (97)
-input[value=""] - keydown: a (97)
-input[value=""] - keypress: a (97)
 input[value=""] - keypress: a (97)
 input[value="a"] - input
-input[value="a"] - keydown: b (98)
-input[value="a"] - keypress: b (98)
-input[value="ab"] - input
-input[value="ab"] - keyup: b (98)
+input[value="a"] - keyup: a (97)
+input[value="a"] - keydown: a (97)
+input[value="a"] - keypress: a (97)
+input[value="aa"] - input
+input[value="aa"] - keydown: b (98)
+input[value="aa"] - keypress: b (98)
+input[value="aab"] - input
+input[value="aab"] - keyup: b (98)
 `)
   })
 
@@ -179,18 +192,20 @@ input[value="ab"] - keyup: b (98)
     userEvent.keyboard('{a>2}b{/a}')
 
     expect(getEventSnapshot()).toMatchInlineSnapshot(`
-Events fired on: input[value="ab"]
+Events fired on: input[value="aab"]
 
 input[value=""] - keydown: a (97)
-input[value=""] - keydown: a (97)
-input[value=""] - keypress: a (97)
 input[value=""] - keypress: a (97)
 input[value="a"] - input
-input[value="a"] - keydown: b (98)
-input[value="a"] - keypress: b (98)
-input[value="ab"] - input
-input[value="ab"] - keyup: b (98)
-input[value="ab"] - keyup: a (97)
+input[value="a"] - keyup: a (97)
+input[value="a"] - keydown: a (97)
+input[value="a"] - keypress: a (97)
+input[value="aa"] - input
+input[value="aa"] - keydown: b (98)
+input[value="aa"] - keypress: b (98)
+input[value="aab"] - input
+input[value="aab"] - keyup: b (98)
+input[value="aab"] - keyup: a (97)
 `)
   })
 })

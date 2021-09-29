@@ -62,7 +62,6 @@ export function keyboardImplementationWrapper(
 function createKeyboardState(): keyboardState {
   return {
     activeElement: null,
-    fireKeyDownTimes: 1,
     pressed: [],
     carryChar: '',
     modifiers: {

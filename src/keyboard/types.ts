@@ -38,9 +38,9 @@ export type keyboardState = {
   carryChar: string
 
   /**
-      Number of times key down event will be triggered
+      Repeat keydown event for 'keyDef'
    */
-  fireKeyDownTimes: number
+  repeatKey?: {times: number; consumedLength: number; keyDef: keyboardKey}
 }
 
 export type keyboardOptions = {

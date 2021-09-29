@@ -18,7 +18,7 @@ export function getNextKeyDef(
   consumedLength: number
   releasePrevious: boolean
   releaseSelf: boolean
-  fireKeyDownTimes: number
+  fireKeydownTimes: number
 } {
   const bracketDict: {[key: string]: string | undefined} = {
     '{': '}',
@@ -78,7 +78,7 @@ export function getNextKeyDef(
 
     releasePrevious: startModifier === '/',
     releaseSelf: hasReleaseSelf(startBracket, descriptor, endModifier),
-    fireKeyDownTimes: repeatModifier ? parseInt(repeatModifier, 10) : 0,
+    fireKeydownTimes: repeatModifier ? parseInt(repeatModifier, 10) : 0,
   }
 
   if (isPrintableCharacter(startBracket, descriptor)) {

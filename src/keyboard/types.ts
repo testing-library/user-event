@@ -1,3 +1,5 @@
+import {getNextKeyDef} from './getNextKeyDef'
+
 /**
  * @internal Do not create/alter this by yourself as this type might be subject to changes.
  */
@@ -38,9 +40,9 @@ export type keyboardState = {
   carryChar: string
 
   /**
-      Repeat keydown event for 'keyDef'
+      Repeat keydown and keypress event
    */
-  repeatKey?: {times: number; consumedLength: number; keyDef: keyboardKey}
+  repeatKey?: ReturnType<typeof getNextKeyDef>
 }
 
 export type keyboardOptions = {

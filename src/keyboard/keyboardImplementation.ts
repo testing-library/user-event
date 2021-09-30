@@ -17,9 +17,9 @@ export async function keyboardImplementation(
 ): Promise<void> {
   const {document} = options
   const getCurrentElement = () => getActive(document)
-  const nextKeyDef = getNextKeyDef(text, options)
-  const {releasePrevious, fireKeydownTimes, releaseSelf} = nextKeyDef
-  const {keyDef, consumedLength} = state.repeatKey ?? nextKeyDef
+
+  const {keyDef, consumedLength, releasePrevious, releaseSelf, repeat} =
+    state.repeatKey ?? getNextKeyDef(text, options)
 
   const replace = applyPlugins(
     plugins.replaceBehavior,
@@ -31,7 +31,9 @@ export async function keyboardImplementation(
   if (!replace) {
     const pressed = state.pressed.find(p => p.keyDef === keyDef)
 
-    if (pressed) {
+    // Release the key automatically if it was pressed before.
+    // Do not release the key on iterations on `state.repeatKey`.
+    if (pressed && !state.repeatKey) {
       keyup(
         keyDef,
         getCurrentElement,
@@ -53,23 +55,31 @@ export async function keyboardImplementation(
         keypress(keyDef, getCurrentElement, options, state)
       }
 
-      if (releaseSelf) {
+      // Release the key only on the last iteration on `state.repeatKey`.
+      if (releaseSelf && repeat <= 1) {
         keyup(keyDef, getCurrentElement, options, state, unpreventedDefault)
       }
     }
   }
 
-  if (text.length > consumedLength) {
+  if (text.length > consumedLength || repeat > 1) {
     if (options.delay > 0) {
       await wait(options.delay)
     }
 
-    if (fireKeydownTimes > 0 && !state.repeatKey) {
-      state.repeatKey = {consumedLength, keyDef, times: fireKeydownTimes - 1}
-      return keyboardImplementation(text, options, state)
+    if (repeat > 1) {
+      state.repeatKey = {
+        // don't consume again on the next iteration
+        consumedLength: 0,
+        keyDef,
+        releasePrevious,
+        releaseSelf,
+        repeat: repeat - 1,
+      }
+    } else {
+      delete state.repeatKey
     }
 
-    delete state.repeatKey
     return keyboardImplementation(text.slice(consumedLength), options, state)
   }
   return void undefined

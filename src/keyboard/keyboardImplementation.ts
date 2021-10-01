@@ -62,22 +62,22 @@ export async function keyboardImplementation(
     }
   }
 
+  if (repeat > 1) {
+    state.repeatKey = {
+      // don't consume again on the next iteration
+      consumedLength: 0,
+      keyDef,
+      releasePrevious,
+      releaseSelf,
+      repeat: repeat - 1,
+    }
+  } else {
+    delete state.repeatKey
+  }
+
   if (text.length > consumedLength || repeat > 1) {
     if (options.delay > 0) {
       await wait(options.delay)
-    }
-
-    if (repeat > 1) {
-      state.repeatKey = {
-        // don't consume again on the next iteration
-        consumedLength: 0,
-        keyDef,
-        releasePrevious,
-        releaseSelf,
-        repeat: repeat - 1,
-      }
-    } else {
-      delete state.repeatKey
     }
 
     return keyboardImplementation(text.slice(consumedLength), options, state)

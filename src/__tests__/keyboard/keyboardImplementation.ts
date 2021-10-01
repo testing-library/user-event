@@ -16,6 +16,14 @@ test('no character input if `altKey` or `ctrlKey` is pressed', () => {
   expect(eventWasFired('input')).toBe(false)
 })
 
+test('do not leak repeatKey in state', () => {
+  const {element} = setup(`<input/>`)
+  ;(element as HTMLInputElement).focus()
+
+  const keyboardState = userEvent.keyboard('{a>2}')
+  expect(keyboardState).toHaveProperty('repeatKey', undefined)
+})
+
 describe('pressing and releasing keys', () => {
   it('fires event with releasing key twice', () => {
     const {element, getEventSnapshot, clearEventCalls} = setup(`<input/>`)

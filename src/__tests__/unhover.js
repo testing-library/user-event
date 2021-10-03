@@ -43,3 +43,20 @@ test('throws when unhover element with pointer-events set to none', () => {
   const {element} = setup(`<div style="pointer-events: none"></div>`)
   expect(() => userEvent.unhover(element)).toThrowError(/unable to unhover/i)
 })
+
+test('does not throws when hover element with pointer-events set to none and skipPointerEventsCheck is set', () => {
+  const {element, getEventSnapshot} = setup(
+    `<div style="pointer-events: none"></div>`,
+  )
+  userEvent.unhover(element, undefined, {skipPointerEventsCheck: true})
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
+    Events fired on: div
+
+    div - pointermove
+    div - mousemove: Left (0)
+    div - pointerout
+    div - pointerleave
+    div - mouseout: Left (0)
+    div - mouseleave: Left (0)
+  `)
+})

@@ -128,7 +128,8 @@ function click(
       'unable to click element as it has or inherits pointer-events set to "none".',
     )
   }
-  if (!skipHover) hover(element, init, {skipPointerEventsCheck})
+  // We just checked for `pointerEvents`. We can always skip this one in `hover`.
+  if (!skipHover) hover(element, init, {skipPointerEventsCheck: true})
 
   if (isElementType(element, 'label')) {
     clickLabel(element, init, {clickCount})

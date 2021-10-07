@@ -252,6 +252,7 @@ Thanks goes to these people ([emoji key][emojis]):
     <td align="center"><a href="https://github.com/mkurcius"><img src="https://avatars.githubusercontent.com/u/1613212?v=4?s=100" width="100px;" alt=""/><br /><sub><b>mkurcius</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=mkurcius" title="Code">💻</a></td>
     <td align="center"><a href="http://stderr.timfischbach.de"><img src="https://avatars.githubusercontent.com/u/26554?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Tim Fischbach</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3Atf" title="Bug reports">🐛</a></td>
     <td align="center"><a href="https://github.com/eventualbuddha"><img src="https://avatars.githubusercontent.com/u/1938?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Brian Donovan</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=eventualbuddha" title="Code">💻</a></td>
+    <td align="center"><a href="http://www.largetimber.com"><img src="https://avatars.githubusercontent.com/u/10626756?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Eric Wang</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=fa93hws" title="Code">💻</a></td>
   </tr>
 </table>
 

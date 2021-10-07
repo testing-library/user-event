@@ -10,8 +10,8 @@ test('get pointer-events from element or ancestor', () => {
         </div>
     `)
 
-  expect(hasPointerEvents(element as HTMLDivElement)).toBe(false)
-  expect(hasPointerEvents((element as HTMLDivElement).children[0])).toBe(true)
-  expect(hasPointerEvents((element as HTMLDivElement).children[1])).toBe(false)
-  expect(hasPointerEvents((element as HTMLDivElement).children[2])).toBe(false)
+  expect(hasPointerEvents(element)).toBe(false)
+  expect(hasPointerEvents(element.children[0])).toBe(true)
+  expect(hasPointerEvents(element.children[1])).toBe(false)
+  expect(hasPointerEvents(element.children[2])).toBe(false)
 })

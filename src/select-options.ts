@@ -1,5 +1,10 @@
 import {createEvent, getConfig, fireEvent} from '@testing-library/dom'
-import {hasPointerEvents, isDisabled, isElementType} from './utils'
+import {
+  hasPointerEvents,
+  isDisabled,
+  isElementType,
+  PointerOptions,
+} from './utils'
 import {click} from './click'
 import {focus} from './focus'
 import {hover, unhover} from './hover'
@@ -9,6 +14,7 @@ function selectOptionsBase(
   select: Element,
   values: HTMLElement | HTMLElement[] | string[] | string,
   init?: MouseEventInit,
+  {skipPointerEventsCheck = false}: PointerOptions = {},
 ) {
   if (!newValue && !(select as HTMLSelectElement).multiple) {
     throw getConfig().getElementError(
@@ -47,7 +53,9 @@ function selectOptionsBase(
   if (isElementType(select, 'select')) {
     if (select.multiple) {
       for (const option of selectedOptions) {
-        const withPointerEvents = hasPointerEvents(option)
+        const withPointerEvents = skipPointerEventsCheck
+          ? true
+          : hasPointerEvents(option)
 
         // events fired for multiple select are weird. Can't use hover...
         if (withPointerEvents) {
@@ -75,10 +83,12 @@ function selectOptionsBase(
         }
       }
     } else if (selectedOptions.length === 1) {
-      const withPointerEvents = hasPointerEvents(select)
+      const withPointerEvents = skipPointerEventsCheck
+        ? true
+        : hasPointerEvents(select)
       // the click to open the select options
       if (withPointerEvents) {
-        click(select, init)
+        click(select, init, {skipPointerEventsCheck})
       } else {
         focus(select)
       }
@@ -104,9 +114,9 @@ function selectOptionsBase(
     }
   } else if (select.getAttribute('role') === 'listbox') {
     selectedOptions.forEach(option => {
-      hover(option, init)
-      click(option, init)
-      unhover(option, init)
+      hover(option, init, {skipPointerEventsCheck})
+      click(option, init, {skipPointerEventsCheck})
+      unhover(option, init, {skipPointerEventsCheck})
     })
   } else {
     throw getConfig().getElementError(

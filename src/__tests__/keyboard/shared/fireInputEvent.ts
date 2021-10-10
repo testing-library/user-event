@@ -4,9 +4,9 @@ import userEvent from '../../../'
 it('dispatch change event on blur', () => {
   const {element, getEvents} = setup('<input/>')
 
-  ;(element as HTMLInputElement).focus()
+  element.focus()
   userEvent.keyboard('foo')
-  ;(element as HTMLInputElement).blur()
+  element.blur()
 
   expect(getEvents('change')).toHaveLength(1)
 })
@@ -14,10 +14,10 @@ it('dispatch change event on blur', () => {
 it('do not dispatch change event if value did not change', () => {
   const {element, getEvents} = setup('<input/>')
 
-  ;(element as HTMLInputElement).focus()
+  element.focus()
   userEvent.keyboard('foo')
   userEvent.keyboard('{backspace}{backspace}{backspace}')
-  ;(element as HTMLInputElement).blur()
+  element.blur()
 
   expect(getEvents('change')).toHaveLength(0)
 })

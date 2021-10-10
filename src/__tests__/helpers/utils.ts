@@ -7,25 +7,48 @@ import {isElementType} from '../../utils'
 // all of the stuff below is complex magic that makes the simpler tests work
 // sorrynotsorry...
 
-const unstringSnapshotSerializer = {
-  test: val => val && val.hasOwnProperty('snapshot'),
-  print: val => val.snapshot,
+const unstringSnapshotSerializer: jest.SnapshotSerializerPlugin = {
+  test: (val: unknown) =>
+    Boolean(
+      typeof val === 'object'
+        ? Object.prototype.hasOwnProperty.call(val, 'snapshot')
+        : false,
+    ),
+  print: val => String((<null | {snapshot?: string}>val)?.snapshot),
 }
 
 expect.addSnapshotSerializer(unstringSnapshotSerializer)
 
-function setup(ui, {eventHandlers} = {}) {
+type EventHandlers = Record<string, EventListener>
+
+// The HTMLCollection in lib.d.ts does not allow array access
+type HTMLCollection<Elements extends Array<Element>> = Elements & {
+  item<N extends number>(i: N): Elements[N]
+}
+
+function setup<Elements extends Element | Element[] = HTMLElement>(
+  ui: string,
+  {
+    eventHandlers,
+  }: {
+    eventHandlers?: EventHandlers
+  } = {},
+) {
   const div = document.createElement('div')
   div.innerHTML = ui.trim()
   document.body.append(div)
 
+  type ElementsArray = Elements extends Array<Element> ? Elements : [Elements]
   return {
-    element: div.firstChild,
-    elements: div.children,
+    element: div.firstChild as ElementsArray[0],
+    elements: div.children as unknown as HTMLCollection<ElementsArray>,
     // for single elements add the listeners to the element for capturing non-bubbling events
-    ...addListeners(div.children.length === 1 ? div.firstChild : div, {
-      eventHandlers,
-    }),
+    ...addListeners(
+      div.children.length === 1 ? (div.firstChild as Element) : div,
+      {
+        eventHandlers,
+      },
+    ),
   }
 }
 
@@ -49,7 +72,7 @@ function setupSelect({
     </select>
   `
   document.body.append(form)
-  const select = form.querySelector('select')
+  const select = form.querySelector('select') as HTMLSelectElement
   const options = Array.from(form.querySelectorAll('option'))
   return {
     ...addListeners(select),
@@ -76,17 +99,22 @@ function setupListbox() {
     </ul>
   `
   document.body.append(wrapper)
-  const listbox = wrapper.querySelector('[role="listbox"]')
-  const options = Array.from(wrapper.querySelectorAll('[role="option"]'))
+  const listbox = wrapper.querySelector('[role="listbox"]') as HTMLUListElement
+  const options = Array.from(
+    wrapper.querySelectorAll<HTMLElement>('[role="option"]'),
+  )
 
   // the user is responsible for handling aria-selected on listbox options
   options.forEach(el =>
-    el.addEventListener('click', e =>
-      e.target.setAttribute(
+    el.addEventListener('click', e => {
+      const target = e.currentTarget as HTMLElement
+      target.setAttribute(
         'aria-selected',
-        JSON.stringify(!JSON.parse(e.target.getAttribute('aria-selected'))),
-      ),
-    ),
+        JSON.stringify(
+          !JSON.parse(String(target.getAttribute('aria-selected'))),
+        ),
+      )
+    }),
   )
 
   return {
@@ -97,7 +125,7 @@ function setupListbox() {
 }
 
 const eventLabelGetters = {
-  KeyboardEvent(event) {
+  KeyboardEvent(event: KeyboardEvent) {
     return [
       event.key,
       typeof event.keyCode === 'undefined' ? null : `(${event.keyCode})`,
@@ -105,9 +133,9 @@ const eventLabelGetters = {
       .join(' ')
       .trim()
   },
-  MouseEvent(event) {
+  MouseEvent(event: MouseEvent) {
     // https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/button
-    const mouseButtonMap = {
+    const mouseButtonMap: Record<number, string> = {
       0: 'Left',
       1: 'Middle',
       2: 'Right',
@@ -116,20 +144,29 @@ const eventLabelGetters = {
     }
     return `${mouseButtonMap[event.button]} (${event.button})`
   },
-}
+} as const
 
-let eventListeners = []
+let eventListeners: Array<{
+  el: EventTarget
+  type: string
+  listener: EventListener
+}> = []
 
 // asside from the hijacked listener stuff here, it's also important to call
 // this function rather than simply calling addEventListener yourself
 // because it adds your listener to an eventListeners array which is cleaned
 // up automatically which will help use avoid memory leaks.
-function addEventListener(el, type, listener, options) {
+function addEventListener(
+  el: EventTarget,
+  type: string,
+  listener: EventListener,
+  options?: AddEventListenerOptions,
+) {
   eventListeners.push({el, type, listener})
   el.addEventListener(type, listener, options)
 }
 
-function getElementValue(element) {
+function getElementValue(element: Element) {
   if (isElementType(element, 'select') && element.multiple) {
     return JSON.stringify(Array.from(element.selectedOptions).map(o => o.value))
   } else if (element.getAttribute('role') === 'listbox') {
@@ -139,25 +176,38 @@ function getElementValue(element) {
   } else if (element.getAttribute('role') === 'option') {
     return JSON.stringify(element.innerHTML)
   } else if (
-    element.type === 'checkbox' ||
-    element.type === 'radio' ||
+    isElementType(element, 'input', {type: 'checkbox'}) ||
+    isElementType(element, 'input', {type: 'radio'}) ||
     isElementType(element, 'button')
   ) {
     // handled separately
     return null
   }
 
-  return JSON.stringify(element.value)
+  return JSON.stringify((element as HTMLInputElement).value)
 }
 
-function getElementDisplayName(element) {
+function hasProperty<T extends {}, K extends PropertyKey>(
+  obj: T,
+  prop: K,
+): obj is T & {[k in K]: unknown} {
+  return prop in obj
+}
+
+function getElementDisplayName(element: Element) {
   const value = getElementValue(element)
-  const hasChecked = element.type === 'checkbox' || element.type === 'radio'
+  const hasChecked =
+    isElementType(element, 'input', {type: 'checkbox'}) ||
+    isElementType(element, 'input', {type: 'radio'})
   return [
     element.tagName.toLowerCase(),
     element.id ? `#${element.id}` : null,
-    element.name ? `[name="${element.name}"]` : null,
-    element.htmlFor ? `[for="${element.htmlFor}"]` : null,
+    hasProperty(element, 'name') && element.name
+      ? `[name="${element.name}"]`
+      : null,
+    hasProperty(element, 'htmlFor') && element.htmlFor
+      ? `[for="${element.htmlFor}"]`
+      : null,
     value ? `[value=${value}]` : null,
     hasChecked ? `[checked=${element.checked}]` : null,
     isElementType(element, 'option') ? `[selected=${element.selected}]` : null,
@@ -169,13 +219,44 @@ function getElementDisplayName(element) {
     .join('')
 }
 
-function addListeners(element, {eventHandlers = {}} = {}) {
-  const eventHandlerCalls = {current: []}
+type CallData = {
+  event: Event
+  elementDisplayName: string
+  testData?: TestData
+}
+
+type TestData = {
+  handled?: boolean
+
+  // Where is this assigned?
+  before?: Element
+  after?: Element
+}
+
+function isElement(target: EventTarget): target is Element {
+  return 'tagName' in target
+}
+
+function isMouseEvent(event: Event): event is MouseEvent {
+  return event.constructor.name === 'MouseEvent'
+}
+
+function addListeners(
+  element: Element & {testData?: TestData},
+  {
+    eventHandlers = {},
+  }: {
+    eventHandlers?: EventHandlers
+  } = {},
+) {
+  const eventHandlerCalls: {current: CallData[]} = {current: []}
   const generalListener = jest
-    .fn(event => {
-      const callData = {
+    .fn((event: Event) => {
+      const target = event.target
+      const callData: CallData = {
         event,
-        elementDisplayName: getElementDisplayName(event.target),
+        elementDisplayName:
+          target && isElement(target) ? getElementDisplayName(target) : '',
       }
       if (element.testData && !element.testData.handled) {
         callData.testData = element.testData
@@ -192,10 +273,9 @@ function addListeners(element, {eventHandlers = {}} = {}) {
 
   for (const name of listeners) {
     addEventListener(element, name.toLowerCase(), (...args) => {
-      const handler = eventHandlers[name]
-      if (handler) {
+      if (name in eventHandlers) {
         generalListener(...args)
-        return handler(...args)
+        return eventHandlers[name](...args)
       }
       return generalListener(...args)
     })
@@ -208,10 +288,15 @@ function addListeners(element, {eventHandlers = {}} = {}) {
   function getEventSnapshot() {
     const eventCalls = eventHandlerCalls.current
       .map(({event, testData, elementDisplayName}) => {
+        const eventName = event.constructor.name
         const eventLabel =
-          eventLabelGetters[event.constructor.name]?.(event) ?? ''
+          eventName in eventLabelGetters
+            ? eventLabelGetters[eventName as keyof typeof eventLabelGetters](
+                event as KeyboardEvent & MouseEvent,
+              )
+            : ''
         const modifiers = ['altKey', 'shiftKey', 'metaKey', 'ctrlKey']
-          .filter(key => event[key])
+          .filter(key => event[key as keyof Event])
           .map(k => `{${k.replace('Key', '')}}`)
           .join('')
 
@@ -245,18 +330,17 @@ function addListeners(element, {eventHandlers = {}} = {}) {
     generalListener.mockClear()
     eventHandlerCalls.current = []
   }
-  const getEvents = type =>
+  const getEvents = (type?: string) =>
     generalListener.mock.calls
       .map(([e]) => e)
       .filter(e => !type || e.type === type)
-  const eventWasFired = eventType => getEvents().some(e => e.type === eventType)
+  const eventWasFired = (eventType: string) => getEvents(eventType).length > 0
 
   function getClickEventsSnapshot() {
-    const lines = getEvents().map(
-      ({constructor, type, button, buttons, detail}) =>
-        constructor.name === 'MouseEvent'
-          ? `${type} - button=${button}; buttons=${buttons}; detail=${detail}`
-          : type,
+    const lines = getEvents().map(e =>
+      isMouseEvent(e)
+        ? `${e.type} - button=${e.button}; buttons=${e.buttons}; detail=${e.detail}`
+        : e.type,
     )
     return {snapshot: lines.join('\n')}
   }
@@ -270,21 +354,23 @@ function addListeners(element, {eventHandlers = {}} = {}) {
   }
 }
 
-function getValueWithSelection({value, selectionStart, selectionEnd}) {
+function getValueWithSelection(element?: Element) {
+  const {value, selectionStart, selectionEnd} = element as HTMLInputElement
+
   return [
-    value.slice(0, selectionStart),
+    value.slice(0, selectionStart ?? undefined),
     ...(selectionStart === selectionEnd
       ? ['{CURSOR}']
       : [
           '{SELECTION}',
-          value.slice(selectionStart, selectionEnd),
+          value.slice(selectionStart ?? 0, selectionEnd ?? undefined),
           '{/SELECTION}',
         ]),
-    value.slice(selectionEnd),
+    value.slice(selectionEnd ?? undefined),
   ].join('')
 }
 
-const changeLabelGetter = {
+const changeLabelGetter: Record<PropertyKey, (d: TestData) => string> = {
   value: ({before, after}) =>
     [
       JSON.stringify(getValueWithSelection(before)),
@@ -292,8 +378,8 @@ const changeLabelGetter = {
     ].join(' -> '),
   checked: ({before, after}) =>
     [
-      before.checked ? 'checked' : 'unchecked',
-      after.checked ? 'checked' : 'unchecked',
+      (before as HTMLInputElement).checked ? 'checked' : 'unchecked',
+      (after as HTMLInputElement).checked ? 'checked' : 'unchecked',
     ].join(' -> '),
 
   // unfortunately, changing a select option doesn't happen within fireEvent
@@ -303,16 +389,28 @@ const changeLabelGetter = {
 }
 changeLabelGetter.selectionStart = changeLabelGetter.value
 changeLabelGetter.selectionEnd = changeLabelGetter.value
-const getDefaultLabel = ({key, before, after}) =>
-  `${key}: ${JSON.stringify(before[key])} -> ${JSON.stringify(after[key])}`
 
-function getChanges({before, after}) {
+const getDefaultLabel = <T>({
+  key,
+  before,
+  after,
+}: {
+  key: keyof T
+  before: T
+  after: T
+}) => `${key}: ${JSON.stringify(before[key])} -> ${JSON.stringify(after[key])}`
+
+function getChanges({before, after}: TestData) {
   const changes = new Set()
-  for (const key of Object.keys(before)) {
-    if (after[key] !== before[key]) {
-      changes.add(
-        (changeLabelGetter[key] ?? getDefaultLabel)({key, before, after}),
-      )
+  if (before && after) {
+    for (const key of Object.keys(before) as Array<keyof typeof before>) {
+      if (after[key] !== before[key]) {
+        changes.add(
+          (key in changeLabelGetter ? changeLabelGetter[key] : getDefaultLabel)(
+            {key, before, after},
+          ),
+        )
+      }
     }
   }
 

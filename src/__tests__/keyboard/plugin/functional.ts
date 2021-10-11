@@ -138,7 +138,31 @@ test.each`
 
     userEvent.keyboard('[Enter]')
 
+    expect(getEvents('click')).toHaveLength(0)
     expect(getEvents('submit')).toHaveLength(1)
+  },
+)
+
+test.each`
+  elementType   | hasForm
+  ${'checkbox'} | ${false}
+  ${'checkbox'} | ${true}
+  ${'radio'}    | ${false}
+  ${'radio'}    | ${true}
+`(
+  'NOT trigger submit event on [Enter] keypress on HTMLInputElement type="$elementType" when hasForm=$hasForm',
+  ({elementType, hasForm}) => {
+    const {element, getEvents} = setup(
+      hasForm
+        ? `<form><input type="${elementType}"/></form>`
+        : `<input type="${elementType}"/>`,
+    )
+    element.querySelector('input')?.focus()
+
+    userEvent.keyboard('[Enter]')
+
+    expect(getEvents('click')).toHaveLength(0)
+    expect(getEvents('submit')).toHaveLength(0)
   },
 )
 

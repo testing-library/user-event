@@ -86,12 +86,13 @@ export const keypressBehavior: behaviorPlugin[] = [
     matches: (keyDef, element) =>
       keyDef.key === 'Enter' &&
       isElementType(element, 'input') &&
-      ['checkbox', 'radio'].includes(element.type) &&
-      hasFormSubmit(element.form),
+      ['checkbox', 'radio'].includes(element.type),
     handle: (keyDef, element) => {
-      const form = (element as HTMLInputElement).form as HTMLFormElement
+      const form = (element as HTMLInputElement).form
 
-      fireEvent.submit(form)
+      if (hasFormSubmit(form)) {
+        fireEvent.submit(form)
+      }
     },
   },
   {

@@ -1,4 +1,6 @@
-export const hasFormSubmit = (form: HTMLFormElement | null) =>
+export const hasFormSubmit = (
+  form: HTMLFormElement | null,
+): form is HTMLFormElement =>
   !!(
     form &&
     (form.querySelector('input[type="submit"]') ||

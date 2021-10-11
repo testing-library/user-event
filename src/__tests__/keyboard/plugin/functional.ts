@@ -117,6 +117,31 @@ test('trigger click event on [Enter] keypress on HTMLButtonElement', () => {
   `)
 })
 
+test.each`
+  elementType   | submit
+  ${'checkbox'} | ${'input'}
+  ${'checkbox'} | ${'button'}
+  ${'radio'}    | ${'input'}
+  ${'radio'}    | ${'button'}
+`(
+  'trigger submit event on [Enter] keypress on HTMLInputElement type=$elementType with submit $submit',
+  ({elementType, submit}) => {
+    const {element, getEvents} = setup(
+      `<form>
+            <input type="${elementType}" />
+            ${submit === 'button' && '<button type="submit">submit</button>'}
+            ${submit === 'input' && '<input type="submit" />'}
+          </form>`,
+    )
+
+    element.querySelector('input')?.focus()
+
+    userEvent.keyboard('[Enter]')
+
+    expect(getEvents('submit')).toHaveLength(1)
+  },
+)
+
 test('trigger click event on [Space] keyup on HTMLButtonElement', () => {
   const {element, getEventSnapshot, getEvents} = setup(`<button/>`)
   element.focus()

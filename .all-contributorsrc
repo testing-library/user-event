@@ -939,6 +939,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "JohannesFischer",
+      "name": "Johannes Fischer",
+      "avatar_url": "https://avatars.githubusercontent.com/u/28100?v=4",
+      "profile": "https://johannesfischer.github.io/",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "commitConvention": "none",

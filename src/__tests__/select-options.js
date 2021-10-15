@@ -259,3 +259,88 @@ test('fire no pointer events when multiple select has disabled pointer events', 
   expect(o2.selected).toBe(true)
   expect(o3.selected).toBe(true)
 })
+
+test('fires correct events when pointer events set to none but skipPointerEvents is set', () => {
+  const {select, options, getEventSnapshot} = setupSelect({
+    pointerEvents: 'none',
+  })
+  userEvent.selectOptions(select, '2', undefined, {
+    skipPointerEventsCheck: true,
+  })
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
+    Events fired on: select[name="select"][value="2"]
+
+    select[name="select"][value="1"] - pointerover
+    select[name="select"][value="1"] - pointerenter
+    select[name="select"][value="1"] - mouseover: Left (0)
+    select[name="select"][value="1"] - mouseenter: Left (0)
+    select[name="select"][value="1"] - pointermove
+    select[name="select"][value="1"] - mousemove: Left (0)
+    select[name="select"][value="1"] - pointerdown
+    select[name="select"][value="1"] - mousedown: Left (0)
+    select[name="select"][value="1"] - focus
+    select[name="select"][value="1"] - focusin
+    select[name="select"][value="1"] - pointerup
+    select[name="select"][value="1"] - mouseup: Left (0)
+    select[name="select"][value="1"] - click: Left (0)
+    select[name="select"][value="2"] - input
+    select[name="select"][value="2"] - change
+    select[name="select"][value="2"] - pointerover
+    select[name="select"][value="2"] - pointerenter
+    select[name="select"][value="2"] - mouseover: Left (0)
+    select[name="select"][value="2"] - mouseenter: Left (0)
+    select[name="select"][value="2"] - pointerup
+    select[name="select"][value="2"] - mouseup: Left (0)
+    select[name="select"][value="2"] - click: Left (0)
+  `)
+  const [o1, o2, o3] = options
+  expect(o1.selected).toBe(false)
+  expect(o2.selected).toBe(true)
+  expect(o3.selected).toBe(false)
+})
+
+test('fires correct events on multi-selects when pointer events is set and skipPointerEventsCheck is set', () => {
+  const {select, options, getEventSnapshot} = setupSelect({
+    multiple: true,
+    pointerEvents: 'none',
+  })
+  userEvent.selectOptions(select, ['1', '3'], undefined, {
+    skipPointerEventsCheck: true,
+  })
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
+    Events fired on: select[name="select"][value=["1","3"]]
+
+    option[value="1"][selected=false] - pointerover
+    select[name="select"][value=[]] - pointerenter
+    option[value="1"][selected=false] - mouseover: Left (0)
+    select[name="select"][value=[]] - mouseenter: Left (0)
+    option[value="1"][selected=false] - pointermove
+    option[value="1"][selected=false] - mousemove: Left (0)
+    option[value="1"][selected=false] - pointerdown
+    option[value="1"][selected=false] - mousedown: Left (0)
+    select[name="select"][value=[]] - focus
+    select[name="select"][value=[]] - focusin
+    option[value="1"][selected=false] - pointerup
+    option[value="1"][selected=false] - mouseup: Left (0)
+    select[name="select"][value=["1"]] - input
+    select[name="select"][value=["1"]] - change
+    option[value="1"][selected=true] - click: Left (0)
+    option[value="3"][selected=false] - pointerover
+    select[name="select"][value=["1"]] - pointerenter
+    option[value="3"][selected=false] - mouseover: Left (0)
+    select[name="select"][value=["1"]] - mouseenter: Left (0)
+    option[value="3"][selected=false] - pointermove
+    option[value="3"][selected=false] - mousemove: Left (0)
+    option[value="3"][selected=false] - pointerdown
+    option[value="3"][selected=false] - mousedown: Left (0)
+    option[value="3"][selected=false] - pointerup
+    option[value="3"][selected=false] - mouseup: Left (0)
+    select[name="select"][value=["1","3"]] - input
+    select[name="select"][value=["1","3"]] - change
+    option[value="3"][selected=true] - click: Left (0)
+  `)
+  const [o1, o2, o3] = options
+  expect(o1.selected).toBe(true)
+  expect(o2.selected).toBe(false)
+  expect(o3.selected).toBe(true)
+})

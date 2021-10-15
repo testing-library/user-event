@@ -56,7 +56,6 @@ export const defaultKeyMap: keyboardKey[] = [
   {code: 'OSLeft', key: 'OS', location: DOM_KEY_LOCATION.LEFT, keyCode: 91},
   {code: 'OSRight', key: 'OS', location: DOM_KEY_LOCATION.RIGHT, keyCode: 91},
 
-  {code: 'Escape', key: 'CapsLock', keyCode: 20},
   {code: 'CapsLock', key: 'CapsLock', keyCode: 20},
   {code: 'Backspace', key: 'Backspace', keyCode: 8},
   {code: 'Enter', key: 'Enter', keyCode: 13},

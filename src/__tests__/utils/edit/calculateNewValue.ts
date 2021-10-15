@@ -5,7 +5,7 @@ import {setup} from '__tests__/helpers/utils'
 
 test('honors maxlength', () => {
   const {element, getEventSnapshot} = setup('<input maxlength="2" />')
-  userEvent.type(element as Element, '123')
+  userEvent.type(element, '123')
 
   // NOTE: no input event when typing "3"
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
@@ -40,7 +40,7 @@ test('honors maxlength', () => {
 
 test('honors maxlength="" as if there was no maxlength', () => {
   const {element, getEventSnapshot} = setup('<input maxlength="" />')
-  userEvent.type(element as Element, '123')
+  userEvent.type(element, '123')
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value="123"]
@@ -77,7 +77,7 @@ test('honors maxlength with existing text', () => {
   const {element, getEventSnapshot} = setup(
     '<input value="12" maxlength="2" />',
   )
-  userEvent.type(element as Element, '3')
+  userEvent.type(element, '3')
 
   // NOTE: no input event when typing "3"
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
@@ -108,7 +108,7 @@ test('honors maxlength on textarea', () => {
     '<textarea maxlength="2">12</textarea>',
   )
 
-  userEvent.type(element as Element, '3')
+  userEvent.type(element, '3')
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: textarea[value="12"]
@@ -137,7 +137,7 @@ test('honors maxlength on textarea', () => {
 test('ignores maxlength on input[type=number]', () => {
   const {element} = setup(`<input maxlength="2" type="number" value="12" />`)
 
-  userEvent.type(element as Element, '3')
+  userEvent.type(element, '3')
 
   expect(element).toHaveValue(123)
 })

@@ -1070,55 +1070,6 @@ test('navigation key: {pageUp} and {pageDown} moves the cursor for <input>', () 
   `)
 })
 
-test('navigation key: {pageUp} and {pageDown} moves the cursor for <textarea>', () => {
-  const {element, getEventSnapshot} = setup('<textarea></textarea>')
-  userEvent.type(element, '{enter}b{enter}{pageUp}a{pageDown}c')
-  expect(getEventSnapshot()).toMatchInlineSnapshot(`
-    Events fired on: textarea[value="a\\nb\\nc"]
-
-    textarea[value=""] - pointerover
-    textarea[value=""] - pointerenter
-    textarea[value=""] - mouseover: Left (0)
-    textarea[value=""] - mouseenter: Left (0)
-    textarea[value=""] - pointermove
-    textarea[value=""] - mousemove: Left (0)
-    textarea[value=""] - pointerdown
-    textarea[value=""] - mousedown: Left (0)
-    textarea[value=""] - focus
-    textarea[value=""] - focusin
-    textarea[value=""] - pointerup
-    textarea[value=""] - mouseup: Left (0)
-    textarea[value=""] - click: Left (0)
-    textarea[value=""] - keydown: Enter (13)
-    textarea[value=""] - keypress: Enter (13)
-    textarea[value="\\n"] - input
-    textarea[value="\\n"] - keyup: Enter (13)
-    textarea[value="\\n"] - keydown: b (98)
-    textarea[value="\\n"] - keypress: b (98)
-    textarea[value="\\nb"] - input
-    textarea[value="\\nb"] - keyup: b (98)
-    textarea[value="\\nb"] - keydown: Enter (13)
-    textarea[value="\\nb"] - keypress: Enter (13)
-    textarea[value="\\nb\\n"] - input
-    textarea[value="\\nb\\n"] - keyup: Enter (13)
-    textarea[value="\\nb\\n"] - keydown: PageUp (33)
-    textarea[value="\\nb\\n"] - select
-    textarea[value="\\nb\\n"] - keyup: PageUp (33)
-    textarea[value="\\nb\\n"] - keydown: a (97)
-    textarea[value="\\nb\\n"] - keypress: a (97)
-    textarea[value="a\\nb\\n"] - select
-    textarea[value="a\\nb\\n"] - input
-    textarea[value="a\\nb\\n"] - keyup: a (97)
-    textarea[value="a\\nb\\n"] - keydown: PageDown (34)
-    textarea[value="a\\nb\\n"] - select
-    textarea[value="a\\nb\\n"] - keyup: PageDown (34)
-    textarea[value="a\\nb\\n"] - keydown: c (99)
-    textarea[value="a\\nb\\n"] - keypress: c (99)
-    textarea[value="a\\nb\\nc"] - input
-    textarea[value="a\\nb\\nc"] - keyup: c (99)
-  `)
-})
-
 test('can type into an input with type `time`', () => {
   const {element, getEventSnapshot} = setup('<input type="time" />')
   userEvent.type(element, '01:05')

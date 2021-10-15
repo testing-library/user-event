@@ -26,7 +26,7 @@ it('type without focus', () => {
 it('type with focus', () => {
   const {element} = setup('<input/>')
   const {getEventSnapshot} = addListeners(document.body)
-  ;(element as HTMLInputElement).focus()
+  element.focus()
 
   userEvent.keyboard('foo')
 
@@ -53,7 +53,7 @@ it('type with focus', () => {
 it('type asynchronous', async () => {
   const {element} = setup('<input/>')
   const {getEventSnapshot} = addListeners(document.body)
-  ;(element as HTMLInputElement).focus()
+  element.focus()
 
   // eslint-disable-next-line testing-library/no-await-sync-events
   await userEvent.keyboard('foo', {delay: 1})
@@ -110,7 +110,7 @@ describe('error', () => {
 
 it('continue typing with state', () => {
   const {element, getEventSnapshot, clearEventCalls} = setup('<input/>')
-  ;(element as HTMLInputElement).focus()
+  element.focus()
   clearEventCalls()
 
   const state = userEvent.keyboard('[ShiftRight>]')

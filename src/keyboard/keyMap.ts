@@ -56,7 +56,6 @@ export const defaultKeyMap: keyboardKey[] = [
   {code: 'OSLeft', key: 'OS', location: DOM_KEY_LOCATION.LEFT, keyCode: 91},
   {code: 'OSRight', key: 'OS', location: DOM_KEY_LOCATION.RIGHT, keyCode: 91},
 
-  {code: 'Escape', key: 'CapsLock', keyCode: 20},
   {code: 'CapsLock', key: 'CapsLock', keyCode: 20},
   {code: 'Backspace', key: 'Backspace', keyCode: 8},
   {code: 'Enter', key: 'Enter', keyCode: 13},
@@ -74,6 +73,8 @@ export const defaultKeyMap: keyboardKey[] = [
   {code: 'Home', key: 'Home', keyCode: 36},
   {code: 'End', key: 'End', keyCode: 35},
   {code: 'Delete', key: 'Delete', keyCode: 46},
+  {code: 'PageUp', key: 'PageUp', keyCode: 33},
+  {code: 'PageDown', key: 'PageDown', keyCode: 34},
 
   // TODO: add mappings
 ]

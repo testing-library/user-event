@@ -921,6 +921,33 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "fa93hws",
+      "name": "Eric Wang",
+      "avatar_url": "https://avatars.githubusercontent.com/u/10626756?v=4",
+      "profile": "http://www.largetimber.com",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "jesperorb",
+      "name": "Jesper Orb",
+      "avatar_url": "https://avatars.githubusercontent.com/u/21122051?v=4",
+      "profile": "https://github.com/jesperorb",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "JohannesFischer",
+      "name": "Johannes Fischer",
+      "avatar_url": "https://avatars.githubusercontent.com/u/28100?v=4",
+      "profile": "https://johannesfischer.github.io/",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "commitConvention": "none",

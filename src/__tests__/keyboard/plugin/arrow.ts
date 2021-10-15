@@ -2,7 +2,7 @@ import userEvent from 'index'
 import {setup} from '__tests__/helpers/utils'
 
 const setupInput = () =>
-  setup(`<input value="foobar"/>`).element as HTMLInputElement
+  setup<HTMLInputElement>(`<input value="foobar"/>`).element
 
 test('collapse selection to the left', () => {
   const el = setupInput()

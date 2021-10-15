@@ -1024,6 +1024,52 @@ test('navigation key: {home} and {end} moves the cursor', () => {
   `)
 })
 
+test('navigation key: {pageUp} and {pageDown} moves the cursor for <input>', () => {
+  const {element, getEventSnapshot} = setup('<input />')
+  userEvent.type(element, 'c{pageUp}ab{pageDown}d')
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
+    Events fired on: input[value="abcd"]
+
+    input[value=""] - pointerover
+    input[value=""] - pointerenter
+    input[value=""] - mouseover: Left (0)
+    input[value=""] - mouseenter: Left (0)
+    input[value=""] - pointermove
+    input[value=""] - mousemove: Left (0)
+    input[value=""] - pointerdown
+    input[value=""] - mousedown: Left (0)
+    input[value=""] - focus
+    input[value=""] - focusin
+    input[value=""] - pointerup
+    input[value=""] - mouseup: Left (0)
+    input[value=""] - click: Left (0)
+    input[value=""] - keydown: c (99)
+    input[value=""] - keypress: c (99)
+    input[value="c"] - input
+    input[value="c"] - keyup: c (99)
+    input[value="c"] - keydown: PageUp (33)
+    input[value="c"] - select
+    input[value="c"] - keyup: PageUp (33)
+    input[value="c"] - keydown: a (97)
+    input[value="c"] - keypress: a (97)
+    input[value="ac"] - select
+    input[value="ac"] - input
+    input[value="ac"] - keyup: a (97)
+    input[value="ac"] - keydown: b (98)
+    input[value="ac"] - keypress: b (98)
+    input[value="abc"] - select
+    input[value="abc"] - input
+    input[value="abc"] - keyup: b (98)
+    input[value="abc"] - keydown: PageDown (34)
+    input[value="abc"] - select
+    input[value="abc"] - keyup: PageDown (34)
+    input[value="abc"] - keydown: d (100)
+    input[value="abc"] - keypress: d (100)
+    input[value="abcd"] - input
+    input[value="abcd"] - keyup: d (100)
+  `)
+})
+
 test('can type into an input with type `time`', () => {
   const {element, getEventSnapshot} = setup('<input type="time" />')
   userEvent.type(element, '01:05')

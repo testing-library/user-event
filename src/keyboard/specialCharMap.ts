@@ -12,4 +12,6 @@ export const specialCharMap = {
   selectAll: '{selectall}',
   space: '{space}',
   whitespace: ' ',
+  pageUp: '{pageUp}',
+  pageDown: '{pageDown}',
 } as const

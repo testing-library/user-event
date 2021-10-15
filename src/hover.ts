@@ -4,6 +4,7 @@ import {
   getMouseEventOptions,
   isDisabled,
   hasPointerEvents,
+  PointerOptions,
 } from './utils'
 
 // includes `element`
@@ -16,8 +17,12 @@ function getParentElements(element: Element) {
   return parentElements
 }
 
-function hover(element: Element, init?: MouseEventInit) {
-  if (!hasPointerEvents(element)) {
+function hover(
+  element: Element,
+  init?: MouseEventInit,
+  {skipPointerEventsCheck = false}: PointerOptions = {},
+) {
+  if (!skipPointerEventsCheck && !hasPointerEvents(element)) {
     throw new Error(
       'unable to hover element as it has or inherits pointer-events set to "none".',
     )
@@ -42,8 +47,12 @@ function hover(element: Element, init?: MouseEventInit) {
   }
 }
 
-function unhover(element: Element, init?: MouseEventInit) {
-  if (!hasPointerEvents(element)) {
+function unhover(
+  element: Element,
+  init?: MouseEventInit,
+  {skipPointerEventsCheck = false}: PointerOptions = {},
+) {
+  if (!skipPointerEventsCheck && !hasPointerEvents(element)) {
     throw new Error(
       'unable to unhover element as it has or inherits pointer-events set to "none".',
     )

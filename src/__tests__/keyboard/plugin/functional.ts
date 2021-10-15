@@ -32,7 +32,7 @@ test('produce extra events for the Control key when AltGraph is pressed', () => 
 test('backspace to valid value', () => {
   const {element, getEventSnapshot} = setup(`<input type="number"/>`)
 
-  userEvent.type(element as Element, '5e-[Backspace][Backspace]')
+  userEvent.type(element, '5e-[Backspace][Backspace]')
 
   expect(element).toHaveValue(5)
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
@@ -76,7 +76,7 @@ test('trigger click event on [Enter] keydown on HTMLAnchorElement', () => {
   const {element, getEventSnapshot, getEvents} = setup(
     `<a href="example.com" target="_blank"/>`,
   )
-  ;(element as HTMLAnchorElement).focus()
+  element.focus()
 
   userEvent.keyboard('[Enter]')
 
@@ -99,7 +99,7 @@ test('trigger click event on [Enter] keydown on HTMLAnchorElement', () => {
 
 test('trigger click event on [Enter] keypress on HTMLButtonElement', () => {
   const {element, getEventSnapshot, getEvents} = setup(`<button/>`)
-  ;(element as HTMLButtonElement).focus()
+  element.focus()
 
   userEvent.keyboard('[Enter]')
 
@@ -119,7 +119,7 @@ test('trigger click event on [Enter] keypress on HTMLButtonElement', () => {
 
 test('trigger click event on [Space] keyup on HTMLButtonElement', () => {
   const {element, getEventSnapshot, getEvents} = setup(`<button/>`)
-  ;(element as HTMLButtonElement).focus()
+  element.focus()
 
   userEvent.keyboard('[Space]')
 
@@ -138,8 +138,10 @@ test('trigger click event on [Space] keyup on HTMLButtonElement', () => {
 })
 
 test('trigger click event on [Space] keyup on HTMLInputElement type=button', () => {
-  const {element, getEventSnapshot, getEvents} = setup(`<input type="button" />`)
-  ;(element as HTMLButtonElement).focus()
+  const {element, getEventSnapshot, getEvents} = setup(
+    `<input type="button" />`,
+  )
+  element.focus()
 
   userEvent.keyboard('[Space]')
 
@@ -159,7 +161,7 @@ test('trigger click event on [Space] keyup on HTMLInputElement type=button', () 
 
 test('trigger change event on [Space] keyup on HTMLInputElement type=radio', () => {
   const {element, getEventSnapshot, getEvents} = setup(`<input type="radio" />`)
-  ;(element as HTMLInputElement).focus()
+  element.focus()
 
   userEvent.keyboard('[Space]')
 

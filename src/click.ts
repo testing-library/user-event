@@ -6,6 +6,7 @@ import {
   isDisabled,
   isElementType,
   hasPointerEvents,
+  PointerOptions,
 } from './utils'
 import {hover} from './hover'
 import {blur} from './blur'
@@ -28,7 +29,7 @@ export declare interface clickOptions {
 function clickLabel(
   label: HTMLLabelElement,
   init: MouseEventInit | undefined,
-  {clickCount}: clickOptions,
+  {clickCount}: clickOptions & PointerOptions,
 ) {
   if (isLabelWithInternallyDisabledControl(label)) return
 
@@ -49,7 +50,7 @@ function clickLabel(
 function clickBooleanElement(
   element: HTMLInputElement,
   init: MouseEventInit | undefined,
-  {clickCount}: clickOptions,
+  {clickCount}: clickOptions & PointerOptions,
 ) {
   fireEvent.pointerDown(element, init)
   if (!element.disabled) {
@@ -72,7 +73,7 @@ function clickBooleanElement(
 function clickElement(
   element: Element,
   init: MouseEventInit | undefined,
-  {clickCount}: clickOptions,
+  {clickCount}: clickOptions & PointerOptions,
 ) {
   const previousElement = getPreviouslyFocusedElement(element)
   fireEvent.pointerDown(element, init)
@@ -116,14 +117,19 @@ function findClosest(element: Element, callback: (e: Element) => boolean) {
 function click(
   element: Element,
   init?: MouseEventInit,
-  {skipHover = false, clickCount = 0}: clickOptions = {},
+  {
+    skipHover = false,
+    clickCount = 0,
+    skipPointerEventsCheck = false,
+  }: clickOptions & PointerOptions = {},
 ) {
-  if (!hasPointerEvents(element)) {
+  if (!skipPointerEventsCheck && !hasPointerEvents(element)) {
     throw new Error(
       'unable to click element as it has or inherits pointer-events set to "none".',
     )
   }
-  if (!skipHover) hover(element, init)
+  // We just checked for `pointerEvents`. We can always skip this one in `hover`.
+  if (!skipHover) hover(element, init, {skipPointerEventsCheck: true})
 
   if (isElementType(element, 'label')) {
     clickLabel(element, init, {clickCount})
@@ -146,15 +152,19 @@ function fireClick(element: Element, mouseEventOptions: MouseEventInit) {
   }
 }
 
-function dblClick(element: Element, init?: MouseEventInit) {
-  if (!hasPointerEvents(element)) {
+function dblClick(
+  element: Element,
+  init?: MouseEventInit,
+  {skipPointerEventsCheck = false}: clickOptions & PointerOptions = {},
+) {
+  if (!skipPointerEventsCheck && !hasPointerEvents(element)) {
     throw new Error(
       'unable to double-click element as it has or inherits pointer-events set to "none".',
     )
   }
-  hover(element, init)
-  click(element, init, {skipHover: true, clickCount: 0})
-  click(element, init, {skipHover: true, clickCount: 1})
+  hover(element, init, {skipPointerEventsCheck})
+  click(element, init, {skipHover: true, clickCount: 0, skipPointerEventsCheck})
+  click(element, init, {skipHover: true, clickCount: 1, skipPointerEventsCheck})
   fireEvent.dblClick(element, getMouseEventOptions('dblclick', init, 2))
 }
 

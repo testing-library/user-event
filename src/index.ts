@@ -7,8 +7,11 @@ import {upload} from './upload'
 import {selectOptions, deselectOptions} from './select-options'
 import {paste} from './paste'
 import {keyboard, specialCharMap} from './keyboard'
+import {UserEventApis, setup} from './setup'
 
-const userEvent = {
+const userEvent: UserEventApis & {
+  setup: typeof setup
+} = {
   click,
   dblClick,
   type,
@@ -21,6 +24,7 @@ const userEvent = {
   deselectOptions,
   paste,
   keyboard,
+  setup,
 }
 
 export default userEvent

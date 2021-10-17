@@ -11,20 +11,21 @@ import {typeOptions} from 'type/typeImplementation'
 import {upload, uploadOptions} from 'upload'
 import {PointerOptions} from 'utils'
 
-export type UserEventApis = {
-  click: typeof click
-  dblClick: typeof dblClick
-  type: typeof type
-  clear: typeof clear
-  tab: typeof tab
-  hover: typeof hover
-  unhover: typeof unhover
-  upload: typeof upload
-  selectOptions: typeof selectOptions
-  deselectOptions: typeof deselectOptions
-  paste: typeof paste
-  keyboard: typeof keyboard
+export const userEventApis = {
+  clear,
+  click,
+  dblClick,
+  deselectOptions,
+  hover,
+  keyboard,
+  paste,
+  selectOptions,
+  tab,
+  type,
+  unhover,
+  upload,
 }
+export type UserEventApis = typeof userEventApis
 
 type ClickOptions = Omit<clickOptions, 'clickCount'>
 
@@ -148,7 +149,7 @@ function _setup(
       return selectOptions(...args)
     },
 
-    setup: (options: SetupOptions = {}) => {
+    setup: (options: SetupOptions) => {
       return _setup(
         {
           ...keyboardDefaults,

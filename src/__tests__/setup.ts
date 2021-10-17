@@ -192,6 +192,7 @@ cases<APICase>(
     },
     keyboard: {
       api: 'keyboard',
+      args: ['foo'],
       optionsArg: 1,
       options: {
         keyboardMap: [{key: 'x', code: 'SpecialKey'}],
@@ -228,6 +229,7 @@ cases<APICase>(
     },
     type: {
       api: 'type',
+      args: [null, 'foo'],
       elementArg: 0,
       optionsArg: 2,
       options: {

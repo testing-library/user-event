@@ -118,20 +118,24 @@ test('trigger click event on [Enter] keypress on HTMLButtonElement', () => {
 })
 
 test.each`
-  elementType   | submit
-  ${'checkbox'} | ${'input'}
-  ${'checkbox'} | ${'button'}
-  ${'radio'}    | ${'input'}
-  ${'radio'}    | ${'button'}
+  elementType   | submit      | hasForm
+  ${'checkbox'} | ${'input'}  | ${true}
+  ${'checkbox'} | ${'button'} | ${true}
+  ${'radio'}    | ${'input'}  | ${true}
+  ${'radio'}    | ${'button'} | ${true}
+  ${'checkbox'} | ${'input'}  | ${false}
+  ${'checkbox'} | ${'button'} | ${false}
+  ${'radio'}    | ${'input'}  | ${false}
+  ${'radio'}    | ${'button'} | ${false}
 `(
-  'trigger submit event on [Enter] keypress on HTMLInputElement type=$elementType with submit $submit',
-  ({elementType, submit}) => {
+  'trigger submit event on [Enter] keypress on HTMLInputElement type=$elementType with submit $submit and hasForm=$hasForm',
+  ({elementType, submit, hasForm}) => {
     const {element, getEvents} = setup(
-      `<form>
+      `<${hasForm ? 'form' : 'div'}>
             <input type="${elementType}" />
             ${submit === 'button' && '<button type="submit">submit</button>'}
             ${submit === 'input' && '<input type="submit" />'}
-          </form>`,
+          </${hasForm ? 'form' : ''}>`,
     )
 
     element.querySelector('input')?.focus()
@@ -139,30 +143,7 @@ test.each`
     userEvent.keyboard('[Enter]')
 
     expect(getEvents('click')).toHaveLength(0)
-    expect(getEvents('submit')).toHaveLength(1)
-  },
-)
-
-test.each`
-  elementType   | hasForm
-  ${'checkbox'} | ${false}
-  ${'checkbox'} | ${true}
-  ${'radio'}    | ${false}
-  ${'radio'}    | ${true}
-`(
-  'NOT trigger submit event on [Enter] keypress on HTMLInputElement type="$elementType" when hasForm=$hasForm',
-  ({elementType, hasForm}) => {
-    const {element, getEvents} = setup(
-      hasForm
-        ? `<form><input type="${elementType}"/></form>`
-        : `<input type="${elementType}"/>`,
-    )
-    element.querySelector('input')?.focus()
-
-    userEvent.keyboard('[Enter]')
-
-    expect(getEvents('click')).toHaveLength(0)
-    expect(getEvents('submit')).toHaveLength(0)
+    expect(getEvents('submit')).toHaveLength(hasForm ? 1 : 0)
   },
 )
 

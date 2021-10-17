@@ -1,4 +1,4 @@
-import {getSelectionRange} from './selectionRange'
+import {getSelectionRange} from '../../document/selectionRange'
 import {getValue} from './getValue'
 
 export function isCursorAtEnd(element: Element) {

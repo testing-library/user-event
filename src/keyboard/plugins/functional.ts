@@ -12,7 +12,7 @@ import {
   isElementType,
 } from '../../utils'
 import {getKeyEventProps, getMouseEventProps} from '../getEventProps'
-import {carryValue, fireInputEvent} from '../shared'
+import {fireInputEvent} from '../shared'
 import {behaviorPlugin} from '../types'
 
 const modifierKeys = {
@@ -58,11 +58,11 @@ export const keydownBehavior: behaviorPlugin[] = [
       keyDef.key === 'Backspace' &&
       isEditable(element) &&
       !isCursorAtStart(element),
-    handle: (keyDef, element, options, state) => {
+    handle: (keyDef, element) => {
       const {newValue, newSelectionStart} = calculateNewValue(
         '',
         element as HTMLElement,
-        state.carryValue,
+        undefined,
         undefined,
         'backward',
       )
@@ -74,8 +74,6 @@ export const keydownBehavior: behaviorPlugin[] = [
           inputType: 'deleteContentBackward',
         },
       })
-
-      carryValue(element, state, newValue)
     },
   },
 ]

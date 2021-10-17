@@ -1,4 +1,4 @@
-import {isElementType} from '../misc/isElementType'
+import {isElementType} from '../utils/misc/isElementType'
 
 // https://github.com/jsdom/jsdom/blob/c2fb8ff94917a4d45e2398543f5dd2a8fed0bdab/lib/jsdom/living/nodes/HTMLInputElement-impl.js#L45
 enum selectionSupportType {
@@ -31,9 +31,7 @@ export function hasSelectionSupport(
   )
 }
 
-export function getSelectionRange(
-  element: Element,
-): {
+export function getSelectionRange(element: Element): {
   selectionStart: number | null
   selectionEnd: number | null
 } {

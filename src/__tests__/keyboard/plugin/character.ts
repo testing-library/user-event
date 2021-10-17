@@ -1,3 +1,4 @@
+import {getUIValue} from 'document/value'
 import userEvent from 'index'
 import {setup} from '__tests__/helpers/utils'
 
@@ -24,21 +25,23 @@ test('type [Enter] in contenteditable', () => {
 })
 
 test.each([
-  ['1e--5', 1e-5, undefined, 4],
+  ['1e--5', 1e-5, '1e-5', 4],
   ['1--e--5', null, '1--e5', 5],
   ['.-1.-e--5', null, '.-1-e5', 6],
-  ['1.5e--5', 1.5e-5, undefined, 6],
-  ['1e5-', 1e5, undefined, 3],
+  ['1.5e--5', 1.5e-5, '1.5e-5', 6],
+  ['1e5-', 1e5, '1e5', 3],
 ])(
   'type invalid values into <input type="number"/>',
-  (text, expectedValue, expectedCarryValue, expectedInputEvents) => {
-    const {element, getEvents} = setup(`<input type="number"/>`)
+  (text, expectedValue, expectedUiValue, expectedInputEvents) => {
+    const {element, getEvents} = setup<HTMLInputElement>(
+      `<input type="number"/>`,
+    )
     element.focus()
 
-    const state = userEvent.keyboard(text)
+    userEvent.keyboard(text)
 
     expect(element).toHaveValue(expectedValue)
-    expect(state).toHaveProperty('carryValue', expectedCarryValue)
+    expect(getUIValue(element)).toBe(expectedUiValue)
     expect(getEvents('input')).toHaveLength(expectedInputEvents)
   },
 )

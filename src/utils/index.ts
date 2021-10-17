@@ -11,7 +11,7 @@ export * from './edit/isEditable'
 export * from './edit/isValidDateValue'
 export * from './edit/isValidInputTimeValue'
 export * from './edit/maxLength'
-export * from './edit/selectionRange'
+export * from '../document/selectionRange'
 
 export * from './focus/getActiveElement'
 export * from './focus/isFocusable'

@@ -333,7 +333,9 @@ test('typing into a controlled input works', () => {
     input[value="$2"] - keyup: 2 (50)
     input[value="$2"] - keydown: 3 (51)
     input[value="$2"] - keypress: 3 (51)
-    input[value="$23"] - input
+    input[value="23"] - select
+    input[value="23"] - input
+      "23{CURSOR}" -> "$23{CURSOR}"
     input[value="$23"] - keyup: 3 (51)
   `)
 })
@@ -422,7 +424,9 @@ test('ignored {backspace} in controlled input', () => {
     input[value="$23"] - click: Left (0)
     input[value="$23"] - keydown: 4 (52)
     input[value="$23"] - keypress: 4 (52)
-    input[value="$234"] - input
+    input[value="234"] - select
+    input[value="234"] - input
+      "234{CURSOR}" -> "$234{CURSOR}"
     input[value="$234"] - keyup: 4 (52)
   `)
 })

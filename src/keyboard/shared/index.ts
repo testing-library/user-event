@@ -1,3 +1,2 @@
-export * from './carryValue'
 export * from './fireChangeForInputTimeIfValid'
-export * from './fireInputEvent'
+export * from '../../document/fireInputEvent'

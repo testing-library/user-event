@@ -28,6 +28,9 @@ export type keyboardState = {
       For HTMLInputElements type='number':
       If the last input char is '.', '-' or 'e',
       the IDL value attribute does not reflect the input value.
+
+      @deprecated The document state workaround in `src/document/value.ts` keeps track
+      of UI value diverging from value property.
     */
   carryValue?: string
 

@@ -12,9 +12,22 @@ declare global {
   interface Element {
     [UIValue]?: string
   }
-  interface PropertyDescriptor {
-    [PropertyInterceptor]?: typeof PropertyInterceptor
+}
+
+interface PropertySetter<T = unknown> {
+  (v: T): void
+  [PropertyInterceptor]?: typeof PropertyInterceptor
+}
+
+function makeValueInterceptor(realSetter: (this: Element, v: string) => void) {
+  function valueInterceptor(this: Element, v: Value | string) {
+    this[UIValue] = typeof v === 'object' && v[UIValue] ? String(v) : undefined
+    realSetter.call(this, String(v))
   }
+  ;(valueInterceptor as PropertySetter<string>)[PropertyInterceptor] =
+    PropertyInterceptor
+
+  return valueInterceptor
 }
 
 export function prepareValueInterceptor(element: HTMLInputElement) {
@@ -23,21 +36,18 @@ export function prepareValueInterceptor(element: HTMLInputElement) {
     'value',
   )
 
-  if (!prototypeDescriptor?.set || prototypeDescriptor[PropertyInterceptor]) {
+  if (
+    !prototypeDescriptor?.set ||
+    (prototypeDescriptor.set as PropertySetter)[PropertyInterceptor]
+  ) {
     return
   }
 
   // eslint-disable-next-line accessor-pairs
   Object.defineProperty(element.constructor.prototype, 'value', {
     ...prototypeDescriptor,
-    [PropertyInterceptor]: PropertyInterceptor,
-    set(v: Value | string) {
-      ;(this as Element)[UIValue] = typeof v === 'object' && v[UIValue] ? String(v) : undefined
-      ;(prototypeDescriptor.set as typeof prototypeDescriptor.set).call(
-        this,
-        String(v),
-      )
-    },
+    // eslint-disable-next-line @typescript-eslint/unbound-method
+    set: makeValueInterceptor(prototypeDescriptor.set),
   })
 }
 

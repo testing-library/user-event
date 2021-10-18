@@ -1503,10 +1503,7 @@ describe('promise rejections', () => {
     console.error.mockReset()
   })
 
-  test.each([
-    ['foo', '[{', 'Unable to find the "window"'],
-    [document.body, '[{', 'Expected key descriptor but found "{"'],
-  ])(
+  test.each([[document.body, '[{', 'Expected key descriptor but found "{"']])(
     'catch promise rejections and report to the console on synchronous calls',
     async (element, text, errorMessage) => {
       const errLog = jest

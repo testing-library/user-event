@@ -1,11 +1,12 @@
 import {fireEvent} from '@testing-library/dom'
+import {prepareSelectionInterceptor} from './selection'
 import {
   getInitialValue,
   prepareValueInterceptor,
   setInitialValue,
 } from './value'
 
-const isPrepared = Symbol('Preparation was already executed')
+const isPrepared = Symbol('Node prepared with document state workarounds')
 
 declare global {
   interface Node {
@@ -67,6 +68,7 @@ function prepareElement(el: Node | HTMLInputElement) {
 
   if ('value' in el) {
     prepareValueInterceptor(el)
+    prepareSelectionInterceptor(el)
   }
 
   el[isPrepared] = isPrepared

@@ -1,6 +1,7 @@
 import {setup} from '../helpers/utils'
 import {prepareDocument} from '../../document'
 import {getUIValue, setUIValue} from '../../document/value'
+import {getUISelection, setUISelection} from '../../document/selection'
 
 function prepare(element: Element) {
   prepareDocument(element.ownerDocument)
@@ -53,4 +54,37 @@ test('trigger `change` event if value changed since focus/set', () => {
   element.blur()
 
   expect(getEvents('change')).toHaveLength(1)
+})
+
+test('maintain selection range like UI', () => {
+  const {element} = setup<HTMLInputElement>(`<input type="text" value="abc"/>`)
+
+  prepare(element)
+
+  element.setSelectionRange(1, 1)
+  element.focus()
+  setUIValue(element, 'adbc')
+  setUISelection(element, 2, 2)
+
+  expect(getUISelection(element)).toEqual({
+    selectionStart: 2,
+    selectionEnd: 2,
+  })
+  expect(element.selectionStart).toBe(2)
+})
+
+test('maintain selection range on elements without support for selection range', () => {
+  const {element} = setup<HTMLInputElement>(`<input type="number"/>`)
+
+  prepare(element)
+
+  element.focus()
+  setUIValue(element, '2e-')
+  setUISelection(element, 2, 2)
+
+  expect(getUISelection(element)).toEqual({
+    selectionStart: 2,
+    selectionEnd: 2,
+  })
+  expect(element.selectionStart).toBe(null)
 })

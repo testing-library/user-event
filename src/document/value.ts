@@ -1,8 +1,9 @@
 import {applyNative} from './applyNative'
+import {prepareInterceptor} from './interceptor'
+import {clearUISelection} from './selection'
 
 const UIValue = Symbol('Displayed value in UI')
 const InitialValue = Symbol('Initial value to compare on blur')
-const PropertyInterceptor = Symbol('Interceptor for set() calls')
 
 type Value = {
   [UIValue]?: typeof UIValue
@@ -16,53 +17,26 @@ declare global {
   }
 }
 
-interface PropertySetter<T = unknown> {
-  (v: T): void
-  [PropertyInterceptor]?: typeof PropertyInterceptor
-}
-
-function makeValueInterceptor(
-  realSetter: (this: HTMLInputElement | HTMLTextAreaElement, v: string) => void,
+function valueInterceptor(
+  this: HTMLInputElement | HTMLTextAreaElement,
+  v: Value | string,
 ) {
-  function valueInterceptor(
-    this: HTMLInputElement | HTMLTextAreaElement,
-    v: Value | string,
-  ) {
-    const isUIValue = typeof v === 'object' && v[UIValue]
+  const isUI = typeof v === 'object' && v[UIValue]
 
-    this[UIValue] = isUIValue ? String(v) : undefined
-    if (!isUIValue) {
-      this[InitialValue] = String(v)
-    }
+  this[UIValue] = isUI ? String(v) : undefined
+  if (!isUI) {
+    this[InitialValue] = String(v)
 
-    realSetter.call(this, String(v))
+    // Programmatically setting the value property
+    // moves the cursor to the end of the input.
+    clearUISelection(this)
   }
 
-  ;(valueInterceptor as PropertySetter<string>)[PropertyInterceptor] =
-    PropertyInterceptor
-
-  return valueInterceptor
+  return String(v)
 }
 
 export function prepareValueInterceptor(element: HTMLInputElement) {
-  const prototypeDescriptor = Object.getOwnPropertyDescriptor(
-    element.constructor.prototype,
-    'value',
-  )
-
-  if (
-    !prototypeDescriptor?.set ||
-    (prototypeDescriptor.set as PropertySetter)[PropertyInterceptor]
-  ) {
-    return
-  }
-
-  // eslint-disable-next-line accessor-pairs
-  Object.defineProperty(element.constructor.prototype, 'value', {
-    ...prototypeDescriptor,
-    // eslint-disable-next-line @typescript-eslint/unbound-method
-    set: makeValueInterceptor(prototypeDescriptor.set),
-  })
+  prepareInterceptor(element, 'value', valueInterceptor)
 }
 
 export function setUIValue(

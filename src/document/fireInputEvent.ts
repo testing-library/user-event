@@ -1,13 +1,7 @@
 import {fireEvent} from '@testing-library/dom'
-import {
-  isElementType,
-  getValue,
-  hasUnreliableEmptyValue,
-  isContentEditable,
-  setSelectionRange,
-  getSelectionRange,
-} from '../utils'
+import {isElementType, isContentEditable, setSelectionRange} from '../utils'
 import {applyNative} from './applyNative'
+import {hasUISelection} from './selection'
 import {setUIValue} from './value'
 
 export function fireInputEvent(
@@ -27,7 +21,7 @@ export function fireInputEvent(
   // apply the changes before firing the input event, so that input handlers can access the altered dom and selection
   if (isContentEditable(element)) {
     applyNative(element, 'textContent', newValue)
-  } else /* istanbul ignore else */ if (
+  } /* istanbul ignore else */ else if (
     isElementType(element, ['input', 'textarea'])
   ) {
     setUIValue(element, newValue)
@@ -41,7 +35,7 @@ export function fireInputEvent(
     ...eventOverrides,
   })
 
-  setSelectionRangeAfterInputHandler(element, newValue, newSelectionStart)
+  setSelectionRangeAfterInputHandler(element, newSelectionStart)
 }
 
 function setSelectionRangeAfterInput(
@@ -53,21 +47,19 @@ function setSelectionRangeAfterInput(
 
 function setSelectionRangeAfterInputHandler(
   element: Element,
-  newValue: string,
   newSelectionStart: number,
 ) {
-  const value = getValue(element) as string
+  // On controlled inputs the selection changes without a call to
+  // either the `value` setter or the `setSelectionRange` method.
+  // So if our tracked position for UI still exists and derives from a valid selectionStart,
+  // the cursor was moved due to an input being controlled.
 
-  // don't apply this workaround on elements that don't necessarily report the visible value - e.g. number
-  // TODO: this could probably be only applied when there is keyboardState.carryValue
-  const isUnreliableValue = value === '' && hasUnreliableEmptyValue(element)
-
-  if (!isUnreliableValue && value === newValue) {
-    const {selectionStart} = getSelectionRange(element)
-    if (selectionStart === value.length) {
-      // The value was changed as expected, but the cursor was moved to the end
-      // TODO: this could probably be only applied when we work around a framework setter on the element in applyNative
-      setSelectionRange(element, newSelectionStart, newSelectionStart)
-    }
+  if (
+    isElementType(element, ['input', 'textarea']) &&
+    typeof element.selectionStart === 'number' &&
+    element.selectionStart !== newSelectionStart &&
+    hasUISelection(element)
+  ) {
+    setSelectionRange(element, newSelectionStart, newSelectionStart)
   }
 }

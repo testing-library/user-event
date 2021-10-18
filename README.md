@@ -257,6 +257,9 @@ Thanks goes to these people ([emoji key][emojis]):
     <td align="center"><a href="https://johannesfischer.github.io/"><img src="https://avatars.githubusercontent.com/u/28100?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Johannes Fischer</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=JohannesFischer" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/777PolarFox777"><img src="https://avatars.githubusercontent.com/u/19393384?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Andrew D.</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=777PolarFox777" title="Code">💻</a></td>
   </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/patricklizon"><img src="https://avatars.githubusercontent.com/u/12571855?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Patrick Lizoń</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=patricklizon" title="Code">💻</a></td>
+  </tr>
 </table>
 
 <!-- markdownlint-restore -->

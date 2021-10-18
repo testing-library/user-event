@@ -957,6 +957,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "patricklizon",
+      "name": "Patrick Lizoń",
+      "avatar_url": "https://avatars.githubusercontent.com/u/12571855?v=4",
+      "profile": "https://github.com/patricklizon",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "commitConvention": "none",

@@ -948,6 +948,24 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "777PolarFox777",
+      "name": "Andrew D.",
+      "avatar_url": "https://avatars.githubusercontent.com/u/19393384?v=4",
+      "profile": "https://github.com/777PolarFox777",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "patricklizon",
+      "name": "Patrick Lizoń",
+      "avatar_url": "https://avatars.githubusercontent.com/u/12571855?v=4",
+      "profile": "https://github.com/patricklizon",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "commitConvention": "none",

@@ -6,6 +6,7 @@
 import {fireEvent} from '@testing-library/dom'
 import {
   calculateNewValue,
+  hasFormSubmit,
   isClickableInput,
   isCursorAtStart,
   isEditable,
@@ -84,6 +85,19 @@ export const keypressBehavior: behaviorPlugin[] = [
   {
     matches: (keyDef, element) =>
       keyDef.key === 'Enter' &&
+      isElementType(element, 'input') &&
+      ['checkbox', 'radio'].includes(element.type),
+    handle: (keyDef, element) => {
+      const form = (element as HTMLInputElement).form
+
+      if (hasFormSubmit(form)) {
+        fireEvent.submit(form)
+      }
+    },
+  },
+  {
+    matches: (keyDef, element) =>
+      keyDef.key === 'Enter' &&
       (isClickableInput(element) ||
         // Links with href defined should handle Enter the same as a click
         (isElementType(element, 'a') && Boolean(element.href))),
@@ -99,9 +113,7 @@ export const keypressBehavior: behaviorPlugin[] = [
 
       if (
         form &&
-        (form.querySelectorAll('input').length === 1 ||
-          form.querySelector('input[type="submit"]') ||
-          form.querySelector('button[type="submit"]'))
+        (form.querySelectorAll('input').length === 1 || hasFormSubmit(form))
       ) {
         fireEvent.submit(form)
       }

@@ -32,9 +32,7 @@ export function prepareValueInterceptor(element: HTMLInputElement) {
     ...prototypeDescriptor,
     [PropertyInterceptor]: PropertyInterceptor,
     set(v: Value | string) {
-      if (typeof v === 'object') {
-        ;(this as Element)[UIValue] = v[UIValue] ? String(v) : undefined
-      }
+      ;(this as Element)[UIValue] = typeof v === 'object' && v[UIValue] ? String(v) : undefined
       ;(prototypeDescriptor.set as typeof prototypeDescriptor.set).call(
         this,
         String(v),

@@ -31,6 +31,9 @@ export function prepareDocument(document: Document) {
     },
   )
 
+  // Our test environment defaults to `document.body` as `activeElement`.
+  // In other environments this might be `null` when preparing.
+  // istanbul ignore else
   if (document.activeElement) {
     prepareElement(document.activeElement)
   }

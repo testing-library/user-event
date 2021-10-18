@@ -1,6 +1,7 @@
 import {applyNative} from './applyNative'
 
 const UIValue = Symbol('Displayed value in UI')
+const InitialValue = Symbol('Initial value to compare on blur')
 const PropertyInterceptor = Symbol('Interceptor for set() calls')
 
 type Value = {
@@ -11,6 +12,7 @@ type Value = {
 declare global {
   interface Element {
     [UIValue]?: string
+    [InitialValue]?: string
   }
 }
 
@@ -19,11 +21,23 @@ interface PropertySetter<T = unknown> {
   [PropertyInterceptor]?: typeof PropertyInterceptor
 }
 
-function makeValueInterceptor(realSetter: (this: Element, v: string) => void) {
-  function valueInterceptor(this: Element, v: Value | string) {
-    this[UIValue] = typeof v === 'object' && v[UIValue] ? String(v) : undefined
+function makeValueInterceptor(
+  realSetter: (this: HTMLInputElement | HTMLTextAreaElement, v: string) => void,
+) {
+  function valueInterceptor(
+    this: HTMLInputElement | HTMLTextAreaElement,
+    v: Value | string,
+  ) {
+    const isUIValue = typeof v === 'object' && v[UIValue]
+
+    this[UIValue] = isUIValue ? String(v) : undefined
+    if (!isUIValue) {
+      this[InitialValue] = String(v)
+    }
+
     realSetter.call(this, String(v))
   }
+
   ;(valueInterceptor as PropertySetter<string>)[PropertyInterceptor] =
     PropertyInterceptor
 
@@ -63,4 +77,16 @@ export function setUIValue(
 
 export function getUIValue(element: HTMLInputElement | HTMLTextAreaElement) {
   return element[UIValue] === undefined ? element.value : element[UIValue]
+}
+
+export function setInitialValue(
+  element: HTMLInputElement | HTMLTextAreaElement,
+) {
+  element[InitialValue] = element.value
+}
+
+export function getInitialValue(
+  element: HTMLInputElement | HTMLTextAreaElement,
+) {
+  return element[InitialValue]
 }

@@ -1,15 +1,15 @@
 import {fireEvent} from '@testing-library/dom'
-import {prepareValueInterceptor} from './value'
+import {
+  getInitialValue,
+  prepareValueInterceptor,
+  setInitialValue,
+} from './value'
 
 const isPrepared = Symbol('Preparation was already executed')
-const initialValue = Symbol('Initial value when element received focus')
 
 declare global {
   interface Node {
     [isPrepared]?: typeof isPrepared
-  }
-  interface HTMLInputElement {
-    [initialValue]?: string | null
   }
 }
 
@@ -39,11 +39,9 @@ export function prepareDocument(document: Document) {
     'blur',
     e => {
       const el = e.target as HTMLInputElement
-      if (typeof el[initialValue] === 'string') {
-        const newValue = el.value
-        if (newValue !== el[initialValue]) {
-          fireEvent.change(el)
-        }
+      const initialValue = getInitialValue(el)
+      if (typeof initialValue === 'string' && el.value !== initialValue) {
+        fireEvent.change(el)
       }
     },
     {
@@ -57,7 +55,7 @@ export function prepareDocument(document: Document) {
 
 function prepareElement(el: Node | HTMLInputElement) {
   if ('value' in el) {
-    el[initialValue] = el.value
+    setInitialValue(el)
   }
 
   if (el[isPrepared]) {

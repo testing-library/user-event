@@ -77,6 +77,14 @@ cases(
       text: '[Control>]',
       modifiers: {releaseSelf: false},
     },
+    'keep key pressed with repeatModifier': {
+      text: '{Control>2}',
+      modifiers: {releaseSelf: false},
+    },
+    'release after repeatModifier': {
+      text: '{Control>2/}',
+      modifiers: {releaseSelf: true},
+    },
     'no releaseSelf on legacy modifier': {
       text: '{ctrl}',
       modifiers: {releaseSelf: false},
@@ -96,15 +104,23 @@ cases(
   {
     'invalid descriptor': {
       text: '{!}',
-      expectedError: 'Expected key descriptor but found "!" in "{!}"',
+      expectedError: 'but found "!" in "{!}"',
     },
     'missing descriptor': {
       text: '',
-      expectedError: 'Expected key descriptor but found "" in ""',
+      expectedError: 'but found "" in ""',
     },
     'missing closing bracket': {
       text: '{a)',
-      expectedError: 'Expected closing bracket but found ")" in "{a)"',
+      expectedError: 'but found ")" in "{a)"',
+    },
+    'invalid repeat modifier': {
+      text: '{a>e}',
+      expectedError: 'but found "e" in "{a>e}"',
+    },
+    'missing bracket after repeat modifier': {
+      text: '{a>3)',
+      expectedError: 'but found ")" in "{a>3)"',
     },
   },
 )

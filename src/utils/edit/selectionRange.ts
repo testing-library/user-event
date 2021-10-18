@@ -39,7 +39,7 @@ export function setSelectionRange(
   const {selectionStart, selectionEnd} = getSelectionRange(element)
 
   // Prevent unnecessary select events
-  // istanbul ignore if
+  // istanbul ignore next
   if (
     selectionStart === newSelectionStart &&
     selectionEnd === newSelectionEnd

@@ -6,6 +6,7 @@
 import {behaviorPlugin} from '../types'
 import {
   calculateNewValue,
+  fireInputEvent,
   getValue,
   isContentEditable,
   isCursorAtEnd,
@@ -13,7 +14,6 @@ import {
   isElementType,
   setSelectionRange,
 } from '../../utils'
-import {fireInputEvent} from '../shared'
 
 export const keydownBehavior: behaviorPlugin[] = [
   {

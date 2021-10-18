@@ -73,3 +73,7 @@ function prepareElement(el: Node | HTMLInputElement) {
 
   el[isPrepared] = isPrepared
 }
+
+export {applyNative} from './applyNative'
+export {getUIValue, setUIValue} from './value'
+export {getUISelection, hasUISelection, setUISelection} from './selection'

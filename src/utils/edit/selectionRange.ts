@@ -1,5 +1,5 @@
-import {isElementType} from '../utils/misc/isElementType'
-import {getUISelection, setUISelection} from './selection'
+import {isElementType} from '../misc/isElementType'
+import {getUISelection, setUISelection} from '../../document'
 
 export function getSelectionRange(element: Element): {
   selectionStart: number | null

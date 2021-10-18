@@ -3,11 +3,12 @@
  */
 
 import {fireEvent} from '@testing-library/dom'
-import {fireChangeForInputTimeIfValid, fireInputEvent} from '../shared'
+import {fireChangeForInputTimeIfValid} from '../shared'
 import {behaviorPlugin} from '../types'
 import {
   buildTimeValue,
   calculateNewValue,
+  fireInputEvent,
   getSpaceUntilMaxLength,
   getValue,
   isClickableInput,

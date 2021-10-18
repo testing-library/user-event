@@ -1,4 +1,4 @@
-import {getSelectionRange} from '../../document/selectionRange'
+import {getSelectionRange} from './selectionRange'
 import {getValue} from './getValue'
 import {isValidDateValue} from './isValidDateValue'
 import {isValidInputTimeValue} from './isValidInputTimeValue'

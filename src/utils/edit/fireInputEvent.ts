@@ -1,8 +1,8 @@
 import {fireEvent} from '@testing-library/dom'
-import {isElementType, isContentEditable, setSelectionRange} from '../utils'
-import {applyNative} from './applyNative'
-import {hasUISelection} from './selection'
-import {setUIValue} from './value'
+import {isElementType} from '../misc/isElementType'
+import {applyNative, hasUISelection, setUIValue} from '../../document'
+import {isContentEditable} from './isContentEditable'
+import {setSelectionRange} from './selectionRange'
 
 export function fireInputEvent(
   element: HTMLElement,
@@ -21,7 +21,7 @@ export function fireInputEvent(
   // apply the changes before firing the input event, so that input handlers can access the altered dom and selection
   if (isContentEditable(element)) {
     applyNative(element, 'textContent', newValue)
-  } else /* istanbul ignore else */ if (
+  } /* istanbul ignore else */ else if (
     isElementType(element, ['input', 'textarea'])
   ) {
     setUIValue(element, newValue)

@@ -1,7 +1,11 @@
 import {setup} from '../helpers/utils'
-import {prepareDocument} from '../../document'
-import {getUIValue, setUIValue} from '../../document/value'
-import {getUISelection, setUISelection} from '../../document/selection'
+import {
+  prepareDocument,
+  getUIValue,
+  setUIValue,
+  getUISelection,
+  setUISelection,
+} from '../../document'
 
 function prepare(element: Element) {
   prepareDocument(element.ownerDocument)

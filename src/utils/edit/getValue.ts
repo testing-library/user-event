@@ -1,4 +1,4 @@
-import {getUIValue} from 'document/value'
+import {getUIValue} from '../../document'
 import {isContentEditable} from './isContentEditable'
 
 export function getValue<T extends Element | null>(

@@ -6,13 +6,13 @@
 import {fireEvent} from '@testing-library/dom'
 import {
   calculateNewValue,
+  fireInputEvent,
   isClickableInput,
   isCursorAtStart,
   isEditable,
   isElementType,
 } from '../../utils'
 import {getKeyEventProps, getMouseEventProps} from '../getEventProps'
-import {fireInputEvent} from '../shared'
 import {behaviorPlugin} from '../types'
 
 const modifierKeys = {

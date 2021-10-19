@@ -17,7 +17,10 @@ export * from './focus/getActiveElement'
 export * from './focus/isFocusable'
 export * from './focus/selector'
 
+export * from './keyDef/readNextDescriptor'
+
 export * from './misc/eventWrapper'
+export * from './misc/isDescendantOrSelf'
 export * from './misc/isElementType'
 export * from './misc/isLabelWithInternallyDisabledControl'
 export * from './misc/isVisible'
@@ -26,3 +29,7 @@ export * from './misc/isDocument'
 export * from './misc/wait'
 export * from './misc/hasPointerEvents'
 export * from './misc/hasFormSubmit'
+
+export * from './pointer/fakeEvent'
+export * from './pointer/firePointerEvents'
+export * from './pointer/mouseButtons'

@@ -20,6 +20,7 @@ import '../click'
 import '../hover'
 import '../keyboard'
 import '../paste'
+import '../pointer'
 import '../select-options'
 import '../tab'
 import '../type'
@@ -73,6 +74,7 @@ jest.mock('../click', () => mockApis('../click', 'click', 'dblClick'))
 jest.mock('../hover', () => mockApis('../hover', 'hover', 'unhover'))
 jest.mock('../keyboard', () => mockApis('../keyboard', 'keyboard'))
 jest.mock('../paste', () => mockApis('../paste', 'paste'))
+jest.mock('../pointer', () => mockApis('../pointer', 'pointer'))
 jest.mock('../select-options', () =>
   mockApis('../select-options', 'selectOptions', 'deselectOptions'),
 )
@@ -202,6 +204,17 @@ cases<APICase>(
       },
     },
     paste: {api: 'paste', args: [null, 'foo'], elementArg: 0},
+    pointer: {
+      api: 'pointer',
+      args: ['foo'],
+      optionsArg: 1,
+      options: {
+        pointerMap: [{name: 'x', pointerType: 'touch'}],
+      },
+      optionsSub: {
+        pointerMap: [{name: 'y', pointerType: 'touch'}],
+      },
+    },
     selectOptions: {
       api: 'selectOptions',
       args: [null, ['foo']],
@@ -270,4 +283,27 @@ test('maintain `keyboardState` through different api calls', async () => {
   expect(element).toHaveValue('abb')
   // if the state is shared through api the already pressed `b` is automatically released
   expect(getEvents('keyup')).toHaveLength(3)
+})
+
+test('maintain `pointerState` through different api calls', async () => {
+  const {element, getEvents} = setup<HTMLInputElement>(`<input/>`)
+
+  const api = userEvent.setup()
+
+  expect(api.pointer({keys: '[MouseLeft>]', target: element})).toBe(undefined)
+
+  expect(getSpy('pointer')).toBeCalledTimes(1)
+  expect(getEvents('mousedown')).toHaveLength(1)
+  expect(getEvents('mouseup')).toHaveLength(0)
+
+  await expect(api.pointer('[/MouseLeft]', {delay: 1})).resolves.toBe(undefined)
+
+  expect(getSpy('pointer')).toBeCalledTimes(2)
+  expect(getEvents('mousedown')).toHaveLength(1)
+  expect(getEvents('mouseup')).toHaveLength(1)
+
+  api.setup({}).pointer({target: element.ownerDocument.body})
+
+  expect(getSpy('pointer')).toBeCalledTimes(3)
+  expect(getEvents('mouseleave')).toHaveLength(1)
 })

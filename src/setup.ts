@@ -4,6 +4,8 @@ import {hover, unhover} from 'hover'
 import {createKeyboardState, keyboard, keyboardOptions} from 'keyboard'
 import type {keyboardState} from 'keyboard/types'
 import {paste} from 'paste'
+import {createPointerState, pointer} from 'pointer'
+import type {pointerOptions, pointerState} from 'pointer/types'
 import {deselectOptions, selectOptions} from 'select-options'
 import {tab, tabOptions} from 'tab'
 import {type} from 'type'
@@ -19,6 +21,7 @@ export const userEventApis = {
   hover,
   keyboard,
   paste,
+  pointer,
   selectOptions,
   tab,
   type,
@@ -30,6 +33,8 @@ export type UserEventApis = typeof userEventApis
 type ClickOptions = Omit<clickOptions, 'clickCount'>
 
 type KeyboardOptions = Partial<keyboardOptions>
+
+type PointerApiOptions = Partial<pointerOptions>
 
 type TabOptions = Omit<tabOptions, 'shift'>
 
@@ -44,6 +49,7 @@ interface SetupOptions
   extends ClickOptions,
     KeyboardOptions,
     PointerOptions,
+    PointerApiOptions,
     TabOptions,
     TypeOptions,
     UploadOptions {}
@@ -57,6 +63,7 @@ export function setup(options: SetupOptions = {}) {
 
   return _setup(options, {
     keyboardState: createKeyboardState(),
+    pointerState: createPointerState(),
   })
 }
 
@@ -64,10 +71,11 @@ function _setup(
   {
     applyAccept,
     autoModify,
-    delay,
+    delay = 0,
     document,
     focusTrap,
     keyboardMap,
+    pointerMap,
     skipAutoClose,
     skipClick,
     skipHover,
@@ -75,8 +83,10 @@ function _setup(
   }: SetupOptions,
   {
     keyboardState,
+    pointerState,
   }: {
     keyboardState: keyboardState
+    pointerState: pointerState
   },
 ): UserEventApis & {
   /**
@@ -92,6 +102,10 @@ function _setup(
   }
   const pointerDefaults: PointerOptions = {
     skipPointerEventsCheck,
+  }
+  const pointerApiDefaults: PointerApiOptions = {
+    delay,
+    pointerMap,
   }
   const clickDefaults: clickOptions = {
     skipHover,
@@ -144,6 +158,15 @@ function _setup(
       return paste(...args)
     },
 
+    // pointer needs typecasting because of the overloading
+    pointer: ((...args: Parameters<typeof pointer>) => {
+      args[1] = {...pointerApiDefaults, ...args[1], pointerState}
+      const ret = pointer(...args) as pointerState | Promise<pointerState>
+      if (ret instanceof Promise) {
+        return ret.then(() => undefined)
+      }
+    }) as typeof pointer,
+
     selectOptions: (...args: Parameters<typeof selectOptions>) => {
       args[3] = {...pointerDefaults, ...args[3]}
       return selectOptions(...args)
@@ -159,6 +182,7 @@ function _setup(
         },
         {
           keyboardState,
+          pointerState,
         },
       )
     },

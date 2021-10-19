@@ -2,11 +2,11 @@ import {Coords, firePointerEvent, isDescendantOrSelf} from '../utils'
 import {pointerState, PointerTarget} from './types'
 
 export interface PointerMoveAction extends PointerTarget {
-  pointerName: string
+  pointerName?: string
 }
 
 export async function pointerMove(
-  {pointerName, target, coords}: PointerMoveAction,
+  {pointerName = 'mouse', target, coords}: PointerMoveAction,
   state: pointerState,
 ): Promise<void> {
   if (!(pointerName in state.position)) {

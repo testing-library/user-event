@@ -22,11 +22,14 @@ export async function pointerAction(
   for (let i = 0; i < actions.length; i++) {
     const action = actions[i]
     const pointerName =
-      'pointerName' in action
+      'pointerName' in action && action.pointerName
         ? action.pointerName
-        : action.keyDef.pointerType === 'touch'
-        ? action.keyDef.name
-        : action.keyDef.pointerType
+        : 'keyDef' in action
+        ? action.keyDef.pointerType === 'touch'
+          ? action.keyDef.name
+          : action.keyDef.pointerType
+        : 'mouse'
+
     const target = action.target ?? getPrevTarget(pointerName, state)
     const coords = completeCoords({
       ...(pointerName in state.position

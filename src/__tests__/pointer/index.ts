@@ -45,7 +45,7 @@ test('drag sequence', () => {
 
   userEvent.pointer([
     {keys: '[MouseLeft>]', target: element},
-    {pointerName: 'mouse', coords: {x: 20, y: 20}},
+    {coords: {x: 20, y: 20}},
     '[/MouseLeft]',
   ])
 
@@ -64,8 +64,8 @@ test('hover to other element', () => {
   const {elements, getClickEventsSnapshot} = setup(`<div></div><div></div>`)
 
   userEvent.pointer([
-    {pointerName: 'mouse', target: elements[0], coords: {x: 20, y: 20}},
-    {pointerName: 'mouse', target: elements[1], coords: {x: 40, y: 40}},
+    {target: elements[0], coords: {x: 20, y: 20}},
+    {target: elements[1], coords: {x: 40, y: 40}},
   ])
 
   expect(getClickEventsSnapshot()).toMatchInlineSnapshot(`

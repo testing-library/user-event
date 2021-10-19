@@ -1,56 +1,12 @@
 import {isElementType} from '../misc/isElementType'
+import {getUISelection, setUISelection} from '../../document'
 
-// https://github.com/jsdom/jsdom/blob/c2fb8ff94917a4d45e2398543f5dd2a8fed0bdab/lib/jsdom/living/nodes/HTMLInputElement-impl.js#L45
-enum selectionSupportType {
-  'text' = 'text',
-  'search' = 'search',
-  'url' = 'url',
-  'tel' = 'tel',
-  'password' = 'password',
-}
-
-const InputSelection = Symbol('inputSelection')
-type InputWithInternalSelection = HTMLInputElement & {
-  [InputSelection]?: {
-    selectionStart: number
-    selectionEnd: number
-  }
-}
-
-export function hasSelectionSupport(
-  element: Element,
-): element is
-  | HTMLTextAreaElement
-  | (HTMLInputElement & {type: selectionSupportType}) {
-  return (
-    isElementType(element, 'textarea') ||
-    (isElementType(element, 'input') &&
-      Boolean(
-        selectionSupportType[element.type as keyof typeof selectionSupportType],
-      ))
-  )
-}
-
-export function getSelectionRange(
-  element: Element,
-): {
+export function getSelectionRange(element: Element): {
   selectionStart: number | null
   selectionEnd: number | null
 } {
-  if (hasSelectionSupport(element)) {
-    return {
-      selectionStart: element.selectionStart,
-      selectionEnd: element.selectionEnd,
-    }
-  }
-
-  if (isElementType(element, 'input')) {
-    return (
-      (element as InputWithInternalSelection)[InputSelection] ?? {
-        selectionStart: null,
-        selectionEnd: null,
-      }
-    )
+  if (isElementType(element, ['input', 'textarea'])) {
+    return getUISelection(element)
   }
 
   const selection = element.ownerDocument.getSelection()
@@ -76,28 +32,18 @@ export function setSelectionRange(
   newSelectionStart: number,
   newSelectionEnd: number,
 ) {
+  if (isElementType(element, ['input', 'textarea'])) {
+    return setUISelection(element, newSelectionStart, newSelectionEnd)
+  }
+
   const {selectionStart, selectionEnd} = getSelectionRange(element)
 
+  // Prevent unnecessary select events
+  // istanbul ignore next
   if (
     selectionStart === newSelectionStart &&
     selectionEnd === newSelectionEnd
   ) {
-    return
-  }
-
-  if (hasSelectionSupport(element)) {
-    element.setSelectionRange(newSelectionStart, newSelectionEnd)
-  }
-
-  if (isElementType(element, 'input')) {
-    ;(element as InputWithInternalSelection)[InputSelection] = {
-      selectionStart: newSelectionStart,
-      selectionEnd: newSelectionEnd,
-    }
-  }
-
-  // Moving the selection inside <input> or <textarea> does not alter the document Selection.
-  if (isElementType(element, 'input') || isElementType(element, 'textarea')) {
     return
   }
 

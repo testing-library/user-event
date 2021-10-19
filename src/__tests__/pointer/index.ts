@@ -139,8 +139,15 @@ test('click per touch device', () => {
   userEvent.pointer({keys: '[TouchA]', target: element})
 
   expect(getClickEventsSnapshot()).toMatchInlineSnapshot(`
+    pointerover - pointerId=2; pointerType=touch; isPrimary=undefined
+    pointerenter - pointerId=2; pointerType=touch; isPrimary=undefined
     pointerdown - pointerId=2; pointerType=touch; isPrimary=true
     pointerup - pointerId=2; pointerType=touch; isPrimary=true
+    pointerout - pointerId=2; pointerType=touch; isPrimary=undefined
+    pointerleave - pointerId=2; pointerType=touch; isPrimary=undefined
+    mouseover - button=0; buttons=0; detail=0
+    mouseenter - button=0; buttons=0; detail=0
+    mousemove - button=0; buttons=0; detail=0
     mousedown - button=0; buttons=0; detail=1
     mouseup - button=0; buttons=0; detail=1
     click - button=0; buttons=0; detail=1
@@ -153,13 +160,25 @@ test('double click per touch device', () => {
   userEvent.pointer({keys: '[TouchA][TouchA]', target: element})
 
   expect(getClickEventsSnapshot()).toMatchInlineSnapshot(`
+    pointerover - pointerId=2; pointerType=touch; isPrimary=undefined
+    pointerenter - pointerId=2; pointerType=touch; isPrimary=undefined
     pointerdown - pointerId=2; pointerType=touch; isPrimary=true
     pointerup - pointerId=2; pointerType=touch; isPrimary=true
+    pointerout - pointerId=2; pointerType=touch; isPrimary=undefined
+    pointerleave - pointerId=2; pointerType=touch; isPrimary=undefined
+    mouseover - button=0; buttons=0; detail=0
+    mouseenter - button=0; buttons=0; detail=0
+    mousemove - button=0; buttons=0; detail=0
     mousedown - button=0; buttons=0; detail=1
     mouseup - button=0; buttons=0; detail=1
     click - button=0; buttons=0; detail=1
+    pointerover - pointerId=3; pointerType=touch; isPrimary=undefined
+    pointerenter - pointerId=3; pointerType=touch; isPrimary=undefined
     pointerdown - pointerId=3; pointerType=touch; isPrimary=true
     pointerup - pointerId=3; pointerType=touch; isPrimary=true
+    pointerout - pointerId=3; pointerType=touch; isPrimary=undefined
+    pointerleave - pointerId=3; pointerType=touch; isPrimary=undefined
+    mousemove - button=0; buttons=0; detail=0
     mousedown - button=0; buttons=0; detail=2
     mouseup - button=0; buttons=0; detail=2
     click - button=0; buttons=0; detail=2
@@ -172,10 +191,18 @@ test('multi touch does not click', () => {
   userEvent.pointer({keys: '[TouchA>][TouchB][/TouchA]', target: element})
 
   expect(getClickEventsSnapshot()).toMatchInlineSnapshot(`
+    pointerover - pointerId=2; pointerType=touch; isPrimary=undefined
+    pointerenter - pointerId=2; pointerType=touch; isPrimary=undefined
     pointerdown - pointerId=2; pointerType=touch; isPrimary=true
+    pointerover - pointerId=3; pointerType=touch; isPrimary=undefined
+    pointerenter - pointerId=3; pointerType=touch; isPrimary=undefined
     pointerdown - pointerId=3; pointerType=touch; isPrimary=false
     pointerup - pointerId=3; pointerType=touch; isPrimary=false
+    pointerout - pointerId=3; pointerType=touch; isPrimary=undefined
+    pointerleave - pointerId=3; pointerType=touch; isPrimary=undefined
     pointerup - pointerId=2; pointerType=touch; isPrimary=true
+    pointerout - pointerId=2; pointerType=touch; isPrimary=undefined
+    pointerleave - pointerId=2; pointerType=touch; isPrimary=undefined
   `)
 })
 
@@ -189,9 +216,16 @@ test('drag touch', () => {
   ])
 
   expect(getClickEventsSnapshot()).toMatchInlineSnapshot(`
+    pointerover - pointerId=2; pointerType=touch; isPrimary=undefined
+    pointerenter - pointerId=2; pointerType=touch; isPrimary=undefined
     pointerdown - pointerId=2; pointerType=touch; isPrimary=true
     pointermove - pointerId=2; pointerType=touch; isPrimary=undefined
     pointerup - pointerId=2; pointerType=touch; isPrimary=true
+    pointerout - pointerId=2; pointerType=touch; isPrimary=undefined
+    pointerleave - pointerId=2; pointerType=touch; isPrimary=undefined
+    mouseover - button=0; buttons=0; detail=0
+    mouseenter - button=0; buttons=0; detail=0
+    mousemove - button=0; buttons=0; detail=0
     mousedown - button=0; buttons=0; detail=1
     mouseup - button=0; buttons=0; detail=1
     click - button=0; buttons=0; detail=1

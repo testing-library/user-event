@@ -80,6 +80,10 @@ function down(
   }
   state.pressed.push(pressObj)
 
+  if (pointerType !== 'mouse') {
+    fire('pointerover')
+    fire('pointerenter')
+  }
   if (
     pointerType !== 'mouse' ||
     !state.pressed.some(
@@ -139,7 +143,16 @@ function up(
   ) {
     fire('pointerup')
   }
+  if (pointerType !== 'mouse') {
+    fire('pointerout')
+    fire('pointerleave')
+  }
   if (pointerType !== 'mouse' && !isMultiTouch) {
+    if (clickCount === 1) {
+      fire('mouseover')
+      fire('mouseenter')
+    }
+    fire('mousemove')
     unpreventedDefault = fire('mousedown') && unpreventedDefault
   }
 

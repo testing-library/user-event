@@ -1,4 +1,5 @@
 import {getConfig as getDOMTestingLibraryConfig} from '@testing-library/dom'
+import {prepareDocument} from '../document'
 import {keyboardImplementation, releaseAllKeys} from './keyboardImplementation'
 import {defaultKeyMap} from './keyMap'
 import {keyboardState, keyboardOptions, keyboardKey} from './types'
@@ -52,6 +53,8 @@ export function keyboardImplementationWrapper(
     keyboardMap,
   }
 
+  prepareDocument(document)
+
   return {
     promise: keyboardImplementation(text, options, state),
     state,
@@ -59,7 +62,7 @@ export function keyboardImplementationWrapper(
   }
 }
 
-function createKeyboardState(): keyboardState {
+export function createKeyboardState(): keyboardState {
   return {
     activeElement: null,
     pressed: [],

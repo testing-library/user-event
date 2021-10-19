@@ -9,7 +9,7 @@ interface uploadInit {
   changeInit?: EventInit
 }
 
-interface uploadOptions {
+export interface uploadOptions {
   applyAccept?: boolean
 }
 

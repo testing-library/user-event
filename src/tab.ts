@@ -28,7 +28,7 @@ function getNextElement(
   return elements[nextIndex] || elements[defaultIndex]
 }
 
-interface tabOptions {
+export interface tabOptions {
   shift?: boolean
   focusTrap?: Document | Element
 }

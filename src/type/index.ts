@@ -1,4 +1,5 @@
 import {getConfig as getDOMTestingLibraryConfig} from '@testing-library/dom'
+import {prepareDocument} from 'document'
 import {typeImplementation, typeOptions} from './typeImplementation'
 
 export function type(
@@ -18,6 +19,8 @@ export function type(
   text: string,
   {delay = 0, ...options}: typeOptions = {},
 ): Promise<void> | void {
+  prepareDocument(element.ownerDocument)
+
   // we do not want to wrap in the asyncWrapper if we're not
   // going to actually be doing anything async, so we only wrap
   // if the delay is greater than 0

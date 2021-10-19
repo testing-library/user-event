@@ -238,7 +238,15 @@ function isElement(target: EventTarget): target is Element {
 }
 
 function isMouseEvent(event: Event): event is MouseEvent {
-  return event.constructor.name === 'MouseEvent'
+  return (
+    event.constructor.name === 'MouseEvent' ||
+    event.type === 'click' ||
+    event.type.startsWith('mouse')
+  )
+}
+
+function isPointerEvent(event: Event): event is PointerEvent {
+  return event.type.startsWith('pointer')
 }
 
 function addListeners(
@@ -340,6 +348,8 @@ function addListeners(
     const lines = getEvents().map(e =>
       isMouseEvent(e)
         ? `${e.type} - button=${e.button}; buttons=${e.buttons}; detail=${e.detail}`
+        : isPointerEvent(e)
+        ? `${e.type} - pointerId=${e.pointerId}; pointerType=${e.pointerType}; isPrimary=${e.isPrimary}`
         : e.type,
     )
     return {snapshot: lines.join('\n')}

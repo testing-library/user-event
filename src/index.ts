@@ -7,6 +7,7 @@ import {upload} from './upload'
 import {selectOptions, deselectOptions} from './select-options'
 import {paste} from './paste'
 import {keyboard, specialCharMap} from './keyboard'
+import {pointer} from './pointer'
 
 const userEvent = {
   click,
@@ -21,6 +22,7 @@ const userEvent = {
   deselectOptions,
   paste,
   keyboard,
+  pointer,
 }
 
 export default userEvent

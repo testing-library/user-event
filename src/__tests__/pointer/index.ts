@@ -132,3 +132,68 @@ test('other keys reset click counter, but keyup/click still uses the old count',
     click - button=0; buttons=0; detail=1
   `)
 })
+
+test('click per touch device', () => {
+  const {element, getClickEventsSnapshot} = setup(`<div></div>`)
+
+  userEvent.pointer({keys: '[TouchA]', target: element})
+
+  expect(getClickEventsSnapshot()).toMatchInlineSnapshot(`
+    pointerdown - pointerId=2; pointerType=touch; isPrimary=true
+    pointerup - pointerId=2; pointerType=touch; isPrimary=true
+    mousedown - button=0; buttons=0; detail=1
+    mouseup - button=0; buttons=0; detail=1
+    click - button=0; buttons=0; detail=1
+  `)
+})
+
+test('double click per touch device', () => {
+  const {element, getClickEventsSnapshot} = setup(`<div></div>`)
+
+  userEvent.pointer({keys: '[TouchA][TouchA]', target: element})
+
+  expect(getClickEventsSnapshot()).toMatchInlineSnapshot(`
+    pointerdown - pointerId=2; pointerType=touch; isPrimary=true
+    pointerup - pointerId=2; pointerType=touch; isPrimary=true
+    mousedown - button=0; buttons=0; detail=1
+    mouseup - button=0; buttons=0; detail=1
+    click - button=0; buttons=0; detail=1
+    pointerdown - pointerId=3; pointerType=touch; isPrimary=true
+    pointerup - pointerId=3; pointerType=touch; isPrimary=true
+    mousedown - button=0; buttons=0; detail=2
+    mouseup - button=0; buttons=0; detail=2
+    click - button=0; buttons=0; detail=2
+  `)
+})
+
+test('multi touch does not click', () => {
+  const {element, getClickEventsSnapshot} = setup(`<div></div>`)
+
+  userEvent.pointer({keys: '[TouchA>][TouchB][/TouchA]', target: element})
+
+  expect(getClickEventsSnapshot()).toMatchInlineSnapshot(`
+    pointerdown - pointerId=2; pointerType=touch; isPrimary=true
+    pointerdown - pointerId=3; pointerType=touch; isPrimary=false
+    pointerup - pointerId=3; pointerType=touch; isPrimary=false
+    pointerup - pointerId=2; pointerType=touch; isPrimary=true
+  `)
+})
+
+test('drag touch', () => {
+  const {element, getClickEventsSnapshot} = setup(`<div></div>`)
+
+  userEvent.pointer([
+    {keys: '[TouchA>]', target: element},
+    {pointerName: 'TouchA', coords: {x: 20, y: 20}},
+    '[/TouchA]',
+  ])
+
+  expect(getClickEventsSnapshot()).toMatchInlineSnapshot(`
+    pointerdown - pointerId=2; pointerType=touch; isPrimary=true
+    pointermove - pointerId=2; pointerType=touch; isPrimary=undefined
+    pointerup - pointerId=2; pointerType=touch; isPrimary=true
+    mousedown - button=0; buttons=0; detail=1
+    mouseup - button=0; buttons=0; detail=1
+    click - button=0; buttons=0; detail=1
+  `)
+})

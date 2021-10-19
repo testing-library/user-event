@@ -55,6 +55,8 @@ function down(
   let isPrimary = true
   if (pointerType !== 'mouse') {
     for (const obj of state.pressed) {
+      // TODO: test multi device input across browsers
+      // istanbul ignore else
       if (obj.keyDef.pointerType === pointerType) {
         obj.isMultiTouch = true
         isMultiTouch = true

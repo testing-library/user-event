@@ -62,26 +62,70 @@ test('drag sequence', () => {
 })
 
 test('hover to other element', () => {
-  const {elements, getClickEventsSnapshot} = setup(`<div></div><div></div>`)
+  const {elements, getEventSnapshot} = setup(`<div></div><div></div>`)
 
   userEvent.pointer([
     {target: elements[0], coords: {x: 20, y: 20}},
     {target: elements[1], coords: {x: 40, y: 40}},
   ])
 
-  expect(getClickEventsSnapshot()).toMatchInlineSnapshot(`
-    pointerenter - pointerId=1; pointerType=mouse; isPrimary=undefined
-    mouseenter - button=0; buttons=0; detail=0
-    pointermove - pointerId=1; pointerType=mouse; isPrimary=undefined
-    mousemove - button=0; buttons=0; detail=0
-    pointermove - pointerId=1; pointerType=mouse; isPrimary=undefined
-    mousemove - button=0; buttons=0; detail=0
-    pointerleave - pointerId=1; pointerType=mouse; isPrimary=undefined
-    mouseleave - button=0; buttons=0; detail=0
-    pointerenter - pointerId=1; pointerType=mouse; isPrimary=undefined
-    mouseenter - button=0; buttons=0; detail=0
-    pointermove - pointerId=1; pointerType=mouse; isPrimary=undefined
-    mousemove - button=0; buttons=0; detail=0
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
+    Events fired on: div
+
+    div - pointerenter
+    div - mouseenter
+    div - pointermove
+    div - mousemove
+    div - pointermove
+    div - mousemove
+    div - pointerleave
+    div - mouseleave
+    div - pointerenter
+    div - mouseenter
+    div - pointermove
+    div - mousemove
+  `)
+})
+
+test('hover inside element', () => {
+  const {element, getEventSnapshot} = setup(`<div><a></a><p></p></div>`)
+
+  userEvent.pointer([
+    {target: element},
+    {target: element.firstChild as Element},
+    {target: element.lastChild as Element},
+    {target: element},
+  ])
+
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
+    Events fired on: div
+
+    div - pointerover
+    div - pointerenter
+    div - mouseover
+    div - mouseenter
+    div - pointermove
+    div - mousemove
+    div - pointermove
+    div - mousemove
+    a - pointerenter
+    a - mouseenter
+    a - pointermove
+    a - mousemove
+    a - pointermove
+    a - mousemove
+    a - pointerleave
+    a - mouseleave
+    p - pointerenter
+    p - mouseenter
+    p - pointermove
+    p - mousemove
+    p - pointermove
+    p - mousemove
+    p - pointerleave
+    p - mouseleave
+    div - pointermove
+    div - mousemove
   `)
 })
 
@@ -233,12 +277,57 @@ test('drag touch', () => {
   `)
 })
 
+test('move touch over elements', () => {
+  const {element, getEventSnapshot} = setup(`<div><a></a><p></p></div>`)
+
+  userEvent.pointer([
+    {keys: '[TouchA>]', target: element},
+    {pointerName: 'TouchA', target: element.firstChild as Element},
+    {pointerName: 'TouchA', target: element.lastChild as Element},
+    {pointerName: 'TouchA', target: element},
+    {keys: '[/TouchA]', target: element},
+  ])
+
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
+    Events fired on: div
+
+    div - pointerover
+    div - pointerenter
+    div - pointerdown
+    div - pointermove
+    a - pointerenter
+    a - pointermove
+    a - pointermove
+    a - pointerleave
+    p - pointerenter
+    p - pointermove
+    p - pointermove
+    p - pointerleave
+    div - pointermove
+    div - pointerup
+    div - pointerout
+    div - pointerleave
+    div - mouseover
+    div - mouseenter
+    div - mousemove
+    div - mousedown
+    div - mouseup
+    div - click
+  `)
+})
+
 test('unknown button does nothing', () => {
   const {element, getEvents} = setup(`<div></div>`)
 
   userEvent.pointer({keys: '[foo]', target: element})
 
   expect(getEvents()).toEqual([])
+})
+
+test('pointer without previous target results in error', async () => {
+  await expect(
+    userEvent.pointer({keys: '[MouseLeft]'}, {delay: 1}),
+  ).rejects.toThrowError('no previous position')
 })
 
 describe('error', () => {

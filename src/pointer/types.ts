@@ -50,18 +50,7 @@ export interface pointerKey {
   /** Name of the pointer */
   name: string
   /** Type of the pointer device */
-  type: 'mouse' | 'pen' | 'touch'
+  pointerType: 'mouse' | 'pen' | 'touch'
   /** Type of button */
   button?: MouseButton
-}
-
-export interface Coords {
-  x: number
-  y: number
-  clientX: number
-  clientY: number
-  offsetX: number
-  offsetY: number
-  pageX: number
-  pageY: number
 }

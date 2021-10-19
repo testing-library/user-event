@@ -1,7 +1,8 @@
 import {getConfig as getDOMTestingLibraryConfig} from '@testing-library/dom'
+import {Coords} from '../utils'
 import {defaultKeyMap} from './keyMap'
 import {pointerImplementation} from './pointerImplementation'
-import {Coords, pointerOptions, pointerState} from './types'
+import {pointerOptions, pointerState} from './types'
 
 export function pointer(
   keys: string,

@@ -18,7 +18,9 @@ export async function pointerAction(
   actions: PointerAction[],
   options: pointerOptions,
   state: pointerState,
-): Promise<void> {
+): Promise<unknown[]> {
+  const ret: Array<Promise<void>> = []
+
   for (let i = 0; i < actions.length; i++) {
     const action = actions[i]
     const pointerName =
@@ -43,6 +45,8 @@ export async function pointerAction(
         ? pointerPress({...action, target, coords}, state)
         : pointerMove({...action, target, coords}, state)
 
+    ret.push(promise)
+
     if (options.delay > 0) {
       await promise
       if (i < actions.length - 1) {
@@ -52,6 +56,8 @@ export async function pointerAction(
   }
 
   delete state.activeClickCount
+
+  return Promise.all(ret)
 }
 
 function getPrevTarget(pointerName: string, state: pointerState) {

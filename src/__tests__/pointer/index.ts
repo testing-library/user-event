@@ -1,3 +1,4 @@
+import {wait} from 'utils'
 import userEvent from '../../index'
 import {setup} from '../helpers/utils'
 
@@ -229,5 +230,71 @@ test('drag touch', () => {
     mousedown - button=0; buttons=0; detail=1
     mouseup - button=0; buttons=0; detail=1
     click - button=0; buttons=0; detail=1
+  `)
+})
+
+test('unknown button does nothing', () => {
+  const {element, getEvents} = setup(`<div></div>`)
+
+  userEvent.pointer({keys: '[foo]', target: element})
+
+  expect(getEvents()).toEqual([])
+})
+
+describe('error', () => {
+  afterEach(() => {
+    ;(console.error as jest.MockedFunction<typeof console.error>).mockClear()
+  })
+
+  it('error for unknown pointer in sync', async () => {
+    const err = jest.spyOn(console, 'error')
+    err.mockImplementation(() => {})
+
+    const {element} = setup(`<div></div>`)
+    userEvent.pointer({pointerName: 'foo', target: element})
+
+    // the catch will be asynchronous
+    await wait(10)
+
+    expect(err).toHaveBeenCalledWith(expect.any(Error) as unknown)
+    expect(err.mock.calls[0][0]).toHaveProperty(
+      'message',
+      expect.stringContaining('does not exist'),
+    )
+  })
+
+  it('error for unknown pointer in async', async () => {
+    const {element} = setup(`<div></div>`)
+    const promise = userEvent.pointer(
+      {pointerName: 'foo', target: element},
+      {delay: 1},
+    )
+
+    return expect(promise).rejects.toThrowError('does not exist')
+  })
+})
+
+test('asynchronous pointer', async () => {
+  const {element, getClickEventsSnapshot} = setup(`<div></div>`)
+
+  // eslint-disable-next-line testing-library/no-await-sync-events
+  const pointerState = await userEvent.pointer(
+    {keys: '[MouseLeft]', target: element},
+    {delay: 1},
+  )
+  // eslint-disable-next-line testing-library/no-await-sync-events
+  await userEvent.pointer([{coords: {x: 20, y: 20}}, '[/MouseLeft]'], {
+    delay: 1,
+    pointerState,
+  })
+
+  expect(getClickEventsSnapshot()).toMatchInlineSnapshot(`
+    pointerdown - pointerId=1; pointerType=mouse; isPrimary=true
+    mousedown - button=0; buttons=0; detail=1
+    pointerup - pointerId=1; pointerType=mouse; isPrimary=true
+    mouseup - button=0; buttons=0; detail=1
+    click - button=0; buttons=0; detail=1
+    pointermove - pointerId=1; pointerType=mouse; isPrimary=undefined
+    mousemove - button=0; buttons=0; detail=0
   `)
 })

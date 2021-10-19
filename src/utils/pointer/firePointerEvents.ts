@@ -25,13 +25,13 @@ export function firePointerEvent(
     isPrimary,
     clickCount,
   }: {
-    pointerType: 'mouse' | 'pen' | 'touch'
+    pointerType?: 'mouse' | 'pen' | 'touch'
     button?: MouseButton
     buttons: MouseButton[]
     coords: Coords
-    pointerId: number
-    isPrimary: boolean
-    clickCount: number
+    pointerId?: number
+    isPrimary?: boolean
+    clickCount?: number
   },
 ) {
   const Event =
@@ -41,11 +41,18 @@ export function firePointerEvent(
 
   let init: FakeEventInit = {
     ...coords,
-    button: getMouseButton(button ?? 0),
-    buttons: getMouseButtons(...buttons),
   }
   if (Event === FakePointerEvent) {
-    init = {...init, isPrimary, pointerId, pointerType}
+    init = {...init, pointerId, pointerType}
+  }
+  if (['pointerdown', 'pointerup'].includes(type)) {
+    init.isPrimary = isPrimary
+  }
+  if (
+    ['mousedown', 'mouseup', 'pointerdown', 'pointerup', 'click'].includes(type)
+  ) {
+    init.button = getMouseButton(button ?? 0)
+    init.buttons = getMouseButtons(...buttons)
   }
   if (['mousedown', 'mouseup', 'click'].includes(type)) {
     init.detail = clickCount

@@ -1,4 +1,4 @@
-import {MouseButton} from '../utils'
+import {Coords, MouseButton} from '../utils'
 
 /**
  * @internal Do not create/alter this by yourself as this type might be subject to changes.
@@ -25,13 +25,15 @@ export type pointerState = {
    * The mouse is always pointer 1 and keeps its position.
    * Pen and touch devices receive a new pointerId for every interaction.
    */
-  position: {
-    type: 'mouse' | 'pen' | 'touch'
-    pointerId: number
-    keyName?: string
-    target: Element
-    targetOffset: [number, number]
-  }[]
+  position: Record<
+    string,
+    {
+      pointerId: number
+      pointerType: 'mouse' | 'pen' | 'touch'
+      target?: Element
+      coords: Coords
+    }
+  >
 
   /**
    * Last applied pointer id
@@ -42,12 +44,12 @@ export type pointerState = {
 export type pointerOptions = {
   /** Delay between keystrokes */
   delay: number
-  /** Keyboard layout to use */
+  /** Available pointer keys */
   pointerMap: pointerKey[]
 }
 
 export interface pointerKey {
-  /** Name of the pointer */
+  /** Name of the pointer key */
   name: string
   /** Type of the pointer device */
   pointerType: 'mouse' | 'pen' | 'touch'

@@ -1,6 +1,6 @@
 import {Coords, wait} from '../utils'
 import {getNextKeyDef} from './getNextKeyDef'
-import {pointerKeyImplementation} from './pointerKeyImplementation'
+import {pointerPress} from './pointerPress'
 import {pointerOptions, pointerState} from './types'
 
 export async function pointerImplementation(
@@ -17,7 +17,7 @@ export async function pointerImplementation(
   )
 
   if (keyDef) {
-    const promise = pointerKeyImplementation(
+    const promise = pointerPress(
       {
         keyDef,
         releasePrevious,

@@ -1,7 +1,7 @@
 import {Coords, firePointerEvent} from '../utils'
-import {pointerKey, pointerState} from './types'
+import type {pointerKey, pointerState} from './types'
 
-export async function pointerKeyImplementation(
+export async function pointerPress(
   {
     keyDef,
     releasePrevious,

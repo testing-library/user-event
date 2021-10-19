@@ -20,6 +20,7 @@ export * from './focus/selector'
 export * from './keyDef/readNextDescriptor'
 
 export * from './misc/eventWrapper'
+export * from './misc/isDescendantOrSelf'
 export * from './misc/isElementType'
 export * from './misc/isLabelWithInternallyDisabledControl'
 export * from './misc/isVisible'

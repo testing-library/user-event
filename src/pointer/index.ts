@@ -68,7 +68,22 @@ export function pointerImplementationWrapper(
 export function createPointerState(): pointerState {
   return {
     pointerId: 1,
-    position: [],
+    position: {
+      mouse: {
+        pointerType: 'mouse',
+        pointerId: 1,
+        coords: {
+          clientX: 0,
+          clientY: 0,
+          offsetX: 0,
+          offsetY: 0,
+          pageX: 0,
+          pageY: 0,
+          x: 0,
+          y: 0,
+        },
+      },
+    },
     pressed: [],
   }
 }

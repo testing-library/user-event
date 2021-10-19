@@ -370,15 +370,15 @@ test('fires mouse events with the correct properties', () => {
   const {element, getClickEventsSnapshot} = setup('<div></div>')
   userEvent.click(element)
   expect(getClickEventsSnapshot()).toMatchInlineSnapshot(`
-    pointerover
-    pointerenter
+    pointerover - pointerId=undefined; pointerType=undefined; isPrimary=undefined
+    pointerenter - pointerId=undefined; pointerType=undefined; isPrimary=undefined
     mouseover - button=0; buttons=0; detail=0
     mouseenter - button=0; buttons=0; detail=0
-    pointermove
+    pointermove - pointerId=undefined; pointerType=undefined; isPrimary=undefined
     mousemove - button=0; buttons=0; detail=0
-    pointerdown
+    pointerdown - pointerId=undefined; pointerType=undefined; isPrimary=undefined
     mousedown - button=0; buttons=1; detail=1
-    pointerup
+    pointerup - pointerId=undefined; pointerType=undefined; isPrimary=undefined
     mouseup - button=0; buttons=1; detail=1
     click - button=0; buttons=1; detail=1
   `)
@@ -391,15 +391,15 @@ test('fires mouse events with custom button property', () => {
     altKey: true,
   })
   expect(getClickEventsSnapshot()).toMatchInlineSnapshot(`
-    pointerover
-    pointerenter
+    pointerover - pointerId=undefined; pointerType=undefined; isPrimary=undefined
+    pointerenter - pointerId=undefined; pointerType=undefined; isPrimary=undefined
     mouseover - button=0; buttons=0; detail=0
     mouseenter - button=0; buttons=0; detail=0
-    pointermove
+    pointermove - pointerId=undefined; pointerType=undefined; isPrimary=undefined
     mousemove - button=0; buttons=0; detail=0
-    pointerdown
+    pointerdown - pointerId=undefined; pointerType=undefined; isPrimary=undefined
     mousedown - button=1; buttons=4; detail=1
-    pointerup
+    pointerup - pointerId=undefined; pointerType=undefined; isPrimary=undefined
     mouseup - button=1; buttons=4; detail=1
     click - button=1; buttons=4; detail=1
   `)
@@ -410,15 +410,15 @@ test('fires mouse events with custom buttons property', () => {
 
   userEvent.click(element, {buttons: 4})
   expect(getClickEventsSnapshot()).toMatchInlineSnapshot(`
-    pointerover
-    pointerenter
+    pointerover - pointerId=undefined; pointerType=undefined; isPrimary=undefined
+    pointerenter - pointerId=undefined; pointerType=undefined; isPrimary=undefined
     mouseover - button=0; buttons=0; detail=0
     mouseenter - button=0; buttons=0; detail=0
-    pointermove
+    pointermove - pointerId=undefined; pointerType=undefined; isPrimary=undefined
     mousemove - button=0; buttons=0; detail=0
-    pointerdown
+    pointerdown - pointerId=undefined; pointerType=undefined; isPrimary=undefined
     mousedown - button=1; buttons=4; detail=1
-    pointerup
+    pointerup - pointerId=undefined; pointerType=undefined; isPrimary=undefined
     mouseup - button=1; buttons=4; detail=1
     click - button=1; buttons=4; detail=1
   `)

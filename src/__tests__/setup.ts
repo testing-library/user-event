@@ -284,3 +284,26 @@ test('maintain `keyboardState` through different api calls', async () => {
   // if the state is shared through api the already pressed `b` is automatically released
   expect(getEvents('keyup')).toHaveLength(3)
 })
+
+test('maintain `pointerState` through different api calls', async () => {
+  const {element, getEvents} = setup<HTMLInputElement>(`<input/>`)
+
+  const api = userEvent.setup()
+
+  expect(api.pointer({keys: '[MouseLeft>]', target: element})).toBe(undefined)
+
+  expect(getSpy('pointer')).toBeCalledTimes(1)
+  expect(getEvents('mousedown')).toHaveLength(1)
+  expect(getEvents('mouseup')).toHaveLength(0)
+
+  await expect(api.pointer('[/MouseLeft]', {delay: 1})).resolves.toBe(undefined)
+
+  expect(getSpy('pointer')).toBeCalledTimes(2)
+  expect(getEvents('mousedown')).toHaveLength(1)
+  expect(getEvents('mouseup')).toHaveLength(1)
+
+  api.setup({}).pointer({target: element.ownerDocument.body})
+
+  expect(getSpy('pointer')).toBeCalledTimes(3)
+  expect(getEvents('mouseleave')).toHaveLength(1)
+})

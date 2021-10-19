@@ -3,11 +3,12 @@
  */
 
 import {fireEvent} from '@testing-library/dom'
-import {fireChangeForInputTimeIfValid, fireInputEvent} from '../shared'
+import {fireChangeForInputTimeIfValid} from '../shared'
 import {behaviorPlugin} from '../types'
 import {
   buildTimeValue,
   calculateNewValue,
+  fireInputEvent,
   getSpaceUntilMaxLength,
   getValue,
   isClickableInput,
@@ -112,18 +113,14 @@ export const keypressBehavior: behaviorPlugin[] = [
     matches: (keyDef, element) =>
       keyDef.key?.length === 1 &&
       isElementType(element, 'input', {type: 'number', readOnly: false}),
-    handle: (keyDef, element, options, state) => {
+    handle: (keyDef, element) => {
       if (!/[\d.\-e]/.test(keyDef.key as string)) {
         return
       }
 
-      const oldValue =
-        state.carryValue ?? getValue(element) ?? /* istanbul ignore next */ ''
-
       const {newValue, newSelectionStart} = calculateNewValue(
         keyDef.key as string,
         element as HTMLElement,
-        oldValue,
       )
 
       // the browser allows some invalid input but not others
@@ -146,13 +143,6 @@ export const keypressBehavior: behaviorPlugin[] = [
           inputType: 'insertText',
         },
       })
-
-      const appliedValue = getValue(element)
-      if (appliedValue === newValue) {
-        state.carryValue = undefined
-      } else {
-        state.carryValue = newValue
-      }
     },
   },
   {

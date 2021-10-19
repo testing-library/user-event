@@ -59,7 +59,7 @@ export function keyboardImplementationWrapper(
   }
 }
 
-function createKeyboardState(): keyboardState {
+export function createKeyboardState(): keyboardState {
   return {
     activeElement: null,
     pressed: [],

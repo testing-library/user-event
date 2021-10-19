@@ -44,9 +44,20 @@ function assignPointerInit(
   })
 }
 
+const notBubbling = ['mouseover', 'mouseout', 'pointerover', 'pointerout']
+
+function getInitDefaults(type: string, init: FakeEventInit): FakeEventInit {
+  return {
+    bubbles: !notBubbling.includes(type),
+    cancelable: true,
+    composed: true,
+    ...init,
+  }
+}
+
 export class FakeMouseEvent extends MouseEvent {
   constructor(type: string, init: FakeEventInit) {
-    super(type, init)
+    super(type, getInitDefaults(type, init))
     assignPositionInit(this, init)
   }
 }
@@ -54,7 +65,7 @@ export class FakeMouseEvent extends MouseEvent {
 // Should extend PointerEvent, but... https://github.com/jsdom/jsdom/issues/2527
 export class FakePointerEvent extends MouseEvent {
   constructor(type: string, init: FakeEventInit) {
-    super(type, init)
+    super(type, getInitDefaults(type, init))
     assignPositionInit(this, init)
     assignPointerInit(this, init)
   }

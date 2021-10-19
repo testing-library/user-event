@@ -1,20 +1,18 @@
 import {Coords, firePointerEvent, isDescendantOrSelf} from '../utils'
-import {pointerState} from './types'
+import {pointerState, PointerTarget} from './types'
+
+export interface PointerMoveAction extends PointerTarget {
+  pointerName: string
+}
 
 export async function pointerMove(
-  {
-    name,
-    target,
-    coords,
-  }: {
-    name: string
-    target: Element
-    coords: Coords
-  },
+  {pointerName, target, coords}: PointerMoveAction,
   state: pointerState,
 ): Promise<void> {
-  if (!(name in state.position)) {
-    throw new Error(`Trying to move pointer "${name}" which does not exist.`)
+  if (!(pointerName in state.position)) {
+    throw new Error(
+      `Trying to move pointer "${pointerName}" which does not exist.`,
+    )
   }
 
   const {
@@ -22,7 +20,7 @@ export async function pointerMove(
     pointerType,
     target: prevTarget,
     coords: prevCoords,
-  } = state.position[name]
+  } = state.position[pointerName]
 
   if (prevTarget && prevTarget !== target) {
     // Here we could probably calculate a few coords to a fake boundary(?)
@@ -44,7 +42,7 @@ export async function pointerMove(
   // Here we could probably calculate a few coords leading up to the final position
   fireMove(target, coords)
 
-  state.position[name] = {pointerId, pointerType, target, coords}
+  state.position[pointerName] = {pointerId, pointerType, target, coords}
 
   function fireMove(eventTarget: Element, eventCoords: Coords) {
     fire(eventTarget, 'pointermove', eventCoords)

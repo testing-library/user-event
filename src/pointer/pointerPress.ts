@@ -1,32 +1,30 @@
 import {Coords, firePointerEvent} from '../utils'
-import type {pointerKey, pointerState} from './types'
+import type {pointerKey, pointerState, PointerTarget} from './types'
+
+export interface PointerPressAction extends PointerTarget {
+  keyDef: pointerKey
+  releasePrevious: boolean
+  releaseSelf: boolean
+}
 
 export async function pointerPress(
-  {
-    keyDef,
-    releasePrevious,
-    releaseSelf,
-    target,
-    coords,
-  }: {
-    keyDef: pointerKey
-    releasePrevious: boolean
-    releaseSelf: boolean
-    target: Element
-    coords: Coords
-  },
+  {keyDef, releasePrevious, releaseSelf, target, coords}: PointerPressAction,
   state: pointerState,
 ): Promise<void> {
   const previous = state.pressed.find(p => p.keyDef === keyDef)
+
+  const pointerName =
+    keyDef.pointerType === 'touch' ? keyDef.name : keyDef.pointerType
+
   if (previous) {
-    up(keyDef, target, coords, state, previous)
+    up(pointerName, keyDef, target, coords, state, previous)
   }
 
   if (!releasePrevious) {
-    const press = down(keyDef, target, coords, state)
+    const press = down(pointerName, keyDef, target, coords, state)
 
     if (releaseSelf) {
-      up(keyDef, target, coords, state, press)
+      up(pointerName, keyDef, target, coords, state, press)
     }
   }
 }
@@ -37,6 +35,7 @@ function getNextPointerId(state: pointerState) {
 }
 
 function down(
+  pointerName: string,
   keyDef: pointerKey,
   target: Element,
   coords: Coords,
@@ -44,6 +43,13 @@ function down(
 ) {
   const {name, pointerType, button} = keyDef
   const pointerId = pointerType === 'mouse' ? 1 : getNextPointerId(state)
+
+  state.position[pointerName] = {
+    pointerId,
+    pointerType,
+    target,
+    coords,
+  }
 
   let isMultiTouch = false
   let isPrimary = true
@@ -106,6 +112,7 @@ function down(
 }
 
 function up(
+  pointerName: string,
   {pointerType, button}: pointerKey,
   target: Element,
   coords: Coords,
@@ -116,6 +123,15 @@ function up(
 
   const {isMultiTouch, isPrimary, pointerId, clickCount} = pressed
   let {unpreventedDefault} = pressed
+
+  state.position[pointerName] = {
+    pointerId,
+    pointerType,
+    target,
+    coords,
+  }
+
+  // TODO: pointerleave for touch device
 
   if (
     pointerType !== 'mouse' ||

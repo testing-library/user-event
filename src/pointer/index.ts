@@ -1,35 +1,28 @@
 import {getConfig as getDOMTestingLibraryConfig} from '@testing-library/dom'
-import {Coords} from '../utils'
+import {parseKeyDef} from './parseKeyDef'
 import {defaultKeyMap} from './keyMap'
-import {pointerImplementation} from './pointerImplementation'
+import {
+  pointerAction,
+  PointerAction,
+  PointerActionTarget,
+} from './pointerAction'
 import {pointerOptions, pointerState} from './types'
 
 export function pointer(
-  keys: string,
-  target: Element,
-  coords?: Partial<Coords>,
+  input: PointerInput,
   options?: Partial<pointerOptions & {pointerState: pointerState; delay: 0}>,
 ): pointerState
 export function pointer(
-  keys: string,
-  target: Element,
-  coords: Partial<Coords>,
+  input: PointerInput,
   options: Partial<
     pointerOptions & {pointerState: pointerState; delay: number}
   >,
 ): Promise<pointerState>
 export function pointer(
-  keys: string,
-  target: Element,
-  coords: Partial<Coords> = {},
+  input: PointerInput,
   options: Partial<pointerOptions & {pointerState: pointerState}> = {},
 ) {
-  const {promise, state} = pointerImplementationWrapper(
-    keys,
-    target,
-    coords,
-    options,
-  )
+  const {promise, state} = pointerImplementationWrapper(input, options)
 
   if ((options.delay ?? 0) > 0) {
     return getDOMTestingLibraryConfig().asyncWrapper(() =>
@@ -43,10 +36,14 @@ export function pointer(
   }
 }
 
+type PointerActionInput =
+  | string
+  | ({keys: string} & PointerActionTarget)
+  | PointerAction
+type PointerInput = PointerActionInput | Array<PointerActionInput>
+
 export function pointerImplementationWrapper(
-  keys: string,
-  target: Element,
-  coords: Partial<Coords>,
+  input: PointerInput,
   config: Partial<pointerOptions & {pointerState: pointerState}>,
 ) {
   const {
@@ -59,8 +56,24 @@ export function pointerImplementationWrapper(
     pointerMap,
   }
 
+  const actions: PointerAction[] = []
+  ;(Array.isArray(input) ? input : [input]).forEach(actionInput => {
+    if (typeof actionInput === 'string') {
+      actions.push(...parseKeyDef(actionInput, options))
+    } else if ('keys' in actionInput) {
+      actions.push(
+        ...parseKeyDef(actionInput.keys, options).map(i => ({
+          ...actionInput,
+          ...i,
+        })),
+      )
+    } else {
+      actions.push(actionInput)
+    }
+  })
+
   return {
-    promise: pointerImplementation(keys, target, coords, options, state),
+    promise: pointerAction(actions, options, state),
     state,
   }
 }

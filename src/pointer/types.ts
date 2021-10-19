@@ -56,3 +56,8 @@ export interface pointerKey {
   /** Type of button */
   button?: MouseButton
 }
+
+export interface PointerTarget {
+  target: Element
+  coords: Coords
+}

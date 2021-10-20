@@ -73,16 +73,16 @@ test('hover to other element', () => {
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: div
 
-    div - pointerenter
-    div - mouseenter
+    div - pointerover
+    div - mouseover
     div - pointermove
     div - mousemove
     div - pointermove
     div - mousemove
-    div - pointerleave
-    div - mouseleave
-    div - pointerenter
-    div - mouseenter
+    div - pointerout
+    div - mouseout
+    div - pointerover
+    div - mouseover
     div - pointermove
     div - mousemove
   `)
@@ -109,22 +109,22 @@ test('hover inside element', () => {
     div - mousemove
     div - pointermove
     div - mousemove
-    a - pointerenter
-    a - mouseenter
+    a - pointerover
+    a - mouseover
     a - pointermove
     a - mousemove
     a - pointermove
     a - mousemove
-    a - pointerleave
-    a - mouseleave
-    p - pointerenter
-    p - mouseenter
+    a - pointerout
+    a - mouseout
+    p - pointerover
+    p - mouseover
     p - pointermove
     p - mousemove
     p - pointermove
     p - mousemove
-    p - pointerleave
-    p - mouseleave
+    p - pointerout
+    p - mouseout
     div - pointermove
     div - mousemove
   `)
@@ -298,14 +298,14 @@ test('move touch over elements', () => {
     div - pointerenter
     div - pointerdown
     div - pointermove
-    a - pointerenter
+    a - pointerover
     a - pointermove
     a - pointermove
-    a - pointerleave
-    p - pointerenter
+    a - pointerout
+    p - pointerover
     p - pointermove
     p - pointermove
-    p - pointerleave
+    p - pointerout
     div - pointermove
     div - pointerup
     div - pointerout

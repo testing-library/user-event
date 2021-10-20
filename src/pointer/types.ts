@@ -1,3 +1,4 @@
+import {keyboardState} from 'keyboard/types'
 import {Coords, MouseButton} from '../utils'
 
 /**
@@ -60,4 +61,9 @@ export interface pointerKey {
 export interface PointerTarget {
   target: Element
   coords: Coords
+}
+
+export interface inputDeviceState {
+  pointerState: pointerState
+  keyboardState: keyboardState
 }

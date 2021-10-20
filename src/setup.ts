@@ -160,7 +160,7 @@ function _setup(
 
     // pointer needs typecasting because of the overloading
     pointer: ((...args: Parameters<typeof pointer>) => {
-      args[1] = {...pointerApiDefaults, ...args[1], pointerState}
+      args[1] = {...pointerApiDefaults, ...args[1], pointerState, keyboardState}
       const ret = pointer(...args) as pointerState | Promise<pointerState>
       if (ret instanceof Promise) {
         return ret.then(() => undefined)

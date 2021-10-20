@@ -1,5 +1,5 @@
 import {Coords, firePointerEvent, isDescendantOrSelf} from '../utils'
-import {pointerState, PointerTarget} from './types'
+import {inputDeviceState, PointerTarget} from './types'
 
 export interface PointerMoveAction extends PointerTarget {
   pointerName?: string
@@ -7,9 +7,9 @@ export interface PointerMoveAction extends PointerTarget {
 
 export async function pointerMove(
   {pointerName = 'mouse', target, coords}: PointerMoveAction,
-  state: pointerState,
+  {pointerState, keyboardState}: inputDeviceState,
 ): Promise<void> {
-  if (!(pointerName in state.position)) {
+  if (!(pointerName in pointerState.position)) {
     throw new Error(
       `Trying to move pointer "${pointerName}" which does not exist.`,
     )
@@ -20,7 +20,7 @@ export async function pointerMove(
     pointerType,
     target: prevTarget,
     coords: prevCoords,
-  } = state.position[pointerName]
+  } = pointerState.position[pointerName]
 
   if (prevTarget && prevTarget !== target) {
     // Here we could probably calculate a few coords to a fake boundary(?)
@@ -42,7 +42,7 @@ export async function pointerMove(
   // Here we could probably calculate a few coords leading up to the final position
   fireMove(target, coords)
 
-  state.position[pointerName] = {pointerId, pointerType, target, coords}
+  pointerState.position[pointerName] = {pointerId, pointerType, target, coords}
 
   function fireMove(eventTarget: Element, eventCoords: Coords) {
     fire(eventTarget, 'pointermove', eventCoords)
@@ -71,9 +71,8 @@ export async function pointerMove(
 
   function fire(eventTarget: Element, type: string, eventCoords: Coords) {
     return firePointerEvent(eventTarget, type, {
-      buttons: state.pressed
-        .filter(p => p.keyDef.pointerType === pointerType)
-        .map(p => p.keyDef.button ?? 0),
+      pointerState,
+      keyboardState,
       coords: eventCoords,
       pointerId,
       pointerType,

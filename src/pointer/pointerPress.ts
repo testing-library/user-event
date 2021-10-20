@@ -1,5 +1,10 @@
 import {Coords, firePointerEvent} from '../utils'
-import type {pointerKey, pointerState, PointerTarget} from './types'
+import type {
+  inputDeviceState,
+  pointerKey,
+  pointerState,
+  PointerTarget,
+} from './types'
 
 export interface PointerPressAction extends PointerTarget {
   keyDef: pointerKey
@@ -9,9 +14,9 @@ export interface PointerPressAction extends PointerTarget {
 
 export async function pointerPress(
   {keyDef, releasePrevious, releaseSelf, target, coords}: PointerPressAction,
-  state: pointerState,
+  state: inputDeviceState,
 ): Promise<void> {
-  const previous = state.pressed.find(p => p.keyDef === keyDef)
+  const previous = state.pointerState.pressed.find(p => p.keyDef === keyDef)
 
   const pointerName =
     keyDef.pointerType === 'touch' ? keyDef.name : keyDef.pointerType
@@ -39,12 +44,12 @@ function down(
   keyDef: pointerKey,
   target: Element,
   coords: Coords,
-  state: pointerState,
+  {pointerState, keyboardState}: inputDeviceState,
 ) {
   const {name, pointerType, button} = keyDef
-  const pointerId = pointerType === 'mouse' ? 1 : getNextPointerId(state)
+  const pointerId = pointerType === 'mouse' ? 1 : getNextPointerId(pointerState)
 
-  state.position[pointerName] = {
+  pointerState.position[pointerName] = {
     pointerId,
     pointerType,
     target,
@@ -54,7 +59,7 @@ function down(
   let isMultiTouch = false
   let isPrimary = true
   if (pointerType !== 'mouse') {
-    for (const obj of state.pressed) {
+    for (const obj of pointerState.pressed) {
       // TODO: test multi device input across browsers
       // istanbul ignore else
       if (obj.keyDef.pointerType === pointerType) {
@@ -65,11 +70,11 @@ function down(
     }
   }
 
-  if (state.activeClickCount?.[0] !== name) {
-    delete state.activeClickCount
+  if (pointerState.activeClickCount?.[0] !== name) {
+    delete pointerState.activeClickCount
   }
-  const clickCount = Number(state.activeClickCount?.[1] ?? 0) + 1
-  state.activeClickCount = [name, clickCount]
+  const clickCount = Number(pointerState.activeClickCount?.[1] ?? 0) + 1
+  pointerState.activeClickCount = [name, clickCount]
 
   const pressObj = {
     keyDef,
@@ -80,7 +85,7 @@ function down(
     isPrimary,
     clickCount,
   }
-  state.pressed.push(pressObj)
+  pointerState.pressed.push(pressObj)
 
   if (pointerType !== 'mouse') {
     fire('pointerover')
@@ -88,7 +93,7 @@ function down(
   }
   if (
     pointerType !== 'mouse' ||
-    !state.pressed.some(
+    !pointerState.pressed.some(
       p => p.keyDef !== keyDef && p.keyDef.pointerType === pointerType,
     )
   ) {
@@ -104,10 +109,9 @@ function down(
 
   function fire(type: string) {
     return firePointerEvent(target, type, {
+      pointerState,
+      keyboardState,
       button,
-      buttons: state.pressed
-        .filter(p => p.keyDef.pointerType === pointerType)
-        .map(p => p.keyDef.button ?? 0),
       clickCount,
       coords,
       isPrimary,
@@ -122,15 +126,15 @@ function up(
   {pointerType, button}: pointerKey,
   target: Element,
   coords: Coords,
-  state: pointerState,
+  {pointerState, keyboardState}: inputDeviceState,
   pressed: pointerState['pressed'][number],
 ) {
-  state.pressed = state.pressed.filter(p => p !== pressed)
+  pointerState.pressed = pointerState.pressed.filter(p => p !== pressed)
 
   const {isMultiTouch, isPrimary, pointerId, clickCount} = pressed
   let {unpreventedDefault} = pressed
 
-  state.position[pointerName] = {
+  pointerState.position[pointerName] = {
     pointerId,
     pointerType,
     target,
@@ -141,7 +145,8 @@ function up(
 
   if (
     pointerType !== 'mouse' ||
-    !state.pressed.filter(p => p.keyDef.pointerType === pointerType).length
+    !pointerState.pressed.filter(p => p.keyDef.pointerType === pointerType)
+      .length
   ) {
     fire('pointerup')
   }
@@ -169,10 +174,9 @@ function up(
 
   function fire(type: string) {
     return firePointerEvent(target, type, {
+      pointerState,
+      keyboardState,
       button,
-      buttons: state.pressed
-        .filter(p => p.keyDef.pointerType === pointerType)
-        .map(p => p.keyDef.button ?? 0),
       clickCount,
       coords,
       isPrimary,

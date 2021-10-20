@@ -3,6 +3,7 @@ import {click} from './click'
 import {blur} from './blur'
 import {focus} from './focus'
 import {isDisabled, isElementType} from './utils'
+import type {UserEvent} from './setup'
 
 interface uploadInit {
   clickInit?: MouseEventInit
@@ -13,7 +14,8 @@ export interface uploadOptions {
   applyAccept?: boolean
 }
 
-function upload(
+export function upload(
+  this: UserEvent,
   element: HTMLElement,
   fileOrFiles: File | File[],
   init?: uploadInit,
@@ -30,7 +32,7 @@ function upload(
   }
   if (isDisabled(element)) return
 
-  click(element, init?.clickInit)
+  click.call(this, element, init?.clickInit)
 
   const files = (Array.isArray(fileOrFiles) ? fileOrFiles : [fileOrFiles])
     .filter(file => !applyAccept || isAcceptableFile(file, input.accept))
@@ -100,5 +102,3 @@ function isAcceptableFile(file: File, accept: string) {
     return file.type === acceptToken
   })
 }
-
-export {upload}

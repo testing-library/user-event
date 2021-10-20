@@ -1,7 +1,8 @@
 import {isDisabled, isElementType} from './utils'
 import {type} from './type'
+import type {UserEvent} from './setup'
 
-function clear(element: Element) {
+export function clear(this: UserEvent, element: Element) {
   if (!isElementType(element, ['input', 'textarea'])) {
     // TODO: support contenteditable
     throw new Error(
@@ -23,7 +24,7 @@ function clear(element: Element) {
     ;(element as HTMLInputElement).type = 'text'
   }
 
-  type(element, '{selectall}{del}', {
+  void type.call(this, element, '{selectall}{del}', {
     delay: 0,
     initialSelectionStart:
       element.selectionStart ?? /* istanbul ignore next */ undefined,
@@ -35,5 +36,3 @@ function clear(element: Element) {
     ;(element as HTMLInputElement).type = elementType
   }
 }
-
-export {clear}

@@ -1,4 +1,5 @@
 import {fireEvent} from '@testing-library/dom'
+import type {UserEvent} from './setup'
 import {
   isLabelWithInternallyDisabledControl,
   getMouseEventOptions,
@@ -17,7 +18,8 @@ function getParentElements(element: Element) {
   return parentElements
 }
 
-function hover(
+export function hover(
+  this: UserEvent,
   element: Element,
   init?: MouseEventInit,
   {skipPointerEventsCheck = false}: PointerOptions = {},
@@ -47,7 +49,8 @@ function hover(
   }
 }
 
-function unhover(
+export function unhover(
+  this: UserEvent,
   element: Element,
   init?: MouseEventInit,
   {skipPointerEventsCheck = false}: PointerOptions = {},
@@ -76,5 +79,3 @@ function unhover(
     }
   }
 }
-
-export {hover, unhover}

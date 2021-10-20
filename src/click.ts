@@ -11,6 +11,7 @@ import {
 import {hover} from './hover'
 import {blur} from './blur'
 import {focus} from './focus'
+import type {UserEvent} from './setup'
 
 function getPreviouslyFocusedElement(element: Element) {
   const focusedElement = element.ownerDocument.activeElement
@@ -114,7 +115,8 @@ function findClosest(element: Element, callback: (e: Element) => boolean) {
   return undefined
 }
 
-function click(
+export function click(
+  this: UserEvent,
   element: Element,
   init?: MouseEventInit,
   {
@@ -129,7 +131,8 @@ function click(
     )
   }
   // We just checked for `pointerEvents`. We can always skip this one in `hover`.
-  if (!skipHover) hover(element, init, {skipPointerEventsCheck: true})
+  if (!skipHover)
+    hover.call(this, element, init, {skipPointerEventsCheck: true})
 
   if (isElementType(element, 'label')) {
     clickLabel(element, init, {clickCount})
@@ -152,7 +155,8 @@ function fireClick(element: Element, mouseEventOptions: MouseEventInit) {
   }
 }
 
-function dblClick(
+export function dblClick(
+  this: UserEvent,
   element: Element,
   init?: MouseEventInit,
   {skipPointerEventsCheck = false}: clickOptions & PointerOptions = {},
@@ -162,10 +166,16 @@ function dblClick(
       'unable to double-click element as it has or inherits pointer-events set to "none".',
     )
   }
-  hover(element, init, {skipPointerEventsCheck})
-  click(element, init, {skipHover: true, clickCount: 0, skipPointerEventsCheck})
-  click(element, init, {skipHover: true, clickCount: 1, skipPointerEventsCheck})
+  hover.call(this, element, init, {skipPointerEventsCheck})
+  click.call(this, element, init, {
+    skipHover: true,
+    clickCount: 0,
+    skipPointerEventsCheck,
+  })
+  click.call(this, element, init, {
+    skipHover: true,
+    clickCount: 1,
+    skipPointerEventsCheck,
+  })
   fireEvent.dblClick(element, getMouseEventOptions('dblclick', init, 2))
 }
-
-export {click, dblClick}

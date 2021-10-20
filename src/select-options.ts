@@ -8,8 +8,30 @@ import {
 import {click} from './click'
 import {focus} from './focus'
 import {hover, unhover} from './hover'
+import type {UserEvent} from './setup'
+
+export function selectOptions(
+  this: UserEvent,
+  select: Element,
+  values: HTMLElement | HTMLElement[] | string[] | string,
+  init?: MouseEventInit,
+  options: PointerOptions = {},
+) {
+  return selectOptionsBase.call(this, true, select, values, init, options)
+}
+
+export function deselectOptions(
+  this: UserEvent,
+  select: Element,
+  values: HTMLElement | HTMLElement[] | string[] | string,
+  init?: MouseEventInit,
+  options: PointerOptions = {},
+) {
+  return selectOptionsBase.call(this, false, select, values, init, options)
+}
 
 function selectOptionsBase(
+  this: UserEvent,
   newValue: boolean,
   select: Element,
   values: HTMLElement | HTMLElement[] | string[] | string,
@@ -88,7 +110,7 @@ function selectOptionsBase(
         : hasPointerEvents(select)
       // the click to open the select options
       if (withPointerEvents) {
-        click(select, init, {skipPointerEventsCheck})
+        click.call(this, select, init, {skipPointerEventsCheck})
       } else {
         focus(select)
       }
@@ -114,9 +136,9 @@ function selectOptionsBase(
     }
   } else if (select.getAttribute('role') === 'listbox') {
     selectedOptions.forEach(option => {
-      hover(option, init, {skipPointerEventsCheck})
-      click(option, init, {skipPointerEventsCheck})
-      unhover(option, init, {skipPointerEventsCheck})
+      hover.call(this, option, init, {skipPointerEventsCheck})
+      click.call(this, option, init, {skipPointerEventsCheck})
+      unhover.call(this, option, init, {skipPointerEventsCheck})
     })
   } else {
     throw getConfig().getElementError(
@@ -139,8 +161,3 @@ function selectOptionsBase(
     fireEvent.change(select, init)
   }
 }
-
-const selectOptions = selectOptionsBase.bind(null, true)
-const deselectOptions = selectOptionsBase.bind(null, false)
-
-export {selectOptions, deselectOptions}

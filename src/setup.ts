@@ -1,3 +1,4 @@
+import {prepareDocument} from 'document'
 import {clear} from './clear'
 import {click, clickOptions, dblClick} from './click'
 import {hover, unhover} from './hover'
@@ -59,7 +60,7 @@ interface SetupOptions
  * All APIs returned by this function share an input device state and a default configuration.
  */
 export function setup(options: SetupOptions = {}) {
-  // TODO: prepare our document state workarounds
+  prepareDocument(options.document ?? document)
 
   return _setup(options, {
     keyboardState: createKeyboardState(),

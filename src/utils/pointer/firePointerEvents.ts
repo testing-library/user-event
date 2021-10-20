@@ -1,6 +1,6 @@
 import {fireEvent} from '@testing-library/dom'
-import type {pointerState} from 'pointer/types'
-import type {keyboardState} from 'keyboard/types'
+import type {pointerState} from '../../pointer/types'
+import type {keyboardState} from '../../keyboard/types'
 import {FakeEventInit, FakeMouseEvent, FakePointerEvent} from './fakeEvent'
 import {getMouseButton, getMouseButtons, MouseButton} from './mouseButtons'
 

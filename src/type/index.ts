@@ -1,5 +1,5 @@
 import {getConfig as getDOMTestingLibraryConfig} from '@testing-library/dom'
-import {prepareDocument} from 'document'
+import {prepareDocument} from '../document'
 import {typeImplementation, typeOptions} from './typeImplementation'
 
 export function type(

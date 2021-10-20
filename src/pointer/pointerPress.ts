@@ -1,4 +1,13 @@
-import {Coords, firePointerEvent, isDisabled} from '../utils'
+/* eslint-disable complexity */
+
+import {focus} from '../focus'
+import {
+  Coords,
+  findClosest,
+  firePointerEvent,
+  isDisabled,
+  isFocusable,
+} from '../utils'
 import type {
   inputDeviceState,
   pointerKey,
@@ -21,15 +30,24 @@ export async function pointerPress(
   const pointerName =
     keyDef.pointerType === 'touch' ? keyDef.name : keyDef.pointerType
 
+  const targetIsDisabled = isDisabled(target)
+
   if (previous) {
-    up(pointerName, keyDef, target, coords, state, previous)
+    up(state, pointerName, keyDef, targetIsDisabled, target, coords, previous)
   }
 
   if (!releasePrevious) {
-    const press = down(pointerName, keyDef, target, coords, state)
+    const press = down(
+      state,
+      pointerName,
+      keyDef,
+      targetIsDisabled,
+      target,
+      coords,
+    )
 
     if (releaseSelf) {
-      up(pointerName, keyDef, target, coords, state, press)
+      up(state, pointerName, keyDef, targetIsDisabled, target, coords, press)
     }
   }
 }
@@ -40,11 +58,12 @@ function getNextPointerId(state: pointerState) {
 }
 
 function down(
+  {pointerState, keyboardState}: inputDeviceState,
   pointerName: string,
   keyDef: pointerKey,
+  targetIsDisabled: boolean,
   target: Element,
   coords: Coords,
-  {pointerState, keyboardState}: inputDeviceState,
 ) {
   const {name, pointerType, button} = keyDef
   const pointerId = pointerType === 'mouse' ? 1 : getNextPointerId(pointerState)
@@ -87,23 +106,29 @@ function down(
   }
   pointerState.pressed.push(pressObj)
 
-  if (pointerType !== 'mouse') {
-    fire('pointerover')
-    fire('pointerenter')
-  }
-  if (
-    pointerType !== 'mouse' ||
-    !pointerState.pressed.some(
-      p => p.keyDef !== keyDef && p.keyDef.pointerType === pointerType,
-    )
-  ) {
-    fire('pointerdown')
-  }
-  if (pointerType === 'mouse' && !isDisabled(target)) {
-    pressObj.unpreventedDefault = fire('mousedown')
+  if (!targetIsDisabled) {
+    if (pointerType !== 'mouse') {
+      fire('pointerover')
+      fire('pointerenter')
+    }
+    if (
+      pointerType !== 'mouse' ||
+      !pointerState.pressed.some(
+        p => p.keyDef !== keyDef && p.keyDef.pointerType === pointerType,
+      )
+    ) {
+      fire('pointerdown')
+    }
+    if (pointerType === 'mouse') {
+      pressObj.unpreventedDefault = fire('mousedown')
+    }
+
+    // TODO: touch...
   }
 
-  // TODO: touch...
+  if (pointerType === 'mouse') {
+    focus(findClosest(target, isFocusable) ?? target.ownerDocument.body)
+  }
 
   return pressObj
 
@@ -122,11 +147,12 @@ function down(
 }
 
 function up(
+  {pointerState, keyboardState}: inputDeviceState,
   pointerName: string,
   {pointerType, button}: pointerKey,
+  targetIsDisabled: boolean,
   target: Element,
   coords: Coords,
-  {pointerState, keyboardState}: inputDeviceState,
   pressed: pointerState['pressed'][number],
 ) {
   pointerState.pressed = pointerState.pressed.filter(p => p !== pressed)
@@ -143,34 +169,44 @@ function up(
 
   // TODO: pointerleave for touch device
 
-  if (
-    pointerType !== 'mouse' ||
-    !pointerState.pressed.filter(p => p.keyDef.pointerType === pointerType)
-      .length
-  ) {
-    fire('pointerup')
-  }
-  if (pointerType !== 'mouse') {
-    fire('pointerout')
-    fire('pointerleave')
-  }
-  if (pointerType !== 'mouse' && !isMultiTouch && !isDisabled(target)) {
-    if (clickCount === 1) {
-      fire('mouseover')
-      fire('mouseenter')
+  if (!targetIsDisabled) {
+    if (
+      pointerType !== 'mouse' ||
+      !pointerState.pressed.filter(p => p.keyDef.pointerType === pointerType)
+        .length
+    ) {
+      fire('pointerup')
     }
-    fire('mousemove')
-    unpreventedDefault = fire('mousedown') && unpreventedDefault
+    if (pointerType !== 'mouse') {
+      fire('pointerout')
+      fire('pointerleave')
+    }
+    if (pointerType !== 'mouse' && !isMultiTouch) {
+      if (clickCount === 1) {
+        fire('mouseover')
+        fire('mouseenter')
+      }
+      fire('mousemove')
+      unpreventedDefault = fire('mousedown') && unpreventedDefault
+    }
   }
 
-  if ((pointerType === 'mouse' || !isMultiTouch) && !isDisabled(target)) {
-    unpreventedDefault = fire('mouseup') && unpreventedDefault
+  if (pointerType !== 'mouse' && !isMultiTouch) {
+    // The closest focusable element is focused when a `mousedown` would have been fired.
+    // Even if there was no `mousedown` because the element was disabled.
+    focus(findClosest(target, isFocusable) ?? target.ownerDocument.body)
+  }
 
-    const canClick = pointerType !== 'mouse' || button === 'primary'
-    if (canClick && unpreventedDefault && target === pressed.downTarget) {
-      fire('click')
-      if (clickCount === 2) {
-        fire('dblclick')
+  if (!targetIsDisabled) {
+    if (pointerType === 'mouse' || !isMultiTouch) {
+      unpreventedDefault = fire('mouseup') && unpreventedDefault
+
+      const canClick = pointerType !== 'mouse' || button === 'primary'
+      if (canClick && unpreventedDefault && target === pressed.downTarget) {
+        fire('click')
+        if (clickCount === 2) {
+          fire('dblclick')
+        }
       }
     }
   }

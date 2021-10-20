@@ -1,10 +1,6 @@
 import {createPointerState} from 'pointer'
 import type {UserEvent} from './setup'
-import {
-  isLabelWithInternallyDisabledControl,
-  hasPointerEvents,
-  PointerOptions,
-} from './utils'
+import {hasPointerEvents, PointerOptions} from './utils'
 
 export function hover(
   this: UserEvent,
@@ -17,7 +13,6 @@ export function hover(
       'unable to hover element as it has or inherits pointer-events set to "none".',
     )
   }
-  if (isLabelWithInternallyDisabledControl(element)) return
 
   const pointerState = createPointerState()
   pointerState.position.mouse.target = element.ownerDocument.body
@@ -36,7 +31,6 @@ export function unhover(
       'unable to unhover element as it has or inherits pointer-events set to "none".',
     )
   }
-  if (isLabelWithInternallyDisabledControl(element)) return
 
   const pointerState = createPointerState()
   pointerState.position.mouse.target = element

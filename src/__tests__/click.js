@@ -286,9 +286,16 @@ test('gives focus to the form control when clicking within a label', () => {
 test('fires no events when clicking a label with a nested control that is disabled', () => {
   const {element, getEventSnapshot} = setup(`<label><input disabled /></label>`)
   userEvent.click(element)
-  expect(getEventSnapshot()).toMatchInlineSnapshot(
-    `No events were fired on: label`,
-  )
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
+    Events fired on: label
+
+    label - pointerover
+    label - pointerenter
+    label - mouseover
+    label - mouseenter
+    label - pointermove
+    label - mousemove
+  `)
 })
 
 test('does not crash if the label has no control', () => {

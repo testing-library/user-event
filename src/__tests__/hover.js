@@ -34,9 +34,16 @@ test('no events fired on labels that contain disabled controls', () => {
   const {element, getEventSnapshot} = setup('<label><input disabled /></label>')
 
   userEvent.hover(element)
-  expect(getEventSnapshot()).toMatchInlineSnapshot(
-    `No events were fired on: label`,
-  )
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
+    Events fired on: label
+
+    label - pointerover
+    label - pointerenter
+    label - mouseover
+    label - mouseenter
+    label - pointermove
+    label - mousemove
+  `)
 })
 
 test('fires non-bubbling events on parents for hover', () => {

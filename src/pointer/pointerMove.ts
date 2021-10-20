@@ -36,6 +36,8 @@ export async function pointerMove(
     }
   }
 
+  pointerState.position[pointerName] = {pointerId, pointerType, target, coords}
+
   if (prevTarget !== target) {
     if (!prevTarget || !isDescendantOrSelf(prevTarget, target)) {
       fireEnter(target, coords)
@@ -46,8 +48,6 @@ export async function pointerMove(
 
   // Here we could probably calculate a few coords leading up to the final position
   fireMove(target, coords)
-
-  pointerState.position[pointerName] = {pointerId, pointerType, target, coords}
 
   function fireMove(eventTarget: Element, eventCoords: Coords) {
     fire(eventTarget, 'pointermove', eventCoords)

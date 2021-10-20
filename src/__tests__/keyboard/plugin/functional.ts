@@ -11,10 +11,10 @@ test('produce extra events for the Control key when AltGraph is pressed', () => 
 
     input[value=""] - pointerover
     input[value=""] - pointerenter
-    input[value=""] - mouseover: Left (0)
-    input[value=""] - mouseenter: Left (0)
+    input[value=""] - mouseover
+    input[value=""] - mouseenter
     input[value=""] - pointermove
-    input[value=""] - mousemove: Left (0)
+    input[value=""] - mousemove
     input[value=""] - pointerdown
     input[value=""] - mousedown: Left (0)
     input[value=""] - focus
@@ -40,10 +40,10 @@ test('backspace to valid value', () => {
 
     input[value=""] - pointerover
     input[value=""] - pointerenter
-    input[value=""] - mouseover: Left (0)
-    input[value=""] - mouseenter: Left (0)
+    input[value=""] - mouseover
+    input[value=""] - mouseenter
     input[value=""] - pointermove
-    input[value=""] - mousemove: Left (0)
+    input[value=""] - mousemove
     input[value=""] - pointerdown
     input[value=""] - mousedown: Left (0)
     input[value=""] - focus

@@ -10,10 +10,10 @@ test('clears text', () => {
 
     input[value="hello"] - pointerover
     input[value="hello"] - pointerenter
-    input[value="hello"] - mouseover: Left (0)
-    input[value="hello"] - mouseenter: Left (0)
+    input[value="hello"] - mouseover
+    input[value="hello"] - mouseenter
     input[value="hello"] - pointermove
-    input[value="hello"] - mousemove: Left (0)
+    input[value="hello"] - mousemove
     input[value="hello"] - pointerdown
     input[value="hello"] - mousedown: Left (0)
     input[value="hello"] - focus
@@ -52,10 +52,10 @@ test('does not clear text on readonly inputs', () => {
 
     input[value="hello"] - pointerover
     input[value="hello"] - pointerenter
-    input[value="hello"] - mouseover: Left (0)
-    input[value="hello"] - mouseenter: Left (0)
+    input[value="hello"] - mouseover
+    input[value="hello"] - mouseenter
     input[value="hello"] - pointermove
-    input[value="hello"] - mousemove: Left (0)
+    input[value="hello"] - mousemove
     input[value="hello"] - pointerdown
     input[value="hello"] - mousedown: Left (0)
     input[value="hello"] - focus

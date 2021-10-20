@@ -1,22 +1,10 @@
-import {fireEvent} from '@testing-library/dom'
+import {createPointerState} from 'pointer'
 import type {UserEvent} from './setup'
 import {
   isLabelWithInternallyDisabledControl,
-  getMouseEventOptions,
-  isDisabled,
   hasPointerEvents,
   PointerOptions,
 } from './utils'
-
-// includes `element`
-function getParentElements(element: Element) {
-  const parentElements = [element]
-  let currentElement: Element | null = element
-  while ((currentElement = currentElement.parentElement) != null) {
-    parentElements.push(currentElement)
-  }
-  return parentElements
-}
 
 export function hover(
   this: UserEvent,
@@ -31,22 +19,10 @@ export function hover(
   }
   if (isLabelWithInternallyDisabledControl(element)) return
 
-  const parentElements = getParentElements(element).reverse()
+  const pointerState = createPointerState()
+  pointerState.position.mouse.target = element.ownerDocument.body
 
-  fireEvent.pointerOver(element, init)
-  for (const el of parentElements) {
-    fireEvent.pointerEnter(el, init)
-  }
-  if (!isDisabled(element)) {
-    fireEvent.mouseOver(element, getMouseEventOptions('mouseover', init))
-    for (const el of parentElements) {
-      fireEvent.mouseEnter(el, getMouseEventOptions('mouseenter', init))
-    }
-  }
-  fireEvent.pointerMove(element, init)
-  if (!isDisabled(element)) {
-    fireEvent.mouseMove(element, getMouseEventOptions('mousemove', init))
-  }
+  this.pointer({target: element}, {pointerState})
 }
 
 export function unhover(
@@ -62,20 +38,8 @@ export function unhover(
   }
   if (isLabelWithInternallyDisabledControl(element)) return
 
-  const parentElements = getParentElements(element)
+  const pointerState = createPointerState()
+  pointerState.position.mouse.target = element
 
-  fireEvent.pointerMove(element, init)
-  if (!isDisabled(element)) {
-    fireEvent.mouseMove(element, getMouseEventOptions('mousemove', init))
-  }
-  fireEvent.pointerOut(element, init)
-  for (const el of parentElements) {
-    fireEvent.pointerLeave(el, init)
-  }
-  if (!isDisabled(element)) {
-    fireEvent.mouseOut(element, getMouseEventOptions('mouseout', init))
-    for (const el of parentElements) {
-      fireEvent.mouseLeave(el, getMouseEventOptions('mouseleave', init))
-    }
-  }
+  this.pointer({target: element.ownerDocument.body}, {pointerState})
 }

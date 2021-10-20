@@ -15,10 +15,10 @@ test('should fire the correct events for input', () => {
 
     input[value=""] - pointerover
     input[value=""] - pointerenter
-    input[value=""] - mouseover: Left (0)
-    input[value=""] - mouseenter: Left (0)
+    input[value=""] - mouseover
+    input[value=""] - mouseenter
     input[value=""] - pointermove
-    input[value=""] - mousemove: Left (0)
+    input[value=""] - mousemove
     input[value=""] - pointerdown
     input[value=""] - mousedown: Left (0)
     input[value=""] - focus
@@ -51,11 +51,9 @@ test('should fire the correct events with label', () => {
     Events fired on: form
 
     label[for="element"] - pointerover
-    form - pointerenter
-    label[for="element"] - mouseover: Left (0)
-    form - mouseenter: Left (0)
+    label[for="element"] - mouseover
     label[for="element"] - pointermove
-    label[for="element"] - mousemove: Left (0)
+    label[for="element"] - mousemove
     label[for="element"] - pointerdown
     label[for="element"] - mousedown: Left (0)
     label[for="element"] - pointerup

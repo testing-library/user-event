@@ -9,10 +9,10 @@ test('fires correct events', () => {
 
     select[name="select"][value="1"] - pointerover
     select[name="select"][value="1"] - pointerenter
-    select[name="select"][value="1"] - mouseover: Left (0)
-    select[name="select"][value="1"] - mouseenter: Left (0)
+    select[name="select"][value="1"] - mouseover
+    select[name="select"][value="1"] - mouseenter
     select[name="select"][value="1"] - pointermove
-    select[name="select"][value="1"] - mousemove: Left (0)
+    select[name="select"][value="1"] - mousemove
     select[name="select"][value="1"] - pointerdown
     select[name="select"][value="1"] - mousedown: Left (0)
     select[name="select"][value="1"] - focus
@@ -43,28 +43,22 @@ test('fires correct events on listBox select', () => {
     Events fired on: ul[value="2"]
 
     li#2[value="2"][aria-selected=false] - pointerover
-    ul - pointerenter
-    li#2[value="2"][aria-selected=false] - mouseover: Left (0)
-    ul - mouseenter: Left (0)
+    li#2[value="2"][aria-selected=false] - mouseover
     li#2[value="2"][aria-selected=false] - pointermove
-    li#2[value="2"][aria-selected=false] - mousemove: Left (0)
+    li#2[value="2"][aria-selected=false] - mousemove
     li#2[value="2"][aria-selected=false] - pointerover
-    ul - pointerenter
-    li#2[value="2"][aria-selected=false] - mouseover: Left (0)
-    ul - mouseenter: Left (0)
+    li#2[value="2"][aria-selected=false] - mouseover
     li#2[value="2"][aria-selected=false] - pointermove
-    li#2[value="2"][aria-selected=false] - mousemove: Left (0)
+    li#2[value="2"][aria-selected=false] - mousemove
     li#2[value="2"][aria-selected=false] - pointerdown
     li#2[value="2"][aria-selected=false] - mousedown: Left (0)
     li#2[value="2"][aria-selected=false] - pointerup
     li#2[value="2"][aria-selected=false] - mouseup: Left (0)
     li#2[value="2"][aria-selected=true] - click: Left (0)
     li#2[value="2"][aria-selected=true] - pointermove
-    li#2[value="2"][aria-selected=true] - mousemove: Left (0)
+    li#2[value="2"][aria-selected=true] - mousemove
     li#2[value="2"][aria-selected=true] - pointerout
-    ul[value="2"] - pointerleave
-    li#2[value="2"][aria-selected=true] - mouseout: Left (0)
-    ul[value="2"] - mouseleave: Left (0)
+    li#2[value="2"][aria-selected=true] - mouseout
   `)
   const [o1, o2, o3] = options
   expect(o1).toHaveAttribute('aria-selected', 'false')
@@ -272,10 +266,10 @@ test('fires correct events when pointer events set to none but skipPointerEvents
 
     select[name="select"][value="1"] - pointerover
     select[name="select"][value="1"] - pointerenter
-    select[name="select"][value="1"] - mouseover: Left (0)
-    select[name="select"][value="1"] - mouseenter: Left (0)
+    select[name="select"][value="1"] - mouseover
+    select[name="select"][value="1"] - mouseenter
     select[name="select"][value="1"] - pointermove
-    select[name="select"][value="1"] - mousemove: Left (0)
+    select[name="select"][value="1"] - mousemove
     select[name="select"][value="1"] - pointerdown
     select[name="select"][value="1"] - mousedown: Left (0)
     select[name="select"][value="1"] - focus

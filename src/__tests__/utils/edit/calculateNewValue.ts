@@ -13,10 +13,10 @@ test('honors maxlength', () => {
 
     input[value=""] - pointerover
     input[value=""] - pointerenter
-    input[value=""] - mouseover: Left (0)
-    input[value=""] - mouseenter: Left (0)
+    input[value=""] - mouseover
+    input[value=""] - mouseenter
     input[value=""] - pointermove
-    input[value=""] - mousemove: Left (0)
+    input[value=""] - mousemove
     input[value=""] - pointerdown
     input[value=""] - mousedown: Left (0)
     input[value=""] - focus
@@ -47,10 +47,10 @@ test('honors maxlength="" as if there was no maxlength', () => {
 
     input[value=""] - pointerover
     input[value=""] - pointerenter
-    input[value=""] - mouseover: Left (0)
-    input[value=""] - mouseenter: Left (0)
+    input[value=""] - mouseover
+    input[value=""] - mouseenter
     input[value=""] - pointermove
-    input[value=""] - mousemove: Left (0)
+    input[value=""] - mousemove
     input[value=""] - pointerdown
     input[value=""] - mousedown: Left (0)
     input[value=""] - focus
@@ -85,10 +85,10 @@ test('honors maxlength with existing text', () => {
 
     input[value="12"] - pointerover
     input[value="12"] - pointerenter
-    input[value="12"] - mouseover: Left (0)
-    input[value="12"] - mouseenter: Left (0)
+    input[value="12"] - mouseover
+    input[value="12"] - mouseenter
     input[value="12"] - pointermove
-    input[value="12"] - mousemove: Left (0)
+    input[value="12"] - mousemove
     input[value="12"] - pointerdown
     input[value="12"] - mousedown: Left (0)
     input[value="12"] - focus
@@ -115,10 +115,10 @@ test('honors maxlength on textarea', () => {
 
     textarea[value="12"] - pointerover
     textarea[value="12"] - pointerenter
-    textarea[value="12"] - mouseover: Left (0)
-    textarea[value="12"] - mouseenter: Left (0)
+    textarea[value="12"] - mouseover
+    textarea[value="12"] - mouseenter
     textarea[value="12"] - pointermove
-    textarea[value="12"] - mousemove: Left (0)
+    textarea[value="12"] - mousemove
     textarea[value="12"] - pointerdown
     textarea[value="12"] - mousedown: Left (0)
     textarea[value="12"] - focus

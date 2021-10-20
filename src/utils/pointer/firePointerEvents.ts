@@ -1,4 +1,6 @@
 import {fireEvent} from '@testing-library/dom'
+import type {pointerState} from 'pointer/types'
+import type {keyboardState} from 'keyboard/types'
 import {FakeEventInit, FakeMouseEvent, FakePointerEvent} from './fakeEvent'
 import {getMouseButton, getMouseButtons, MouseButton} from './mouseButtons'
 
@@ -17,17 +19,19 @@ export function firePointerEvent(
   target: Element,
   type: string,
   {
+    pointerState,
+    keyboardState,
     pointerType,
     button,
-    buttons,
     coords,
     pointerId,
     isPrimary,
     clickCount,
   }: {
+    pointerState: pointerState
+    keyboardState: keyboardState
     pointerType?: 'mouse' | 'pen' | 'touch'
     button?: MouseButton
-    buttons: MouseButton[]
     coords: Coords
     pointerId?: number
     isPrimary?: boolean
@@ -41,6 +45,10 @@ export function firePointerEvent(
 
   let init: FakeEventInit = {
     ...coords,
+    altKey: keyboardState.modifiers.alt,
+    ctrlKey: keyboardState.modifiers.ctrl,
+    metaKey: keyboardState.modifiers.meta,
+    shiftKey: keyboardState.modifiers.shift,
   }
   if (Event === FakePointerEvent) {
     init = {...init, pointerId, pointerType}
@@ -52,7 +60,11 @@ export function firePointerEvent(
     ['mousedown', 'mouseup', 'pointerdown', 'pointerup', 'click'].includes(type)
   ) {
     init.button = getMouseButton(button ?? 0)
-    init.buttons = getMouseButtons(...buttons)
+    init.buttons = getMouseButtons(
+      ...pointerState.pressed
+        .filter(p => p.keyDef.pointerType === pointerType)
+        .map(p => p.keyDef.button ?? 0),
+    )
   }
   if (['mousedown', 'mouseup', 'click'].includes(type)) {
     init.detail = clickCount

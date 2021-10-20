@@ -10,7 +10,18 @@ export const MouseButton = {
 
 export type MouseButton = keyof typeof MouseButton | number
 
+// Some legacy...
+const MouseButtonFlip = {
+  auxiliary: 1,
+  secondary: 2,
+  1: 2,
+  2: 1,
+} as const
+
 export function getMouseButton(button: MouseButton): number {
+  if (button in MouseButtonFlip) {
+    return MouseButtonFlip[button as keyof typeof MouseButtonFlip]
+  }
   return typeof button === 'number' ? button : MouseButton[button]
 }
 

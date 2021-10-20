@@ -1,6 +1,6 @@
-import {prepareDocument} from 'document'
 import {clear} from './clear'
 import {click, clickOptions, dblClick} from './click'
+import {prepareDocument} from './document'
 import {hover, unhover} from './hover'
 import {createKeyboardState, keyboard, keyboardOptions} from './keyboard'
 import type {keyboardState} from './keyboard/types'

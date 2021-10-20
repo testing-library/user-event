@@ -1,4 +1,4 @@
-import {Coords, firePointerEvent} from '../utils'
+import {Coords, firePointerEvent, isDisabled} from '../utils'
 import type {
   inputDeviceState,
   pointerKey,
@@ -99,7 +99,7 @@ function down(
   ) {
     fire('pointerdown')
   }
-  if (pointerType === 'mouse') {
+  if (pointerType === 'mouse' && !isDisabled(target)) {
     pressObj.unpreventedDefault = fire('mousedown')
   }
 
@@ -154,7 +154,7 @@ function up(
     fire('pointerout')
     fire('pointerleave')
   }
-  if (pointerType !== 'mouse' && !isMultiTouch) {
+  if (pointerType !== 'mouse' && !isMultiTouch && !isDisabled(target)) {
     if (clickCount === 1) {
       fire('mouseover')
       fire('mouseenter')
@@ -163,7 +163,7 @@ function up(
     unpreventedDefault = fire('mousedown') && unpreventedDefault
   }
 
-  if (pointerType === 'mouse' || !isMultiTouch) {
+  if ((pointerType === 'mouse' || !isMultiTouch) && !isDisabled(target)) {
     unpreventedDefault = fire('mouseup') && unpreventedDefault
 
     const canClick = pointerType !== 'mouse' || button === 'primary'

@@ -1,4 +1,5 @@
 import {getConfig as getDOMTestingLibraryConfig} from '@testing-library/dom'
+import {createKeyboardState} from '../keyboard'
 import {parseKeyDef} from './parseKeyDef'
 import {defaultKeyMap} from './keyMap'
 import {
@@ -6,33 +7,31 @@ import {
   PointerAction,
   PointerActionTarget,
 } from './pointerAction'
-import {pointerOptions, pointerState} from './types'
+import type {inputDeviceState, pointerOptions, pointerState} from './types'
 
 export function pointer(
   input: PointerInput,
-  options?: Partial<pointerOptions & {pointerState: pointerState; delay: 0}>,
+  options?: Partial<pointerOptions & {delay: 0} & inputDeviceState>,
 ): pointerState
 export function pointer(
   input: PointerInput,
-  options: Partial<
-    pointerOptions & {pointerState: pointerState; delay: number}
-  >,
+  options: Partial<pointerOptions & {delay: number} & inputDeviceState>,
 ): Promise<pointerState>
 export function pointer(
   input: PointerInput,
-  options: Partial<pointerOptions & {pointerState: pointerState}> = {},
+  options: Partial<pointerOptions & inputDeviceState> = {},
 ) {
-  const {promise, state} = pointerImplementationWrapper(input, options)
+  const {promise, pointerState} = pointerImplementationWrapper(input, options)
 
   if ((options.delay ?? 0) > 0) {
     return getDOMTestingLibraryConfig().asyncWrapper(() =>
-      promise.then(() => state),
+      promise.then(() => pointerState),
     )
   } else {
     // prevent users from dealing with UnhandledPromiseRejectionWarning in sync call
     promise.catch(console.error)
 
-    return state
+    return pointerState
   }
 }
 
@@ -44,10 +43,11 @@ type PointerInput = PointerActionInput | Array<PointerActionInput>
 
 export function pointerImplementationWrapper(
   input: PointerInput,
-  config: Partial<pointerOptions & {pointerState: pointerState}>,
+  config: Partial<pointerOptions & inputDeviceState>,
 ) {
   const {
-    pointerState: state = createPointerState(),
+    pointerState = createPointerState(),
+    keyboardState = createKeyboardState(),
     delay = 0,
     pointerMap = defaultKeyMap,
   } = config
@@ -73,8 +73,8 @@ export function pointerImplementationWrapper(
   })
 
   return {
-    promise: pointerAction(actions, options, state),
-    state,
+    promise: pointerAction(actions, options, {pointerState, keyboardState}),
+    pointerState,
   }
 }
 

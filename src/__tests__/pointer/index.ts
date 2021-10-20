@@ -387,3 +387,28 @@ test('asynchronous pointer', async () => {
     mousemove - button=0; buttons=0; detail=0
   `)
 })
+
+test('apply modifiers from keyboardstate', async () => {
+  const {element, getEvents} = setup(`<input/>`)
+
+  element.focus()
+  let keyboardState = userEvent.keyboard('[ShiftLeft>]')
+  userEvent.pointer({keys: '[MouseLeft]', target: element}, {keyboardState})
+  keyboardState = userEvent.keyboard('[/ShiftLeft][ControlRight>]', {
+    keyboardState,
+  })
+  userEvent.pointer({keys: '[MouseLeft]', target: element}, {keyboardState})
+  keyboardState = userEvent.keyboard('[/ControlRight][AltLeft>]', {
+    keyboardState,
+  })
+  userEvent.pointer({keys: '[MouseLeft]', target: element}, {keyboardState})
+  keyboardState = userEvent.keyboard('[/AltLeft][MetaLeft>]', {keyboardState})
+  userEvent.pointer({keys: '[MouseLeft]', target: element}, {keyboardState})
+
+  expect(getEvents('click')).toEqual([
+    expect.objectContaining({shiftKey: true}),
+    expect.objectContaining({ctrlKey: true}),
+    expect.objectContaining({altKey: true}),
+    expect.objectContaining({metaKey: true}),
+  ])
+})

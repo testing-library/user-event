@@ -1,7 +1,7 @@
 import {Coords, wait} from '../utils'
 import {pointerMove, PointerMoveAction} from './pointerMove'
 import {pointerPress, PointerPressAction} from './pointerPress'
-import {pointerOptions, pointerState} from './types'
+import {inputDeviceState, pointerOptions, pointerState} from './types'
 
 export type PointerActionTarget = {
   target?: Element
@@ -17,7 +17,7 @@ export type PointerAction = PointerActionTarget &
 export async function pointerAction(
   actions: PointerAction[],
   options: pointerOptions,
-  state: pointerState,
+  state: inputDeviceState,
 ): Promise<unknown[]> {
   const ret: Array<Promise<void>> = []
 
@@ -32,10 +32,11 @@ export async function pointerAction(
           : action.keyDef.pointerType
         : 'mouse'
 
-    const target = action.target ?? getPrevTarget(pointerName, state)
+    const target =
+      action.target ?? getPrevTarget(pointerName, state.pointerState)
     const coords = completeCoords({
-      ...(pointerName in state.position
-        ? state.position[pointerName].coords
+      ...(pointerName in state.pointerState.position
+        ? state.pointerState.position[pointerName].coords
         : undefined),
       ...action.coords,
     })
@@ -55,7 +56,7 @@ export async function pointerAction(
     }
   }
 
-  delete state.activeClickCount
+  delete state.pointerState.activeClickCount
 
   return Promise.all(ret)
 }

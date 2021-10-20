@@ -169,6 +169,9 @@ function up(
     const canClick = pointerType !== 'mouse' || button === 'primary'
     if (canClick && unpreventedDefault && target === pressed.downTarget) {
       fire('click')
+      if (clickCount === 2) {
+        fire('dblclick')
+      }
     }
   }
 

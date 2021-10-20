@@ -1,5 +1,5 @@
-import {wait} from 'utils'
 import userEvent from '../../index'
+import {wait} from '../../utils'
 import {setup} from '../helpers/utils'
 
 test('double click', () => {

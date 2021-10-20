@@ -1,4 +1,4 @@
-import {keyboardState} from 'keyboard/types'
+import {keyboardState} from '../keyboard/types'
 import {Coords, MouseButton} from '../utils'
 
 /**

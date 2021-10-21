@@ -1,10 +1,9 @@
 module.exports = {
   extends: './node_modules/kcd-scripts/eslint.js',
+  parser: '@typescript-eslint/parser',
   settings: {
     'import/resolver': {
-      node: {
-        extensions: ['.js', '.ts'],
-      },
+      typescript: {},
     },
   },
   rules: {

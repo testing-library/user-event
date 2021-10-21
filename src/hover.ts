@@ -1,4 +1,4 @@
-import {createPointerState} from 'pointer'
+import {createPointerState} from './pointer'
 import type {UserEvent} from './setup'
 import {hasPointerEvents, PointerOptions} from './utils'
 

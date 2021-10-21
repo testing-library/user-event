@@ -1,13 +1,13 @@
 import {fireEvent} from '@testing-library/dom'
 import {
+  blur,
+  focus,
   getActiveElement,
   FOCUSABLE_SELECTOR,
   isVisible,
   isDisabled,
   isDocument,
 } from './utils'
-import {focus} from './focus'
-import {blur} from './blur'
 import type {UserEvent} from './setup'
 
 function getNextElement(

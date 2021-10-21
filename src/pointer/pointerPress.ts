@@ -1,11 +1,11 @@
 /* eslint-disable complexity */
 
 import {fireEvent} from '@testing-library/dom'
-import {focus} from '../focus'
 import {
   Coords,
   findClosest,
   firePointerEvent,
+  focus,
   isDisabled,
   isFocusable,
 } from '../utils'

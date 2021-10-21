@@ -30,6 +30,10 @@ export const userEventApis = {
   upload,
 }
 export type UserEventApis = typeof userEventApis
+type setup = ReturnType<typeof _setup>['setup']
+export type UserEvent = UserEventApis & {
+  setup: setup
+}
 
 type ClickOptions = Omit<clickOptions, 'clickCount'>
 
@@ -123,27 +127,29 @@ function _setup(
     applyAccept,
   }
 
-  return {
-    clear,
+  const userEvent: UserEvent = {
+    clear: (...args: Parameters<typeof clear>) => {
+      return clear.call(userEvent, ...args)
+    },
 
     click: (...args: Parameters<typeof click>) => {
       args[2] = {...pointerDefaults, ...clickDefaults, ...args[2]}
-      return click(...args)
+      return click.call(userEvent, ...args)
     },
 
     dblClick: (...args: Parameters<typeof dblClick>) => {
       args[2] = {...pointerDefaults, ...clickDefaults, ...args[2]}
-      return dblClick(...args)
+      return dblClick.call(userEvent, ...args)
     },
 
     deselectOptions: (...args: Parameters<typeof deselectOptions>) => {
       args[3] = {...pointerDefaults, ...args[3]}
-      return deselectOptions(...args)
+      return deselectOptions.call(userEvent, ...args)
     },
 
     hover: (...args: Parameters<typeof hover>) => {
       args[2] = {...pointerDefaults, ...args[2]}
-      return hover(...args)
+      return hover.call(userEvent, ...args)
     },
 
     // keyboard needs typecasting because of the overloading
@@ -156,7 +162,7 @@ function _setup(
     }) as typeof keyboard,
 
     paste: (...args: Parameters<typeof paste>) => {
-      return paste(...args)
+      return paste.call(userEvent, ...args)
     },
 
     // pointer needs typecasting because of the overloading
@@ -170,7 +176,7 @@ function _setup(
 
     selectOptions: (...args: Parameters<typeof selectOptions>) => {
       args[3] = {...pointerDefaults, ...args[3]}
-      return selectOptions(...args)
+      return selectOptions.call(userEvent, ...args)
     },
 
     setup: (options: SetupOptions) => {
@@ -190,23 +196,25 @@ function _setup(
 
     tab: (...args: Parameters<typeof tab>) => {
       args[0] = {...tabDefaults, ...args[0]}
-      return tab(...args)
+      return tab.call(userEvent, ...args)
     },
 
     // type needs typecasting because of the overloading
     type: ((...args: Parameters<typeof type>) => {
       args[2] = {...typeDefaults, ...args[2]}
-      return type(...args)
+      return type.call(userEvent, ...args)
     }) as typeof type,
 
     unhover: (...args: Parameters<typeof unhover>) => {
       args[2] = {...pointerDefaults, ...args[2]}
-      return unhover(...args)
+      return unhover.call(userEvent, ...args)
     },
 
     upload: (...args: Parameters<typeof upload>) => {
       args[3] = {...uploadDefaults, ...args[3]}
-      return upload(...args)
+      return upload.call(userEvent, ...args)
     },
   }
+
+  return userEvent
 }

@@ -1,4 +1,5 @@
 import {fireEvent} from '@testing-library/dom'
+import type {UserEvent} from './setup'
 import {
   getSpaceUntilMaxLength,
   setSelectionRange,
@@ -26,7 +27,8 @@ function isSupportedElement(
   )
 }
 
-function paste(
+export function paste(
+  this: UserEvent,
   element: HTMLElement,
   text: string,
   init?: ClipboardEventInit,
@@ -79,12 +81,10 @@ function paste(
     element,
 
     // TODO: investigate why the selection caused by invalid parameters was expected
-    ({
+    {
       newSelectionStart,
       selectionEnd: newSelectionStart,
-    } as unknown) as number,
-    ({} as unknown) as number,
+    } as unknown as number,
+    {} as unknown as number,
   )
 }
-
-export {paste}

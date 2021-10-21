@@ -44,7 +44,7 @@ function assignPointerInit(
   })
 }
 
-const notBubbling = ['mouseover', 'mouseout', 'pointerover', 'pointerout']
+const notBubbling = ['mouseenter', 'mouseleave', 'pointerenter', 'pointerleave']
 
 function getInitDefaults(type: string, init: FakeEventInit): FakeEventInit {
   return {

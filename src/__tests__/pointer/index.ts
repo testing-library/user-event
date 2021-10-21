@@ -9,15 +9,16 @@ test('double click', () => {
 
   expect(getClickEventsSnapshot()).toMatchInlineSnapshot(`
     pointerdown - pointerId=1; pointerType=mouse; isPrimary=true
-    mousedown - button=0; buttons=0; detail=1
+    mousedown - button=0; buttons=1; detail=1
     pointerup - pointerId=1; pointerType=mouse; isPrimary=true
     mouseup - button=0; buttons=0; detail=1
     click - button=0; buttons=0; detail=1
     pointerdown - pointerId=1; pointerType=mouse; isPrimary=true
-    mousedown - button=0; buttons=0; detail=2
+    mousedown - button=0; buttons=1; detail=2
     pointerup - pointerId=1; pointerType=mouse; isPrimary=true
     mouseup - button=0; buttons=0; detail=2
     click - button=0; buttons=0; detail=2
+    dblclick
   `)
 })
 
@@ -29,12 +30,12 @@ test('two clicks', () => {
 
   expect(getClickEventsSnapshot()).toMatchInlineSnapshot(`
     pointerdown - pointerId=1; pointerType=mouse; isPrimary=true
-    mousedown - button=0; buttons=0; detail=1
+    mousedown - button=0; buttons=1; detail=1
     pointerup - pointerId=1; pointerType=mouse; isPrimary=true
     mouseup - button=0; buttons=0; detail=1
     click - button=0; buttons=0; detail=1
     pointerdown - pointerId=1; pointerType=mouse; isPrimary=true
-    mousedown - button=0; buttons=0; detail=1
+    mousedown - button=0; buttons=1; detail=1
     pointerup - pointerId=1; pointerType=mouse; isPrimary=true
     mouseup - button=0; buttons=0; detail=1
     click - button=0; buttons=0; detail=1
@@ -52,7 +53,7 @@ test('drag sequence', () => {
 
   expect(getClickEventsSnapshot()).toMatchInlineSnapshot(`
     pointerdown - pointerId=1; pointerType=mouse; isPrimary=true
-    mousedown - button=0; buttons=0; detail=1
+    mousedown - button=0; buttons=1; detail=1
     pointermove - pointerId=1; pointerType=mouse; isPrimary=undefined
     mousemove - button=0; buttons=0; detail=0
     pointerup - pointerId=1; pointerType=mouse; isPrimary=true
@@ -72,16 +73,16 @@ test('hover to other element', () => {
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: div
 
-    div - pointerenter
-    div - mouseenter
+    div - pointerover
+    div - mouseover
     div - pointermove
     div - mousemove
     div - pointermove
     div - mousemove
-    div - pointerleave
-    div - mouseleave
-    div - pointerenter
-    div - mouseenter
+    div - pointerout
+    div - mouseout
+    div - pointerover
+    div - mouseover
     div - pointermove
     div - mousemove
   `)
@@ -108,22 +109,22 @@ test('hover inside element', () => {
     div - mousemove
     div - pointermove
     div - mousemove
-    a - pointerenter
-    a - mouseenter
+    a - pointerover
+    a - mouseover
     a - pointermove
     a - mousemove
     a - pointermove
     a - mousemove
-    a - pointerleave
-    a - mouseleave
-    p - pointerenter
-    p - mouseenter
+    a - pointerout
+    a - mouseout
+    p - pointerover
+    p - mouseover
     p - pointermove
     p - mousemove
     p - pointermove
     p - mousemove
-    p - pointerleave
-    p - mouseleave
+    p - pointerout
+    p - mouseout
     div - pointermove
     div - mousemove
   `)
@@ -137,12 +138,12 @@ test('continue previous target', () => {
 
   expect(getClickEventsSnapshot()).toMatchInlineSnapshot(`
     pointerdown - pointerId=1; pointerType=mouse; isPrimary=true
-    mousedown - button=0; buttons=0; detail=1
+    mousedown - button=0; buttons=1; detail=1
     pointerup - pointerId=1; pointerType=mouse; isPrimary=true
     mouseup - button=0; buttons=0; detail=1
     click - button=0; buttons=0; detail=1
     pointerdown - pointerId=1; pointerType=mouse; isPrimary=true
-    mousedown - button=0; buttons=0; detail=1
+    mousedown - button=0; buttons=1; detail=1
     pointerup - pointerId=1; pointerType=mouse; isPrimary=true
     mouseup - button=0; buttons=0; detail=1
     click - button=0; buttons=0; detail=1
@@ -159,19 +160,21 @@ test('other keys reset click counter, but keyup/click still uses the old count',
 
   expect(getClickEventsSnapshot()).toMatchInlineSnapshot(`
     pointerdown - pointerId=1; pointerType=mouse; isPrimary=true
-    mousedown - button=0; buttons=0; detail=1
+    mousedown - button=0; buttons=1; detail=1
     pointerup - pointerId=1; pointerType=mouse; isPrimary=true
     mouseup - button=0; buttons=0; detail=1
     click - button=0; buttons=0; detail=1
     pointerdown - pointerId=1; pointerType=mouse; isPrimary=true
-    mousedown - button=0; buttons=0; detail=2
-    mousedown - button=1; buttons=0; detail=1
-    mouseup - button=1; buttons=0; detail=1
+    mousedown - button=0; buttons=1; detail=2
+    mousedown - button=2; buttons=3; detail=1
+    mouseup - button=2; buttons=1; detail=1
+    contextmenu - button=0; buttons=0; detail=0
     pointerup - pointerId=1; pointerType=mouse; isPrimary=true
     mouseup - button=0; buttons=0; detail=2
     click - button=0; buttons=0; detail=2
+    dblclick
     pointerdown - pointerId=1; pointerType=mouse; isPrimary=true
-    mousedown - button=0; buttons=0; detail=1
+    mousedown - button=0; buttons=1; detail=1
     pointerup - pointerId=1; pointerType=mouse; isPrimary=true
     mouseup - button=0; buttons=0; detail=1
     click - button=0; buttons=0; detail=1
@@ -227,6 +230,7 @@ test('double click per touch device', () => {
     mousedown - button=0; buttons=0; detail=2
     mouseup - button=0; buttons=0; detail=2
     click - button=0; buttons=0; detail=2
+    dblclick
   `)
 })
 
@@ -295,14 +299,14 @@ test('move touch over elements', () => {
     div - pointerenter
     div - pointerdown
     div - pointermove
-    a - pointerenter
+    a - pointerover
     a - pointermove
     a - pointermove
-    a - pointerleave
-    p - pointerenter
+    a - pointerout
+    p - pointerover
     p - pointermove
     p - pointermove
-    p - pointerleave
+    p - pointerout
     div - pointermove
     div - pointerup
     div - pointerout
@@ -379,7 +383,7 @@ test('asynchronous pointer', async () => {
 
   expect(getClickEventsSnapshot()).toMatchInlineSnapshot(`
     pointerdown - pointerId=1; pointerType=mouse; isPrimary=true
-    mousedown - button=0; buttons=0; detail=1
+    mousedown - button=0; buttons=1; detail=1
     pointerup - pointerId=1; pointerType=mouse; isPrimary=true
     mouseup - button=0; buttons=0; detail=1
     click - button=0; buttons=0; detail=1

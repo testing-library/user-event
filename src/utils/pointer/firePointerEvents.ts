@@ -43,15 +43,16 @@ export function firePointerEvent(
       ? FakeMouseEvent
       : FakePointerEvent
 
-  let init: FakeEventInit = {
+  const init: FakeEventInit = {
     ...coords,
     altKey: keyboardState.modifiers.alt,
     ctrlKey: keyboardState.modifiers.ctrl,
     metaKey: keyboardState.modifiers.meta,
     shiftKey: keyboardState.modifiers.shift,
   }
-  if (Event === FakePointerEvent) {
-    init = {...init, pointerId, pointerType}
+  if (Event === FakePointerEvent || type === 'click') {
+    init.pointerId = pointerId
+    init.pointerType = pointerType
   }
   if (['pointerdown', 'pointerup'].includes(type)) {
     init.isPrimary = isPrimary

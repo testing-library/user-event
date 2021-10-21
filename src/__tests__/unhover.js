@@ -9,11 +9,11 @@ test('unhover', () => {
     Events fired on: button
 
     button - pointermove
-    button - mousemove: Left (0)
+    button - mousemove
     button - pointerout
     button - pointerleave
-    button - mouseout: Left (0)
-    button - mouseleave: Left (0)
+    button - mouseout
+    button - mouseleave
   `)
 })
 
@@ -34,9 +34,16 @@ test('no events fired on labels that contain disabled controls', () => {
   const {element, getEventSnapshot} = setup('<label><input disabled /></label>')
 
   userEvent.unhover(element)
-  expect(getEventSnapshot()).toMatchInlineSnapshot(
-    `No events were fired on: label`,
-  )
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
+    Events fired on: label
+
+    label - pointermove
+    label - mousemove
+    label - pointerout
+    label - pointerleave
+    label - mouseout
+    label - mouseleave
+  `)
 })
 
 test('throws when unhover element with pointer-events set to none', () => {
@@ -53,10 +60,10 @@ test('does not throws when hover element with pointer-events set to none and ski
     Events fired on: div
 
     div - pointermove
-    div - mousemove: Left (0)
+    div - mousemove
     div - pointerout
     div - pointerleave
-    div - mouseout: Left (0)
-    div - mouseleave: Left (0)
+    div - mouseout
+    div - mouseleave
   `)
 })

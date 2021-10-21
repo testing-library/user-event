@@ -68,7 +68,7 @@ jobs:
         run: npm run build
 
       - name: 🚀 Release
-        uses: ph-fritsche/action-release@v1
+        uses: ph-fritsche/action-release@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

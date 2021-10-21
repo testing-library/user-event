@@ -1,13 +1,16 @@
 import {getConfig as getDOMTestingLibraryConfig} from '@testing-library/dom'
 import {prepareDocument} from '../document'
+import type {UserEvent} from '../setup'
 import {typeImplementation, typeOptions} from './typeImplementation'
 
 export function type(
+  this: UserEvent,
   element: Element,
   text: string,
   options?: typeOptions & {delay?: 0},
 ): void
 export function type(
+  this: UserEvent,
   element: Element,
   text: string,
   options: typeOptions & {delay: number},
@@ -15,6 +18,7 @@ export function type(
 // this needs to be wrapped in the event/asyncWrapper for React's act and angular's change detection
 // depending on whether it will be async.
 export function type(
+  this: UserEvent,
   element: Element,
   text: string,
   {delay = 0, ...options}: typeOptions = {},
@@ -27,10 +31,11 @@ export function type(
 
   if (delay > 0) {
     return getDOMTestingLibraryConfig().asyncWrapper(() =>
-      typeImplementation(element, text, {delay, ...options}),
+      typeImplementation.call(this, element, text, {delay, ...options}),
     )
   } else {
-    return void typeImplementation(element, text, {delay, ...options})
+    return void typeImplementation
+      .call(this, element, text, {delay, ...options})
       // prevents users from dealing with UnhandledPromiseRejectionWarning
       .catch(console.error)
   }

@@ -10,16 +10,27 @@ export const MouseButton = {
 
 export type MouseButton = keyof typeof MouseButton | number
 
+// Some legacy...
+const MouseButtonFlip = {
+  auxiliary: 1,
+  secondary: 2,
+  1: 2,
+  2: 1,
+} as const
+
 export function getMouseButton(button: MouseButton): number {
+  if (button in MouseButtonFlip) {
+    return MouseButtonFlip[button as keyof typeof MouseButtonFlip]
+  }
   return typeof button === 'number' ? button : MouseButton[button]
 }
 
 export function getMouseButtons(...buttons: Array<MouseButton>) {
   let v = 0
   for (const t of buttons) {
-    const pos = getMouseButton(t)
+    const pos = typeof t === 'number' ? t : MouseButton[t]
     // eslint-disable-next-line no-bitwise
-    v &= 2 ** pos
+    v |= 2 ** pos
   }
   return v
 }

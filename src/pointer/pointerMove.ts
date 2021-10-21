@@ -1,4 +1,9 @@
-import {Coords, firePointerEvent, isDescendantOrSelf} from '../utils'
+import {
+  Coords,
+  firePointerEvent,
+  isDescendantOrSelf,
+  isDisabled,
+} from '../utils'
 import {inputDeviceState, PointerTarget} from './types'
 
 export interface PointerMoveAction extends PointerTarget {
@@ -31,6 +36,8 @@ export async function pointerMove(
     }
   }
 
+  pointerState.position[pointerName] = {pointerId, pointerType, target, coords}
+
   if (prevTarget !== target) {
     if (!prevTarget || !isDescendantOrSelf(prevTarget, target)) {
       fireEnter(target, coords)
@@ -42,11 +49,9 @@ export async function pointerMove(
   // Here we could probably calculate a few coords leading up to the final position
   fireMove(target, coords)
 
-  pointerState.position[pointerName] = {pointerId, pointerType, target, coords}
-
   function fireMove(eventTarget: Element, eventCoords: Coords) {
     fire(eventTarget, 'pointermove', eventCoords)
-    if (pointerType === 'mouse') {
+    if (pointerType === 'mouse' && !isDisabled(eventTarget)) {
       fire(eventTarget, 'mousemove', eventCoords)
     }
   }
@@ -54,7 +59,7 @@ export async function pointerMove(
   function fireLeave(eventTarget: Element, eventCoords: Coords) {
     fire(eventTarget, 'pointerout', eventCoords)
     fire(eventTarget, 'pointerleave', eventCoords)
-    if (pointerType === 'mouse') {
+    if (pointerType === 'mouse' && !isDisabled(eventTarget)) {
       fire(eventTarget, 'mouseout', eventCoords)
       fire(eventTarget, 'mouseleave', eventCoords)
     }
@@ -63,7 +68,7 @@ export async function pointerMove(
   function fireEnter(eventTarget: Element, eventCoords: Coords) {
     fire(eventTarget, 'pointerover', eventCoords)
     fire(eventTarget, 'pointerenter', eventCoords)
-    if (pointerType === 'mouse') {
+    if (pointerType === 'mouse' && !isDisabled(eventTarget)) {
       fire(eventTarget, 'mouseover', eventCoords)
       fire(eventTarget, 'mouseenter', eventCoords)
     }

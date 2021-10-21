@@ -8,6 +8,7 @@ import {
 } from './utils'
 import {focus} from './focus'
 import {blur} from './blur'
+import type {UserEvent} from './setup'
 
 function getNextElement(
   currentIndex: number,
@@ -33,7 +34,10 @@ export interface tabOptions {
   focusTrap?: Document | Element
 }
 
-function tab({shift = false, focusTrap}: tabOptions = {}) {
+export function tab(
+  this: UserEvent,
+  {shift = false, focusTrap}: tabOptions = {},
+) {
   const doc = focusTrap?.ownerDocument ?? document
   const previousElement = getActiveElement(doc)
 
@@ -158,8 +162,6 @@ function tab({shift = false, focusTrap}: tabOptions = {}) {
     fireEvent.keyUp(keyUpTarget, {...shiftKeyInit, shiftKey: false})
   }
 }
-
-export {tab}
 
 /*
 eslint

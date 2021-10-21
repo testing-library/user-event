@@ -1,5 +1,6 @@
 /* eslint-disable complexity */
 
+import {fireEvent} from '@testing-library/dom'
 import {focus} from '../focus'
 import {
   Coords,
@@ -126,7 +127,7 @@ function down(
     // TODO: touch...
   }
 
-  if (pointerType === 'mouse') {
+  if (pointerType === 'mouse' && pressObj.unpreventedDefault) {
     focus(findClosest(target, isFocusable) ?? target.ownerDocument.body)
   }
 
@@ -191,9 +192,10 @@ function up(
     }
   }
 
-  if (pointerType !== 'mouse' && !isMultiTouch) {
+  if (unpreventedDefault && pointerType !== 'mouse' && !isMultiTouch) {
     // The closest focusable element is focused when a `mousedown` would have been fired.
     // Even if there was no `mousedown` because the element was disabled.
+    // A `mousedown` that preventsDefault cancels this though.
     focus(findClosest(target, isFocusable) ?? target.ownerDocument.body)
   }
 
@@ -202,11 +204,24 @@ function up(
       unpreventedDefault = fire('mouseup') && unpreventedDefault
 
       const canClick = pointerType !== 'mouse' || button === 'primary'
-      if (canClick && unpreventedDefault && target === pressed.downTarget) {
+      if (canClick && target === pressed.downTarget) {
         fire('click')
         if (clickCount === 2) {
           fire('dblclick')
         }
+
+        // If the click happens inside a `label` with a control, the control (or closes focusable) is focused.
+        const label = target.closest('label')
+        if (label?.control) {
+          focus(
+            findClosest(label.control, isFocusable) ??
+              target.ownerDocument.body,
+          )
+        }
+      }
+
+      if (pointerType === 'mouse' && button === 'secondary') {
+        fireEvent.contextMenu(target)
       }
     }
   }

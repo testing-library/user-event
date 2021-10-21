@@ -14,12 +14,12 @@ test('fires correct events', () => {
     select[name="select"][value="1"] - pointermove
     select[name="select"][value="1"] - mousemove
     select[name="select"][value="1"] - pointerdown
-    select[name="select"][value="1"] - mousedown: Left (0)
+    select[name="select"][value="1"] - mousedown
     select[name="select"][value="1"] - focus
     select[name="select"][value="1"] - focusin
     select[name="select"][value="1"] - pointerup
-    select[name="select"][value="1"] - mouseup: Left (0)
-    select[name="select"][value="1"] - click: Left (0)
+    select[name="select"][value="1"] - mouseup
+    select[name="select"][value="1"] - click
     select[name="select"][value="2"] - input
     select[name="select"][value="2"] - change
     select[name="select"][value="2"] - pointerover
@@ -51,10 +51,10 @@ test('fires correct events on listBox select', () => {
     li#2[value="2"][aria-selected=false] - pointermove
     li#2[value="2"][aria-selected=false] - mousemove
     li#2[value="2"][aria-selected=false] - pointerdown
-    li#2[value="2"][aria-selected=false] - mousedown: Left (0)
+    li#2[value="2"][aria-selected=false] - mousedown
     li#2[value="2"][aria-selected=false] - pointerup
-    li#2[value="2"][aria-selected=false] - mouseup: Left (0)
-    li#2[value="2"][aria-selected=true] - click: Left (0)
+    li#2[value="2"][aria-selected=false] - mouseup
+    li#2[value="2"][aria-selected=true] - click
     li#2[value="2"][aria-selected=true] - pointermove
     li#2[value="2"][aria-selected=true] - mousemove
     li#2[value="2"][aria-selected=true] - pointerout
@@ -271,12 +271,12 @@ test('fires correct events when pointer events set to none but skipPointerEvents
     select[name="select"][value="1"] - pointermove
     select[name="select"][value="1"] - mousemove
     select[name="select"][value="1"] - pointerdown
-    select[name="select"][value="1"] - mousedown: Left (0)
+    select[name="select"][value="1"] - mousedown
     select[name="select"][value="1"] - focus
     select[name="select"][value="1"] - focusin
     select[name="select"][value="1"] - pointerup
-    select[name="select"][value="1"] - mouseup: Left (0)
-    select[name="select"][value="1"] - click: Left (0)
+    select[name="select"][value="1"] - mouseup
+    select[name="select"][value="1"] - click
     select[name="select"][value="2"] - input
     select[name="select"][value="2"] - change
     select[name="select"][value="2"] - pointerover

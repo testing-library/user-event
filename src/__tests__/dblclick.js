@@ -14,18 +14,18 @@ test('fires the correct events on buttons', () => {
     button - pointermove
     button - mousemove
     button - pointerdown
-    button - mousedown: Left (0)
+    button - mousedown
     button - focus
     button - focusin
     button - pointerup
-    button - mouseup: Left (0)
-    button - click: Left (0)
+    button - mouseup
+    button - click
     button - pointerdown
-    button - mousedown: Left (0)
+    button - mousedown
     button - pointerup
-    button - mouseup: Left (0)
-    button - click: Left (0)
-    button - dblclick: Left (0)
+    button - mouseup
+    button - click
+    button - dblclick
   `)
 })
 
@@ -61,24 +61,24 @@ test('fires the correct events on checkboxes', () => {
     input[checked=false] - pointermove
     input[checked=false] - mousemove
     input[checked=false] - pointerdown
-    input[checked=false] - mousedown: Left (0)
+    input[checked=false] - mousedown
     input[checked=false] - focus
     input[checked=false] - focusin
     input[checked=false] - pointerup
-    input[checked=false] - mouseup: Left (0)
-    input[checked=true] - click: Left (0)
+    input[checked=false] - mouseup
+    input[checked=true] - click
       unchecked -> checked
     input[checked=true] - input
     input[checked=true] - change
     input[checked=true] - pointerdown
-    input[checked=true] - mousedown: Left (0)
+    input[checked=true] - mousedown
     input[checked=true] - pointerup
-    input[checked=true] - mouseup: Left (0)
-    input[checked=false] - click: Left (0)
+    input[checked=true] - mouseup
+    input[checked=false] - click
       checked -> unchecked
     input[checked=false] - input
     input[checked=false] - change
-    input[checked=false] - dblclick: Left (0)
+    input[checked=false] - dblclick
   `)
 })
 
@@ -95,18 +95,18 @@ test('fires the correct events on regular inputs', () => {
     input[value=""] - pointermove
     input[value=""] - mousemove
     input[value=""] - pointerdown
-    input[value=""] - mousedown: Left (0)
+    input[value=""] - mousedown
     input[value=""] - focus
     input[value=""] - focusin
     input[value=""] - pointerup
-    input[value=""] - mouseup: Left (0)
-    input[value=""] - click: Left (0)
+    input[value=""] - mouseup
+    input[value=""] - click
     input[value=""] - pointerdown
-    input[value=""] - mousedown: Left (0)
+    input[value=""] - mousedown
     input[value=""] - pointerup
-    input[value=""] - mouseup: Left (0)
-    input[value=""] - click: Left (0)
-    input[value=""] - dblclick: Left (0)
+    input[value=""] - mouseup
+    input[value=""] - click
+    input[value=""] - dblclick
   `)
 })
 
@@ -123,16 +123,16 @@ test('fires the correct events on divs', () => {
     div - pointermove
     div - mousemove
     div - pointerdown
-    div - mousedown: Left (0)
+    div - mousedown
     div - pointerup
-    div - mouseup: Left (0)
-    div - click: Left (0)
+    div - mouseup
+    div - click
     div - pointerdown
-    div - mousedown: Left (0)
+    div - mousedown
     div - pointerup
-    div - mouseup: Left (0)
-    div - click: Left (0)
-    div - dblclick: Left (0)
+    div - mouseup
+    div - click
+    div - dblclick
   `)
 })
 
@@ -214,17 +214,17 @@ test('fires mouse events with the correct properties', () => {
     mouseenter - button=0; buttons=0; detail=0
     pointermove - pointerId=1; pointerType=mouse; isPrimary=undefined
     mousemove - button=0; buttons=0; detail=0
-    pointerdown - pointerId=undefined; pointerType=undefined; isPrimary=undefined
+    pointerdown - pointerId=1; pointerType=mouse; isPrimary=true
     mousedown - button=0; buttons=1; detail=1
-    pointerup - pointerId=undefined; pointerType=undefined; isPrimary=undefined
-    mouseup - button=0; buttons=1; detail=1
-    click - button=0; buttons=1; detail=1
-    pointerdown - pointerId=undefined; pointerType=undefined; isPrimary=undefined
+    pointerup - pointerId=1; pointerType=mouse; isPrimary=true
+    mouseup - button=0; buttons=0; detail=1
+    click - button=0; buttons=0; detail=1
+    pointerdown - pointerId=1; pointerType=mouse; isPrimary=true
     mousedown - button=0; buttons=1; detail=2
-    pointerup - pointerId=undefined; pointerType=undefined; isPrimary=undefined
-    mouseup - button=0; buttons=1; detail=2
-    click - button=0; buttons=1; detail=2
-    dblclick - button=0; buttons=1; detail=2
+    pointerup - pointerId=1; pointerType=mouse; isPrimary=true
+    mouseup - button=0; buttons=0; detail=2
+    click - button=0; buttons=0; detail=2
+    dblclick
   `)
 })
 
@@ -241,17 +241,17 @@ test('fires mouse events with custom button property', () => {
     mouseenter - button=0; buttons=0; detail=0
     pointermove - pointerId=1; pointerType=mouse; isPrimary=undefined
     mousemove - button=0; buttons=0; detail=0
-    pointerdown - pointerId=undefined; pointerType=undefined; isPrimary=undefined
-    mousedown - button=1; buttons=4; detail=1
-    pointerup - pointerId=undefined; pointerType=undefined; isPrimary=undefined
-    mouseup - button=1; buttons=4; detail=1
-    click - button=1; buttons=4; detail=1
-    pointerdown - pointerId=undefined; pointerType=undefined; isPrimary=undefined
-    mousedown - button=1; buttons=4; detail=2
-    pointerup - pointerId=undefined; pointerType=undefined; isPrimary=undefined
-    mouseup - button=1; buttons=4; detail=2
-    click - button=1; buttons=4; detail=2
-    dblclick - button=1; buttons=4; detail=2
+    pointerdown - pointerId=1; pointerType=mouse; isPrimary=true
+    mousedown - button=0; buttons=1; detail=1
+    pointerup - pointerId=1; pointerType=mouse; isPrimary=true
+    mouseup - button=0; buttons=0; detail=1
+    click - button=0; buttons=0; detail=1
+    pointerdown - pointerId=1; pointerType=mouse; isPrimary=true
+    mousedown - button=0; buttons=1; detail=2
+    pointerup - pointerId=1; pointerType=mouse; isPrimary=true
+    mouseup - button=0; buttons=0; detail=2
+    click - button=0; buttons=0; detail=2
+    dblclick
   `)
 })
 
@@ -267,17 +267,17 @@ test('fires mouse events with custom buttons property', () => {
     mouseenter - button=0; buttons=0; detail=0
     pointermove - pointerId=1; pointerType=mouse; isPrimary=undefined
     mousemove - button=0; buttons=0; detail=0
-    pointerdown - pointerId=undefined; pointerType=undefined; isPrimary=undefined
-    mousedown - button=1; buttons=4; detail=1
-    pointerup - pointerId=undefined; pointerType=undefined; isPrimary=undefined
-    mouseup - button=1; buttons=4; detail=1
-    click - button=1; buttons=4; detail=1
-    pointerdown - pointerId=undefined; pointerType=undefined; isPrimary=undefined
-    mousedown - button=1; buttons=4; detail=2
-    pointerup - pointerId=undefined; pointerType=undefined; isPrimary=undefined
-    mouseup - button=1; buttons=4; detail=2
-    click - button=1; buttons=4; detail=2
-    dblclick - button=1; buttons=4; detail=2
+    pointerdown - pointerId=1; pointerType=mouse; isPrimary=true
+    mousedown - button=0; buttons=1; detail=1
+    pointerup - pointerId=1; pointerType=mouse; isPrimary=true
+    mouseup - button=0; buttons=0; detail=1
+    click - button=0; buttons=0; detail=1
+    pointerdown - pointerId=1; pointerType=mouse; isPrimary=true
+    mousedown - button=0; buttons=1; detail=2
+    pointerup - pointerId=1; pointerType=mouse; isPrimary=true
+    mouseup - button=0; buttons=0; detail=2
+    click - button=0; buttons=0; detail=2
+    dblclick
   `)
 })
 

@@ -30,12 +30,12 @@ test('{esc} triggers typing the escape character', () => {
     input[value=""] - pointermove
     input[value=""] - mousemove
     input[value=""] - pointerdown
-    input[value=""] - mousedown: Left (0)
+    input[value=""] - mousedown
     input[value=""] - focus
     input[value=""] - focusin
     input[value=""] - pointerup
-    input[value=""] - mouseup: Left (0)
-    input[value=""] - click: Left (0)
+    input[value=""] - mouseup
+    input[value=""] - click
     input[value=""] - keydown: Escape (27)
     input[value=""] - keyup: Escape (27)
   `)
@@ -54,12 +54,12 @@ test('a{backspace}', () => {
     input[value=""] - pointermove
     input[value=""] - mousemove
     input[value=""] - pointerdown
-    input[value=""] - mousedown: Left (0)
+    input[value=""] - mousedown
     input[value=""] - focus
     input[value=""] - focusin
     input[value=""] - pointerup
-    input[value=""] - mouseup: Left (0)
-    input[value=""] - click: Left (0)
+    input[value=""] - mouseup
+    input[value=""] - click
     input[value=""] - keydown: a (97)
     input[value=""] - keypress: a (97)
     input[value="a"] - input
@@ -83,12 +83,12 @@ test('{backspace}a', () => {
     input[value=""] - pointermove
     input[value=""] - mousemove
     input[value=""] - pointerdown
-    input[value=""] - mousedown: Left (0)
+    input[value=""] - mousedown
     input[value=""] - focus
     input[value=""] - focusin
     input[value=""] - pointerup
-    input[value=""] - mouseup: Left (0)
-    input[value=""] - click: Left (0)
+    input[value=""] - mouseup
+    input[value=""] - click
     input[value=""] - keydown: Backspace (8)
     input[value=""] - keyup: Backspace (8)
     input[value=""] - keydown: a (97)
@@ -115,12 +115,12 @@ test('{backspace} triggers typing the backspace character and deletes the charac
     input[value="yo"] - pointermove
     input[value="yo"] - mousemove
     input[value="yo"] - pointerdown
-    input[value="yo"] - mousedown: Left (0)
+    input[value="yo"] - mousedown
     input[value="yo"] - focus
     input[value="yo"] - focusin
     input[value="yo"] - pointerup
-    input[value="yo"] - mouseup: Left (0)
-    input[value="yo"] - click: Left (0)
+    input[value="yo"] - mouseup
+    input[value="yo"] - click
     input[value="yo"] - keydown: Backspace (8)
     input[value="o"] - select
     input[value="o"] - input
@@ -145,12 +145,12 @@ test('{backspace} on a readOnly input', () => {
     input[value="yo"] - pointermove
     input[value="yo"] - mousemove
     input[value="yo"] - pointerdown
-    input[value="yo"] - mousedown: Left (0)
+    input[value="yo"] - mousedown
     input[value="yo"] - focus
     input[value="yo"] - focusin
     input[value="yo"] - pointerup
-    input[value="yo"] - mouseup: Left (0)
-    input[value="yo"] - click: Left (0)
+    input[value="yo"] - mouseup
+    input[value="yo"] - click
     input[value="yo"] - keydown: Backspace (8)
     input[value="yo"] - keyup: Backspace (8)
   `)
@@ -175,12 +175,12 @@ test('{backspace} does not fire input if keydown prevents default', () => {
     input[value="yo"] - pointermove
     input[value="yo"] - mousemove
     input[value="yo"] - pointerdown
-    input[value="yo"] - mousedown: Left (0)
+    input[value="yo"] - mousedown
     input[value="yo"] - focus
     input[value="yo"] - focusin
     input[value="yo"] - pointerup
-    input[value="yo"] - mouseup: Left (0)
-    input[value="yo"] - click: Left (0)
+    input[value="yo"] - mouseup
+    input[value="yo"] - click
     input[value="yo"] - keydown: Backspace (8)
     input[value="yo"] - keyup: Backspace (8)
   `)
@@ -203,12 +203,12 @@ test('{backspace} deletes the selected range', () => {
     input[value="Hi there"] - pointermove
     input[value="Hi there"] - mousemove
     input[value="Hi there"] - pointerdown
-    input[value="Hi there"] - mousedown: Left (0)
+    input[value="Hi there"] - mousedown
     input[value="Hi there"] - focus
     input[value="Hi there"] - focusin
     input[value="Hi there"] - pointerup
-    input[value="Hi there"] - mouseup: Left (0)
-    input[value="Hi there"] - click: Left (0)
+    input[value="Hi there"] - mouseup
+    input[value="Hi there"] - click
     input[value="Hi there"] - keydown: Backspace (8)
     input[value="Here"] - select
     input[value="Here"] - input
@@ -239,12 +239,12 @@ test('{alt}a{/alt}', () => {
     input[value=""] - pointermove
     input[value=""] - mousemove
     input[value=""] - pointerdown
-    input[value=""] - mousedown: Left (0)
+    input[value=""] - mousedown
     input[value=""] - focus
     input[value=""] - focusin
     input[value=""] - pointerup
-    input[value=""] - mouseup: Left (0)
-    input[value=""] - click: Left (0)
+    input[value=""] - mouseup
+    input[value=""] - click
     input[value=""] - keydown: Alt (18) {alt}
     input[value=""] - keydown: a (97) {alt}
     input[value=""] - keyup: a (97) {alt}
@@ -267,12 +267,12 @@ test('{meta}a{/meta}', () => {
     input[value=""] - pointermove
     input[value=""] - mousemove
     input[value=""] - pointerdown
-    input[value=""] - mousedown: Left (0)
+    input[value=""] - mousedown
     input[value=""] - focus
     input[value=""] - focusin
     input[value=""] - pointerup
-    input[value=""] - mouseup: Left (0)
-    input[value=""] - click: Left (0)
+    input[value=""] - mouseup
+    input[value=""] - click
     input[value=""] - keydown: Meta (93) {meta}
     input[value=""] - keydown: a (97) {meta}
     input[value=""] - keypress: a (97) {meta}
@@ -297,12 +297,12 @@ test('{ctrl}a{/ctrl}', () => {
     input[value=""] - pointermove
     input[value=""] - mousemove
     input[value=""] - pointerdown
-    input[value=""] - mousedown: Left (0)
+    input[value=""] - mousedown
     input[value=""] - focus
     input[value=""] - focusin
     input[value=""] - pointerup
-    input[value=""] - mouseup: Left (0)
-    input[value=""] - click: Left (0)
+    input[value=""] - mouseup
+    input[value=""] - click
     input[value=""] - keydown: Control (17) {ctrl}
     input[value=""] - keydown: a (97) {ctrl}
     input[value=""] - keyup: a (97) {ctrl}
@@ -325,12 +325,12 @@ test('{shift}a{/shift}', () => {
     input[value=""] - pointermove
     input[value=""] - mousemove
     input[value=""] - pointerdown
-    input[value=""] - mousedown: Left (0)
+    input[value=""] - mousedown
     input[value=""] - focus
     input[value=""] - focusin
     input[value=""] - pointerup
-    input[value=""] - mouseup: Left (0)
-    input[value=""] - click: Left (0)
+    input[value=""] - mouseup
+    input[value=""] - click
     input[value=""] - keydown: Shift (16) {shift}
     input[value=""] - keydown: a (97) {shift}
     input[value=""] - keypress: a (97) {shift}
@@ -356,12 +356,12 @@ test('{capslock}a{capslock}', () => {
     input[value=""] - pointermove
     input[value=""] - mousemove
     input[value=""] - pointerdown
-    input[value=""] - mousedown: Left (0)
+    input[value=""] - mousedown
     input[value=""] - focus
     input[value=""] - focusin
     input[value=""] - pointerup
-    input[value=""] - mouseup: Left (0)
-    input[value=""] - click: Left (0)
+    input[value=""] - mouseup
+    input[value=""] - click
     input[value=""] - keydown: CapsLock (20)
     input[value=""] - keyup: CapsLock (20)
     input[value=""] - keydown: a (97)
@@ -388,12 +388,12 @@ test('a{enter}', () => {
     input[value=""] - pointermove
     input[value=""] - mousemove
     input[value=""] - pointerdown
-    input[value=""] - mousedown: Left (0)
+    input[value=""] - mousedown
     input[value=""] - focus
     input[value=""] - focusin
     input[value=""] - pointerup
-    input[value=""] - mouseup: Left (0)
-    input[value=""] - click: Left (0)
+    input[value=""] - mouseup
+    input[value=""] - click
     input[value=""] - keydown: a (97)
     input[value=""] - keypress: a (97)
     input[value="a"] - input
@@ -423,12 +423,12 @@ test('{enter} with preventDefault keydown', () => {
     input[value=""] - pointermove
     input[value=""] - mousemove
     input[value=""] - pointerdown
-    input[value=""] - mousedown: Left (0)
+    input[value=""] - mousedown
     input[value=""] - focus
     input[value=""] - focusin
     input[value=""] - pointerup
-    input[value=""] - mouseup: Left (0)
-    input[value=""] - click: Left (0)
+    input[value=""] - mouseup
+    input[value=""] - click
     input[value=""] - keydown: Enter (13)
     input[value=""] - keyup: Enter (13)
   `)
@@ -449,12 +449,12 @@ test('{enter} on a button', () => {
     button - pointermove
     button - mousemove
     button - pointerdown
-    button - mousedown: Left (0)
+    button - mousedown
     button - focus
     button - focusin
     button - pointerup
-    button - mouseup: Left (0)
-    button - click: Left (0)
+    button - mouseup
+    button - click
     button - keydown: Enter (13)
     button - keypress: Enter (13)
     button - click: Left (0)
@@ -481,12 +481,12 @@ test('{enter} on a button when keydown calls prevent default', () => {
     button - pointermove
     button - mousemove
     button - pointerdown
-    button - mousedown: Left (0)
+    button - mousedown
     button - focus
     button - focusin
     button - pointerup
-    button - mouseup: Left (0)
-    button - click: Left (0)
+    button - mouseup
+    button - click
     button - keydown: Enter (13)
     button - keyup: Enter (13)
   `)
@@ -511,12 +511,12 @@ test('{enter} on a button when keypress calls prevent default', () => {
     button - pointermove
     button - mousemove
     button - pointerdown
-    button - mousedown: Left (0)
+    button - mousedown
     button - focus
     button - focusin
     button - pointerup
-    button - mouseup: Left (0)
-    button - click: Left (0)
+    button - mouseup
+    button - click
     button - keydown: Enter (13)
     button - keypress: Enter (13)
     button - keyup: Enter (13)
@@ -538,12 +538,12 @@ test('{space} on a button', () => {
     button - pointermove
     button - mousemove
     button - pointerdown
-    button - mousedown: Left (0)
+    button - mousedown
     button - focus
     button - focusin
     button - pointerup
-    button - mouseup: Left (0)
-    button - click: Left (0)
+    button - mouseup
+    button - click
     button - keydown: (32)
     button - keypress: (32)
     button - keyup: (32)
@@ -566,12 +566,12 @@ test(`' ' on a button is the same as '{space}'`, () => {
     button - pointermove
     button - mousemove
     button - pointerdown
-    button - mousedown: Left (0)
+    button - mousedown
     button - focus
     button - focusin
     button - pointerup
-    button - mouseup: Left (0)
-    button - click: Left (0)
+    button - mouseup
+    button - click
     button - keydown: (32)
     button - keypress: (32)
     button - keyup: (32)
@@ -598,12 +598,12 @@ test('{space} with preventDefault keydown on button', () => {
     button - pointermove
     button - mousemove
     button - pointerdown
-    button - mousedown: Left (0)
+    button - mousedown
     button - focus
     button - focusin
     button - pointerup
-    button - mouseup: Left (0)
-    button - click: Left (0)
+    button - mouseup
+    button - click
     button - keydown: (32)
     button - keyup: (32)
   `)
@@ -628,12 +628,12 @@ test('{space} with preventDefault keyup on button', () => {
     button - pointermove
     button - mousemove
     button - pointerdown
-    button - mousedown: Left (0)
+    button - mousedown
     button - focus
     button - focusin
     button - pointerup
-    button - mouseup: Left (0)
-    button - click: Left (0)
+    button - mouseup
+    button - click
     button - keydown: (32)
     button - keypress: (32)
     button - keyup: (32)
@@ -655,12 +655,12 @@ test('{space} on an input', () => {
     input[value=""] - pointermove
     input[value=""] - mousemove
     input[value=""] - pointerdown
-    input[value=""] - mousedown: Left (0)
+    input[value=""] - mousedown
     input[value=""] - focus
     input[value=""] - focusin
     input[value=""] - pointerup
-    input[value=""] - mouseup: Left (0)
-    input[value=""] - click: Left (0)
+    input[value=""] - mouseup
+    input[value=""] - click
     input[value=""] - keydown: (32)
     input[value=""] - keypress: (32)
     input[value=" "] - input
@@ -685,12 +685,12 @@ test('{enter} on an input type="color" fires same events as a button', () => {
     input[value="#ffffff"] - pointermove
     input[value="#ffffff"] - mousemove
     input[value="#ffffff"] - pointerdown
-    input[value="#ffffff"] - mousedown: Left (0)
+    input[value="#ffffff"] - mousedown
     input[value="#ffffff"] - focus
     input[value="#ffffff"] - focusin
     input[value="#ffffff"] - pointerup
-    input[value="#ffffff"] - mouseup: Left (0)
-    input[value="#ffffff"] - click: Left (0)
+    input[value="#ffffff"] - mouseup
+    input[value="#ffffff"] - click
     input[value="#ffffff"] - keydown: Enter (13)
     input[value="#ffffff"] - keypress: Enter (13)
     input[value="#ffffff"] - click: Left (0)
@@ -715,12 +715,12 @@ test('{space} on an input type="color" fires same events as a button', () => {
     input[value="#ffffff"] - pointermove
     input[value="#ffffff"] - mousemove
     input[value="#ffffff"] - pointerdown
-    input[value="#ffffff"] - mousedown: Left (0)
+    input[value="#ffffff"] - mousedown
     input[value="#ffffff"] - focus
     input[value="#ffffff"] - focusin
     input[value="#ffffff"] - pointerup
-    input[value="#ffffff"] - mouseup: Left (0)
-    input[value="#ffffff"] - click: Left (0)
+    input[value="#ffffff"] - mouseup
+    input[value="#ffffff"] - click
     input[value="#ffffff"] - keydown: (32)
     input[value="#ffffff"] - keypress: (32)
     input[value="#ffffff"] - keyup: (32)
@@ -745,12 +745,12 @@ test(`' ' on input type="color" is the same as '{space}'`, () => {
     input[value="#ffffff"] - pointermove
     input[value="#ffffff"] - mousemove
     input[value="#ffffff"] - pointerdown
-    input[value="#ffffff"] - mousedown: Left (0)
+    input[value="#ffffff"] - mousedown
     input[value="#ffffff"] - focus
     input[value="#ffffff"] - focusin
     input[value="#ffffff"] - pointerup
-    input[value="#ffffff"] - mouseup: Left (0)
-    input[value="#ffffff"] - click: Left (0)
+    input[value="#ffffff"] - mouseup
+    input[value="#ffffff"] - click
     input[value="#ffffff"] - keydown: (32)
     input[value="#ffffff"] - keypress: (32)
     input[value="#ffffff"] - keyup: (32)
@@ -773,12 +773,12 @@ test('{enter} on a textarea', () => {
     textarea[value=""] - pointermove
     textarea[value=""] - mousemove
     textarea[value=""] - pointerdown
-    textarea[value=""] - mousedown: Left (0)
+    textarea[value=""] - mousedown
     textarea[value=""] - focus
     textarea[value=""] - focusin
     textarea[value=""] - pointerup
-    textarea[value=""] - mouseup: Left (0)
-    textarea[value=""] - click: Left (0)
+    textarea[value=""] - mouseup
+    textarea[value=""] - click
     textarea[value=""] - keydown: Enter (13)
     textarea[value=""] - keypress: Enter (13)
     textarea[value="\\n"] - input
@@ -803,12 +803,12 @@ test('{enter} on a textarea when keydown calls prevent default', () => {
     textarea[value=""] - pointermove
     textarea[value=""] - mousemove
     textarea[value=""] - pointerdown
-    textarea[value=""] - mousedown: Left (0)
+    textarea[value=""] - mousedown
     textarea[value=""] - focus
     textarea[value=""] - focusin
     textarea[value=""] - pointerup
-    textarea[value=""] - mouseup: Left (0)
-    textarea[value=""] - click: Left (0)
+    textarea[value=""] - mouseup
+    textarea[value=""] - click
     textarea[value=""] - keydown: Enter (13)
     textarea[value=""] - keyup: Enter (13)
   `)
@@ -831,12 +831,12 @@ test('{enter} on a textarea when keypress calls prevent default', () => {
     textarea[value=""] - pointermove
     textarea[value=""] - mousemove
     textarea[value=""] - pointerdown
-    textarea[value=""] - mousedown: Left (0)
+    textarea[value=""] - mousedown
     textarea[value=""] - focus
     textarea[value=""] - focusin
     textarea[value=""] - pointerup
-    textarea[value=""] - mouseup: Left (0)
-    textarea[value=""] - click: Left (0)
+    textarea[value=""] - mouseup
+    textarea[value=""] - click
     textarea[value=""] - keydown: Enter (13)
     textarea[value=""] - keypress: Enter (13)
     textarea[value=""] - keyup: Enter (13)
@@ -858,12 +858,12 @@ test('{meta}{enter}{/meta} on a button', () => {
     button - pointermove
     button - mousemove
     button - pointerdown
-    button - mousedown: Left (0)
+    button - mousedown
     button - focus
     button - focusin
     button - pointerup
-    button - mouseup: Left (0)
-    button - click: Left (0)
+    button - mouseup
+    button - click
     button - keydown: Meta (93) {meta}
     button - keydown: Enter (13) {meta}
     button - keypress: Enter (13) {meta}
@@ -888,12 +888,12 @@ test('{meta}{alt}{ctrl}a{/ctrl}{/alt}{/meta}', () => {
     input[value=""] - pointermove
     input[value=""] - mousemove
     input[value=""] - pointerdown
-    input[value=""] - mousedown: Left (0)
+    input[value=""] - mousedown
     input[value=""] - focus
     input[value=""] - focusin
     input[value=""] - pointerup
-    input[value=""] - mouseup: Left (0)
-    input[value=""] - click: Left (0)
+    input[value=""] - mouseup
+    input[value=""] - click
     input[value=""] - keydown: Meta (93) {meta}
     input[value=""] - keydown: Alt (18) {alt}{meta}
     input[value=""] - keydown: Control (17) {alt}{meta}{ctrl}
@@ -928,12 +928,12 @@ test('{selectall} selects all the text', () => {
     input[value="abcdefg"] - pointermove
     input[value="abcdefg"] - mousemove
     input[value="abcdefg"] - pointerdown
-    input[value="abcdefg"] - mousedown: Left (0)
+    input[value="abcdefg"] - mousedown
     input[value="abcdefg"] - focus
     input[value="abcdefg"] - focusin
     input[value="abcdefg"] - pointerup
-    input[value="abcdefg"] - mouseup: Left (0)
-    input[value="abcdefg"] - click: Left (0)
+    input[value="abcdefg"] - mouseup
+    input[value="abcdefg"] - click
     input[value="abcdefg"] - select
   `)
 })
@@ -958,12 +958,12 @@ test('{del} at the start of the input', () => {
     input[value="hello"] - pointermove
     input[value="hello"] - mousemove
     input[value="hello"] - pointerdown
-    input[value="hello"] - mousedown: Left (0)
+    input[value="hello"] - mousedown
     input[value="hello"] - focus
     input[value="hello"] - focusin
     input[value="hello"] - pointerup
-    input[value="hello"] - mouseup: Left (0)
-    input[value="hello"] - click: Left (0)
+    input[value="hello"] - mouseup
+    input[value="hello"] - click
     input[value="hello"] - keydown: Delete (46)
     input[value="ello"] - select
     input[value="ello"] - input
@@ -988,12 +988,12 @@ test('{del} at end of the input', () => {
     input[value="hello"] - pointermove
     input[value="hello"] - mousemove
     input[value="hello"] - pointerdown
-    input[value="hello"] - mousedown: Left (0)
+    input[value="hello"] - mousedown
     input[value="hello"] - focus
     input[value="hello"] - focusin
     input[value="hello"] - pointerup
-    input[value="hello"] - mouseup: Left (0)
-    input[value="hello"] - click: Left (0)
+    input[value="hello"] - mouseup
+    input[value="hello"] - click
     input[value="hello"] - select
     input[value="hello"] - keydown: Delete (46)
     input[value="hello"] - keyup: Delete (46)
@@ -1020,12 +1020,12 @@ test('{del} in the middle of the input', () => {
     input[value="hello"] - pointermove
     input[value="hello"] - mousemove
     input[value="hello"] - pointerdown
-    input[value="hello"] - mousedown: Left (0)
+    input[value="hello"] - mousedown
     input[value="hello"] - focus
     input[value="hello"] - focusin
     input[value="hello"] - pointerup
-    input[value="hello"] - mouseup: Left (0)
-    input[value="hello"] - click: Left (0)
+    input[value="hello"] - mouseup
+    input[value="hello"] - click
     input[value="hello"] - select
     input[value="hello"] - keydown: Delete (46)
     input[value="helo"] - select
@@ -1054,12 +1054,12 @@ test('{del} with a selection range', () => {
     input[value="hello"] - pointermove
     input[value="hello"] - mousemove
     input[value="hello"] - pointerdown
-    input[value="hello"] - mousedown: Left (0)
+    input[value="hello"] - mousedown
     input[value="hello"] - focus
     input[value="hello"] - focusin
     input[value="hello"] - pointerup
-    input[value="hello"] - mouseup: Left (0)
-    input[value="hello"] - click: Left (0)
+    input[value="hello"] - mouseup
+    input[value="hello"] - click
     input[value="hello"] - select
     input[value="hello"] - keydown: Delete (46)
     input[value="hlo"] - select
@@ -1109,12 +1109,12 @@ test('any remaining type modifiers are automatically released at the end', () =>
     input[value=""] - pointermove
     input[value=""] - mousemove
     input[value=""] - pointerdown
-    input[value=""] - mousedown: Left (0)
+    input[value=""] - mousedown
     input[value=""] - focus
     input[value=""] - focusin
     input[value=""] - pointerup
-    input[value=""] - mouseup: Left (0)
-    input[value=""] - click: Left (0)
+    input[value=""] - mouseup
+    input[value=""] - click
     input[value=""] - keydown: Meta (93) {meta}
     input[value=""] - keydown: Alt (18) {alt}{meta}
     input[value=""] - keydown: Control (17) {alt}{meta}{ctrl}
@@ -1141,12 +1141,12 @@ test('modifiers will not be closed if skipAutoClose is enabled', () => {
     input[value=""] - pointermove
     input[value=""] - mousemove
     input[value=""] - pointerdown
-    input[value=""] - mousedown: Left (0)
+    input[value=""] - mousedown
     input[value=""] - focus
     input[value=""] - focusin
     input[value=""] - pointerup
-    input[value=""] - mouseup: Left (0)
-    input[value=""] - click: Left (0)
+    input[value=""] - mouseup
+    input[value=""] - click
     input[value=""] - keydown: Meta (93) {meta}
     input[value=""] - keydown: a (97) {meta}
     input[value=""] - keypress: a (97) {meta}

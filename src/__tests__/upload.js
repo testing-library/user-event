@@ -20,12 +20,12 @@ test('should fire the correct events for input', () => {
     input[value=""] - pointermove
     input[value=""] - mousemove
     input[value=""] - pointerdown
-    input[value=""] - mousedown: Left (0)
+    input[value=""] - mousedown
     input[value=""] - focus
     input[value=""] - focusin
     input[value=""] - pointerup
-    input[value=""] - mouseup: Left (0)
-    input[value=""] - click: Left (0)
+    input[value=""] - mouseup
+    input[value=""] - click
     input[value=""] - blur
     input[value=""] - focusout
     input[value=""] - focus
@@ -55,10 +55,10 @@ test('should fire the correct events with label', () => {
     label[for="element"] - pointermove
     label[for="element"] - mousemove
     label[for="element"] - pointerdown
-    label[for="element"] - mousedown: Left (0)
+    label[for="element"] - mousedown
     label[for="element"] - pointerup
-    label[for="element"] - mouseup: Left (0)
-    label[for="element"] - click: Left (0)
+    label[for="element"] - mouseup
+    label[for="element"] - click
     input#element[value=""] - click: Left (0)
     input#element[value=""] - focusin
     input#element[value=""] - input
@@ -258,6 +258,6 @@ test('apply init options', () => {
     changeInit: {cancelable: true},
   })
 
-  expect(getEvents('click')[0]).toHaveProperty('shiftKey', true)
+  expect(getEvents('click')[0]).toHaveProperty('shiftKey', false)
   expect(getEvents('change')[0]).toHaveProperty('cancelable', true)
 })

@@ -9,12 +9,12 @@ test('double click', () => {
 
   expect(getClickEventsSnapshot()).toMatchInlineSnapshot(`
     pointerdown - pointerId=1; pointerType=mouse; isPrimary=true
-    mousedown - button=0; buttons=0; detail=1
+    mousedown - button=0; buttons=1; detail=1
     pointerup - pointerId=1; pointerType=mouse; isPrimary=true
     mouseup - button=0; buttons=0; detail=1
     click - button=0; buttons=0; detail=1
     pointerdown - pointerId=1; pointerType=mouse; isPrimary=true
-    mousedown - button=0; buttons=0; detail=2
+    mousedown - button=0; buttons=1; detail=2
     pointerup - pointerId=1; pointerType=mouse; isPrimary=true
     mouseup - button=0; buttons=0; detail=2
     click - button=0; buttons=0; detail=2
@@ -30,12 +30,12 @@ test('two clicks', () => {
 
   expect(getClickEventsSnapshot()).toMatchInlineSnapshot(`
     pointerdown - pointerId=1; pointerType=mouse; isPrimary=true
-    mousedown - button=0; buttons=0; detail=1
+    mousedown - button=0; buttons=1; detail=1
     pointerup - pointerId=1; pointerType=mouse; isPrimary=true
     mouseup - button=0; buttons=0; detail=1
     click - button=0; buttons=0; detail=1
     pointerdown - pointerId=1; pointerType=mouse; isPrimary=true
-    mousedown - button=0; buttons=0; detail=1
+    mousedown - button=0; buttons=1; detail=1
     pointerup - pointerId=1; pointerType=mouse; isPrimary=true
     mouseup - button=0; buttons=0; detail=1
     click - button=0; buttons=0; detail=1
@@ -53,7 +53,7 @@ test('drag sequence', () => {
 
   expect(getClickEventsSnapshot()).toMatchInlineSnapshot(`
     pointerdown - pointerId=1; pointerType=mouse; isPrimary=true
-    mousedown - button=0; buttons=0; detail=1
+    mousedown - button=0; buttons=1; detail=1
     pointermove - pointerId=1; pointerType=mouse; isPrimary=undefined
     mousemove - button=0; buttons=0; detail=0
     pointerup - pointerId=1; pointerType=mouse; isPrimary=true
@@ -138,12 +138,12 @@ test('continue previous target', () => {
 
   expect(getClickEventsSnapshot()).toMatchInlineSnapshot(`
     pointerdown - pointerId=1; pointerType=mouse; isPrimary=true
-    mousedown - button=0; buttons=0; detail=1
+    mousedown - button=0; buttons=1; detail=1
     pointerup - pointerId=1; pointerType=mouse; isPrimary=true
     mouseup - button=0; buttons=0; detail=1
     click - button=0; buttons=0; detail=1
     pointerdown - pointerId=1; pointerType=mouse; isPrimary=true
-    mousedown - button=0; buttons=0; detail=1
+    mousedown - button=0; buttons=1; detail=1
     pointerup - pointerId=1; pointerType=mouse; isPrimary=true
     mouseup - button=0; buttons=0; detail=1
     click - button=0; buttons=0; detail=1
@@ -160,20 +160,21 @@ test('other keys reset click counter, but keyup/click still uses the old count',
 
   expect(getClickEventsSnapshot()).toMatchInlineSnapshot(`
     pointerdown - pointerId=1; pointerType=mouse; isPrimary=true
-    mousedown - button=0; buttons=0; detail=1
+    mousedown - button=0; buttons=1; detail=1
     pointerup - pointerId=1; pointerType=mouse; isPrimary=true
     mouseup - button=0; buttons=0; detail=1
     click - button=0; buttons=0; detail=1
     pointerdown - pointerId=1; pointerType=mouse; isPrimary=true
-    mousedown - button=0; buttons=0; detail=2
-    mousedown - button=2; buttons=0; detail=1
-    mouseup - button=2; buttons=0; detail=1
+    mousedown - button=0; buttons=1; detail=2
+    mousedown - button=2; buttons=3; detail=1
+    mouseup - button=2; buttons=1; detail=1
+    contextmenu - button=0; buttons=0; detail=0
     pointerup - pointerId=1; pointerType=mouse; isPrimary=true
     mouseup - button=0; buttons=0; detail=2
     click - button=0; buttons=0; detail=2
     dblclick
     pointerdown - pointerId=1; pointerType=mouse; isPrimary=true
-    mousedown - button=0; buttons=0; detail=1
+    mousedown - button=0; buttons=1; detail=1
     pointerup - pointerId=1; pointerType=mouse; isPrimary=true
     mouseup - button=0; buttons=0; detail=1
     click - button=0; buttons=0; detail=1
@@ -382,7 +383,7 @@ test('asynchronous pointer', async () => {
 
   expect(getClickEventsSnapshot()).toMatchInlineSnapshot(`
     pointerdown - pointerId=1; pointerType=mouse; isPrimary=true
-    mousedown - button=0; buttons=0; detail=1
+    mousedown - button=0; buttons=1; detail=1
     pointerup - pointerId=1; pointerType=mouse; isPrimary=true
     mouseup - button=0; buttons=0; detail=1
     click - button=0; buttons=0; detail=1

@@ -1,4 +1,3 @@
-export * from './click/getMouseEventOptions'
 export * from './click/isClickableInput'
 
 export * from './edit/buildTimeValue'
@@ -23,7 +22,6 @@ export * from './misc/eventWrapper'
 export * from './misc/findClosest'
 export * from './misc/isDescendantOrSelf'
 export * from './misc/isElementType'
-export * from './misc/isLabelWithInternallyDisabledControl'
 export * from './misc/isVisible'
 export * from './misc/isDisabled'
 export * from './misc/isDocument'

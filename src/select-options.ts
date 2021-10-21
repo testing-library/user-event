@@ -35,8 +35,8 @@ function selectOptionsBase(
   newValue: boolean,
   select: Element,
   values: HTMLElement | HTMLElement[] | string[] | string,
-  init?: MouseEventInit,
-  {skipPointerEventsCheck = false}: PointerOptions = {},
+  init: MouseEventInit | undefined,
+  {skipPointerEventsCheck}: PointerOptions,
 ) {
   if (!newValue && !(select as HTMLSelectElement).multiple) {
     throw getConfig().getElementError(
@@ -110,7 +110,7 @@ function selectOptionsBase(
         : hasPointerEvents(select)
       // the click to open the select options
       if (withPointerEvents) {
-        click.call(this, select, init, {skipPointerEventsCheck})
+        click.call(this, select, init, {skipPointerEventsCheck: true})
       } else {
         focus(select)
       }

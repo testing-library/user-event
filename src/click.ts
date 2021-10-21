@@ -21,8 +21,9 @@ export function click(
       'unable to click element as it has or inherits pointer-events set to "none".',
     )
   }
-  // We just checked for `pointerEvents`. We can always skip this one in `hover`.
+  // istanbul ignore else
   if (!skipHover)
+    // We just checked for `pointerEvents`. We can always skip this one in `hover`.
     hover.call(this, element, init, {skipPointerEventsCheck: true})
 
   const keys =

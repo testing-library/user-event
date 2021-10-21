@@ -9,17 +9,17 @@ test('click in button', () => {
 
     button - pointerover
     button - pointerenter
-    button - mouseover: Left (0)
-    button - mouseenter: Left (0)
+    button - mouseover
+    button - mouseenter
     button - pointermove
-    button - mousemove: Left (0)
+    button - mousemove
     button - pointerdown
-    button - mousedown: Left (0)
+    button - mousedown
     button - focus
     button - focusin
     button - pointerup
-    button - mouseup: Left (0)
-    button - click: Left (0)
+    button - mouseup
+    button - click
   `)
 })
 
@@ -32,8 +32,6 @@ test('only fires pointer events when clicking a disabled button', () => {
     button - pointerover
     button - pointerenter
     button - pointermove
-    button - pointerdown
-    button - pointerup
   `)
 })
 
@@ -46,17 +44,17 @@ test('clicking a checkbox', () => {
 
     input[checked=false] - pointerover
     input[checked=false] - pointerenter
-    input[checked=false] - mouseover: Left (0)
-    input[checked=false] - mouseenter: Left (0)
+    input[checked=false] - mouseover
+    input[checked=false] - mouseenter
     input[checked=false] - pointermove
-    input[checked=false] - mousemove: Left (0)
+    input[checked=false] - mousemove
     input[checked=false] - pointerdown
-    input[checked=false] - mousedown: Left (0)
+    input[checked=false] - mousedown
     input[checked=false] - focus
     input[checked=false] - focusin
     input[checked=false] - pointerup
-    input[checked=false] - mouseup: Left (0)
-    input[checked=true] - click: Left (0)
+    input[checked=false] - mouseup
+    input[checked=true] - click
       unchecked -> checked
     input[checked=true] - input
     input[checked=true] - change
@@ -75,8 +73,6 @@ test('clicking a disabled checkbox only fires pointer events', () => {
     input[checked=false] - pointerover
     input[checked=false] - pointerenter
     input[checked=false] - pointermove
-    input[checked=false] - pointerdown
-    input[checked=false] - pointerup
   `)
   expect(element).toBeDisabled()
   expect(element).not.toBeChecked()
@@ -91,17 +87,17 @@ test('clicking a radio button', () => {
 
     input[checked=false] - pointerover
     input[checked=false] - pointerenter
-    input[checked=false] - mouseover: Left (0)
-    input[checked=false] - mouseenter: Left (0)
+    input[checked=false] - mouseover
+    input[checked=false] - mouseenter
     input[checked=false] - pointermove
-    input[checked=false] - mousemove: Left (0)
+    input[checked=false] - mousemove
     input[checked=false] - pointerdown
-    input[checked=false] - mousedown: Left (0)
+    input[checked=false] - mousedown
     input[checked=false] - focus
     input[checked=false] - focusin
     input[checked=false] - pointerup
-    input[checked=false] - mouseup: Left (0)
-    input[checked=true] - click: Left (0)
+    input[checked=false] - mouseup
+    input[checked=true] - click
       unchecked -> checked
     input[checked=true] - input
     input[checked=true] - change
@@ -120,8 +116,6 @@ test('clicking a disabled radio button only fires pointer events', () => {
     input[checked=false] - pointerover
     input[checked=false] - pointerenter
     input[checked=false] - pointermove
-    input[checked=false] - pointerdown
-    input[checked=false] - pointerup
   `)
   expect(element).toBeDisabled()
 
@@ -136,15 +130,15 @@ test('should fire the correct events for <div>', () => {
 
     div - pointerover
     div - pointerenter
-    div - mouseover: Left (0)
-    div - mouseenter: Left (0)
+    div - mouseover
+    div - mouseenter
     div - pointermove
-    div - mousemove: Left (0)
+    div - mousemove
     div - pointerdown
-    div - mousedown: Left (0)
+    div - mousedown
     div - pointerup
-    div - mouseup: Left (0)
-    div - click: Left (0)
+    div - mouseup
+    div - click
   `)
 })
 
@@ -184,18 +178,16 @@ test('should blur the previous element', () => {
     Events fired on: div
 
     input[name="b"][value=""] - pointerover
-    div - pointerenter
-    input[name="b"][value=""] - mouseover: Left (0)
-    div - mouseenter: Left (0)
+    input[name="b"][value=""] - mouseover
     input[name="b"][value=""] - pointermove
-    input[name="b"][value=""] - mousemove: Left (0)
+    input[name="b"][value=""] - mousemove
     input[name="b"][value=""] - pointerdown
-    input[name="b"][value=""] - mousedown: Left (0)
+    input[name="b"][value=""] - mousedown
     input[name="a"][value=""] - focusout
     input[name="b"][value=""] - focusin
     input[name="b"][value=""] - pointerup
-    input[name="b"][value=""] - mouseup: Left (0)
-    input[name="b"][value=""] - click: Left (0)
+    input[name="b"][value=""] - mouseup
+    input[name="b"][value=""] - click
   `)
   // focus/blur events don't bubble (but the focusout/focusin do!)
   // we just want to make sure the blur was fired on a
@@ -224,16 +216,14 @@ test('should not blur the previous element when mousedown prevents default', () 
     Events fired on: div
 
     input[name="b"][value=""] - pointerover
-    div - pointerenter
-    input[name="b"][value=""] - mouseover: Left (0)
-    div - mouseenter: Left (0)
+    input[name="b"][value=""] - mouseover
     input[name="b"][value=""] - pointermove
-    input[name="b"][value=""] - mousemove: Left (0)
+    input[name="b"][value=""] - mousemove
     input[name="b"][value=""] - pointerdown
-    input[name="b"][value=""] - mousedown: Left (0)
+    input[name="b"][value=""] - mousedown
     input[name="b"][value=""] - pointerup
-    input[name="b"][value=""] - mouseup: Left (0)
-    input[name="b"][value=""] - click: Left (0)
+    input[name="b"][value=""] - mouseup
+    input[name="b"][value=""] - click
   `)
   // focus/blur events don't bubble (but the focusout do!)
   // we just want to make sure the blur was fired on a
@@ -290,9 +280,21 @@ test('gives focus to the form control when clicking within a label', () => {
 test('fires no events when clicking a label with a nested control that is disabled', () => {
   const {element, getEventSnapshot} = setup(`<label><input disabled /></label>`)
   userEvent.click(element)
-  expect(getEventSnapshot()).toMatchInlineSnapshot(
-    `No events were fired on: label`,
-  )
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
+    Events fired on: label
+
+    label - pointerover
+    label - pointerenter
+    label - mouseover
+    label - mouseenter
+    label - pointermove
+    label - mousemove
+    label - pointerdown
+    label - mousedown
+    label - pointerup
+    label - mouseup
+    label - click
+  `)
 })
 
 test('does not crash if the label has no control', () => {
@@ -370,17 +372,17 @@ test('fires mouse events with the correct properties', () => {
   const {element, getClickEventsSnapshot} = setup('<div></div>')
   userEvent.click(element)
   expect(getClickEventsSnapshot()).toMatchInlineSnapshot(`
-    pointerover - pointerId=undefined; pointerType=undefined; isPrimary=undefined
-    pointerenter - pointerId=undefined; pointerType=undefined; isPrimary=undefined
+    pointerover - pointerId=1; pointerType=mouse; isPrimary=undefined
+    pointerenter - pointerId=1; pointerType=mouse; isPrimary=undefined
     mouseover - button=0; buttons=0; detail=0
     mouseenter - button=0; buttons=0; detail=0
-    pointermove - pointerId=undefined; pointerType=undefined; isPrimary=undefined
+    pointermove - pointerId=1; pointerType=mouse; isPrimary=undefined
     mousemove - button=0; buttons=0; detail=0
-    pointerdown - pointerId=undefined; pointerType=undefined; isPrimary=undefined
+    pointerdown - pointerId=1; pointerType=mouse; isPrimary=true
     mousedown - button=0; buttons=1; detail=1
-    pointerup - pointerId=undefined; pointerType=undefined; isPrimary=undefined
-    mouseup - button=0; buttons=1; detail=1
-    click - button=0; buttons=1; detail=1
+    pointerup - pointerId=1; pointerType=mouse; isPrimary=true
+    mouseup - button=0; buttons=0; detail=1
+    click - button=0; buttons=0; detail=1
   `)
 })
 
@@ -391,17 +393,17 @@ test('fires mouse events with custom button property', () => {
     altKey: true,
   })
   expect(getClickEventsSnapshot()).toMatchInlineSnapshot(`
-    pointerover - pointerId=undefined; pointerType=undefined; isPrimary=undefined
-    pointerenter - pointerId=undefined; pointerType=undefined; isPrimary=undefined
+    pointerover - pointerId=1; pointerType=mouse; isPrimary=undefined
+    pointerenter - pointerId=1; pointerType=mouse; isPrimary=undefined
     mouseover - button=0; buttons=0; detail=0
     mouseenter - button=0; buttons=0; detail=0
-    pointermove - pointerId=undefined; pointerType=undefined; isPrimary=undefined
+    pointermove - pointerId=1; pointerType=mouse; isPrimary=undefined
     mousemove - button=0; buttons=0; detail=0
-    pointerdown - pointerId=undefined; pointerType=undefined; isPrimary=undefined
-    mousedown - button=1; buttons=4; detail=1
-    pointerup - pointerId=undefined; pointerType=undefined; isPrimary=undefined
-    mouseup - button=1; buttons=4; detail=1
-    click - button=1; buttons=4; detail=1
+    pointerdown - pointerId=1; pointerType=mouse; isPrimary=true
+    mousedown - button=0; buttons=1; detail=1
+    pointerup - pointerId=1; pointerType=mouse; isPrimary=true
+    mouseup - button=0; buttons=0; detail=1
+    click - button=0; buttons=0; detail=1
   `)
 })
 
@@ -410,17 +412,17 @@ test('fires mouse events with custom buttons property', () => {
 
   userEvent.click(element, {buttons: 4})
   expect(getClickEventsSnapshot()).toMatchInlineSnapshot(`
-    pointerover - pointerId=undefined; pointerType=undefined; isPrimary=undefined
-    pointerenter - pointerId=undefined; pointerType=undefined; isPrimary=undefined
+    pointerover - pointerId=1; pointerType=mouse; isPrimary=undefined
+    pointerenter - pointerId=1; pointerType=mouse; isPrimary=undefined
     mouseover - button=0; buttons=0; detail=0
     mouseenter - button=0; buttons=0; detail=0
-    pointermove - pointerId=undefined; pointerType=undefined; isPrimary=undefined
+    pointermove - pointerId=1; pointerType=mouse; isPrimary=undefined
     mousemove - button=0; buttons=0; detail=0
-    pointerdown - pointerId=undefined; pointerType=undefined; isPrimary=undefined
-    mousedown - button=1; buttons=4; detail=1
-    pointerup - pointerId=undefined; pointerType=undefined; isPrimary=undefined
-    mouseup - button=1; buttons=4; detail=1
-    click - button=1; buttons=4; detail=1
+    pointerdown - pointerId=1; pointerType=mouse; isPrimary=true
+    mousedown - button=0; buttons=1; detail=1
+    pointerup - pointerId=1; pointerType=mouse; isPrimary=true
+    mouseup - button=0; buttons=0; detail=1
+    click - button=0; buttons=0; detail=1
   `)
 })
 

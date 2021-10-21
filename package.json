@@ -46,6 +46,7 @@
     "@types/estree": "0.0.45",
     "@types/jest-in-case": "^1.0.3",
     "@types/react": "^17.0.3",
+    "eslint-import-resolver-typescript": "^2.5.0",
     "is-ci": "^2.0.0",
     "jest-in-case": "^1.0.2",
     "jest-serializer-ansi": "^1.0.3",

@@ -28,9 +28,9 @@ export function getMouseButton(button: MouseButton): number {
 export function getMouseButtons(...buttons: Array<MouseButton>) {
   let v = 0
   for (const t of buttons) {
-    const pos = getMouseButton(t)
+    const pos = typeof t === 'number' ? t : MouseButton[t]
     // eslint-disable-next-line no-bitwise
-    v &= 2 ** pos
+    v |= 2 ** pos
   }
   return v
 }

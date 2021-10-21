@@ -1,5 +1,5 @@
-import userEvent from '../'
-import {setup} from './helpers/utils'
+import userEvent from '../../'
+import {setup} from '../helpers/utils'
 
 test('unhover', () => {
   const {element, getEventSnapshot} = setup('<button />')

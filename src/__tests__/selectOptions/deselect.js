@@ -1,5 +1,5 @@
-import userEvent from '../'
-import {addListeners, setupSelect, setup} from './helpers/utils'
+import userEvent from '../../'
+import {addListeners, setupSelect, setup} from '../helpers/utils'
 
 test('fires correct events', () => {
   const {form, select, options, getEventSnapshot} = setupSelect({

@@ -1,5 +1,5 @@
-import userEvent from '../'
-import {addEventListener, setup} from './helpers/utils'
+import userEvent from '../../'
+import {addEventListener, setup} from '../helpers/utils'
 
 test('hover', () => {
   const {element, getEventSnapshot} = setup('<button />')

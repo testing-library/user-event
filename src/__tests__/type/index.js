@@ -1,7 +1,7 @@
-import userEvent from '../'
-import {wait} from '../utils'
-import {setup, addListeners} from './helpers/utils'
-import './helpers/custom-element'
+import userEvent from '../../'
+import {wait} from '../../utils'
+import {setup, addListeners} from '../helpers/utils'
+import '../helpers/custom-element'
 
 test('types text in input', () => {
   const {element, getEventSnapshot} = setup('<input />')

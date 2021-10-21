@@ -1,5 +1,5 @@
-import userEvent from '../'
-import {setup} from './helpers/utils'
+import userEvent from '../../'
+import {setup} from '../helpers/utils'
 
 // Note, use the setup function at the bottom of the file...
 // but don't hurt yourself trying to read it 😅

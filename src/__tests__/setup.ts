@@ -21,7 +21,7 @@ import '../hover'
 import '../keyboard'
 import '../paste'
 import '../pointer'
-import '../select-options'
+import '../selectOptions'
 import '../tab'
 import '../type'
 import '../upload'
@@ -75,8 +75,8 @@ jest.mock('../hover', () => mockApis('../hover', 'hover', 'unhover'))
 jest.mock('../keyboard', () => mockApis('../keyboard', 'keyboard'))
 jest.mock('../paste', () => mockApis('../paste', 'paste'))
 jest.mock('../pointer', () => mockApis('../pointer', 'pointer'))
-jest.mock('../select-options', () =>
-  mockApis('../select-options', 'selectOptions', 'deselectOptions'),
+jest.mock('../selectOptions', () =>
+  mockApis('../selectOptions', 'selectOptions', 'deselectOptions'),
 )
 jest.mock('../tab', () => mockApis('../tab', 'tab'))
 jest.mock('../type', () => mockApis('../type', 'type'))

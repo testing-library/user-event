@@ -1,5 +1,4 @@
 import {fireEvent, createEvent} from '@testing-library/dom'
-import {click} from './click'
 import {blur, focus, isDisabled, isElementType} from './utils'
 import type {UserEvent} from './setup'
 
@@ -30,7 +29,7 @@ export function upload(
   }
   if (isDisabled(element)) return
 
-  click.call(this, element, init?.clickInit)
+  this.click(element, init?.clickInit)
 
   const files = (Array.isArray(fileOrFiles) ? fileOrFiles : [fileOrFiles])
     .filter(file => !applyAccept || isAcceptableFile(file, input.accept))

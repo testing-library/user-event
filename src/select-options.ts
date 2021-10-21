@@ -6,8 +6,6 @@ import {
   isElementType,
   PointerOptions,
 } from './utils'
-import {click} from './click'
-import {hover, unhover} from './hover'
 import type {UserEvent} from './setup'
 
 export function selectOptions(
@@ -110,7 +108,7 @@ function selectOptionsBase(
         : hasPointerEvents(select)
       // the click to open the select options
       if (withPointerEvents) {
-        click.call(this, select, init, {skipPointerEventsCheck: true})
+        this.click(select, init, {skipPointerEventsCheck: true})
       } else {
         focus(select)
       }
@@ -136,9 +134,9 @@ function selectOptionsBase(
     }
   } else if (select.getAttribute('role') === 'listbox') {
     selectedOptions.forEach(option => {
-      hover.call(this, option, init, {skipPointerEventsCheck})
-      click.call(this, option, init, {skipPointerEventsCheck})
-      unhover.call(this, option, init, {skipPointerEventsCheck})
+      this.hover(option, init, {skipPointerEventsCheck})
+      this.click(option, init, {skipPointerEventsCheck})
+      this.unhover(option, init, {skipPointerEventsCheck})
     })
   } else {
     throw getConfig().getElementError(

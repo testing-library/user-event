@@ -4,7 +4,6 @@ import {
   getValue,
   getActiveElement,
 } from '../utils'
-import {click} from '../click'
 import {keyboardImplementationWrapper} from '../keyboard'
 import {UserEvent} from '../setup'
 
@@ -32,7 +31,7 @@ export async function typeImplementation(
   // we use this workaround for now to prevent changing behavior
   if ((element as {disabled?: boolean}).disabled) return
 
-  if (!skipClick) click.call(this, element)
+  if (!skipClick) this.click(element)
 
   // The focused element could change between each event, so get the currently active element each time
   const currentElement = () => getActiveElement(element.ownerDocument)

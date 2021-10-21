@@ -1,5 +1,4 @@
 import {isDisabled, isElementType} from './utils'
-import {type} from './type'
 import type {UserEvent} from './setup'
 
 export function clear(this: UserEvent, element: Element) {
@@ -24,7 +23,7 @@ export function clear(this: UserEvent, element: Element) {
     ;(element as HTMLInputElement).type = 'text'
   }
 
-  void type.call(this, element, '{selectall}{del}', {
+  this.type(element, '{selectall}{del}', {
     delay: 0,
     initialSelectionStart:
       element.selectionStart ?? /* istanbul ignore next */ undefined,

@@ -12,6 +12,8 @@ export * from './edit/isValidInputTimeValue'
 export * from './edit/maxLength'
 export * from './edit/selectionRange'
 
+export * from './focus/blur'
+export * from './focus/focus'
 export * from './focus/getActiveElement'
 export * from './focus/isFocusable'
 export * from './focus/selector'

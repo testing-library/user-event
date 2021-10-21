@@ -2,7 +2,13 @@
   "extends": "./node_modules/kcd-scripts/shared-tsconfig.json",
   "compilerOptions": {
     "allowJs": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "baseUrl": ".",
+    "paths": {
+      "#src": ["./src/index"],
+      "#src/*": ["./src/*"],
+      "#testHelpers/*": ["./tests/_helpers/*"]
+    }
   },
-  "include": ["./src", "./typings"]
+  "include": ["./src/**/*", "./tests/**/*"]
 }

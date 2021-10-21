@@ -1,5 +1,4 @@
 import {hasPointerEvents, PointerOptions} from './utils'
-import {hover} from './hover'
 import type {UserEvent} from './setup'
 
 export declare interface clickOptions {
@@ -24,7 +23,7 @@ export function click(
   // istanbul ignore else
   if (!skipHover)
     // We just checked for `pointerEvents`. We can always skip this one in `hover`.
-    hover.call(this, element, init, {skipPointerEventsCheck: true})
+    this.hover(element, init, {skipPointerEventsCheck: true})
 
   const keys =
     init?.button === 2 || init?.buttons === 2 ? '[MouseRight]' : '[MouseLeft]'
@@ -42,7 +41,7 @@ export function dblClick(
       'unable to double-click element as it has or inherits pointer-events set to "none".',
     )
   }
-  hover.call(this, element, init, {skipPointerEventsCheck})
+  this.hover(element, init, {skipPointerEventsCheck})
 
   this.pointer({keys: '[MouseLeft][MouseLeft]', target: element})
 }

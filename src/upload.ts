@@ -1,8 +1,6 @@
 import {fireEvent, createEvent} from '@testing-library/dom'
 import {click} from './click'
-import {blur} from './blur'
-import {focus} from './focus'
-import {isDisabled, isElementType} from './utils'
+import {blur, focus, isDisabled, isElementType} from './utils'
 import type {UserEvent} from './setup'
 
 interface uploadInit {

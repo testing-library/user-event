@@ -1,4 +1,6 @@
-import {getActiveElement, isFocusable, eventWrapper} from './utils'
+import {eventWrapper} from '../misc/eventWrapper'
+import {getActiveElement} from './getActiveElement'
+import {isFocusable} from './isFocusable'
 
 function focus(element: Element) {
   if (!isFocusable(element)) return

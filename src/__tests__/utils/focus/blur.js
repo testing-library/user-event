@@ -1,6 +1,5 @@
-import {blur} from '../blur'
-import {focus} from '../focus'
-import {setup} from './helpers/utils'
+import {blur, focus} from '../../../utils'
+import {setup} from '../../helpers/utils'
 
 test('blur a button', () => {
   const {element, getEventSnapshot, clearEventCalls} = setup(`<button />`)
@@ -28,9 +27,8 @@ test('no events fired on an unblurable input', () => {
 })
 
 test('blur with tabindex', () => {
-  const {element, getEventSnapshot, clearEventCalls} = setup(
-    `<div tabindex="0" />`,
-  )
+  const {element, getEventSnapshot, clearEventCalls} =
+    setup(`<div tabindex="0" />`)
   focus(element)
   clearEventCalls()
   blur(element)
@@ -44,9 +42,8 @@ test('blur with tabindex', () => {
 })
 
 test('no events fired on a disabled blurable input', () => {
-  const {element, getEventSnapshot, clearEventCalls} = setup(
-    `<button disabled />`,
-  )
+  const {element, getEventSnapshot, clearEventCalls} =
+    setup(`<button disabled />`)
   focus(element)
   clearEventCalls()
   blur(element)

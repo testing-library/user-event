@@ -1,5 +1,5 @@
-import {focus} from '../focus'
-import {setup} from './helpers/utils'
+import {focus} from '../../../utils'
+import {setup} from '../../helpers/utils'
 
 test('focus a button', () => {
   const {element, getEventSnapshot} = setup(`<button />`)

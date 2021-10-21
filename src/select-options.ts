@@ -1,12 +1,12 @@
 import {createEvent, getConfig, fireEvent} from '@testing-library/dom'
 import {
+  focus,
   hasPointerEvents,
   isDisabled,
   isElementType,
   PointerOptions,
 } from './utils'
 import {click} from './click'
-import {focus} from './focus'
 import {hover, unhover} from './hover'
 import type {UserEvent} from './setup'
 

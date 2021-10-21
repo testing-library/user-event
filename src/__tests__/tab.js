@@ -1,5 +1,5 @@
 import userEvent from '../'
-import {focus} from '../focus'
+import {focus} from '../utils'
 import {setup, addListeners} from './helpers/utils'
 
 test('fires events when tabbing between two elements', () => {
@@ -324,14 +324,8 @@ test('should stay within a focus trap', () => {
     document.querySelector('[data-testid="div1"]'),
     document.querySelector('[data-testid="div2"]'),
   ]
-  const [
-    checkbox1,
-    radio1,
-    number1,
-    checkbox2,
-    radio2,
-    number2,
-  ] = document.querySelectorAll('[data-testid="element"]')
+  const [checkbox1, radio1, number1, checkbox2, radio2, number2] =
+    document.querySelectorAll('[data-testid="element"]')
 
   expect(document.body).toHaveFocus()
 

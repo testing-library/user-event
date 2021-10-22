@@ -8,7 +8,8 @@
       "#src": ["./src/index"],
       "#src/*": ["./src/*"],
       "#testHelpers/*": ["./tests/_helpers/*"]
-    }
+    },
+    "noEmit": true
   },
-  "include": ["./src/**/*", "./tests/**/*"]
+  "include": ["./src", "./tests"]
 }

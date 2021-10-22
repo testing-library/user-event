@@ -27,7 +27,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "kcd-scripts build",
+    "build": "kcd-scripts build --no-ts-defs && tsc -p tsconfig.build.json",
     "lint": "kcd-scripts lint",
     "setup": "npm install && npm run validate -s",
     "test": "kcd-scripts test",

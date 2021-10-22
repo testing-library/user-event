@@ -7,8 +7,10 @@ import {
   firePointerEvent,
   focus,
   isDisabled,
+  isElementType,
   isFocusable,
 } from '../utils'
+import {getUIValue, setUISelection} from '../document'
 import type {
   inputDeviceState,
   pointerKey,
@@ -128,7 +130,7 @@ function down(
   }
 
   if (pointerType === 'mouse' && pressObj.unpreventedDefault) {
-    focus(findClosest(target, isFocusable) ?? target.ownerDocument.body)
+    mousedownDefaultBehavior({target, targetIsDisabled, clickCount})
   }
 
   return pressObj
@@ -193,10 +195,7 @@ function up(
   }
 
   if (unpreventedDefault && pointerType !== 'mouse' && !isMultiTouch) {
-    // The closest focusable element is focused when a `mousedown` would have been fired.
-    // Even if there was no `mousedown` because the element was disabled.
-    // A `mousedown` that preventsDefault cancels this though.
-    focus(findClosest(target, isFocusable) ?? target.ownerDocument.body)
+    mousedownDefaultBehavior({target, targetIsDisabled, clickCount})
   }
 
   if (!targetIsDisabled) {
@@ -237,5 +236,54 @@ function up(
       pointerId,
       pointerType,
     })
+  }
+}
+
+function mousedownDefaultBehavior({
+  target,
+  targetIsDisabled,
+  clickCount,
+}: {
+  target: Element
+  targetIsDisabled: boolean
+  clickCount: number
+}) {
+  // The closest focusable element is focused when a `mousedown` would have been fired.
+  // Even if there was no `mousedown` because the element was disabled.
+  // A `mousedown` that preventsDefault cancels this though.
+  focus(findClosest(target, isFocusable) ?? target.ownerDocument.body)
+
+  // TODO: What happens if a focus event handler interfers?
+
+  // An unprevented mousedown moves the cursor to the closest character.
+  // We try to approximate the behavior for a no-layout environment.
+  // TODO: implement for other elements
+  if (!targetIsDisabled && isElementType(target, ['input', 'textarea'])) {
+    const value = getUIValue(target) as string
+    const pos = value.length // might override this per option later
+
+    if (clickCount % 3 === 1 || value.length === 0) {
+      setUISelection(target, pos, pos)
+    } else if (clickCount % 3 === 2) {
+      const isWhitespace = /\s/.test(value.substr(Math.max(0, pos - 1), 1))
+      const before = (
+        value
+          .substr(0, pos)
+          .match(isWhitespace ? /\s*$/ : /\S*$/) as RegExpMatchArray
+      )[0].length
+      const after = (
+        value
+          .substr(pos)
+          .match(isWhitespace ? /^\s*/ : /^\S*/) as RegExpMatchArray
+      )[0].length
+      setUISelection(target, pos - before, pos + after)
+    } else {
+      const before = (
+        value.substr(0, pos).match(/[^\r\n]*$/) as RegExpMatchArray
+      )[0].length
+      const after = (value.substr(pos).match(/^[\r\n]*/) as RegExpMatchArray)[0]
+        .length
+      setUISelection(target, pos - before, pos + after)
+    }
   }
 }

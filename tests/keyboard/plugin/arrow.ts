@@ -1,45 +1,46 @@
 import userEvent from '#src'
 import {setup} from '#testHelpers/utils'
 
-const setupInput = () =>
-  setup<HTMLInputElement>(`<input value="foobar"/>`).element
-
 test('collapse selection to the left', () => {
-  const el = setupInput()
-  el.setSelectionRange(2, 4)
+  const {element} = setup<HTMLInputElement>(`<input value="foobar"/>`)
+  element.focus()
+  element.setSelectionRange(2, 4)
 
-  userEvent.type(el, '[ArrowLeft]')
+  userEvent.keyboard('[ArrowLeft]')
 
-  expect(el.selectionStart).toBe(2)
-  expect(el.selectionEnd).toBe(2)
+  expect(element.selectionStart).toBe(2)
+  expect(element.selectionEnd).toBe(2)
 })
 
 test('collapse selection to the right', () => {
-  const el = setupInput()
-  el.setSelectionRange(2, 4)
+  const {element} = setup<HTMLInputElement>(`<input value="foobar"/>`)
+  element.focus()
+  element.setSelectionRange(2, 4)
 
-  userEvent.type(el, '[ArrowRight]')
+  userEvent.keyboard('[ArrowRight]')
 
-  expect(el.selectionStart).toBe(4)
-  expect(el.selectionEnd).toBe(4)
+  expect(element.selectionStart).toBe(4)
+  expect(element.selectionEnd).toBe(4)
 })
 
 test('move cursor left', () => {
-  const el = setupInput()
-  el.setSelectionRange(2, 2)
+  const {element} = setup<HTMLInputElement>(`<input value="foobar"/>`)
+  element.focus()
+  element.setSelectionRange(2, 2)
 
-  userEvent.type(el, '[ArrowLeft]')
+  userEvent.keyboard('[ArrowLeft]')
 
-  expect(el.selectionStart).toBe(1)
-  expect(el.selectionEnd).toBe(1)
+  expect(element.selectionStart).toBe(1)
+  expect(element.selectionEnd).toBe(1)
 })
 
 test('move cursor right', () => {
-  const el = setupInput()
-  el.setSelectionRange(2, 2)
+  const {element} = setup<HTMLInputElement>(`<input value="foobar"/>`)
+  element.focus()
+  element.setSelectionRange(2, 2)
 
-  userEvent.type(el, '[ArrowRight]')
+  userEvent.keyboard('[ArrowRight]')
 
-  expect(el.selectionStart).toBe(3)
-  expect(el.selectionEnd).toBe(3)
+  expect(element.selectionStart).toBe(3)
+  expect(element.selectionEnd).toBe(3)
 })

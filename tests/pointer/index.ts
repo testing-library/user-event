@@ -416,3 +416,46 @@ test('apply modifiers from keyboardstate', async () => {
     expect.objectContaining({metaKey: true}),
   ])
 })
+
+describe('mousedown moves selection', () => {
+  // On an unprevented mousedown the browser moves the cursor to the closest character.
+  // As we have no layout, we are not able to determine the correct character.
+  // So we try an approximation:
+  // We treat any mousedown as if it happened on the space after the last character.
+
+  test('single click moves cursor to the end', () => {
+    const {element} = setup<HTMLInputElement>(`<input value="foo bar baz"/>`)
+
+    userEvent.pointer({keys: '[MouseLeft]', target: element})
+
+    expect(element).toHaveProperty('selectionStart', 11)
+  })
+
+  test('double click selects a word or a sequence of whitespace', () => {
+    const {element} = setup<HTMLInputElement>(`<input value="foo bar baz"/>`)
+
+    userEvent.pointer({keys: '[MouseLeft][MouseLeft]', target: element})
+
+    expect(element).toHaveProperty('selectionStart', 8)
+    expect(element).toHaveProperty('selectionEnd', 11)
+
+    element.value = 'foo bar  '
+
+    userEvent.pointer({keys: '[MouseLeft][MouseLeft]', target: element})
+
+    expect(element).toHaveProperty('selectionStart', 7)
+    expect(element).toHaveProperty('selectionEnd', 9)
+  })
+
+  test('triple click selects whole line', () => {
+    const {element} = setup<HTMLInputElement>(`<input value="foo bar baz"/>`)
+
+    userEvent.pointer({
+      keys: '[MouseLeft][MouseLeft][MouseLeft]',
+      target: element,
+    })
+
+    expect(element).toHaveProperty('selectionStart', 0)
+    expect(element).toHaveProperty('selectionEnd', 11)
+  })
+})

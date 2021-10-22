@@ -102,7 +102,7 @@ test('{backspace} triggers typing the backspace character and deletes the charac
   const {element, getEventSnapshot} = setup('<input value="yo" />')
   element.setSelectionRange(1, 1)
 
-  userEvent.type(element, '{backspace}')
+  userEvent.type(element, '{backspace}', {initialSelectionStart: 1})
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value="o"]
@@ -118,9 +118,11 @@ test('{backspace} triggers typing the backspace character and deletes the charac
     input[value="yo"] - mousedown
     input[value="yo"] - focus
     input[value="yo"] - focusin
+    input[value="yo"] - select
     input[value="yo"] - pointerup
     input[value="yo"] - mouseup
     input[value="yo"] - click
+    input[value="yo"] - select
     input[value="yo"] - keydown: Backspace (8)
     input[value="o"] - select
     input[value="o"] - input
@@ -148,6 +150,7 @@ test('{backspace} on a readOnly input', () => {
     input[value="yo"] - mousedown
     input[value="yo"] - focus
     input[value="yo"] - focusin
+    input[value="yo"] - select
     input[value="yo"] - pointerup
     input[value="yo"] - mouseup
     input[value="yo"] - click
@@ -178,6 +181,7 @@ test('{backspace} does not fire input if keydown prevents default', () => {
     input[value="yo"] - mousedown
     input[value="yo"] - focus
     input[value="yo"] - focusin
+    input[value="yo"] - select
     input[value="yo"] - pointerup
     input[value="yo"] - mouseup
     input[value="yo"] - click
@@ -188,14 +192,15 @@ test('{backspace} does not fire input if keydown prevents default', () => {
 
 test('{backspace} deletes the selected range', () => {
   const {element, getEventSnapshot} = setup('<input value="Hi there" />')
-  element.setSelectionRange(1, 5)
 
-  userEvent.type(element, '{backspace}')
+  userEvent.type(element, '{backspace}', {
+    initialSelectionStart: 1,
+    initialSelectionEnd: 5,
+  })
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value="Here"]
 
-    input[value="Hi there"] - select
     input[value="Hi there"] - pointerover
     input[value="Hi there"] - pointerenter
     input[value="Hi there"] - mouseover
@@ -206,9 +211,11 @@ test('{backspace} deletes the selected range', () => {
     input[value="Hi there"] - mousedown
     input[value="Hi there"] - focus
     input[value="Hi there"] - focusin
+    input[value="Hi there"] - select
     input[value="Hi there"] - pointerup
     input[value="Hi there"] - mouseup
     input[value="Hi there"] - click
+    input[value="Hi there"] - select
     input[value="Hi there"] - keydown: Backspace (8)
     input[value="Here"] - select
     input[value="Here"] - input
@@ -931,6 +938,7 @@ test('{selectall} selects all the text', () => {
     input[value="abcdefg"] - mousedown
     input[value="abcdefg"] - focus
     input[value="abcdefg"] - focusin
+    input[value="abcdefg"] - select
     input[value="abcdefg"] - pointerup
     input[value="abcdefg"] - mouseup
     input[value="abcdefg"] - click
@@ -961,9 +969,11 @@ test('{del} at the start of the input', () => {
     input[value="hello"] - mousedown
     input[value="hello"] - focus
     input[value="hello"] - focusin
+    input[value="hello"] - select
     input[value="hello"] - pointerup
     input[value="hello"] - mouseup
     input[value="hello"] - click
+    input[value="hello"] - select
     input[value="hello"] - keydown: Delete (46)
     input[value="ello"] - select
     input[value="ello"] - input
@@ -991,10 +1001,10 @@ test('{del} at end of the input', () => {
     input[value="hello"] - mousedown
     input[value="hello"] - focus
     input[value="hello"] - focusin
+    input[value="hello"] - select
     input[value="hello"] - pointerup
     input[value="hello"] - mouseup
     input[value="hello"] - click
-    input[value="hello"] - select
     input[value="hello"] - keydown: Delete (46)
     input[value="hello"] - keyup: Delete (46)
   `)
@@ -1023,6 +1033,7 @@ test('{del} in the middle of the input', () => {
     input[value="hello"] - mousedown
     input[value="hello"] - focus
     input[value="hello"] - focusin
+    input[value="hello"] - select
     input[value="hello"] - pointerup
     input[value="hello"] - mouseup
     input[value="hello"] - click
@@ -1057,6 +1068,7 @@ test('{del} with a selection range', () => {
     input[value="hello"] - mousedown
     input[value="hello"] - focus
     input[value="hello"] - focusin
+    input[value="hello"] - select
     input[value="hello"] - pointerup
     input[value="hello"] - mouseup
     input[value="hello"] - click

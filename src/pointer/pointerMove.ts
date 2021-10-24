@@ -40,11 +40,9 @@ export async function pointerMove(
   }
 
   pointerState.position[pointerName] = {
-    pointerId,
-    pointerType,
+    ...pointerState.position[pointerName],
     target,
     coords,
-    selectionRange,
   }
 
   if (prevTarget !== target) {

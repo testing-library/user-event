@@ -67,7 +67,7 @@ export async function pointerMove(
         Math.min(selectionRange.start, selectionFocus.offset),
         Math.max(selectionRange.end, selectionFocus.offset),
       )
-    } else if ('setEnd' in selectionRange) {
+    } else /* istanbul ignore else */ if ('setEnd' in selectionRange) {
       const range = selectionRange.cloneRange()
       const cmp = selectionRange.comparePoint(
         selectionFocus.node,

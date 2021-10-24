@@ -516,6 +516,11 @@ describe('mousedown moves selection', () => {
 
     expect(element).toHaveProperty('selectionStart', 4)
     expect(element).toHaveProperty('selectionEnd', 10)
+
+    userEvent.pointer({}, {pointerState})
+
+    expect(element).toHaveProperty('selectionStart', 4)
+    expect(element).toHaveProperty('selectionEnd', 11)
   })
 
   test('selection is moved on non-input elements', () => {

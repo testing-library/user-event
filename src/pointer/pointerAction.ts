@@ -1,12 +1,16 @@
-import {Coords, wait} from '../utils'
+import {wait} from '../utils'
 import {pointerMove, PointerMoveAction} from './pointerMove'
 import {pointerPress, PointerPressAction} from './pointerPress'
-import {inputDeviceState, pointerOptions, pointerState} from './types'
+import {
+  inputDeviceState,
+  pointerOptions,
+  pointerState,
+  PointerTarget,
+  SelectionTarget,
+} from './types'
 
-export type PointerActionTarget = {
-  target?: Element
-  coords?: Partial<Coords>
-}
+export type PointerActionTarget = Partial<PointerTarget> &
+  Partial<SelectionTarget>
 
 export type PointerAction = PointerActionTarget &
   (
@@ -34,12 +38,11 @@ export async function pointerAction(
 
     const target =
       action.target ?? getPrevTarget(pointerName, state.pointerState)
-    const coords = completeCoords({
-      ...(pointerName in state.pointerState.position
+    const coords =
+      action.coords ??
+      (pointerName in state.pointerState.position
         ? state.pointerState.position[pointerName].coords
-        : undefined),
-      ...action.coords,
-    })
+        : undefined)
 
     const promise =
       'keyDef' in action
@@ -69,17 +72,4 @@ function getPrevTarget(pointerName: string, state: pointerState) {
   }
 
   return state.position[pointerName].target as Element
-}
-
-function completeCoords({
-  x = 0,
-  y = 0,
-  clientX = x,
-  clientY = y,
-  offsetX = x,
-  offsetY = y,
-  pageX = clientX,
-  pageY = clientY,
-}: Partial<Coords>) {
-  return {x, y, clientX, clientY, offsetX, offsetY, pageX, pageY}
 }

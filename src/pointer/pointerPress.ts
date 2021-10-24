@@ -2,7 +2,6 @@
 
 import {fireEvent} from '@testing-library/dom'
 import {
-  Coords,
   findClosest,
   firePointerEvent,
   focus,
@@ -16,18 +15,21 @@ import type {
   pointerKey,
   pointerState,
   PointerTarget,
+  SelectionTarget,
 } from './types'
+import {resolveSelectionTarget} from './resolveSelectionTarget'
 
-export interface PointerPressAction extends PointerTarget {
+export interface PointerPressAction extends PointerTarget, SelectionTarget {
   keyDef: pointerKey
   releasePrevious: boolean
   releaseSelf: boolean
 }
 
 export async function pointerPress(
-  {keyDef, releasePrevious, releaseSelf, target, coords}: PointerPressAction,
+  action: PointerPressAction,
   state: inputDeviceState,
 ): Promise<void> {
+  const {keyDef, target, releasePrevious, releaseSelf} = action
   const previous = state.pointerState.pressed.find(p => p.keyDef === keyDef)
 
   const pointerName =
@@ -36,21 +38,14 @@ export async function pointerPress(
   const targetIsDisabled = isDisabled(target)
 
   if (previous) {
-    up(state, pointerName, keyDef, targetIsDisabled, target, coords, previous)
+    up(state, pointerName, action, previous, targetIsDisabled)
   }
 
   if (!releasePrevious) {
-    const press = down(
-      state,
-      pointerName,
-      keyDef,
-      targetIsDisabled,
-      target,
-      coords,
-    )
+    const press = down(state, pointerName, action, targetIsDisabled)
 
     if (releaseSelf) {
-      up(state, pointerName, keyDef, targetIsDisabled, target, coords, press)
+      up(state, pointerName, action, press, targetIsDisabled)
     }
   }
 }
@@ -63,15 +58,14 @@ function getNextPointerId(state: pointerState) {
 function down(
   {pointerState, keyboardState}: inputDeviceState,
   pointerName: string,
-  keyDef: pointerKey,
+  {keyDef, node, offset, target, coords}: PointerPressAction,
   targetIsDisabled: boolean,
-  target: Element,
-  coords: Coords,
 ) {
   const {name, pointerType, button} = keyDef
   const pointerId = pointerType === 'mouse' ? 1 : getNextPointerId(pointerState)
 
   pointerState.position[pointerName] = {
+    ...pointerState.position[pointerName],
     pointerId,
     pointerType,
     target,
@@ -130,7 +124,14 @@ function down(
   }
 
   if (pointerType === 'mouse' && pressObj.unpreventedDefault) {
-    mousedownDefaultBehavior({target, targetIsDisabled, clickCount})
+    mousedownDefaultBehavior({
+      target,
+      targetIsDisabled,
+      clickCount,
+      position: pointerState.position[pointerName],
+      node,
+      offset,
+    })
   }
 
   return pressObj
@@ -152,11 +153,15 @@ function down(
 function up(
   {pointerState, keyboardState}: inputDeviceState,
   pointerName: string,
-  {pointerType, button}: pointerKey,
-  targetIsDisabled: boolean,
-  target: Element,
-  coords: Coords,
+  {
+    keyDef: {pointerType, button},
+    target,
+    coords,
+    node,
+    offset,
+  }: PointerPressAction,
   pressed: pointerState['pressed'][number],
+  targetIsDisabled: boolean,
 ) {
   pointerState.pressed = pointerState.pressed.filter(p => p !== pressed)
 
@@ -164,8 +169,7 @@ function up(
   let {unpreventedDefault} = pressed
 
   pointerState.position[pointerName] = {
-    pointerId,
-    pointerType,
+    ...pointerState.position[pointerName],
     target,
     coords,
   }
@@ -195,7 +199,14 @@ function up(
   }
 
   if (unpreventedDefault && pointerType !== 'mouse' && !isMultiTouch) {
-    mousedownDefaultBehavior({target, targetIsDisabled, clickCount})
+    mousedownDefaultBehavior({
+      target,
+      targetIsDisabled,
+      clickCount,
+      position: pointerState.position[pointerName],
+      node,
+      offset,
+    })
   }
 
   if (!targetIsDisabled) {
@@ -240,13 +251,19 @@ function up(
 }
 
 function mousedownDefaultBehavior({
+  position,
   target,
   targetIsDisabled,
   clickCount,
+  node,
+  offset,
 }: {
+  position: NonNullable<pointerState['position']['string']>
   target: Element
   targetIsDisabled: boolean
   clickCount: number
+  node?: Node
+  offset?: number
 }) {
   // The closest focusable element is focused when a `mousedown` would have been fired.
   // Even if there was no `mousedown` because the element was disabled.
@@ -257,33 +274,86 @@ function mousedownDefaultBehavior({
 
   // An unprevented mousedown moves the cursor to the closest character.
   // We try to approximate the behavior for a no-layout environment.
-  // TODO: implement for other elements
-  if (!targetIsDisabled && isElementType(target, ['input', 'textarea'])) {
-    const value = getUIValue(target) as string
-    const pos = value.length // might override this per option later
+  if (!targetIsDisabled) {
+    const hasValue = isElementType(target, ['input', 'textarea'])
 
-    if (clickCount % 3 === 1 || value.length === 0) {
-      setUISelection(target, pos, pos)
-    } else if (clickCount % 3 === 2) {
-      const isWhitespace = /\s/.test(value.substr(Math.max(0, pos - 1), 1))
-      const before = (
-        value
-          .substr(0, pos)
-          .match(isWhitespace ? /\s*$/ : /\S*$/) as RegExpMatchArray
-      )[0].length
-      const after = (
-        value
-          .substr(pos)
-          .match(isWhitespace ? /^\s*/ : /^\S*/) as RegExpMatchArray
-      )[0].length
-      setUISelection(target, pos - before, pos + after)
+    // On non-input elements the text selection per multiple click
+    // can extend beyond the target boundaries.
+    // The exact mechanism what is considered in the same line is unclear.
+    // Looks it might be every inline element.
+    // TODO: Check what might be considered part of the same line of text.
+    const text = String(hasValue ? getUIValue(target) : target.textContent)
+
+    const [start, end] = node
+      ? // As offset is describing a DOMOffset it is non-trivial to determine
+        // which elements might be considered in the same line of text.
+        // TODO: support expanding initial range on multiple clicks if node is given
+        [offset, offset]
+      : getTextRange(text, offset, clickCount)
+
+    if (hasValue) {
+      setUISelection(target, start ?? text.length, end ?? text.length)
+      position.selectionRange = {
+        node: target,
+        start: start ?? 0,
+        end: end ?? text.length,
+      }
     } else {
-      const before = (
-        value.substr(0, pos).match(/[^\r\n]*$/) as RegExpMatchArray
-      )[0].length
-      const after = (value.substr(pos).match(/^[\r\n]*/) as RegExpMatchArray)[0]
-        .length
-      setUISelection(target, pos - before, pos + after)
+      const {node: startNode, offset: startOffset} = resolveSelectionTarget({
+        target,
+        node,
+        offset: start,
+      })
+      const {node: endNode, offset: endOffset} = resolveSelectionTarget({
+        target,
+        node,
+        offset: end,
+      })
+
+      const range = new Range()
+      range.setStart(startNode, startOffset)
+      range.setEnd(endNode, endOffset)
+
+      position.selectionRange = range
+
+      // TODO: support multiple ranges
+      const selection = target.ownerDocument.getSelection() as Selection
+      selection.removeAllRanges()
+      selection.addRange(range.cloneRange())
     }
   }
+}
+
+function getTextRange(
+  text: string,
+  pos: number | undefined,
+  clickCount: number,
+) {
+  if (clickCount % 3 === 1 || text.length === 0) {
+    return [pos, pos]
+  }
+
+  const textPos = pos ?? text.length
+  if (clickCount % 3 === 2) {
+    return [
+      textPos -
+        (text.substr(0, pos).match(/(\w+|\s+|\W)?$/) as RegExpMatchArray)[0]
+          .length,
+      pos === undefined
+        ? pos
+        : pos +
+          (text.substr(pos).match(/^(\w+|\s+|\W)?/) as RegExpMatchArray)[0]
+            .length,
+    ]
+  }
+
+  // triple click
+  return [
+    textPos -
+      (text.substr(0, pos).match(/[^\r\n]*$/) as RegExpMatchArray)[0].length,
+    pos === undefined
+      ? pos
+      : pos +
+        (text.substr(pos).match(/^[^\r\n]*/) as RegExpMatchArray)[0].length,
+  ]
 }

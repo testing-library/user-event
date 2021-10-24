@@ -439,6 +439,24 @@ describe('mousedown moves selection', () => {
     expect(element).toHaveProperty('selectionStart', 8)
     expect(element).toHaveProperty('selectionEnd', 11)
 
+    userEvent.pointer({
+      keys: '[MouseLeft][MouseLeft]',
+      target: element,
+      offset: 0,
+    })
+
+    expect(element).toHaveProperty('selectionStart', 0)
+    expect(element).toHaveProperty('selectionEnd', 3)
+
+    userEvent.pointer({
+      keys: '[MouseLeft][MouseLeft]',
+      target: element,
+      offset: 11,
+    })
+
+    expect(element).toHaveProperty('selectionStart', 8)
+    expect(element).toHaveProperty('selectionEnd', 11)
+
     element.value = 'foo bar  '
 
     userEvent.pointer({keys: '[MouseLeft][MouseLeft]', target: element})
@@ -457,5 +475,217 @@ describe('mousedown moves selection', () => {
 
     expect(element).toHaveProperty('selectionStart', 0)
     expect(element).toHaveProperty('selectionEnd', 11)
+
+    userEvent.pointer({
+      keys: '[MouseLeft][MouseLeft][MouseLeft]',
+      target: element,
+      offset: 0,
+    })
+
+    expect(element).toHaveProperty('selectionStart', 0)
+    expect(element).toHaveProperty('selectionEnd', 11)
+
+    userEvent.pointer({
+      keys: '[MouseLeft][MouseLeft][MouseLeft]',
+      target: element,
+      offset: 11,
+    })
+
+    expect(element).toHaveProperty('selectionStart', 0)
+    expect(element).toHaveProperty('selectionEnd', 11)
+  })
+
+  test('mousemove with pressed button extends selection', () => {
+    const {element} = setup<HTMLInputElement>(`<input value="foo bar baz"/>`)
+
+    const pointerState = userEvent.pointer({
+      keys: '[MouseLeft][MouseLeft]',
+      target: element,
+      offset: 6,
+    })
+
+    expect(element).toHaveProperty('selectionStart', 4)
+    expect(element).toHaveProperty('selectionEnd', 7)
+
+    userEvent.pointer({offset: 2}, {pointerState})
+
+    expect(element).toHaveProperty('selectionStart', 2)
+    expect(element).toHaveProperty('selectionEnd', 7)
+
+    userEvent.pointer({offset: 10}, {pointerState})
+
+    expect(element).toHaveProperty('selectionStart', 4)
+    expect(element).toHaveProperty('selectionEnd', 10)
+  })
+
+  test('selection is moved on non-input elements', () => {
+    const {element} = setup(
+      `<section><a></a><span>foo</span> <span>bar</span> <span>baz</span></section>`,
+    )
+    const span = element.querySelectorAll('span')
+
+    const pointerState = userEvent.pointer({
+      keys: '[MouseLeft][MouseLeft]',
+      target: element,
+      offset: 6,
+    })
+
+    expect(document.getSelection()?.toString()).toBe('bar')
+    expect(document.getSelection()?.getRangeAt(0)).toHaveProperty(
+      'startContainer',
+      span[1].previousSibling,
+    )
+    expect(document.getSelection()?.getRangeAt(0)).toHaveProperty(
+      'startOffset',
+      1,
+    )
+    expect(document.getSelection()?.getRangeAt(0)).toHaveProperty(
+      'endContainer',
+      span[1].firstChild,
+    )
+    expect(document.getSelection()?.getRangeAt(0)).toHaveProperty(
+      'endOffset',
+      3,
+    )
+
+    userEvent.pointer({offset: 2}, {pointerState})
+
+    expect(document.getSelection()?.toString()).toBe('o bar')
+    expect(document.getSelection()?.getRangeAt(0)).toHaveProperty(
+      'startContainer',
+      span[0].firstChild,
+    )
+    expect(document.getSelection()?.getRangeAt(0)).toHaveProperty(
+      'startOffset',
+      2,
+    )
+    expect(document.getSelection()?.getRangeAt(0)).toHaveProperty(
+      'endContainer',
+      span[1].firstChild,
+    )
+    expect(document.getSelection()?.getRangeAt(0)).toHaveProperty(
+      'endOffset',
+      3,
+    )
+
+    userEvent.pointer({offset: 10}, {pointerState})
+
+    expect(document.getSelection()?.toString()).toBe('bar ba')
+    expect(document.getSelection()?.getRangeAt(0)).toHaveProperty(
+      'startContainer',
+      span[1].previousSibling,
+    )
+    expect(document.getSelection()?.getRangeAt(0)).toHaveProperty(
+      'startOffset',
+      1,
+    )
+    expect(document.getSelection()?.getRangeAt(0)).toHaveProperty(
+      'endContainer',
+      span[2].firstChild,
+    )
+    expect(document.getSelection()?.getRangeAt(0)).toHaveProperty(
+      'endOffset',
+      2,
+    )
+
+    userEvent.pointer({}, {pointerState})
+
+    expect(document.getSelection()?.toString()).toBe('bar baz')
+    expect(document.getSelection()?.getRangeAt(0)).toHaveProperty(
+      'startContainer',
+      span[1].previousSibling,
+    )
+    expect(document.getSelection()?.getRangeAt(0)).toHaveProperty(
+      'startOffset',
+      1,
+    )
+    expect(document.getSelection()?.getRangeAt(0)).toHaveProperty(
+      'endContainer',
+      span[2].firstChild,
+    )
+    expect(document.getSelection()?.getRangeAt(0)).toHaveProperty(
+      'endOffset',
+      3,
+    )
+  })
+
+  test('`node` overrides the text offset approximation', () => {
+    const {element} = setup(
+      `<section><div><span>foo</span> <span>bar</span></div> <span>baz</span></section>`,
+    )
+    const div = element.firstChild as HTMLDivElement
+    const span = element.querySelectorAll('span')
+
+    const pointerState = userEvent.pointer({
+      keys: '[MouseLeft]',
+      target: element,
+      node: span[0].firstChild as Node,
+      offset: 1,
+    })
+    userEvent.pointer({node: div, offset: 3}, {pointerState})
+
+    expect(document.getSelection()?.toString()).toBe('oo bar')
+    expect(document.getSelection()?.getRangeAt(0)).toHaveProperty(
+      'startContainer',
+      span[0].firstChild,
+    )
+    expect(document.getSelection()?.getRangeAt(0)).toHaveProperty(
+      'startOffset',
+      1,
+    )
+    expect(document.getSelection()?.getRangeAt(0)).toHaveProperty(
+      'endContainer',
+      div,
+    )
+    expect(document.getSelection()?.getRangeAt(0)).toHaveProperty(
+      'endOffset',
+      3,
+    )
+
+    userEvent.pointer({
+      keys: '[MouseLeft]',
+      target: element,
+      node: span[0].firstChild as Node,
+    })
+    expect(document.getSelection()?.toString()).toBe('')
+    expect(document.getSelection()?.getRangeAt(0)).toHaveProperty(
+      'startContainer',
+      span[0].firstChild,
+    )
+    expect(document.getSelection()?.getRangeAt(0)).toHaveProperty(
+      'startOffset',
+      3,
+    )
+    expect(document.getSelection()?.getRangeAt(0)).toHaveProperty(
+      'endContainer',
+      span[0].firstChild,
+    )
+    expect(document.getSelection()?.getRangeAt(0)).toHaveProperty(
+      'endOffset',
+      3,
+    )
+
+    userEvent.pointer({
+      keys: '[MouseLeft]',
+      target: element,
+      node: span[0] as Node,
+    })
+    expect(document.getSelection()?.toString()).toBe('')
+    expect(document.getSelection()?.getRangeAt(0)).toHaveProperty(
+      'startContainer',
+      span[0],
+    )
+    expect(document.getSelection()?.getRangeAt(0)).toHaveProperty(
+      'startOffset',
+      1,
+    )
+    expect(document.getSelection()?.getRangeAt(0)).toHaveProperty(
+      'endContainer',
+      span[0],
+    )
+    expect(document.getSelection()?.getRangeAt(0)).toHaveProperty(
+      'endOffset',
+      1,
+    )
   })
 })

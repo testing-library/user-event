@@ -209,6 +209,8 @@ function up(
     })
   }
 
+  delete pointerState.position[pointerName].selectionRange
+
   if (!targetIsDisabled) {
     if (pointerType === 'mouse' || !isMultiTouch) {
       unpreventedDefault = fire('mouseup') && unpreventedDefault

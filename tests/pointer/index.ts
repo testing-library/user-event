@@ -499,7 +499,7 @@ describe('mousedown moves selection', () => {
     const {element} = setup<HTMLInputElement>(`<input value="foo bar baz"/>`)
 
     const pointerState = userEvent.pointer({
-      keys: '[MouseLeft][MouseLeft]',
+      keys: '[MouseLeft][MouseLeft>]',
       target: element,
       offset: 6,
     })
@@ -525,7 +525,7 @@ describe('mousedown moves selection', () => {
     const span = element.querySelectorAll('span')
 
     const pointerState = userEvent.pointer({
-      keys: '[MouseLeft][MouseLeft]',
+      keys: '[MouseLeft][MouseLeft>]',
       target: element,
       offset: 6,
     })
@@ -617,7 +617,7 @@ describe('mousedown moves selection', () => {
     const span = element.querySelectorAll('span')
 
     const pointerState = userEvent.pointer({
-      keys: '[MouseLeft]',
+      keys: '[MouseLeft>]',
       target: element,
       node: span[0].firstChild as Node,
       offset: 1,

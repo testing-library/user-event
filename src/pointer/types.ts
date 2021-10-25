@@ -1,5 +1,5 @@
 import {keyboardState} from '../keyboard/types'
-import {Coords, MouseButton} from '../utils'
+import {PointerCoords, MouseButton} from '../utils'
 
 /**
  * @internal Do not create/alter this by yourself as this type might be subject to changes.
@@ -31,9 +31,9 @@ export type pointerState = {
     {
       pointerId: number
       pointerType: 'mouse' | 'pen' | 'touch'
-      target?: Element
-      coords: Coords
-    }
+    } & Partial<PointerTarget> & {
+        selectionRange?: Range | SelectionInputRange
+      }
   >
 
   /**
@@ -60,7 +60,23 @@ export interface pointerKey {
 
 export interface PointerTarget {
   target: Element
-  coords: Coords
+  coords?: PointerCoords
+}
+
+export interface SelectionTarget {
+  node?: Node
+  /**
+   * If `node` is set, this is the DOM offset.
+   * Otherwise this is the `textContent`/`value` offset on the `target`.
+   */
+  offset?: number
+}
+
+/** Describes a selection inside `HTMLInputElement`/`HTMLTextareaElement` */
+export interface SelectionInputRange {
+  node: HTMLInputElement | HTMLTextAreaElement
+  start: number
+  end: number
 }
 
 export interface inputDeviceState {

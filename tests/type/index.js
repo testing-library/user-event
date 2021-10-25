@@ -270,10 +270,10 @@ test('should fire events on the currently focused element', () => {
 
 test('should replace selected text', () => {
   const {element} = setup('<input value="hello world" />')
-  const selectionStart = 'hello world'.search('world')
-  const selectionEnd = selectionStart + 'world'.length
-  element.setSelectionRange(selectionStart, selectionEnd)
-  userEvent.type(element, 'friend')
+  userEvent.type(element, 'friend', {
+    initialSelectionStart: 6,
+    initialSelectionEnd: 11,
+  })
   expect(element).toHaveValue('hello friend')
 })
 
@@ -340,15 +340,13 @@ test('typing into a controlled input works', () => {
 
 test('typing in the middle of a controlled input works', () => {
   const {element, getEventSnapshot} = setupDollarInput({initialValue: '$23'})
-  element.setSelectionRange(2, 2)
 
-  userEvent.type(element, '1')
+  userEvent.type(element, '1', {initialSelectionStart: 2})
 
   expect(element).toHaveValue('$213')
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value="$213"]
 
-    input[value="$23"] - select
     input[value="$23"] - pointerover
     input[value="$23"] - pointerenter
     input[value="$23"] - mouseover
@@ -359,9 +357,11 @@ test('typing in the middle of a controlled input works', () => {
     input[value="$23"] - mousedown
     input[value="$23"] - focus
     input[value="$23"] - focusin
+    input[value="$23"] - select
     input[value="$23"] - pointerup
     input[value="$23"] - mouseup
     input[value="$23"] - click
+    input[value="$23"] - select
     input[value="$23"] - keydown: 1 (49)
     input[value="$23"] - keypress: 1 (49)
     input[value="$213"] - select
@@ -372,9 +372,11 @@ test('typing in the middle of a controlled input works', () => {
 
 test('ignored {backspace} in controlled input', () => {
   const {element, getEventSnapshot} = setupDollarInput({initialValue: '$23'})
-  element.setSelectionRange(1, 1)
 
-  userEvent.type(element, '{backspace}')
+  userEvent.type(element, '{backspace}', {
+    initialSelectionStart: 1,
+    initialSelectionEnd: 1,
+  })
   // this is the same behavior in the browser.
   // in our case, when you try to backspace the "$", our event handler
   // will ignore that change and React resets the value to what it was
@@ -390,7 +392,6 @@ test('ignored {backspace} in controlled input', () => {
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value="$234"]
 
-    input[value="$23"] - select
     input[value="$23"] - pointerover
     input[value="$23"] - pointerenter
     input[value="$23"] - mouseover
@@ -401,9 +402,11 @@ test('ignored {backspace} in controlled input', () => {
     input[value="$23"] - mousedown
     input[value="$23"] - focus
     input[value="$23"] - focusin
+    input[value="$23"] - select
     input[value="$23"] - pointerup
     input[value="$23"] - mouseup
     input[value="$23"] - click
+    input[value="$23"] - select
     input[value="$23"] - keydown: Backspace (8)
     input[value="23"] - select
     input[value="23"] - input
@@ -453,10 +456,10 @@ test('typing in a textarea with existing text', () => {
     textarea[value="Hello, "] - mousedown
     textarea[value="Hello, "] - focus
     textarea[value="Hello, "] - focusin
+    textarea[value="Hello, "] - select
     textarea[value="Hello, "] - pointerup
     textarea[value="Hello, "] - mouseup
     textarea[value="Hello, "] - click
-    textarea[value="Hello, "] - select
     textarea[value="Hello, "] - keydown: 1 (49)
     textarea[value="Hello, "] - keypress: 1 (49)
     textarea[value="Hello, 1"] - input
@@ -492,9 +495,11 @@ test('accepts an initialSelectionStart and initialSelectionEnd', () => {
     textarea[value="Hello, "] - mousedown
     textarea[value="Hello, "] - focus
     textarea[value="Hello, "] - focusin
+    textarea[value="Hello, "] - select
     textarea[value="Hello, "] - pointerup
     textarea[value="Hello, "] - mouseup
     textarea[value="Hello, "] - click
+    textarea[value="Hello, "] - select
     textarea[value="Hello, "] - keydown: 1 (49)
     textarea[value="Hello, "] - keypress: 1 (49)
     textarea[value="1Hello, "] - select
@@ -1492,8 +1497,9 @@ test('move selection with arrows', () => {
 test('overwrite selection with same value', () => {
   const {element} = setup(`<input value="1"/>`)
   element.select()
+  element.focus()
 
-  userEvent.type(element, '11123')
+  userEvent.type(element, '11123', {skipClick: true})
 
   expect(element).toHaveValue('11123')
 })

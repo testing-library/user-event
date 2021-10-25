@@ -1,12 +1,7 @@
 import {getConfig as getDOMTestingLibraryConfig} from '@testing-library/dom'
 import {prepareDocument} from './document'
 import type {UserEvent} from './setup'
-import {
-  setSelectionRange,
-  getSelectionRange,
-  getValue,
-  getActiveElement,
-} from './utils'
+import {setSelectionRange} from './utils'
 import {keyboardImplementationWrapper} from './keyboard'
 
 export interface typeOptions {
@@ -72,30 +67,11 @@ async function typeImplementation(
 
   if (!skipClick) userEvent.click(element)
 
-  // The focused element could change between each event, so get the currently active element each time
-  const currentElement = () => getActiveElement(element.ownerDocument)
-
-  // by default, a new element has its selection start and end at 0
-  // but most of the time when people call "type", they expect it to type
-  // at the end of the current input value. So, if the selection start
-  // and end are both the default of 0, then we'll go ahead and change
-  // them to the length of the current value.
-  // the only time it would make sense to pass the initialSelectionStart or
-  // initialSelectionEnd is if you have an input with a value and want to
-  // explicitly start typing with the cursor at 0. Not super common.
-  const value = getValue(currentElement())
-
-  const {selectionStart, selectionEnd} = getSelectionRange(element)
-
-  if (
-    value != null &&
-    (selectionStart === null || selectionStart === 0) &&
-    (selectionEnd === null || selectionEnd === 0)
-  ) {
+  if (initialSelectionStart !== undefined) {
     setSelectionRange(
-      currentElement() as Element,
-      initialSelectionStart ?? value.length,
-      initialSelectionEnd ?? value.length,
+      element,
+      initialSelectionStart,
+      initialSelectionEnd ?? initialSelectionStart,
     )
   }
 

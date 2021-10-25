@@ -1,19 +1,13 @@
 import {fireEvent} from '@testing-library/dom'
 import type {pointerState} from '../../pointer/types'
 import type {keyboardState} from '../../keyboard/types'
-import {FakeEventInit, FakeMouseEvent, FakePointerEvent} from './fakeEvent'
+import {
+  FakeMouseEvent,
+  FakePointerEvent,
+  FakePointerEventInit,
+  PointerCoords,
+} from './fakeEvent'
 import {getMouseButton, getMouseButtons, MouseButton} from './mouseButtons'
-
-export interface Coords {
-  x: number
-  y: number
-  clientX: number
-  clientY: number
-  offsetX: number
-  offsetY: number
-  pageX: number
-  pageY: number
-}
 
 export function firePointerEvent(
   target: Element,
@@ -32,7 +26,7 @@ export function firePointerEvent(
     keyboardState: keyboardState
     pointerType?: 'mouse' | 'pen' | 'touch'
     button?: MouseButton
-    coords: Coords
+    coords?: PointerCoords
     pointerId?: number
     isPrimary?: boolean
     clickCount?: number
@@ -43,7 +37,7 @@ export function firePointerEvent(
       ? FakeMouseEvent
       : FakePointerEvent
 
-  const init: FakeEventInit = {
+  const init: FakePointerEventInit = {
     ...coords,
     altKey: keyboardState.modifiers.alt,
     ctrlKey: keyboardState.modifiers.ctrl,

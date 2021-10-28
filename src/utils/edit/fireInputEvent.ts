@@ -23,13 +23,17 @@ export function fireInputEvent(
   // apply the changes before firing the input event, so that input handlers can access the altered dom and selection
   if (isContentEditable(element)) {
     element.textContent = newValue
-  } /* istanbul ignore else */ else if (
-    isElementType(element, ['input', 'textarea'])
-  ) {
-    setUIValue(element, newValue)
   } else {
-    // TODO: properly type guard
-    throw new Error('Invalid Element')
+    // The pre-commit hooks keeps changing this
+    // See https://github.com/kentcdodds/kcd-scripts/issues/218
+    /* istanbul ignore else */
+    // eslint-disable-next-line no-lonely-if
+    if (isElementType(element, ['input', 'textarea'])) {
+      setUIValue(element, newValue)
+    } else {
+      // TODO: properly type guard
+      throw new Error('Invalid Element')
+    }
   }
   setSelectionRange(element, newSelectionStart, newSelectionStart)
 

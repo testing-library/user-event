@@ -1,6 +1,6 @@
 import {fireEvent} from '@testing-library/dom'
 import {isElementType} from '../misc/isElementType'
-import {applyNative, hasUISelection, setUIValue} from '../../document'
+import {setUIValue, startTrackValue, endTrackValue} from '../../document'
 import {isContentEditable} from './isContentEditable'
 import {setSelectionRange} from './selectionRange'
 
@@ -18,10 +18,12 @@ export function fireInputEvent(
     }
   },
 ) {
+  const oldValue = (element as HTMLInputElement).value
+
   // apply the changes before firing the input event, so that input handlers can access the altered dom and selection
   if (isContentEditable(element)) {
-    applyNative(element, 'textContent', newValue)
-  } else /* istanbul ignore else */ if (
+    element.textContent = newValue
+  } /* istanbul ignore else */ else if (
     isElementType(element, ['input', 'textarea'])
   ) {
     setUIValue(element, newValue)
@@ -29,36 +31,26 @@ export function fireInputEvent(
     // TODO: properly type guard
     throw new Error('Invalid Element')
   }
-  setSelectionRangeAfterInput(element, newSelectionStart)
+  setSelectionRange(element, newSelectionStart, newSelectionStart)
+
+  // When the input event happens in the browser, React executes all event handlers
+  // and if they change state of a controlled value, nothing happens.
+  // But when we trigger the event handlers in test environment,
+  // the changes are rolled back by React before the state update is applied.
+  // Then the updated state is applied which results in a resetted cursor.
+  // There is probably a better way to work around  if we figure out
+  // why the batched update is executed differently in our test environment.
+  startTrackValue(element as HTMLInputElement)
 
   fireEvent.input(element, {
     ...eventOverrides,
   })
 
-  setSelectionRangeAfterInputHandler(element, newSelectionStart)
-}
-
-function setSelectionRangeAfterInput(
-  element: Element,
-  newSelectionStart: number,
-) {
-  setSelectionRange(element, newSelectionStart, newSelectionStart)
-}
-
-function setSelectionRangeAfterInputHandler(
-  element: Element,
-  newSelectionStart: number,
-) {
-  // On controlled inputs the selection changes without a call to
-  // either the `value` setter or the `setSelectionRange` method.
-  // So if our tracked position for UI still exists and derives from a valid selectionStart,
-  // the cursor was moved due to an input being controlled.
-
+  const tracked = endTrackValue(element as HTMLInputElement)
   if (
-    isElementType(element, ['input', 'textarea']) &&
-    typeof element.selectionStart === 'number' &&
-    element.selectionStart !== newSelectionStart &&
-    hasUISelection(element)
+    tracked?.length === 2 &&
+    tracked[0] === oldValue &&
+    tracked[1] === newValue
   ) {
     setSelectionRange(element, newSelectionStart, newSelectionStart)
   }

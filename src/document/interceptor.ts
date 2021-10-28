@@ -10,7 +10,7 @@ type Params<Prop> = Prop extends anyFunc ? Parameters<Prop> : [Prop]
 type ImplReturn<Prop> = Prop extends anyFunc ? Parameters<Prop> : Prop
 
 export function prepareInterceptor<
-  ElementType extends Element,
+  ElementType extends Node,
   PropName extends keyof ElementType,
 >(
   element: ElementType,
@@ -18,14 +18,26 @@ export function prepareInterceptor<
   interceptorImpl: (
     this: ElementType,
     ...args: Params<ElementType[PropName]>
-  ) => ImplReturn<ElementType[PropName]>,
+  ) => {
+    /**
+     * React tracks the changes on element properties.
+     * This workaround tries to alter the DOM element without React noticing,
+     * so that it later picks up the change.
+     *
+     * @see https://github.com/facebook/react/blob/148f8e497c7d37a3c7ab99f01dec2692427272b1/packages/react-dom/src/client/inputValueTracking.js#L51-L104
+     */
+    applyNative?: boolean
+    realArgs?: ImplReturn<ElementType[PropName]>
+  },
 ) {
   const prototypeDescriptor = Object.getOwnPropertyDescriptor(
     element.constructor.prototype,
     propName,
   )
+  const objectDescriptor = Object.getOwnPropertyDescriptor(element, propName)
 
   const target = prototypeDescriptor?.set ? 'set' : 'value'
+
   if (
     typeof prototypeDescriptor?.[target] !== 'function' ||
     (prototypeDescriptor[target] as Interceptable)[Interceptor]
@@ -33,15 +45,17 @@ export function prepareInterceptor<
     return
   }
 
-  const realFunc = prototypeDescriptor[target] as (
-    this: ElementType,
-    ...args: unknown[]
-  ) => unknown
   function intercept(
     this: ElementType,
     ...args: Params<ElementType[PropName]>
   ) {
-    const realArgs = interceptorImpl.call(this, ...args)
+    const {applyNative = true, realArgs} = interceptorImpl.call(this, ...args)
+
+    const realFunc = ((!applyNative && objectDescriptor) ||
+      (prototypeDescriptor as PropertyDescriptor))[target] as (
+      this: ElementType,
+      ...a: unknown[]
+    ) => unknown
 
     if (target === 'set') {
       realFunc.call(this, realArgs)
@@ -51,8 +65,8 @@ export function prepareInterceptor<
   }
   ;(intercept as Interceptable)[Interceptor] = Interceptor
 
-  Object.defineProperty(element.constructor.prototype, propName, {
-    ...prototypeDescriptor,
+  Object.defineProperty(element, propName, {
+    ...(objectDescriptor ?? prototypeDescriptor),
     [target]: intercept,
   })
 }

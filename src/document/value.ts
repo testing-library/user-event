@@ -1,9 +1,9 @@
-import {applyNative} from './applyNative'
 import {prepareInterceptor} from './interceptor'
 import {clearUISelection} from './selection'
 
 const UIValue = Symbol('Displayed value in UI')
 const InitialValue = Symbol('Initial value to compare on blur')
+const TrackChanges = Symbol('Track programmatic changes for React workaround')
 
 type Value = {
   [UIValue]?: typeof UIValue
@@ -14,6 +14,7 @@ declare global {
   interface Element {
     [UIValue]?: string
     [InitialValue]?: string
+    [TrackChanges]?: string[]
   }
 }
 
@@ -25,6 +26,8 @@ function valueInterceptor(
 
   this[UIValue] = isUI ? String(v) : undefined
   if (!isUI) {
+    trackValue(this, String(v))
+
     this[InitialValue] = String(v)
 
     // Programmatically setting the value property
@@ -32,7 +35,10 @@ function valueInterceptor(
     clearUISelection(this)
   }
 
-  return String(v)
+  return {
+    applyNative: !!isUI,
+    realArgs: String(v),
+  }
 }
 
 export function prepareValueInterceptor(element: HTMLInputElement) {
@@ -43,10 +49,10 @@ export function setUIValue(
   element: HTMLInputElement | HTMLTextAreaElement,
   value: string,
 ) {
-  applyNative(element, 'value', {
+  element.value = {
     [UIValue]: UIValue,
     toString: () => value,
-  } as unknown as string)
+  } as unknown as string
 }
 
 export function getUIValue(element: HTMLInputElement | HTMLTextAreaElement) {
@@ -63,4 +69,25 @@ export function getInitialValue(
   element: HTMLInputElement | HTMLTextAreaElement,
 ) {
   return element[InitialValue]
+}
+
+export function startTrackValue(
+  element: HTMLInputElement | HTMLTextAreaElement,
+) {
+  element[TrackChanges] = []
+}
+
+function trackValue(
+  element: HTMLInputElement | HTMLTextAreaElement,
+  v: string,
+) {
+  element[TrackChanges]?.push(v)
+}
+
+export function endTrackValue(element: HTMLInputElement | HTMLTextAreaElement) {
+  const tracked = element[TrackChanges]
+
+  element[TrackChanges] = undefined
+
+  return tracked
 }

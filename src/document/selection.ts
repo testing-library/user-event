@@ -24,9 +24,13 @@ function setSelectionInterceptor(
     ? {start: start.valueOf(), end: Number(end)}
     : undefined
 
-  return [Number(start), end, direction] as Parameters<
-    HTMLInputElement['setSelectionRange']
-  >
+  return {
+    realArgs: [Number(start), end, direction] as [
+      number,
+      number,
+      typeof direction,
+    ],
+  }
 }
 
 export function prepareSelectionInterceptor(
@@ -77,10 +81,4 @@ export function clearUISelection(
   element: HTMLInputElement | HTMLTextAreaElement,
 ) {
   element[UISelection] = undefined
-}
-
-export function hasUISelection(
-  element: HTMLInputElement | HTMLTextAreaElement,
-) {
-  return Boolean(element[UISelection])
 }

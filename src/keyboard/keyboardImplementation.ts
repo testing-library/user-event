@@ -142,10 +142,10 @@ function keypress(
 ) {
   const element = getCurrentElement()
 
-  const unpreventedDefault = fireEvent.keyPress(
-    element,
-    getKeyEventProps(keyDef, state),
-  )
+  const unpreventedDefault = fireEvent.keyPress(element, {
+    ...getKeyEventProps(keyDef, state),
+    charCode: keyDef.key === 'Enter' ? 13 : String(keyDef.key).charCodeAt(0),
+  })
 
   if (unpreventedDefault) {
     applyPlugins(

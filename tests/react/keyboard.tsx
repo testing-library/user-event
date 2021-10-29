@@ -2,7 +2,9 @@ import React, {useState} from 'react'
 import {render, screen} from '@testing-library/react'
 import userEvent from '#src'
 
-test('maintain cursor position on controlled input', () => {
+// Run twice to verify we handle this correctly no matter
+// if React applies its magic before or after our document preparation.
+test.each([0, 1])('maintain cursor position on controlled input', () => {
   function Input({initialValue}: {initialValue: string}) {
     const [val, setVal] = useState(initialValue)
 

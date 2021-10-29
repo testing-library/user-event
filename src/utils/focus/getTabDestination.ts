@@ -29,7 +29,7 @@ export function getTabDestination(
   }
 
   const checkedRadio: Record<string, HTMLInputElement> = {}
-  let prunedElements: HTMLInputElement[] = []
+  let prunedElements: Element[] = isDocument(focusTrap) ? [focusTrap.body] : []
   const activeRadioGroup = isElementType(activeElement, 'input', {
     type: 'radio',
   })
@@ -53,7 +53,7 @@ export function getTabDestination(
       // If we stumble upon a checked radio, remove the others
       if (el.checked) {
         prunedElements = prunedElements.filter(
-          e => e.type !== el.type || e.name !== el.name,
+          e => !isElementType(e, 'input', {type: 'radio', name: el.name}),
         )
         prunedElements.push(el)
         checkedRadio[el.name] = el
@@ -70,14 +70,6 @@ export function getTabDestination(
   })
 
   const currentIndex = prunedElements.findIndex(el => el === activeElement)
-
-  if (
-    isDocument(focusTrap) &&
-    ((currentIndex === 0 && shift) ||
-      (currentIndex === prunedElements.length - 1 && !shift))
-  ) {
-    return focusTrap.body
-  }
 
   const nextIndex = shift ? currentIndex - 1 : currentIndex + 1
   const defaultIndex = shift ? prunedElements.length - 1 : 0

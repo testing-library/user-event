@@ -26,9 +26,6 @@ export function tab(
   }
 
   const nextElement = getTabDestination(previousElement, shift, focusTrap)
-  if (!nextElement) {
-    return
-  }
 
   const shiftKeyInit = {
     key: 'Shift',

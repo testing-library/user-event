@@ -4,9 +4,13 @@
  */
 
 import {fireEvent} from '@testing-library/dom'
+import {setUISelection} from '../../document'
 import {
+  blur,
   calculateNewValue,
   fireInputEvent,
+  focus,
+  getTabDestination,
   hasFormSubmit,
   isClickableInput,
   isCursorAtStart,
@@ -75,6 +79,24 @@ export const keydownBehavior: behaviorPlugin[] = [
           inputType: 'deleteContentBackward',
         },
       })
+    },
+  },
+  {
+    matches: keyDef => keyDef.key === 'Tab',
+    handle: (keyDef, element, options, state) => {
+      const dest = getTabDestination(
+        element,
+        state.modifiers.shift,
+        element.ownerDocument,
+      )
+      if (dest === element.ownerDocument.body) {
+        blur(element)
+      } else {
+        focus(dest)
+        if (isElementType(dest, ['input', 'textarea'])) {
+          setUISelection(dest, 0, dest.value.length)
+        }
+      }
     },
   },
 ]

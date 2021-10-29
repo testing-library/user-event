@@ -1,4 +1,5 @@
 import userEvent from '#src'
+import {getUISelection} from '#src/document'
 import {setup} from '#testHelpers/utils'
 
 test('produce extra events for the Control key when AltGraph is pressed', () => {
@@ -209,4 +210,40 @@ test('trigger change event on [Space] keyup on HTMLInputElement type=radio', () 
     input[checked=true] - input
     input[checked=true] - change
   `)
+})
+
+test('tab through elements', () => {
+  const {elements} = setup<
+    [HTMLInputElement, HTMLInputElement, HTMLButtonElement]
+  >(`<input value="abc"/><input type="number" value="1e5"/><button/>`)
+
+  userEvent.keyboard('[Tab]')
+
+  expect(elements[0]).toHaveFocus()
+  expect(elements[0]).toHaveProperty('selectionStart', 0)
+  expect(elements[0]).toHaveProperty('selectionEnd', 3)
+
+  userEvent.keyboard('[Tab]')
+
+  expect(elements[1]).toHaveFocus()
+  expect(getUISelection(elements[1])).toHaveProperty('selectionStart', 0)
+  expect(getUISelection(elements[1])).toHaveProperty('selectionEnd', 3)
+
+  userEvent.keyboard('[Tab]')
+
+  expect(elements[2]).toHaveFocus()
+
+  userEvent.keyboard('[Tab]')
+
+  expect(document.body).toHaveFocus()
+
+  userEvent.keyboard('[ShiftLeft>][Tab]')
+
+  expect(elements[2]).toHaveFocus()
+
+  userEvent.keyboard('[ShiftRight>][Tab]')
+
+  expect(elements[1]).toHaveFocus()
+  expect(getUISelection(elements[1])).toHaveProperty('selectionStart', 0)
+  expect(getUISelection(elements[1])).toHaveProperty('selectionEnd', 3)
 })

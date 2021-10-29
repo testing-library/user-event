@@ -20,8 +20,6 @@ export function getTabDestination(
         isVisible(el)),
   )
 
-  if (enabledElements.length === 0) return
-
   if (activeElement.getAttribute('tabindex') !== '-1') {
     // tabindex has no effect if the active element has tabindex="-1"
     enabledElements.sort(

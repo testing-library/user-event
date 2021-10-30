@@ -12,31 +12,52 @@ declare global {
   }
 }
 
-function setSelectionInterceptor(
-  this: HTMLInputElement | HTMLTextAreaElement,
-  start: number | Value | null,
-  end: number | null,
-  direction: 'forward' | 'backward' | 'none' = 'none',
-) {
-  const isUI = start && typeof start === 'object' && start[UISelection]
-
-  this[UISelection] = isUI
-    ? {start: start.valueOf(), end: Number(end)}
-    : undefined
-
-  return {
-    realArgs: [Number(start), end, direction] as [
-      number,
-      number,
-      typeof direction,
-    ],
-  }
-}
-
 export function prepareSelectionInterceptor(
   element: HTMLInputElement | HTMLTextAreaElement,
 ) {
-  prepareInterceptor(element, 'setSelectionRange', setSelectionInterceptor)
+  prepareInterceptor(
+    element,
+    'setSelectionRange',
+    function interceptorImpl(
+      this: HTMLInputElement | HTMLTextAreaElement,
+      start: number | Value | null,
+      end: number | null,
+      direction: 'forward' | 'backward' | 'none' = 'none',
+    ) {
+      const isUI = start && typeof start === 'object' && start[UISelection]
+
+      this[UISelection] = isUI
+        ? {start: start.valueOf(), end: Number(end)}
+        : undefined
+
+      return {
+        realArgs: [Number(start), end, direction] as [
+          number,
+          number,
+          typeof direction,
+        ],
+      }
+    },
+  )
+
+  prepareInterceptor(
+    element,
+    'selectionStart',
+    function interceptorImpl(this, v) {
+      this[UISelection] = undefined
+
+      return {realArgs: v}
+    },
+  )
+  prepareInterceptor(
+    element,
+    'selectionEnd',
+    function interceptorImpl(this, v) {
+      this[UISelection] = undefined
+
+      return {realArgs: v}
+    },
+  )
 }
 
 export function setUISelection(

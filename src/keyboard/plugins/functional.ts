@@ -84,11 +84,7 @@ export const keydownBehavior: behaviorPlugin[] = [
   {
     matches: keyDef => keyDef.key === 'Tab',
     handle: (keyDef, element, options, state) => {
-      const dest = getTabDestination(
-        element,
-        state.modifiers.shift,
-        element.ownerDocument,
-      )
+      const dest = getTabDestination(element, state.modifiers.shift)
       if (dest === element.ownerDocument.body) {
         blur(element)
       } else {

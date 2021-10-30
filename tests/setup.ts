@@ -235,10 +235,6 @@ cases<APICase>(
     },
     tab: {
       api: 'tab',
-      optionsArg: 0,
-      options: {
-        focusTrap: document.querySelector('body'),
-      },
     },
     type: {
       api: 'type',

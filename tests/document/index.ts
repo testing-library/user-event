@@ -92,3 +92,29 @@ test('maintain selection range on elements without support for selection range',
   })
   expect(element.selectionStart).toBe(null)
 })
+
+test('clear UI selection if selection is programmatically set', () => {
+  const {element} = setup<HTMLInputElement>(`<input/>`)
+
+  prepare(element)
+
+  element.focus()
+  setUIValue(element, 'abc')
+  setUISelection(element, 1, 2)
+  expect(element.selectionStart).toBe(1)
+
+  element.setSelectionRange(0, 1)
+  expect(getUISelection(element)).toEqual({selectionStart: 0, selectionEnd: 1})
+
+  setUISelection(element, 2, 3)
+  expect(getUISelection(element)).toEqual({selectionStart: 2, selectionEnd: 3})
+
+  element.selectionEnd = 1
+  expect(getUISelection(element)).toEqual({selectionStart: 1, selectionEnd: 1})
+
+  setUISelection(element, 0, 1)
+  expect(getUISelection(element)).toEqual({selectionStart: 0, selectionEnd: 1})
+
+  element.selectionStart = 2
+  expect(getUISelection(element)).toEqual({selectionStart: 2, selectionEnd: 2})
+})

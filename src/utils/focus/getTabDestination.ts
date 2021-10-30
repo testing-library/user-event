@@ -1,15 +1,11 @@
 import {isDisabled} from '../misc/isDisabled'
-import {isDocument} from '../misc/isDocument'
 import {isElementType} from '../misc/isElementType'
 import {isVisible} from '../misc/isVisible'
 import {FOCUSABLE_SELECTOR} from './selector'
 
-export function getTabDestination(
-  activeElement: Element,
-  shift: boolean,
-  focusTrap: Document | Element,
-) {
-  const focusableElements = focusTrap.querySelectorAll(FOCUSABLE_SELECTOR)
+export function getTabDestination(activeElement: Element, shift: boolean) {
+  const document = activeElement.ownerDocument
+  const focusableElements = document.querySelectorAll(FOCUSABLE_SELECTOR)
 
   const enabledElements = Array.from(focusableElements).filter(
     el =>
@@ -29,7 +25,7 @@ export function getTabDestination(
   }
 
   const checkedRadio: Record<string, HTMLInputElement> = {}
-  let prunedElements: Element[] = isDocument(focusTrap) ? [focusTrap.body] : []
+  let prunedElements = [document.body]
   const activeRadioGroup = isElementType(activeElement, 'input', {
     type: 'radio',
   })

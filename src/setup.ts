@@ -77,7 +77,6 @@ function _setup(
     autoModify,
     delay = 0,
     document,
-    focusTrap,
     keyboardMap,
     pointerMap,
     skipAutoClose,
@@ -113,9 +112,6 @@ function _setup(
   }
   const clickDefaults: clickOptions = {
     skipHover,
-  }
-  const tabDefaults: TabOptions = {
-    focusTrap,
   }
   const typeDefaults: TypeOptions = {
     delay,
@@ -194,7 +190,6 @@ function _setup(
     },
 
     tab: (...args: Parameters<typeof tab>) => {
-      args[0] = {...tabDefaults, ...args[0]}
       return tab.call(userEvent, ...args)
     },
 

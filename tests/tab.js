@@ -54,6 +54,82 @@ test('does not change focus if default prevented on keydown', () => {
   expect(bListeners.eventWasFired('focus')).toBe(false)
 })
 
+test('tabs backward if shift is already pressed', () => {
+  const {
+    elements: [elA, elB],
+    getEventSnapshot,
+    clearEventCalls,
+  } = setup(`<input/><input/><input/>`)
+  const user = userEvent.setup()
+  user.keyboard('[ShiftLeft>]')
+  elB.focus()
+  clearEventCalls()
+
+  user.tab()
+
+  expect(elA).toHaveFocus()
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
+    Events fired on: div
+
+    input[value=""] - keydown: Tab (9) {shift}
+    input[value=""] - focusout
+    input[value=""] - focusin
+    input[value=""] - keyup: Tab (9) {shift}
+  `)
+})
+
+test('shift option lifts pressed shift key', () => {
+  const {
+    elements: [, elB, elC],
+    getEventSnapshot,
+    clearEventCalls,
+  } = setup(`<input/><input/><input/>`)
+  const user = userEvent.setup()
+  user.keyboard('[ShiftRight>]')
+  elB.focus()
+  clearEventCalls()
+
+  user.tab({shift: false})
+
+  expect(elC).toHaveFocus()
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
+    Events fired on: div
+
+    input[value=""] - keyup: Shift (16)
+    input[value=""] - keydown: Tab (9)
+    input[value=""] - focusout
+    input[value=""] - focusin
+    input[value=""] - keyup: Tab (9)
+  `)
+})
+
+test('shift option presses shift key', () => {
+  const {
+    elements: [elA, elB],
+    getEventSnapshot,
+    clearEventCalls,
+  } = setup(`<input/><input/><input/>`)
+  const user = userEvent.setup()
+  user.keyboard('[ShiftLeft>]')
+  elB.focus()
+  clearEventCalls()
+
+  user.tab({shift: true})
+
+  expect(elA).toHaveFocus()
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
+    Events fired on: div
+
+    input[value=""] - keyup: Shift (16)
+    input[value=""] - keydown: Shift (16) {shift}
+    input[value=""] - keydown: Tab (9) {shift}
+    input[value=""] - focusout
+    input[value=""] - focusin
+    input[value=""] - keyup: Tab (9) {shift}
+    input[value=""] - keyup: Shift (16)
+  `)
+})
+
 test('fires correct events with shift key', () => {
   const {element, getEventSnapshot, clearEventCalls} = setup(
     `<div><input id="a" /><input id="b" /></div>`,
@@ -303,65 +379,6 @@ test('should not tab to <input> with type="hidden"', () => {
   userEvent.tab()
 
   expect(text).toHaveFocus()
-})
-
-test('should stay within a focus trap', () => {
-  setup(`
-    <>
-      <div data-testid="div1">
-        <input data-testid="element" type="checkbox" />
-        <input data-testid="element" type="radio" />
-        <input data-testid="element" type="number" />
-      </div>
-      <div data-testid="div2">
-        <input data-testid="element" foo="bar" type="checkbox" />
-        <input data-testid="element" foo="bar" type="radio" />
-        <input data-testid="element" foo="bar" type="number" />
-      </div>
-    </>`)
-
-  const [div1, div2] = [
-    document.querySelector('[data-testid="div1"]'),
-    document.querySelector('[data-testid="div2"]'),
-  ]
-  const [checkbox1, radio1, number1, checkbox2, radio2, number2] =
-    document.querySelectorAll('[data-testid="element"]')
-
-  expect(document.body).toHaveFocus()
-
-  userEvent.tab({focusTrap: div1})
-
-  expect(checkbox1).toHaveFocus()
-
-  userEvent.tab({focusTrap: div1})
-
-  expect(radio1).toHaveFocus()
-
-  userEvent.tab({focusTrap: div1})
-
-  expect(number1).toHaveFocus()
-
-  userEvent.tab({focusTrap: div1})
-
-  // cycle goes back to first element
-  expect(checkbox1).toHaveFocus()
-
-  userEvent.tab({focusTrap: div2})
-
-  expect(checkbox2).toHaveFocus()
-
-  userEvent.tab({focusTrap: div2})
-
-  expect(radio2).toHaveFocus()
-
-  userEvent.tab({focusTrap: div2})
-
-  expect(number2).toHaveFocus()
-
-  userEvent.tab({focusTrap: div2})
-
-  // cycle goes back to first element
-  expect(checkbox2).toHaveFocus()
 })
 
 // prior to node 11, Array.sort was unstable for arrays w/ length > 10.

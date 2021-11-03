@@ -70,7 +70,9 @@ function mockApis(modulePath: string, ...vars: string[]) {
 
 // List of API functions per module
 jest.mock('#src/clear', () => mockApis('#src/clear', 'clear'))
-jest.mock('#src/click', () => mockApis('#src/click', 'click', 'dblClick'))
+jest.mock('#src/click', () =>
+  mockApis('#src/click', 'click', 'dblClick', 'tripleClick'),
+)
 jest.mock('#src/hover', () => mockApis('#src/hover', 'hover', 'unhover'))
 jest.mock('#src/keyboard', () => mockApis('#src/keyboard', 'keyboard'))
 jest.mock('#src/paste', () => mockApis('#src/paste', 'paste'))
@@ -235,6 +237,10 @@ cases<APICase>(
     },
     tab: {
       api: 'tab',
+    },
+    tripleClick: {
+      api: 'tripleClick',
+      elementArg: 0,
     },
     type: {
       api: 'type',

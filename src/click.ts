@@ -45,3 +45,19 @@ export function dblClick(
 
   this.pointer({keys: '[MouseLeft][MouseLeft]', target: element})
 }
+
+export function tripleClick(
+  this: UserEvent,
+  element: Element,
+  init?: MouseEventInit,
+  {skipPointerEventsCheck = false}: clickOptions & PointerOptions = {},
+) {
+  if (!skipPointerEventsCheck && !hasPointerEvents(element)) {
+    throw new Error(
+      'unable to triple-click element as it has or inherits pointer-events set to "none".',
+    )
+  }
+  this.hover(element, init, {skipPointerEventsCheck: true})
+
+  this.pointer({keys: '[MouseLeft][MouseLeft][MouseLeft]', target: element})
+}

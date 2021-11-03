@@ -1,5 +1,5 @@
 import {clear} from './clear'
-import {click, clickOptions, dblClick} from './click'
+import {click, clickOptions, dblClick, tripleClick} from './click'
 import {prepareDocument} from './document'
 import {hover, unhover} from './hover'
 import {createKeyboardState, keyboard, keyboardOptions} from './keyboard'
@@ -24,6 +24,7 @@ export const userEventApis = {
   pointer,
   selectOptions,
   tab,
+  tripleClick,
   type,
   unhover,
   upload,
@@ -191,6 +192,10 @@ function _setup(
 
     tab: (...args: Parameters<typeof tab>) => {
       return tab.call(userEvent, ...args)
+    },
+
+    tripleClick: (...args: Parameters<typeof tripleClick>) => {
+      return tripleClick.call(userEvent, ...args)
     },
 
     // type needs typecasting because of the overloading

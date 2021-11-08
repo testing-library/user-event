@@ -431,6 +431,20 @@ describe('mousedown moves selection', () => {
     expect(element).toHaveProperty('selectionStart', 11)
   })
 
+  test('single click moves cursor to the last text', () => {
+    const {element} = setup<HTMLInputElement>(
+      `<div contenteditable>foo bar baz</div>`,
+    )
+
+    userEvent.pointer({keys: '[MouseLeft]', target: element})
+
+    expect(document.getSelection()).toHaveProperty(
+      'focusNode',
+      element.firstChild,
+    )
+    expect(document.getSelection()).toHaveProperty('focusOffset', 11)
+  })
+
   test('double click selects a word or a sequence of whitespace', () => {
     const {element} = setup<HTMLInputElement>(`<input value="foo bar baz"/>`)
 

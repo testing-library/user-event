@@ -9,14 +9,17 @@ import {
   buildTimeValue,
   calculateNewValue,
   fireInputEvent,
+  getInputRange,
   getSpaceUntilMaxLength,
   getValue,
-  isClickableInput,
   isContentEditable,
+  isEditableInput,
   isElementType,
   isValidDateValue,
   isValidInputTimeValue,
+  prepareInput,
 } from '../../utils'
+import {UISelectionRange} from '../../document'
 
 export const keypressBehavior: behaviorPlugin[] = [
   {
@@ -37,9 +40,10 @@ export const keypressBehavior: behaviorPlugin[] = [
         newEntry = timeNewEntry
       }
 
-      const {newValue, newSelectionStart} = calculateNewValue(
+      const {newValue, newOffset} = calculateNewValue(
         newEntry,
-        element as HTMLElement,
+        element as HTMLInputElement & {type: 'time'},
+        getInputRange(element) as UISelectionRange,
       )
       const prevValue = getValue(element)
 
@@ -48,7 +52,10 @@ export const keypressBehavior: behaviorPlugin[] = [
       if (prevValue !== newValue) {
         fireInputEvent(element as HTMLInputElement, {
           newValue,
-          newSelectionStart,
+          newSelection: {
+            node: element,
+            offset: newOffset,
+          },
           eventOverrides: {
             data: keyDef.key,
             inputType: 'insertText',
@@ -81,9 +88,10 @@ export const keypressBehavior: behaviorPlugin[] = [
         newEntry = textToBeTyped
       }
 
-      const {newValue, newSelectionStart} = calculateNewValue(
+      const {newValue, newOffset} = calculateNewValue(
         newEntry,
-        element as HTMLElement,
+        element as HTMLInputElement & {type: 'date'},
+        getInputRange(element) as UISelectionRange,
       )
       const prevValue = getValue(element)
 
@@ -92,7 +100,10 @@ export const keypressBehavior: behaviorPlugin[] = [
       if (prevValue !== newValue) {
         fireInputEvent(element as HTMLInputElement, {
           newValue,
-          newSelectionStart,
+          newSelection: {
+            node: element,
+            offset: newOffset,
+          },
           eventOverrides: {
             data: keyDef.key,
             inputType: 'insertText',
@@ -118,10 +129,10 @@ export const keypressBehavior: behaviorPlugin[] = [
         return
       }
 
-      const {newValue, newSelectionStart} = calculateNewValue(
+      const {newValue = '', commit} = prepareInput(
         keyDef.key as string,
-        element as HTMLElement,
-      )
+        element,
+      ) as NonNullable<ReturnType<typeof prepareInput>>
 
       // the browser allows some invalid input but not others
       // it allows up to two '-' at any place before any 'e' or one directly following 'e'
@@ -135,37 +146,18 @@ export const keypressBehavior: behaviorPlugin[] = [
         return
       }
 
-      fireInputEvent(element as HTMLInputElement, {
-        newValue,
-        newSelectionStart,
-        eventOverrides: {
-          data: keyDef.key,
-          inputType: 'insertText',
-        },
-      })
+      commit()
     },
   },
   {
     matches: (keyDef, element) =>
       keyDef.key?.length === 1 &&
-      ((isElementType(element, ['input', 'textarea'], {readOnly: false}) &&
-        !isClickableInput(element)) ||
+      (isEditableInput(element) ||
+        isElementType(element, 'textarea', {readOnly: false}) ||
         isContentEditable(element)) &&
       getSpaceUntilMaxLength(element) !== 0,
     handle: (keyDef, element) => {
-      const {newValue, newSelectionStart} = calculateNewValue(
-        keyDef.key as string,
-        element as HTMLElement,
-      )
-
-      fireInputEvent(element as HTMLElement, {
-        newValue,
-        newSelectionStart,
-        eventOverrides: {
-          data: keyDef.key,
-          inputType: 'insertText',
-        },
-      })
+      prepareInput(keyDef.key as string, element)?.commit()
     },
   },
   {
@@ -175,23 +167,13 @@ export const keypressBehavior: behaviorPlugin[] = [
         isContentEditable(element)) &&
       getSpaceUntilMaxLength(element) !== 0,
     handle: (keyDef, element, options, state) => {
-      const {newValue, newSelectionStart} = calculateNewValue(
+      prepareInput(
         '\n',
-        element as HTMLElement,
-      )
-
-      const inputType =
+        element,
         isContentEditable(element) && !state.modifiers.shift
           ? 'insertParagraph'
-          : 'insertLineBreak'
-
-      fireInputEvent(element as HTMLElement, {
-        newValue,
-        newSelectionStart,
-        eventOverrides: {
-          inputType,
-        },
-      })
+          : 'insertLineBreak',
+      )?.commit()
     },
   },
 ]

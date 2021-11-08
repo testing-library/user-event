@@ -57,22 +57,28 @@ export async function pointerMove(
   fireMove(target, coords)
 
   if (selectionRange) {
+    // TODO: support multiple ranges (ctrl)
+    // TODO: support extending range (shift)
+
     const selectionFocus = resolveSelectionTarget({target, node, offset})
-    if (
-      'node' in selectionRange &&
-      selectionFocus.node === selectionRange.node
-    ) {
-      setUISelection(
-        selectionRange.node,
-        Math.min(selectionRange.start, selectionFocus.offset),
-        Math.max(selectionRange.end, selectionFocus.offset),
-      )
-    } else /* istanbul ignore else */ if ('setEnd' in selectionRange) {
+    if ('node' in selectionRange) {
+      if (selectionFocus.node === selectionRange.node) {
+        const anchorOffset =
+          selectionFocus.offset < selectionRange.start
+            ? selectionRange.end
+            : selectionRange.start
+        const focusOffset =
+          selectionFocus.offset > selectionRange.end ||
+          selectionFocus.offset < selectionRange.start
+            ? selectionFocus.offset
+            : selectionRange.end
+
+        setUISelection(selectionRange.node, {anchorOffset, focusOffset})
+      }
+    } else {
       const range = selectionRange.cloneRange()
-      const cmp = selectionRange.comparePoint(
-        selectionFocus.node,
-        selectionFocus.offset,
-      )
+
+      const cmp = range.comparePoint(selectionFocus.node, selectionFocus.offset)
       if (cmp < 0) {
         range.setStart(selectionFocus.node, selectionFocus.offset)
       } else if (cmp > 0) {

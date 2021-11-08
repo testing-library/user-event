@@ -1,18 +1,20 @@
 import {fireEvent} from '@testing-library/dom'
-import {isElementType} from '../misc/isElementType'
 import {setUIValue, startTrackValue, endTrackValue} from '../../document'
-import {isContentEditable} from './isContentEditable'
-import {setSelectionRange} from './selectionRange'
+import {isElementType} from '../misc/isElementType'
+import {setSelection} from '../focus/selection'
 
 export function fireInputEvent(
   element: HTMLElement,
   {
     newValue,
-    newSelectionStart,
+    newSelection,
     eventOverrides,
   }: {
     newValue: string
-    newSelectionStart: number
+    newSelection: {
+      node: Node
+      offset: number
+    }
     eventOverrides: Partial<Parameters<typeof fireEvent>[1]> & {
       [k: string]: unknown
     }
@@ -21,21 +23,25 @@ export function fireInputEvent(
   const oldValue = (element as HTMLInputElement).value
 
   // apply the changes before firing the input event, so that input handlers can access the altered dom and selection
-  if (isContentEditable(element)) {
-    element.textContent = newValue
+  if (isElementType(element, ['input', 'textarea'])) {
+    setUIValue(element, newValue)
   } else {
     // The pre-commit hooks keeps changing this
     // See https://github.com/kentcdodds/kcd-scripts/issues/218
     /* istanbul ignore else */
     // eslint-disable-next-line no-lonely-if
-    if (isElementType(element, ['input', 'textarea'])) {
-      setUIValue(element, newValue)
+    if (newSelection.node.nodeType === 3) {
+      newSelection.node.textContent = newValue
     } else {
       // TODO: properly type guard
       throw new Error('Invalid Element')
     }
   }
-  setSelectionRange(element, newSelectionStart, newSelectionStart)
+  setSelection({
+    focusNode: newSelection.node,
+    anchorOffset: newSelection.offset,
+    focusOffset: newSelection.offset,
+  })
 
   // When the input event happens in the browser, React executes all event handlers
   // and if they change state of a controlled value, nothing happens.
@@ -56,6 +62,10 @@ export function fireInputEvent(
     tracked[0] === oldValue &&
     tracked[1] === newValue
   ) {
-    setSelectionRange(element, newSelectionStart, newSelectionStart)
+    setSelection({
+      focusNode: newSelection.node,
+      anchorOffset: newSelection.offset,
+      focusOffset: newSelection.offset,
+    })
   }
 }

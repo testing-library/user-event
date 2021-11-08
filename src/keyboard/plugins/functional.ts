@@ -7,15 +7,13 @@ import {fireEvent} from '@testing-library/dom'
 import {setUISelection} from '../../document'
 import {
   blur,
-  calculateNewValue,
-  fireInputEvent,
   focus,
   getTabDestination,
   hasFormSubmit,
   isClickableInput,
-  isCursorAtStart,
   isEditable,
   isElementType,
+  prepareInput,
 } from '../../utils'
 import {getKeyEventProps, getMouseEventProps} from '../getEventProps'
 import {behaviorPlugin} from '../types'
@@ -60,25 +58,10 @@ export const keydownBehavior: behaviorPlugin[] = [
   },
   {
     matches: (keyDef, element) =>
-      keyDef.key === 'Backspace' &&
-      isEditable(element) &&
-      !isCursorAtStart(element),
+      keyDef.key === 'Backspace' && isEditable(element),
     handle: (keyDef, element) => {
-      const {newValue, newSelectionStart} = calculateNewValue(
-        '',
-        element as HTMLElement,
-        undefined,
-        undefined,
-        'backward',
-      )
-
-      fireInputEvent(element as HTMLElement, {
-        newValue,
-        newSelectionStart,
-        eventOverrides: {
-          inputType: 'deleteContentBackward',
-        },
-      })
+      // TODO: Implement pressing [Backspace] when multiple ranges are selected.
+      prepareInput('', element, 'deleteContentBackward')?.commit()
     },
   },
   {
@@ -90,7 +73,10 @@ export const keydownBehavior: behaviorPlugin[] = [
       } else {
         focus(dest)
         if (isElementType(dest, ['input', 'textarea'])) {
-          setUISelection(dest, 0, dest.value.length)
+          setUISelection(dest, {
+            anchorOffset: 0,
+            focusOffset: dest.value.length,
+          })
         }
       }
     },

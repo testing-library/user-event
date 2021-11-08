@@ -3,11 +3,12 @@ import type {UserEvent} from './setup'
 import {
   getSpaceUntilMaxLength,
   setSelectionRange,
-  calculateNewValue,
   eventWrapper,
   isDisabled,
   isElementType,
   editableInputTypes,
+  getInputRange,
+  prepareInput,
 } from './utils'
 
 interface pasteOptions {
@@ -72,19 +73,11 @@ export function paste(
 
   text = text.substr(0, getSpaceUntilMaxLength(element))
 
-  const {newValue, newSelectionStart} = calculateNewValue(text, element)
-  fireEvent.input(element, {
-    inputType: 'insertFromPaste',
-    target: {value: newValue},
-  })
-  setSelectionRange(
-    element,
+  const inputRange = getInputRange(element)
 
-    // TODO: investigate why the selection caused by invalid parameters was expected
-    {
-      newSelectionStart,
-      selectionEnd: newSelectionStart,
-    } as unknown as number,
-    {} as unknown as number,
-  )
+  if (!inputRange) {
+    return
+  }
+
+  prepareInput(text, element, 'insertFromPaste')?.commit()
 }

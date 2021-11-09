@@ -1,4 +1,10 @@
-import {getInputRange, focus, setSelection, setSelectionRange} from '#src/utils'
+import {
+  getInputRange,
+  focus,
+  setSelection,
+  setSelectionRange,
+  modifySelection,
+} from '#src/utils'
 import {setup} from '#testHelpers/utils'
 
 test('range on input', () => {
@@ -73,6 +79,43 @@ test('range on input without selection support', () => {
   expect(getInputRange(element)).toEqual({
     startOffset: 1,
     endOffset: 2,
+  })
+})
+
+describe('modify selection', () => {
+  test('extend selection on input element', () => {
+    const {element} = setup<HTMLInputElement>(`<input value="foo bar baz"/>`)
+
+    setSelection({focusNode: element, focusOffset: 5})
+
+    modifySelection({focusNode: element, focusOffset: 1})
+
+    expect(element).toHaveProperty('selectionStart', 1)
+    expect(element).toHaveProperty('selectionEnd', 5)
+
+    modifySelection({focusNode: element, focusOffset: 9})
+
+    expect(element).toHaveProperty('selectionStart', 5)
+    expect(element).toHaveProperty('selectionEnd', 9)
+  })
+
+  test('extend selection on other nodes', () => {
+    const {element} = setup(`<div>foo bar baz</div>`)
+    const text = element.firstChild as Text
+
+    setSelection({focusNode: text, focusOffset: 5})
+
+    modifySelection({focusNode: text, focusOffset: 1})
+
+    expect(document.getSelection()).toHaveProperty('focusOffset', 1)
+    expect(document.getSelection()).toHaveProperty('anchorOffset', 5)
+    expect(document.getSelection()?.toString()).toBe('oo b')
+
+    modifySelection({focusNode: text, focusOffset: 9})
+
+    expect(document.getSelection()).toHaveProperty('anchorOffset', 5)
+    expect(document.getSelection()).toHaveProperty('focusOffset', 9)
+    expect(document.getSelection()?.toString()).toBe('ar b')
   })
 })
 

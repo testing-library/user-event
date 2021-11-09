@@ -4,7 +4,6 @@ import {
   EditableInputType,
   fireInputEvent,
   getInputRange,
-  getInputRangesForDelete,
 } from '../../utils'
 
 export function prepareInput(
@@ -17,8 +16,7 @@ export function prepareInput(
       commit: () => void
     }
   | undefined {
-  // TODO: implement for multi-range selection
-  const inputRange = getRangeForInputType(inputType, element)
+  const inputRange = getInputRange(element)
 
   // TODO: implement for ranges on multiple nodes
   /* istanbul ignore if */
@@ -84,16 +82,4 @@ function getNode(element: Element, inputRange: Range | UISelectionRange) {
   return element as
     | HTMLTextAreaElement
     | (HTMLInputElement & {type: EditableInputType})
-}
-
-function getRangeForInputType(
-  inputType: string,
-  element: Element,
-): Range | UISelectionRange | undefined {
-  if (inputType.startsWith('delete')) {
-    const ranges = getInputRangesForDelete(element)
-    return ranges && ranges[ranges.length - 1]
-  }
-
-  return getInputRange(element)
 }

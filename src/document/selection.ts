@@ -81,15 +81,8 @@ export function setUISelection(
     anchorOffset?: number
     focusOffset: number
   },
-  mode: 'replace' | 'add' | 'modify' = 'replace',
+  mode: 'replace' | 'modify' = 'replace',
 ) {
-  // TODO: remove range overlap
-  // New ranges "eat up" old ranges.
-  // If a new range selects a part of an older range and then unselects that part,
-  // it ends up unselected.
-
-  // TODO: remove empty ranges (except last one)
-
   const valueLength = getUIValue(element).length
   const sanitizeOffset = (o: number) => Math.max(0, Math.min(valueLength, o))
 
@@ -100,12 +93,7 @@ export function setUISelection(
   const focusOffset = sanitizeOffset(focusOffsetParam)
 
   const previousRanges = element[UISelection]?.ranges ?? []
-  const ranges =
-    mode === 'replace'
-      ? []
-      : mode === 'add'
-      ? previousRanges
-      : previousRanges.slice(0, -1)
+  const ranges = mode === 'replace' ? [] : previousRanges.slice(0, -1)
 
   const startOffset = Math.min(anchorOffset, focusOffset)
   const endOffset = Math.max(anchorOffset, focusOffset)

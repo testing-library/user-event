@@ -120,31 +120,6 @@ export function updateSelectionOnFocus(element: Element) {
 }
 
 /**
- * Get input ranges for delete operations.
- *
- * Delete operations support multi-range selections.
- */
-export function getInputRangesForDelete(
-  focusNode: Node,
-): Array<{startOffset: number; endOffset: number}> | Range[] | undefined {
-  const typeAndSelection = getTargetTypeAndSelection(focusNode)
-
-  if (typeAndSelection.type === 'input') {
-    return typeAndSelection.selection.ranges
-  } else if (typeAndSelection.type === 'contenteditable') {
-    const selection = typeAndSelection.selection
-    // We don't need to care for multi-ranges outside of the contenteditable
-    // because you can not move focus into a contenteditable without resetting selection.
-    /* istanbul ignore else */
-    if (selection) {
-      return Array(selection.rangeCount)
-        .fill(null)
-        .map((v, i) => selection.getRangeAt(i))
-    }
-  }
-}
-
-/**
  * Get the range that would be overwritten by input.
  */
 export function getInputRange(
@@ -187,40 +162,6 @@ export function modifySelection({
   }
 
   focusNode.ownerDocument?.getSelection()?.extend(focusNode, focusOffset)
-}
-
-/**
- * Add a selection range like with Ctrl+Mouse
- */
-export function addSelection({
-  anchorNode,
-  anchorOffset,
-  focusNode = anchorNode,
-  focusOffset,
-}: {
-  anchorNode: Node
-  /** DOM offset */
-  anchorOffset: number
-  focusNode?: Node
-  focusOffset: number
-}) {
-  const typeAndSelection = getTargetTypeAndSelection(anchorNode)
-
-  if (typeAndSelection.type === 'input') {
-    return setUISelection(
-      focusNode as HTMLInputElement,
-      {anchorOffset, focusOffset},
-      'add',
-    )
-  }
-
-  const range = new Range()
-  range.setStart(anchorNode, anchorOffset)
-  range.setEnd(anchorNode, anchorOffset)
-  const targetBeforeAnchor = range.comparePoint(focusNode, focusOffset)
-  range[targetBeforeAnchor ? 'setStart' : 'setEnd'](focusNode, focusOffset)
-
-  focusNode.ownerDocument?.getSelection()?.addRange(range)
 }
 
 /**

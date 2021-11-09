@@ -62,6 +62,11 @@ export async function pointerMove(
 
     const selectionFocus = resolveSelectionTarget({target, node, offset})
     if ('node' in selectionRange) {
+      // When the mouse is dragged outside of an input/textarea,
+      // the selection is extended to the beginning or end of the input
+      // depending on pointer position.
+      // TODO: extend selection according to pointer position
+      /* istanbul ignore else */
       if (selectionFocus.node === selectionRange.node) {
         const anchorOffset =
           selectionFocus.offset < selectionRange.start

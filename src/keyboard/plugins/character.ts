@@ -129,7 +129,7 @@ export const keypressBehavior: behaviorPlugin[] = [
         return
       }
 
-      const {newValue = '', commit} = prepareInput(
+      const {newValue, commit} = prepareInput(
         keyDef.key as string,
         element,
       ) as NonNullable<ReturnType<typeof prepareInput>>

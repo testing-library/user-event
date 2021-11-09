@@ -14,22 +14,22 @@ export function setSelectionRange(
   focusOffset: number,
 ) {
   if (hasOwnSelection(element)) {
-    setSelection({
+    return setSelection({
       focusNode: element,
       anchorOffset,
       focusOffset,
     })
   } else if (isContentEditable(element) && element.firstChild?.nodeType === 3) {
-    setSelection({
+    return setSelection({
       focusNode: element.firstChild,
       anchorOffset,
       focusOffset,
     })
-  } else {
-    throw new Error(
-      'Not implemented. The result of this interaction is unreliable.',
-    )
   }
+  /* istanbul ignore next */
+  throw new Error(
+    'Not implemented. The result of this interaction is unreliable.',
+  )
 }
 
 /**
@@ -91,7 +91,7 @@ function getElement(node: Node) {
 export function updateSelectionOnFocus(element: Element) {
   const selection = element.ownerDocument.getSelection()
 
-  /** istanbul ignore if */
+  /* istanbul ignore if */
   if (!selection) {
     return
   }

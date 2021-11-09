@@ -75,6 +75,7 @@ export function paste(
 
   const inputRange = getInputRange(element)
 
+  /* istanbul ignore if */
   if (!inputRange) {
     return
   }

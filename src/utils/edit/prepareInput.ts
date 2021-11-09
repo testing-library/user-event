@@ -21,7 +21,7 @@ export function prepareInput(
   const inputRange = getRangeForInputType(inputType, element)
 
   // TODO: implement for ranges on multiple nodes
-  /** istanbul ignore if */
+  /* istanbul ignore if */
   if (
     !inputRange ||
     ('startContainer' in inputRange &&
@@ -73,7 +73,8 @@ function getNode(element: Element, inputRange: Range | UISelectionRange) {
         element.ownerDocument.createTextNode(''),
         inputRange.startContainer.childNodes.item(inputRange.startOffset),
       )
-    } /** istanbul ignore next */ catch {
+    } catch {
+      /* istanbul ignore next */
       throw new Error(
         'Invalid operation. Can not insert text at this position. The behavior is not implemented yet.',
       )

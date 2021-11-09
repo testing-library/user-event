@@ -322,7 +322,6 @@ function mousedownDefaultBehavior({
 
       position.selectionRange = range
 
-      // TODO: support multiple ranges
       const selection = target.ownerDocument.getSelection() as Selection
       selection.removeAllRanges()
       selection.addRange(range.cloneRange())

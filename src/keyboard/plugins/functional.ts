@@ -60,7 +60,6 @@ export const keydownBehavior: behaviorPlugin[] = [
     matches: (keyDef, element) =>
       keyDef.key === 'Backspace' && isEditable(element),
     handle: (keyDef, element) => {
-      // TODO: Implement pressing [Backspace] when multiple ranges are selected.
       prepareInput('', element, 'deleteContentBackward')?.commit()
     },
   },

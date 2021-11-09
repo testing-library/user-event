@@ -57,7 +57,6 @@ export async function pointerMove(
   fireMove(target, coords)
 
   if (selectionRange) {
-    // TODO: support multiple ranges (ctrl)
     // TODO: support extending range (shift)
 
     const selectionFocus = resolveSelectionTarget({target, node, offset})
@@ -90,7 +89,6 @@ export async function pointerMove(
         range.setEnd(selectionFocus.node, selectionFocus.offset)
       }
 
-      // TODO: support multiple ranges
       const selection = target.ownerDocument.getSelection() as Selection
       selection.removeAllRanges()
       selection.addRange(range.cloneRange())

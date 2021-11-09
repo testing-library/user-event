@@ -47,7 +47,6 @@ export const keydownBehavior: behaviorPlugin[] = [
     matches: (keyDef, element) =>
       keyDef.key === 'Delete' && isEditable(element),
     handle: (keDef, element) => {
-      // TODO: Implement pressing [Delete] when multiple ranges are selected.
       prepareInput('', element, 'deleteContentForward')?.commit()
     },
   },

@@ -32,6 +32,8 @@ export enum editableInputTypes {
   'week' = 'week',
 }
 
+export type EditableInputType = keyof typeof editableInputTypes
+
 export function isEditableInput(
   element: Element,
 ): element is HTMLInputElement & {

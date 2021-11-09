@@ -1,73 +1,80 @@
-import {getSelectionRange} from './selectionRange'
-import {getValue} from './getValue'
+import {getUIValue} from '../../document'
+import {EditableInputType} from './isEditable'
 import {isValidDateValue} from './isValidDateValue'
 import {isValidInputTimeValue} from './isValidInputTimeValue'
 
+/**
+ * Calculate a new text value.
+ */
+// This implementation does not properly calculate a new DOM state.
+// It only handles text values and neither cares for DOM offsets nor accounts for non-character elements.
+// It can be used for text nodes and elements supporting value property.
+// TODO: The implementation of `deleteContent` is brittle and should be replaced.
 export function calculateNewValue(
-  newEntry: string,
-  element: HTMLElement,
-  value = getValue(element) ?? /* istanbul ignore next */ '',
-  selectionRange = getSelectionRange(element),
-  deleteContent?: 'backward' | 'forward',
-): {
-  newValue: string
-  newSelectionStart: number
-} {
-  const selectionStart =
-    selectionRange.selectionStart === null
-      ? value.length
-      : selectionRange.selectionStart
-  const selectionEnd =
-    selectionRange.selectionEnd === null
-      ? value.length
-      : selectionRange.selectionEnd
+  inputData: string,
+  node:
+    | (HTMLInputElement & {type: EditableInputType})
+    | HTMLTextAreaElement
+    | (Node & {nodeType: 3})
+    | Text,
+  {
+    startOffset,
+    endOffset,
+  }: {
+    startOffset: number
+    endOffset: number
+  },
+  inputType?: string,
+) {
+  const value =
+    node.nodeType === 3
+      ? String(node.nodeValue)
+      : getUIValue(node as HTMLInputElement)
 
   const prologEnd = Math.max(
     0,
-    selectionStart === selectionEnd && deleteContent === 'backward'
-      ? selectionStart - 1
-      : selectionStart,
+    startOffset === endOffset && inputType === 'deleteContentBackward'
+      ? startOffset - 1
+      : startOffset,
   )
   const prolog = value.substring(0, prologEnd)
   const epilogStart = Math.min(
     value.length,
-    selectionStart === selectionEnd && deleteContent === 'forward'
-      ? selectionEnd + 1
-      : selectionEnd,
+    startOffset === endOffset && inputType === 'deleteContentForward'
+      ? startOffset + 1
+      : endOffset,
   )
   const epilog = value.substring(epilogStart, value.length)
 
-  let newValue = `${prolog}${newEntry}${epilog}`
-  const newSelectionStart = prologEnd + newEntry.length
+  let newValue = `${prolog}${inputData}${epilog}`
+  const newOffset = prologEnd + inputData.length
 
   if (
-    (element as HTMLInputElement).type === 'date' &&
-    !isValidDateValue(element as HTMLInputElement & {type: 'date'}, newValue)
+    (node as HTMLInputElement).type === 'date' &&
+    !isValidDateValue(node as HTMLInputElement & {type: 'date'}, newValue)
   ) {
     newValue = value
   }
 
   if (
-    (element as HTMLInputElement).type === 'time' &&
-    !isValidInputTimeValue(
-      element as HTMLInputElement & {type: 'time'},
-      newValue,
-    )
+    (node as HTMLInputElement).type === 'time' &&
+    !isValidInputTimeValue(node as HTMLInputElement & {type: 'time'}, newValue)
   ) {
     if (
       isValidInputTimeValue(
-        element as HTMLInputElement & {type: 'time'},
-        newEntry,
+        node as HTMLInputElement & {type: 'time'},
+        inputData,
       )
     ) {
-      newValue = newEntry
+      newValue = inputData
     } else {
       newValue = value
     }
   }
 
   return {
+    oldValue: value,
     newValue,
-    newSelectionStart,
+    newOffset,
   }
 }

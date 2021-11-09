@@ -68,12 +68,10 @@ test('maintain selection range like UI', () => {
   element.setSelectionRange(1, 1)
   element.focus()
   setUIValue(element, 'adbc')
-  setUISelection(element, 2, 2)
+  setUISelection(element, {focusOffset: 2})
 
-  expect(getUISelection(element)).toEqual({
-    selectionStart: 2,
-    selectionEnd: 2,
-  })
+  expect(getUISelection(element)).toHaveProperty('startOffset', 2)
+  expect(getUISelection(element)).toHaveProperty('endOffset', 2)
   expect(element.selectionStart).toBe(2)
 })
 
@@ -84,12 +82,10 @@ test('maintain selection range on elements without support for selection range',
 
   element.focus()
   setUIValue(element, '2e-')
-  setUISelection(element, 2, 2)
+  setUISelection(element, {focusOffset: 2})
 
-  expect(getUISelection(element)).toEqual({
-    selectionStart: 2,
-    selectionEnd: 2,
-  })
+  expect(getUISelection(element)).toHaveProperty('startOffset', 2)
+  expect(getUISelection(element)).toHaveProperty('endOffset', 2)
   expect(element.selectionStart).toBe(null)
 })
 
@@ -100,21 +96,26 @@ test('clear UI selection if selection is programmatically set', () => {
 
   element.focus()
   setUIValue(element, 'abc')
-  setUISelection(element, 1, 2)
+  setUISelection(element, {anchorOffset: 1, focusOffset: 2})
   expect(element.selectionStart).toBe(1)
 
   element.setSelectionRange(0, 1)
-  expect(getUISelection(element)).toEqual({selectionStart: 0, selectionEnd: 1})
+  expect(getUISelection(element)).toHaveProperty('startOffset', 0)
+  expect(getUISelection(element)).toHaveProperty('endOffset', 1)
 
-  setUISelection(element, 2, 3)
-  expect(getUISelection(element)).toEqual({selectionStart: 2, selectionEnd: 3})
+  setUISelection(element, {anchorOffset: 2, focusOffset: 3})
+  expect(getUISelection(element)).toHaveProperty('startOffset', 2)
+  expect(getUISelection(element)).toHaveProperty('endOffset', 3)
 
   element.selectionEnd = 1
-  expect(getUISelection(element)).toEqual({selectionStart: 1, selectionEnd: 1})
+  expect(getUISelection(element)).toHaveProperty('startOffset', 1)
+  expect(getUISelection(element)).toHaveProperty('endOffset', 1)
 
-  setUISelection(element, 0, 1)
-  expect(getUISelection(element)).toEqual({selectionStart: 0, selectionEnd: 1})
+  setUISelection(element, {anchorOffset: 1, focusOffset: 0})
+  expect(getUISelection(element)).toHaveProperty('startOffset', 0)
+  expect(getUISelection(element)).toHaveProperty('endOffset', 1)
 
   element.selectionStart = 2
-  expect(getUISelection(element)).toEqual({selectionStart: 2, selectionEnd: 2})
+  expect(getUISelection(element)).toHaveProperty('startOffset', 2)
+  expect(getUISelection(element)).toHaveProperty('endOffset', 2)
 })

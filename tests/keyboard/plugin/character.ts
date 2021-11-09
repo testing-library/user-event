@@ -14,9 +14,8 @@ test('type [Enter] in textarea', () => {
 
 test('type [Enter] in contenteditable', () => {
   const {element, getEvents} = setup(`<div contenteditable="true">f</div>`)
-  element.focus()
 
-  userEvent.keyboard('oo[Enter]bar[ShiftLeft>][Enter]baz')
+  userEvent.type(element, 'oo[Enter]bar[ShiftLeft>][Enter]baz')
 
   expect(element).toHaveTextContent('foo bar baz')
   expect(element.firstChild).toHaveProperty('nodeValue', 'foo\nbar\nbaz')

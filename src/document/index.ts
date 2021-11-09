@@ -76,3 +76,4 @@ function prepareElement(el: Node | HTMLInputElement) {
 
 export {getUIValue, setUIValue, startTrackValue, endTrackValue} from './value'
 export {getUISelection, setUISelection} from './selection'
+export type {UISelectionRange} from './selection'

@@ -226,8 +226,8 @@ test('tab through elements', () => {
   userEvent.keyboard('[Tab]')
 
   expect(elements[1]).toHaveFocus()
-  expect(getUISelection(elements[1])).toHaveProperty('selectionStart', 0)
-  expect(getUISelection(elements[1])).toHaveProperty('selectionEnd', 3)
+  expect(getUISelection(elements[1])).toHaveProperty('startOffset', 0)
+  expect(getUISelection(elements[1])).toHaveProperty('endOffset', 3)
 
   userEvent.keyboard('[Tab]')
 
@@ -244,6 +244,6 @@ test('tab through elements', () => {
   userEvent.keyboard('[ShiftRight>][Tab]')
 
   expect(elements[1]).toHaveFocus()
-  expect(getUISelection(elements[1])).toHaveProperty('selectionStart', 0)
-  expect(getUISelection(elements[1])).toHaveProperty('selectionEnd', 3)
+  expect(getUISelection(elements[1])).toHaveProperty('startOffset', 0)
+  expect(getUISelection(elements[1])).toHaveProperty('endOffset', 3)
 })

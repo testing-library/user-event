@@ -57,3 +57,14 @@ test('use [Delete] on number input', () => {
 
   expect(element).toHaveValue(16)
 })
+
+test('use [Delete] on contenteditable', () => {
+  const {element} = setup(`<div contenteditable>foo bar baz</div>`)
+  const text = element.firstChild as Text
+  element.focus()
+  document.getSelection()?.setBaseAndExtent(text, 1, text, 9)
+
+  userEvent.keyboard('[Delete]')
+
+  expect(element).toHaveTextContent('faz')
+})

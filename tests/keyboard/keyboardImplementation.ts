@@ -34,15 +34,13 @@ describe('pressing and releasing keys', () => {
     userEvent.keyboard('{ArrowLeft>}{ArrowLeft}')
 
     expect(getEventSnapshot()).toMatchInlineSnapshot(`
-Events fired on: input[value=""]
+      Events fired on: input[value=""]
 
-input[value=""] - keydown: ArrowLeft (37)
-input[value=""] - select
-input[value=""] - keyup: ArrowLeft (37)
-input[value=""] - keydown: ArrowLeft (37)
-input[value=""] - select
-input[value=""] - keyup: ArrowLeft (37)
-`)
+      input[value=""] - keydown: ArrowLeft (37)
+      input[value=""] - keyup: ArrowLeft (37)
+      input[value=""] - keydown: ArrowLeft (37)
+      input[value=""] - keyup: ArrowLeft (37)
+    `)
   })
 
   it('fires event without releasing key', () => {
@@ -54,12 +52,12 @@ input[value=""] - keyup: ArrowLeft (37)
     userEvent.keyboard('{a>}')
 
     expect(getEventSnapshot()).toMatchInlineSnapshot(`
-Events fired on: input[value="a"]
+      Events fired on: input[value="a"]
 
-input[value=""] - keydown: a (97)
-input[value=""] - keypress: a (97)
-input[value="a"] - input
-`)
+      input[value=""] - keydown: a (97)
+      input[value=""] - keypress: a (97)
+      input[value="a"] - input
+    `)
   })
 
   it('fires event multiple times without releasing key', () => {
@@ -70,15 +68,15 @@ input[value="a"] - input
     userEvent.keyboard('{a>2}')
 
     expect(getEventSnapshot()).toMatchInlineSnapshot(`
-Events fired on: input[value="aa"]
+      Events fired on: input[value="aa"]
 
-input[value=""] - keydown: a (97)
-input[value=""] - keypress: a (97)
-input[value="a"] - input
-input[value="a"] - keydown: a (97)
-input[value="a"] - keypress: a (97)
-input[value="aa"] - input
-`)
+      input[value=""] - keydown: a (97)
+      input[value=""] - keypress: a (97)
+      input[value="a"] - input
+      input[value="a"] - keydown: a (97)
+      input[value="a"] - keypress: a (97)
+      input[value="aa"] - input
+    `)
   })
 
   it('fires event multiple times and releases key', () => {
@@ -89,16 +87,16 @@ input[value="aa"] - input
     userEvent.keyboard('{a>2/}')
 
     expect(getEventSnapshot()).toMatchInlineSnapshot(`
-Events fired on: input[value="aa"]
+      Events fired on: input[value="aa"]
 
-input[value=""] - keydown: a (97)
-input[value=""] - keypress: a (97)
-input[value="a"] - input
-input[value="a"] - keydown: a (97)
-input[value="a"] - keypress: a (97)
-input[value="aa"] - input
-input[value="aa"] - keyup: a (97)
-`)
+      input[value=""] - keydown: a (97)
+      input[value=""] - keypress: a (97)
+      input[value="a"] - input
+      input[value="a"] - keydown: a (97)
+      input[value="a"] - keypress: a (97)
+      input[value="aa"] - input
+      input[value="aa"] - keyup: a (97)
+    `)
   })
 
   it('fires event multiple times for multiple keys', () => {
@@ -109,28 +107,28 @@ input[value="aa"] - keyup: a (97)
     userEvent.keyboard('{a>2}{b>2/}{c>2}{/a}')
 
     expect(getEventSnapshot()).toMatchInlineSnapshot(`
-Events fired on: input[value="aabbcc"]
+      Events fired on: input[value="aabbcc"]
 
-input[value=""] - keydown: a (97)
-input[value=""] - keypress: a (97)
-input[value="a"] - input
-input[value="a"] - keydown: a (97)
-input[value="a"] - keypress: a (97)
-input[value="aa"] - input
-input[value="aa"] - keydown: b (98)
-input[value="aa"] - keypress: b (98)
-input[value="aab"] - input
-input[value="aab"] - keydown: b (98)
-input[value="aab"] - keypress: b (98)
-input[value="aabb"] - input
-input[value="aabb"] - keyup: b (98)
-input[value="aabb"] - keydown: c (99)
-input[value="aabb"] - keypress: c (99)
-input[value="aabbc"] - input
-input[value="aabbc"] - keydown: c (99)
-input[value="aabbc"] - keypress: c (99)
-input[value="aabbcc"] - input
-input[value="aabbcc"] - keyup: a (97)
-`)
+      input[value=""] - keydown: a (97)
+      input[value=""] - keypress: a (97)
+      input[value="a"] - input
+      input[value="a"] - keydown: a (97)
+      input[value="a"] - keypress: a (97)
+      input[value="aa"] - input
+      input[value="aa"] - keydown: b (98)
+      input[value="aa"] - keypress: b (98)
+      input[value="aab"] - input
+      input[value="aab"] - keydown: b (98)
+      input[value="aab"] - keypress: b (98)
+      input[value="aabb"] - input
+      input[value="aabb"] - keyup: b (98)
+      input[value="aabb"] - keydown: c (99)
+      input[value="aabb"] - keypress: c (99)
+      input[value="aabbc"] - input
+      input[value="aabbc"] - keydown: c (99)
+      input[value="aabbc"] - keypress: c (99)
+      input[value="aabbcc"] - input
+      input[value="aabbcc"] - keyup: a (97)
+    `)
   })
 })

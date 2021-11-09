@@ -7,6 +7,7 @@ test('should paste text in input', () => {
   const text = 'Hello, world!'
   userEvent.paste(element, text)
   expect(element).toHaveValue(text)
+  expect(element).toHaveProperty('selectionStart', 13)
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value="Hello, world!"]
 
@@ -14,8 +15,6 @@ test('should paste text in input', () => {
     input[value=""] - focusin
     input[value=""] - paste
     input[value="Hello, world!"] - input
-      "{CURSOR}" -> "Hello, world!{CURSOR}"
-    input[value="Hello, world!"] - select
   `)
 })
 
@@ -25,6 +24,7 @@ test('should paste text in textarea', () => {
   const text = 'Hello, world!'
   userEvent.paste(element, text)
   expect(element).toHaveValue(text)
+  expect(element).toHaveProperty('selectionStart', 13)
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: textarea[value="Hello, world!"]
 
@@ -32,8 +32,6 @@ test('should paste text in textarea', () => {
     textarea[value=""] - focusin
     textarea[value=""] - paste
     textarea[value="Hello, world!"] - input
-      "{CURSOR}" -> "Hello, world!{CURSOR}"
-    textarea[value="Hello, world!"] - select
   `)
 })
 

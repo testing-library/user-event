@@ -10,8 +10,7 @@ export function resolveSelectionTarget({
   if (isElementType(target, ['input', 'textarea'])) {
     return {
       node: target,
-      offset:
-        offset ?? (getUIValue(target) ?? /* istanbul ignore next */ '').length,
+      offset: offset ?? getUIValue(target).length,
     }
   } else if (node) {
     return {
@@ -58,10 +57,16 @@ function findNodeAtTextOffset(
         offset -= text.length
       } else if (c.nodeType === 1) {
         return findNodeAtTextOffset(c as Element, offset, false)
-      } else /* istanbul ignore else */ if (c.nodeType === 3) {
-        return {
-          node: c as Node,
-          offset: offset ?? (c.nodeValue as string).length,
+      } else {
+        // The pre-commit hooks keeps changing this
+        // See https://github.com/kentcdodds/kcd-scripts/issues/218
+        /* istanbul ignore else */
+        // eslint-disable-next-line no-lonely-if
+        if (c.nodeType === 3) {
+          return {
+            node: c as Node,
+            offset: offset ?? (c.nodeValue as string).length,
+          }
         }
       }
     }

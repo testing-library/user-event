@@ -10,10 +10,8 @@ import {setup} from '#testHelpers/utils'
 test('range on input', () => {
   const {element} = setup('<input value="foo"/>')
 
-  expect(getInputRange(element)).toEqual({
-    startOffset: 0,
-    endOffset: 0,
-  })
+  expect(getInputRange(element)).toHaveProperty('startOffset', 0)
+  expect(getInputRange(element)).toHaveProperty('endOffset', 0)
 
   setSelection({
     focusNode: element,
@@ -23,19 +21,15 @@ test('range on input', () => {
 
   expect(element).toHaveProperty('selectionStart', 1)
   expect(element).toHaveProperty('selectionEnd', 2)
-  expect(getInputRange(element)).toEqual({
-    startOffset: 1,
-    endOffset: 2,
-  })
+  expect(getInputRange(element)).toHaveProperty('startOffset', 1)
+  expect(getInputRange(element)).toHaveProperty('endOffset', 2)
 
   setSelectionRange(element, 2, 3)
 
   expect(element).toHaveProperty('selectionStart', 2)
   expect(element).toHaveProperty('selectionEnd', 3)
-  expect(getInputRange(element)).toEqual({
-    startOffset: 2,
-    endOffset: 3,
-  })
+  expect(getInputRange(element)).toHaveProperty('startOffset', 2)
+  expect(getInputRange(element)).toHaveProperty('endOffset', 3)
 })
 
 test('range on contenteditable', () => {
@@ -69,17 +63,13 @@ test('range on contenteditable', () => {
 test('range on input without selection support', () => {
   const {element} = setup(`<input type="number" value="123"/>`)
 
-  expect(getInputRange(element)).toEqual({
-    startOffset: 0,
-    endOffset: 0,
-  })
+  expect(getInputRange(element)).toHaveProperty('startOffset', 0)
+  expect(getInputRange(element)).toHaveProperty('endOffset', 0)
 
   setSelectionRange(element, 1, 2)
 
-  expect(getInputRange(element)).toEqual({
-    startOffset: 1,
-    endOffset: 2,
-  })
+  expect(getInputRange(element)).toHaveProperty('startOffset', 1)
+  expect(getInputRange(element)).toHaveProperty('endOffset', 2)
 })
 
 describe('modify selection', () => {

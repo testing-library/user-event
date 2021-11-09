@@ -132,9 +132,7 @@ export function getInputRange(
   const typeAndSelection = getTargetTypeAndSelection(focusNode)
 
   if (typeAndSelection.type === 'input') {
-    return typeAndSelection.selection.ranges[
-      typeAndSelection.selection.ranges.length - 1
-    ]
+    return typeAndSelection.selection
   } else if (typeAndSelection.type === 'contenteditable') {
     // Multi-range on contenteditable edits the first selection instead of the last
     return typeAndSelection.selection?.getRangeAt(0)

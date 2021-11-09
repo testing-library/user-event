@@ -15,7 +15,6 @@ export interface UISelectionRange {
 export interface UISelection {
   anchorOffset: number
   focusOffset: number
-  ranges: Array<UISelectionRange>
 }
 
 declare global {
@@ -92,17 +91,12 @@ export function setUISelection(
       : (element[UISelection] as UISelection).anchorOffset
   const focusOffset = sanitizeOffset(focusOffsetParam)
 
-  const previousRanges = element[UISelection]?.ranges ?? []
-  const ranges = mode === 'replace' ? [] : previousRanges.slice(0, -1)
-
   const startOffset = Math.min(anchorOffset, focusOffset)
   const endOffset = Math.max(anchorOffset, focusOffset)
-  ranges.push({startOffset, endOffset})
 
   element[UISelection] = {
     anchorOffset,
     focusOffset,
-    ranges,
   }
 
   if (
@@ -130,12 +124,6 @@ export function getUISelection(
   const sel = element[UISelection] ?? {
     anchorOffset: element.selectionStart ?? 0,
     focusOffset: element.selectionEnd ?? 0,
-    ranges: [
-      {
-        startOffset: element.selectionStart ?? 0,
-        endOffset: element.selectionEnd ?? 0,
-      },
-    ],
   }
   return {
     ...sel,

@@ -19,13 +19,17 @@ export function setSelectionRange(
       anchorOffset,
       focusOffset,
     })
-  } else if (isContentEditable(element) && element.firstChild?.nodeType === 3) {
+  }
+
+  /* istanbul ignore else */
+  if (isContentEditable(element) && element.firstChild?.nodeType === 3) {
     return setSelection({
       focusNode: element.firstChild,
       anchorOffset,
       focusOffset,
     })
   }
+
   /* istanbul ignore next */
   throw new Error(
     'Not implemented. The result of this interaction is unreliable.',

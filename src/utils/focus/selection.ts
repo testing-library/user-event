@@ -1,7 +1,7 @@
 import {isElementType} from '../misc/isElementType'
 import {getUISelection, setUISelection, UISelectionRange} from '../../document'
 import {editableInputTypes} from '../edit/isEditable'
-import {isContentEditable, isInContentEditable} from '../edit/isContentEditable'
+import {isContentEditable, getContentEditable} from '../edit/isContentEditable'
 
 /**
  * Backward-compatible selection.
@@ -70,9 +70,9 @@ function getTargetTypeAndSelection(node: Node) {
   // It is possible to extend a single-range selection into a contenteditable.
   // This results in the range acting like a range outside of contenteditable.
   const isCE =
-    isInContentEditable(node) &&
+    getContentEditable(node) &&
     selection?.anchorNode &&
-    isInContentEditable(selection.anchorNode)
+    getContentEditable(selection.anchorNode)
 
   return {
     type: isCE ? 'contenteditable' : 'default',
@@ -92,15 +92,30 @@ export function updateSelectionOnFocus(element: Element) {
   const selection = element.ownerDocument.getSelection()
 
   /* istanbul ignore if */
-  if (!selection) {
+  if (!selection?.focusNode) {
     return
   }
 
   // If the focus moves inside an element with own selection implementation,
-  // a selection on the document is removed.
-  // But if the selection is collapsed, the cursor position is retained.
-  if (hasOwnSelection(element) && !selection.isCollapsed) {
-    selection.removeAllRanges()
+  // the document selection will be this element.
+  // But if the focused element is inside a contenteditable,
+  // 1) a collapsed selection will be retained.
+  // 2) other selections will be replaced by a cursor
+  //  2.a) at the start of the first child if it is a text node
+  //  2.b) at the start of the contenteditable.
+  if (hasOwnSelection(element)) {
+    const contenteditable = getContentEditable(selection.focusNode)
+    if (contenteditable) {
+      if (!selection.isCollapsed) {
+        const focusNode =
+          contenteditable.firstChild?.nodeType === 3
+            ? contenteditable.firstChild
+            : contenteditable
+        selection.setBaseAndExtent(focusNode, 0, focusNode, 0)
+      }
+    } else {
+      selection.setBaseAndExtent(element, 0, element, 0)
+    }
   }
 }
 

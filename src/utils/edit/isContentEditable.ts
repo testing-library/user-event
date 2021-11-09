@@ -10,14 +10,14 @@ export function isContentEditable(
 }
 
 /**
- * Determine if a node is a contenteditable or inside one.
+ * If a node is a contenteditable or inside one, return that element.
  */
-export function isInContentEditable(node: Node) {
+export function getContentEditable(node: Node): Element | null {
   const element = getElement(node)
-  return Boolean(
+  return (
     element &&
-      (element.closest('[contenteditable=""]') ||
-        element.closest('[contenteditable="true"]')),
+    (element.closest('[contenteditable=""]') ||
+      element.closest('[contenteditable="true"]'))
   )
 }
 

@@ -57,29 +57,38 @@ export async function pointerMove(
   fireMove(target, coords)
 
   if (selectionRange) {
+    // TODO: support extending range (shift)
+
     const selectionFocus = resolveSelectionTarget({target, node, offset})
-    if (
-      'node' in selectionRange &&
-      selectionFocus.node === selectionRange.node
-    ) {
-      setUISelection(
-        selectionRange.node,
-        Math.min(selectionRange.start, selectionFocus.offset),
-        Math.max(selectionRange.end, selectionFocus.offset),
-      )
-    } else /* istanbul ignore else */ if ('setEnd' in selectionRange) {
+    if ('node' in selectionRange) {
+      // When the mouse is dragged outside of an input/textarea,
+      // the selection is extended to the beginning or end of the input
+      // depending on pointer position.
+      // TODO: extend selection according to pointer position
+      /* istanbul ignore else */
+      if (selectionFocus.node === selectionRange.node) {
+        const anchorOffset =
+          selectionFocus.offset < selectionRange.start
+            ? selectionRange.end
+            : selectionRange.start
+        const focusOffset =
+          selectionFocus.offset > selectionRange.end ||
+          selectionFocus.offset < selectionRange.start
+            ? selectionFocus.offset
+            : selectionRange.end
+
+        setUISelection(selectionRange.node, {anchorOffset, focusOffset})
+      }
+    } else {
       const range = selectionRange.cloneRange()
-      const cmp = selectionRange.comparePoint(
-        selectionFocus.node,
-        selectionFocus.offset,
-      )
+
+      const cmp = range.comparePoint(selectionFocus.node, selectionFocus.offset)
       if (cmp < 0) {
         range.setStart(selectionFocus.node, selectionFocus.offset)
       } else if (cmp > 0) {
         range.setEnd(selectionFocus.node, selectionFocus.offset)
       }
 
-      // TODO: support multiple ranges
       const selection = target.ownerDocument.getSelection() as Selection
       selection.removeAllRanges()
       selection.addRange(range.cloneRange())

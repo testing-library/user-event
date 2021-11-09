@@ -10,7 +10,12 @@ test('select input per triple click', () => {
   userEvent.tripleClick(element)
 
   expect(element).toHaveFocus()
-  expect(getUISelection(element)).toEqual({selectionStart: 0, selectionEnd: 7})
+  expect(getUISelection(element)).toEqual(
+    expect.objectContaining({
+      startOffset: 0,
+      endOffset: 7,
+    }),
+  )
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value="foo bar"]

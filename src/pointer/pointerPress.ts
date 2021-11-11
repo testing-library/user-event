@@ -293,8 +293,12 @@ function mousedownDefaultBehavior({
         [offset, offset]
       : getTextRange(text, offset, clickCount)
 
+    // TODO: implement modifying selection per shift/ctrl+mouse
     if (hasValue) {
-      setUISelection(target, start ?? text.length, end ?? text.length)
+      setUISelection(target, {
+        anchorOffset: start ?? text.length,
+        focusOffset: end ?? text.length,
+      })
       position.selectionRange = {
         node: target,
         start: start ?? 0,
@@ -318,7 +322,6 @@ function mousedownDefaultBehavior({
 
       position.selectionRange = range
 
-      // TODO: support multiple ranges
       const selection = target.ownerDocument.getSelection() as Selection
       selection.removeAllRanges()
       selection.addRange(range.cloneRange())

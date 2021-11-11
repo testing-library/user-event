@@ -4,7 +4,8 @@
  */
 
 import {behaviorPlugin} from '../types'
-import {getSelectionRange, isElementType, setSelectionRange} from '../../utils'
+import {isElementType, setSelection} from '../../utils'
+import {getUISelection} from '../../document'
 
 export const keydownBehavior: behaviorPlugin[] = [
   {
@@ -13,18 +14,18 @@ export const keydownBehavior: behaviorPlugin[] = [
       (keyDef.key === 'ArrowLeft' || keyDef.key === 'ArrowRight') &&
       isElementType(element, ['input', 'textarea']),
     handle: (keyDef, element) => {
-      const {selectionStart, selectionEnd} = getSelectionRange(element)
+      const selection = getUISelection(element as HTMLInputElement)
 
-      const direction = keyDef.key === 'ArrowLeft' ? -1 : 1
-
-      const newPos =
-        (selectionStart === selectionEnd
-          ? (selectionStart ?? /* istanbul ignore next */ 0) + direction
-          : direction < 0
-          ? selectionStart
-          : selectionEnd) ?? /* istanbul ignore next */ 0
-
-      setSelectionRange(element, newPos, newPos)
+      // TODO: implement shift/ctrl
+      setSelection({
+        focusNode: element,
+        focusOffset:
+          selection.startOffset === selection.endOffset
+            ? selection.focusOffset + (keyDef.key === 'ArrowLeft' ? -1 : 1)
+            : keyDef.key === 'ArrowLeft'
+            ? selection.startOffset
+            : selection.endOffset,
+      })
     },
   },
 ]

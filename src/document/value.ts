@@ -56,7 +56,9 @@ export function setUIValue(
 }
 
 export function getUIValue(element: HTMLInputElement | HTMLTextAreaElement) {
-  return element[UIValue] === undefined ? element.value : element[UIValue]
+  return element[UIValue] === undefined
+    ? element.value
+    : String(element[UIValue])
 }
 
 export function setInitialValue(

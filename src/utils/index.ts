@@ -16,6 +16,7 @@ export * from './focus/focus'
 export * from './focus/getActiveElement'
 export * from './focus/getTabDestination'
 export * from './focus/isFocusable'
+export * from './focus/selectAll'
 export * from './focus/selection'
 export * from './focus/selector'
 

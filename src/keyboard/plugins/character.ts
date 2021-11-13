@@ -8,7 +8,7 @@ import {behaviorPlugin} from '../types'
 import {
   buildTimeValue,
   calculateNewValue,
-  fireInputEvent,
+  editInputElement,
   getInputRange,
   getSpaceUntilMaxLength,
   getValue,
@@ -50,7 +50,7 @@ export const keypressBehavior: behaviorPlugin[] = [
       // this check was provided by fireInputEventIfNeeded
       // TODO: verify if it is even needed by this handler
       if (prevValue !== newValue) {
-        fireInputEvent(element as HTMLInputElement, {
+        editInputElement(element as HTMLInputElement, {
           newValue,
           newSelection: {
             node: element,
@@ -98,7 +98,7 @@ export const keypressBehavior: behaviorPlugin[] = [
       // this check was provided by fireInputEventIfNeeded
       // TODO: verify if it is even needed by this handler
       if (prevValue !== newValue) {
-        fireInputEvent(element as HTMLInputElement, {
+        editInputElement(element as HTMLInputElement, {
           newValue,
           newSelection: {
             node: element,

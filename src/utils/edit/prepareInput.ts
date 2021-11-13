@@ -1,5 +1,5 @@
 import {fireEvent} from '@testing-library/dom'
-import {calculateNewValue, fireInputEvent, getInputRange} from '../../utils'
+import {calculateNewValue, editInputElement, getInputRange} from '../../utils'
 
 export function prepareInput(
   data: string,
@@ -65,7 +65,7 @@ export function prepareInput(
           return
         }
 
-        fireInputEvent(element as HTMLElement, {
+        editInputElement(element as HTMLTextAreaElement, {
           newValue,
           newSelection: {
             node: element,

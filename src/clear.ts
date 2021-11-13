@@ -1,37 +1,32 @@
-import {isDisabled, isElementType} from './utils'
+import {prepareDocument} from './document'
 import type {UserEvent} from './setup'
+import {
+  focus,
+  isAllSelected,
+  isDisabled,
+  isEditable,
+  prepareInput,
+  selectAll,
+} from './utils'
 
 export function clear(this: UserEvent, element: Element) {
-  if (!isElementType(element, ['input', 'textarea'])) {
-    // TODO: support contenteditable
-    throw new Error(
-      'clear currently only supports input and textarea elements.',
-    )
+  if (!isEditable(element) || isDisabled(element)) {
+    throw new Error('clear()` is only supported on editable elements.')
   }
 
-  if (isDisabled(element)) {
-    return
+  prepareDocument(element.ownerDocument)
+
+  focus(element)
+
+  if (element.ownerDocument.activeElement !== element) {
+    throw new Error('The element to be cleared could not be focused.')
   }
 
-  // TODO: track the selection range ourselves so we don't have to do this input "type" trickery
-  // just like cypress does: https://github.com/cypress-io/cypress/blob/8d7f1a0bedc3c45a2ebf1ff50324b34129fdc683/packages/driver/src/dom/selection.ts#L16-L37
+  selectAll(element)
 
-  const elementType = element.type
-
-  if (elementType !== 'textarea') {
-    // setSelectionRange is not supported on certain types of inputs, e.g. "number" or "email"
-    ;(element as HTMLInputElement).type = 'text'
+  if (!isAllSelected(element)) {
+    throw new Error('The element content to be cleared could not be selected.')
   }
 
-  this.type(element, '{selectall}{del}', {
-    delay: 0,
-    initialSelectionStart:
-      element.selectionStart ?? /* istanbul ignore next */ undefined,
-    initialSelectionEnd:
-      element.selectionEnd ?? /* istanbul ignore next */ undefined,
-  })
-
-  if (elementType !== 'textarea') {
-    ;(element as HTMLInputElement).type = elementType
-  }
+  prepareInput('', element, 'deleteContentBackward')?.commit()
 }

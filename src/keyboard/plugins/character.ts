@@ -129,10 +129,11 @@ export const keypressBehavior: behaviorPlugin[] = [
         return
       }
 
-      const {newValue, commit} = prepareInput(
+      const {getNewValue, commit} = prepareInput(
         keyDef.key as string,
         element,
       ) as NonNullable<ReturnType<typeof prepareInput>>
+      const newValue = (getNewValue as () => string)()
 
       // the browser allows some invalid input but not others
       // it allows up to two '-' at any place before any 'e' or one directly following 'e'

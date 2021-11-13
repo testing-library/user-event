@@ -8,12 +8,6 @@ export function getKeyEventProps(keyDef: keyboardKey, state: keyboardState) {
     ctrlKey: state.modifiers.ctrl,
     metaKey: state.modifiers.meta,
     shiftKey: state.modifiers.shift,
-
-    /** @deprecated use code instead */
-    keyCode:
-      keyDef.keyCode ??
-      // istanbul ignore next
-      (keyDef.key?.length === 1 ? keyDef.key.charCodeAt(0) : undefined),
   }
 }
 

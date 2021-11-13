@@ -4,7 +4,6 @@ import {keyboardImplementation, releaseAllKeys} from './keyboardImplementation'
 import {defaultKeyMap} from './keyMap'
 import {keyboardState, keyboardOptions, keyboardKey} from './types'
 
-export {specialCharMap} from './specialCharMap'
 export type {keyboardOptions, keyboardKey}
 
 export function keyboard(

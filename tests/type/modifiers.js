@@ -912,40 +912,6 @@ test('{meta}{alt}{ctrl}a{/ctrl}{/alt}{/meta}', () => {
   `)
 })
 
-test('{selectall} selects all the text', () => {
-  const value = 'abcdefg'
-  const {element, clearEventCalls, getEventSnapshot} = setup(
-    `<input value="${value}" />`,
-  )
-  element.setSelectionRange(2, 6)
-
-  clearEventCalls()
-
-  userEvent.type(element, '{selectall}')
-
-  expect(element.selectionStart).toBe(0)
-  expect(element.selectionEnd).toBe(value.length)
-  expect(getEventSnapshot()).toMatchInlineSnapshot(`
-    Events fired on: input[value="abcdefg"]
-
-    input[value="abcdefg"] - pointerover
-    input[value="abcdefg"] - pointerenter
-    input[value="abcdefg"] - mouseover
-    input[value="abcdefg"] - mouseenter
-    input[value="abcdefg"] - pointermove
-    input[value="abcdefg"] - mousemove
-    input[value="abcdefg"] - pointerdown
-    input[value="abcdefg"] - mousedown: primary
-    input[value="abcdefg"] - focus
-    input[value="abcdefg"] - focusin
-    input[value="abcdefg"] - select
-    input[value="abcdefg"] - pointerup
-    input[value="abcdefg"] - mouseup: primary
-    input[value="abcdefg"] - click: primary
-    input[value="abcdefg"] - select
-  `)
-})
-
 test('{del} at the start of the input', () => {
   const {element, getEventSnapshot} = setup(`<input value="hello" />`)
 

@@ -14,18 +14,18 @@ test('fires the correct events on buttons', () => {
     button - pointermove
     button - mousemove
     button - pointerdown
-    button - mousedown
+    button - mousedown: primary
     button - focus
     button - focusin
     button - pointerup
-    button - mouseup
-    button - click
+    button - mouseup: primary
+    button - click: primary
     button - pointerdown
-    button - mousedown
+    button - mousedown: primary
     button - pointerup
-    button - mouseup
-    button - click
-    button - dblclick
+    button - mouseup: primary
+    button - click: primary
+    button - dblclick: primary
   `)
 })
 
@@ -61,24 +61,24 @@ test('fires the correct events on checkboxes', () => {
     input[checked=false] - pointermove
     input[checked=false] - mousemove
     input[checked=false] - pointerdown
-    input[checked=false] - mousedown
+    input[checked=false] - mousedown: primary
     input[checked=false] - focus
     input[checked=false] - focusin
     input[checked=false] - pointerup
-    input[checked=false] - mouseup
-    input[checked=true] - click
+    input[checked=false] - mouseup: primary
+    input[checked=true] - click: primary
       unchecked -> checked
     input[checked=true] - input
     input[checked=true] - change
     input[checked=true] - pointerdown
-    input[checked=true] - mousedown
+    input[checked=true] - mousedown: primary
     input[checked=true] - pointerup
-    input[checked=true] - mouseup
-    input[checked=false] - click
+    input[checked=true] - mouseup: primary
+    input[checked=false] - click: primary
       checked -> unchecked
     input[checked=false] - input
     input[checked=false] - change
-    input[checked=false] - dblclick
+    input[checked=false] - dblclick: primary
   `)
 })
 
@@ -95,18 +95,18 @@ test('fires the correct events on regular inputs', () => {
     input[value=""] - pointermove
     input[value=""] - mousemove
     input[value=""] - pointerdown
-    input[value=""] - mousedown
+    input[value=""] - mousedown: primary
     input[value=""] - focus
     input[value=""] - focusin
     input[value=""] - pointerup
-    input[value=""] - mouseup
-    input[value=""] - click
+    input[value=""] - mouseup: primary
+    input[value=""] - click: primary
     input[value=""] - pointerdown
-    input[value=""] - mousedown
+    input[value=""] - mousedown: primary
     input[value=""] - pointerup
-    input[value=""] - mouseup
-    input[value=""] - click
-    input[value=""] - dblclick
+    input[value=""] - mouseup: primary
+    input[value=""] - click: primary
+    input[value=""] - dblclick: primary
   `)
 })
 
@@ -123,16 +123,16 @@ test('fires the correct events on divs', () => {
     div - pointermove
     div - mousemove
     div - pointerdown
-    div - mousedown
+    div - mousedown: primary
     div - pointerup
-    div - mouseup
-    div - click
+    div - mouseup: primary
+    div - click: primary
     div - pointerdown
-    div - mousedown
+    div - mousedown: primary
     div - pointerup
-    div - mouseup
-    div - click
-    div - dblclick
+    div - mouseup: primary
+    div - click: primary
+    div - dblclick: primary
   `)
 })
 
@@ -224,7 +224,7 @@ test('fires mouse events with the correct properties', () => {
     pointerup - pointerId=1; pointerType=mouse; isPrimary=true
     mouseup - button=0; buttons=0; detail=2
     click - button=0; buttons=0; detail=2
-    dblclick
+    dblclick - button=0; buttons=0; detail=2
   `)
 })
 
@@ -251,7 +251,7 @@ test('fires mouse events with custom button property', () => {
     pointerup - pointerId=1; pointerType=mouse; isPrimary=true
     mouseup - button=0; buttons=0; detail=2
     click - button=0; buttons=0; detail=2
-    dblclick
+    dblclick - button=0; buttons=0; detail=2
   `)
 })
 
@@ -277,7 +277,7 @@ test('fires mouse events with custom buttons property', () => {
     pointerup - pointerId=1; pointerType=mouse; isPrimary=true
     mouseup - button=0; buttons=0; detail=2
     click - button=0; buttons=0; detail=2
-    dblclick
+    dblclick - button=0; buttons=0; detail=2
   `)
 })
 

@@ -19,21 +19,21 @@ test('fires correct events', () => {
     select[name="select"][value="1"] - pointermove
     select[name="select"][value="1"] - mousemove
     select[name="select"][value="1"] - pointerdown
-    select[name="select"][value="1"] - mousedown
+    select[name="select"][value="1"] - mousedown: primary
     select[name="select"][value="1"] - focus
     select[name="select"][value="1"] - focusin
     select[name="select"][value="1"] - pointerup
-    select[name="select"][value="1"] - mouseup
-    select[name="select"][value="1"] - click
+    select[name="select"][value="1"] - mouseup: primary
+    select[name="select"][value="1"] - click: primary
     select[name="select"][value="2"] - input
     select[name="select"][value="2"] - change
     select[name="select"][value="2"] - pointerover
     select[name="select"][value="2"] - pointerenter
-    select[name="select"][value="2"] - mouseover: Left (0)
-    select[name="select"][value="2"] - mouseenter: Left (0)
+    select[name="select"][value="2"] - mouseover
+    select[name="select"][value="2"] - mouseenter
     select[name="select"][value="2"] - pointerup
-    select[name="select"][value="2"] - mouseup: Left (0)
-    select[name="select"][value="2"] - click: Left (0)
+    select[name="select"][value="2"] - mouseup: primary
+    select[name="select"][value="2"] - click: primary
   `)
   const [o1, o2, o3] = options
   expect(o1.selected).toBe(false)
@@ -56,10 +56,10 @@ test('fires correct events on listBox select', () => {
     li#2[value="2"][aria-selected=false] - pointermove
     li#2[value="2"][aria-selected=false] - mousemove
     li#2[value="2"][aria-selected=false] - pointerdown
-    li#2[value="2"][aria-selected=false] - mousedown
+    li#2[value="2"][aria-selected=false] - mousedown: primary
     li#2[value="2"][aria-selected=false] - pointerup
-    li#2[value="2"][aria-selected=false] - mouseup
-    li#2[value="2"][aria-selected=true] - click
+    li#2[value="2"][aria-selected=false] - mouseup: primary
+    li#2[value="2"][aria-selected=true] - click: primary
     li#2[value="2"][aria-selected=true] - pointermove
     li#2[value="2"][aria-selected=true] - mousemove
     li#2[value="2"][aria-selected=true] - pointerout
@@ -79,32 +79,32 @@ test('fires correct events on multi-selects', () => {
 
     option[value="1"][selected=false] - pointerover
     select[name="select"][value=[]] - pointerenter
-    option[value="1"][selected=false] - mouseover: Left (0)
-    select[name="select"][value=[]] - mouseenter: Left (0)
+    option[value="1"][selected=false] - mouseover
+    select[name="select"][value=[]] - mouseenter
     option[value="1"][selected=false] - pointermove
-    option[value="1"][selected=false] - mousemove: Left (0)
+    option[value="1"][selected=false] - mousemove
     option[value="1"][selected=false] - pointerdown
-    option[value="1"][selected=false] - mousedown: Left (0)
+    option[value="1"][selected=false] - mousedown: primary
     select[name="select"][value=[]] - focus
     select[name="select"][value=[]] - focusin
     option[value="1"][selected=false] - pointerup
-    option[value="1"][selected=false] - mouseup: Left (0)
+    option[value="1"][selected=false] - mouseup: primary
     select[name="select"][value=["1"]] - input
     select[name="select"][value=["1"]] - change
-    option[value="1"][selected=true] - click: Left (0)
+    option[value="1"][selected=true] - click: primary
     option[value="3"][selected=false] - pointerover
     select[name="select"][value=["1"]] - pointerenter
-    option[value="3"][selected=false] - mouseover: Left (0)
-    select[name="select"][value=["1"]] - mouseenter: Left (0)
+    option[value="3"][selected=false] - mouseover
+    select[name="select"][value=["1"]] - mouseenter
     option[value="3"][selected=false] - pointermove
-    option[value="3"][selected=false] - mousemove: Left (0)
+    option[value="3"][selected=false] - mousemove
     option[value="3"][selected=false] - pointerdown
-    option[value="3"][selected=false] - mousedown: Left (0)
+    option[value="3"][selected=false] - mousedown: primary
     option[value="3"][selected=false] - pointerup
-    option[value="3"][selected=false] - mouseup: Left (0)
+    option[value="3"][selected=false] - mouseup: primary
     select[name="select"][value=["1","3"]] - input
     select[name="select"][value=["1","3"]] - change
-    option[value="3"][selected=true] - click: Left (0)
+    option[value="3"][selected=true] - click: primary
   `)
   const [o1, o2, o3] = options
   expect(o1.selected).toBe(true)
@@ -276,21 +276,21 @@ test('fires correct events when pointer events set to none but skipPointerEvents
     select[name="select"][value="1"] - pointermove
     select[name="select"][value="1"] - mousemove
     select[name="select"][value="1"] - pointerdown
-    select[name="select"][value="1"] - mousedown
+    select[name="select"][value="1"] - mousedown: primary
     select[name="select"][value="1"] - focus
     select[name="select"][value="1"] - focusin
     select[name="select"][value="1"] - pointerup
-    select[name="select"][value="1"] - mouseup
-    select[name="select"][value="1"] - click
+    select[name="select"][value="1"] - mouseup: primary
+    select[name="select"][value="1"] - click: primary
     select[name="select"][value="2"] - input
     select[name="select"][value="2"] - change
     select[name="select"][value="2"] - pointerover
     select[name="select"][value="2"] - pointerenter
-    select[name="select"][value="2"] - mouseover: Left (0)
-    select[name="select"][value="2"] - mouseenter: Left (0)
+    select[name="select"][value="2"] - mouseover
+    select[name="select"][value="2"] - mouseenter
     select[name="select"][value="2"] - pointerup
-    select[name="select"][value="2"] - mouseup: Left (0)
-    select[name="select"][value="2"] - click: Left (0)
+    select[name="select"][value="2"] - mouseup: primary
+    select[name="select"][value="2"] - click: primary
   `)
   const [o1, o2, o3] = options
   expect(o1.selected).toBe(false)
@@ -311,32 +311,32 @@ test('fires correct events on multi-selects when pointer events is set and skipP
 
     option[value="1"][selected=false] - pointerover
     select[name="select"][value=[]] - pointerenter
-    option[value="1"][selected=false] - mouseover: Left (0)
-    select[name="select"][value=[]] - mouseenter: Left (0)
+    option[value="1"][selected=false] - mouseover
+    select[name="select"][value=[]] - mouseenter
     option[value="1"][selected=false] - pointermove
-    option[value="1"][selected=false] - mousemove: Left (0)
+    option[value="1"][selected=false] - mousemove
     option[value="1"][selected=false] - pointerdown
-    option[value="1"][selected=false] - mousedown: Left (0)
+    option[value="1"][selected=false] - mousedown: primary
     select[name="select"][value=[]] - focus
     select[name="select"][value=[]] - focusin
     option[value="1"][selected=false] - pointerup
-    option[value="1"][selected=false] - mouseup: Left (0)
+    option[value="1"][selected=false] - mouseup: primary
     select[name="select"][value=["1"]] - input
     select[name="select"][value=["1"]] - change
-    option[value="1"][selected=true] - click: Left (0)
+    option[value="1"][selected=true] - click: primary
     option[value="3"][selected=false] - pointerover
     select[name="select"][value=["1"]] - pointerenter
-    option[value="3"][selected=false] - mouseover: Left (0)
-    select[name="select"][value=["1"]] - mouseenter: Left (0)
+    option[value="3"][selected=false] - mouseover
+    select[name="select"][value=["1"]] - mouseenter
     option[value="3"][selected=false] - pointermove
-    option[value="3"][selected=false] - mousemove: Left (0)
+    option[value="3"][selected=false] - mousemove
     option[value="3"][selected=false] - pointerdown
-    option[value="3"][selected=false] - mousedown: Left (0)
+    option[value="3"][selected=false] - mousedown: primary
     option[value="3"][selected=false] - pointerup
-    option[value="3"][selected=false] - mouseup: Left (0)
+    option[value="3"][selected=false] - mouseup: primary
     select[name="select"][value=["1","3"]] - input
     select[name="select"][value=["1","3"]] - change
-    option[value="3"][selected=true] - click: Left (0)
+    option[value="3"][selected=true] - click: primary
   `)
   const [o1, o2, o3] = options
   expect(o1.selected).toBe(true)

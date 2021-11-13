@@ -50,31 +50,31 @@ describe('typing in a controlled input', () => {
 
     expect(element).toHaveValue('$23')
     expect(getEventSnapshot()).toMatchInlineSnapshot(`
-          Events fired on: input[value="$23"]
+      Events fired on: input[value="$23"]
 
-          input[value=""] - pointerover
-          input[value=""] - pointerenter
-          input[value=""] - mouseover
-          input[value=""] - mouseenter
-          input[value=""] - pointermove
-          input[value=""] - mousemove
-          input[value=""] - pointerdown
-          input[value=""] - mousedown
-          input[value=""] - focus
-          input[value=""] - focusin
-          input[value=""] - pointerup
-          input[value=""] - mouseup
-          input[value=""] - click
-          input[value=""] - keydown: 2 (50)
-          input[value=""] - keypress: 2 (50)
-          input[value="2"] - input
-            "2{CURSOR}" -> "$2{CURSOR}"
-          input[value="$2"] - keyup: 2 (50)
-          input[value="$2"] - keydown: 3 (51)
-          input[value="$2"] - keypress: 3 (51)
-          input[value="$23"] - input
-          input[value="$23"] - keyup: 3 (51)
-      `)
+      input[value=""] - pointerover
+      input[value=""] - pointerenter
+      input[value=""] - mouseover
+      input[value=""] - mouseenter
+      input[value=""] - pointermove
+      input[value=""] - mousemove
+      input[value=""] - pointerdown
+      input[value=""] - mousedown: primary
+      input[value=""] - focus
+      input[value=""] - focusin
+      input[value=""] - pointerup
+      input[value=""] - mouseup: primary
+      input[value=""] - click: primary
+      input[value=""] - keydown: 2 (50)
+      input[value=""] - keypress: 2 (50)
+      input[value="2"] - input
+        "2{CURSOR}" -> "$2{CURSOR}"
+      input[value="$2"] - keyup: 2 (50)
+      input[value="$2"] - keydown: 3 (51)
+      input[value="$2"] - keypress: 3 (51)
+      input[value="$23"] - input
+      input[value="$23"] - keyup: 3 (51)
+    `)
   })
 
   test('typing in the middle of a controlled input', () => {
@@ -96,12 +96,12 @@ describe('typing in a controlled input', () => {
       input[value="$23"] - pointermove
       input[value="$23"] - mousemove
       input[value="$23"] - pointerdown
-      input[value="$23"] - mousedown
+      input[value="$23"] - mousedown: primary
       input[value="$23"] - focus
       input[value="$23"] - focusin
       input[value="$23"] - pointerup
-      input[value="$23"] - mouseup
-      input[value="$23"] - click
+      input[value="$23"] - mouseup: primary
+      input[value="$23"] - click: primary
       input[value="$23"] - select
       input[value="$23"] - keydown: 1 (49)
       input[value="$23"] - keypress: 1 (49)
@@ -142,12 +142,12 @@ describe('typing in a controlled input', () => {
       input[value="$23"] - pointermove
       input[value="$23"] - mousemove
       input[value="$23"] - pointerdown
-      input[value="$23"] - mousedown
+      input[value="$23"] - mousedown: primary
       input[value="$23"] - focus
       input[value="$23"] - focusin
       input[value="$23"] - pointerup
-      input[value="$23"] - mouseup
-      input[value="$23"] - click
+      input[value="$23"] - mouseup: primary
+      input[value="$23"] - click: primary
       input[value="$23"] - select
       input[value="$23"] - keydown: Backspace (8)
       input[value="23"] - select
@@ -161,10 +161,10 @@ describe('typing in a controlled input', () => {
       input[value="$23"] - pointermove
       input[value="$23"] - mousemove
       input[value="$23"] - pointerdown
-      input[value="$23"] - mousedown
+      input[value="$23"] - mousedown: primary
       input[value="$23"] - pointerup
-      input[value="$23"] - mouseup
-      input[value="$23"] - click
+      input[value="$23"] - mouseup: primary
+      input[value="$23"] - click: primary
       input[value="$23"] - keydown: 4 (52)
       input[value="$23"] - keypress: 4 (52)
       input[value="$234"] - input

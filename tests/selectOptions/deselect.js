@@ -14,19 +14,19 @@ test('fires correct events', () => {
 
     option[value="1"][selected=true] - pointerover
     select[name="select"][value=["1"]] - pointerenter
-    option[value="1"][selected=true] - mouseover: Left (0)
-    select[name="select"][value=["1"]] - mouseenter: Left (0)
+    option[value="1"][selected=true] - mouseover
+    select[name="select"][value=["1"]] - mouseenter
     option[value="1"][selected=true] - pointermove
-    option[value="1"][selected=true] - mousemove: Left (0)
+    option[value="1"][selected=true] - mousemove
     option[value="1"][selected=true] - pointerdown
-    option[value="1"][selected=true] - mousedown: Left (0)
+    option[value="1"][selected=true] - mousedown: primary
     select[name="select"][value=["1"]] - focus
     select[name="select"][value=["1"]] - focusin
     option[value="1"][selected=true] - pointerup
-    option[value="1"][selected=true] - mouseup: Left (0)
+    option[value="1"][selected=true] - mouseup: primary
     select[name="select"][value=[]] - input
     select[name="select"][value=[]] - change
-    option[value="1"][selected=false] - click: Left (0)
+    option[value="1"][selected=false] - click: primary
   `)
 
   expect(form).toHaveFormValues({select: []})
@@ -47,18 +47,18 @@ test('blurs previously focused element', () => {
     Events fired on: form
 
     option[value="1"][selected=false] - pointerover
-    option[value="1"][selected=false] - mouseover: Left (0)
+    option[value="1"][selected=false] - mouseover
     option[value="1"][selected=false] - pointermove
-    option[value="1"][selected=false] - mousemove: Left (0)
+    option[value="1"][selected=false] - mousemove
     option[value="1"][selected=false] - pointerdown
-    option[value="1"][selected=false] - mousedown: Left (0)
+    option[value="1"][selected=false] - mousedown: primary
     button - focusout
     select[name="select"][value=[]] - focusin
     option[value="1"][selected=false] - pointerup
-    option[value="1"][selected=false] - mouseup: Left (0)
+    option[value="1"][selected=false] - mouseup: primary
     select[name="select"][value=[]] - input
     select[name="select"][value=[]] - change
-    option[value="1"][selected=false] - click: Left (0)
+    option[value="1"][selected=false] - click: primary
   `)
 })
 

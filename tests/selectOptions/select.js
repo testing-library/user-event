@@ -263,7 +263,7 @@ test('fires correct events when pointer events set to none but skipPointerEvents
   const {select, options, getEventSnapshot} = setupSelect({
     pointerEvents: 'none',
   })
-  userEvent.selectOptions(select, '2', undefined, {
+  userEvent.selectOptions(select, '2', {
     skipPointerEventsCheck: true,
   })
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
@@ -303,7 +303,7 @@ test('fires correct events on multi-selects when pointer events is set and skipP
     multiple: true,
     pointerEvents: 'none',
   })
-  userEvent.selectOptions(select, ['1', '3'], undefined, {
+  userEvent.selectOptions(select, ['1', '3'], {
     skipPointerEventsCheck: true,
   })
   expect(getEventSnapshot()).toMatchInlineSnapshot(`

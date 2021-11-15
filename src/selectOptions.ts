@@ -12,20 +12,18 @@ export function selectOptions(
   this: UserEvent,
   select: Element,
   values: HTMLElement | HTMLElement[] | string[] | string,
-  init?: MouseEventInit,
   options: PointerOptions = {},
 ) {
-  return selectOptionsBase.call(this, true, select, values, init, options)
+  return selectOptionsBase.call(this, true, select, values, options)
 }
 
 export function deselectOptions(
   this: UserEvent,
   select: Element,
   values: HTMLElement | HTMLElement[] | string[] | string,
-  init?: MouseEventInit,
   options: PointerOptions = {},
 ) {
-  return selectOptionsBase.call(this, false, select, values, init, options)
+  return selectOptionsBase.call(this, false, select, values, options)
 }
 
 function selectOptionsBase(
@@ -33,7 +31,6 @@ function selectOptionsBase(
   newValue: boolean,
   select: Element,
   values: HTMLElement | HTMLElement[] | string[] | string,
-  init: MouseEventInit | undefined,
   {skipPointerEventsCheck}: PointerOptions,
 ) {
   if (!newValue && !(select as HTMLSelectElement).multiple) {
@@ -79,27 +76,27 @@ function selectOptionsBase(
 
         // events fired for multiple select are weird. Can't use hover...
         if (withPointerEvents) {
-          fireEvent.pointerOver(option, init)
-          fireEvent.pointerEnter(select, init)
+          fireEvent.pointerOver(option)
+          fireEvent.pointerEnter(select)
           fireEvent.mouseOver(option)
           fireEvent.mouseEnter(select)
-          fireEvent.pointerMove(option, init)
-          fireEvent.mouseMove(option, init)
-          fireEvent.pointerDown(option, init)
-          fireEvent.mouseDown(option, init)
+          fireEvent.pointerMove(option)
+          fireEvent.mouseMove(option)
+          fireEvent.pointerDown(option)
+          fireEvent.mouseDown(option)
         }
 
         focus(select)
 
         if (withPointerEvents) {
-          fireEvent.pointerUp(option, init)
-          fireEvent.mouseUp(option, init)
+          fireEvent.pointerUp(option)
+          fireEvent.mouseUp(option)
         }
 
         selectOption(option as HTMLOptionElement)
 
         if (withPointerEvents) {
-          fireEvent.click(option, init)
+          fireEvent.click(option)
         }
       }
     } else if (selectedOptions.length === 1) {
@@ -108,7 +105,7 @@ function selectOptionsBase(
         : hasPointerEvents(select)
       // the click to open the select options
       if (withPointerEvents) {
-        this.click(select, init, {skipPointerEventsCheck: true})
+        this.click(select, {skipPointerEventsCheck: true})
       } else {
         focus(select)
       }
@@ -118,13 +115,13 @@ function selectOptionsBase(
       if (withPointerEvents) {
         // the browser triggers another click event on the select for the click on the option
         // this second click has no 'down' phase
-        fireEvent.pointerOver(select, init)
-        fireEvent.pointerEnter(select, init)
+        fireEvent.pointerOver(select)
+        fireEvent.pointerEnter(select)
         fireEvent.mouseOver(select)
         fireEvent.mouseEnter(select)
-        fireEvent.pointerUp(select, init)
-        fireEvent.mouseUp(select, init)
-        fireEvent.click(select, init)
+        fireEvent.pointerUp(select)
+        fireEvent.mouseUp(select)
+        fireEvent.click(select)
       }
     } else {
       throw getConfig().getElementError(
@@ -134,9 +131,9 @@ function selectOptionsBase(
     }
   } else if (select.getAttribute('role') === 'listbox') {
     selectedOptions.forEach(option => {
-      this.hover(option, init, {skipPointerEventsCheck})
-      this.click(option, init, {skipPointerEventsCheck})
-      this.unhover(option, init, {skipPointerEventsCheck})
+      this.hover(option, {skipPointerEventsCheck})
+      this.click(option, {skipPointerEventsCheck})
+      this.unhover(option, {skipPointerEventsCheck})
     })
   } else {
     throw getConfig().getElementError(
@@ -153,9 +150,8 @@ function selectOptionsBase(
         bubbles: true,
         cancelable: false,
         composed: true,
-        ...init,
       }),
     )
-    fireEvent.change(select, init)
+    fireEvent.change(select)
   }
 }

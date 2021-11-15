@@ -471,7 +471,7 @@ test('right click fires `contextmenu` instead of `click', () => {
 
   clearEventCalls()
 
-  userEvent.click(element, {buttons: 2})
+  userEvent.pointer({keys: '[MouseRight]', target: element})
   expect(getEvents('contextmenu')).toHaveLength(1)
   expect(getEvents('click')).toHaveLength(0)
 })
@@ -483,6 +483,6 @@ test('throws when clicking element with pointer-events set to none', () => {
 
 test('does not throws when clicking element with pointer-events set to none and skipPointerEventsCheck is set', () => {
   const {element, getEvents} = setup(`<div style="pointer-events: none"></div>`)
-  userEvent.click(element, undefined, {skipPointerEventsCheck: true})
+  userEvent.click(element, {skipPointerEventsCheck: true})
   expect(getEvents('click')).toHaveLength(1)
 })

@@ -11,15 +11,15 @@ it('type without focus', () => {
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: body
 
-    body - keydown: f (102)
-    body - keypress: f (102)
-    body - keyup: f (102)
-    body - keydown: o (111)
-    body - keypress: o (111)
-    body - keyup: o (111)
-    body - keydown: o (111)
-    body - keypress: o (111)
-    body - keyup: o (111)
+    body - keydown: f
+    body - keypress: f
+    body - keyup: f
+    body - keydown: o
+    body - keypress: o
+    body - keyup: o
+    body - keydown: o
+    body - keypress: o
+    body - keyup: o
   `)
 })
 
@@ -35,18 +35,18 @@ it('type with focus', () => {
     Events fired on: body
 
     input[value=""] - focusin
-    input[value=""] - keydown: f (102)
-    input[value=""] - keypress: f (102)
+    input[value=""] - keydown: f
+    input[value=""] - keypress: f
     input[value="f"] - input
-    input[value="f"] - keyup: f (102)
-    input[value="f"] - keydown: o (111)
-    input[value="f"] - keypress: o (111)
+    input[value="f"] - keyup: f
+    input[value="f"] - keydown: o
+    input[value="f"] - keypress: o
     input[value="fo"] - input
-    input[value="fo"] - keyup: o (111)
-    input[value="fo"] - keydown: o (111)
-    input[value="fo"] - keypress: o (111)
+    input[value="fo"] - keyup: o
+    input[value="fo"] - keydown: o
+    input[value="fo"] - keypress: o
     input[value="foo"] - input
-    input[value="foo"] - keyup: o (111)
+    input[value="foo"] - keyup: o
   `)
 })
 
@@ -63,18 +63,18 @@ it('type asynchronous', async () => {
     Events fired on: body
 
     input[value=""] - focusin
-    input[value=""] - keydown: f (102)
-    input[value=""] - keypress: f (102)
+    input[value=""] - keydown: f
+    input[value=""] - keypress: f
     input[value="f"] - input
-    input[value="f"] - keyup: f (102)
-    input[value="f"] - keydown: o (111)
-    input[value="f"] - keypress: o (111)
+    input[value="f"] - keyup: f
+    input[value="f"] - keydown: o
+    input[value="f"] - keypress: o
     input[value="fo"] - input
-    input[value="fo"] - keyup: o (111)
-    input[value="fo"] - keydown: o (111)
-    input[value="fo"] - keypress: o (111)
+    input[value="fo"] - keyup: o
+    input[value="fo"] - keydown: o
+    input[value="fo"] - keypress: o
     input[value="foo"] - input
-    input[value="foo"] - keyup: o (111)
+    input[value="foo"] - keyup: o
   `)
 })
 
@@ -118,7 +118,7 @@ it('continue typing with state', () => {
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value=""]
 
-    input[value=""] - keydown: Shift (16) {shift}
+    input[value=""] - keydown: Shift {shift}
   `)
   clearEventCalls()
 
@@ -127,10 +127,10 @@ it('continue typing with state', () => {
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value="F"]
 
-    input[value=""] - keydown: F (70) {shift}
-    input[value=""] - keypress: F (70) {shift}
+    input[value=""] - keydown: F {shift}
+    input[value=""] - keypress: F {shift}
     input[value="F"] - input
-    input[value="F"] - keyup: F (70) {shift}
-    input[value="F"] - keyup: Shift (16)
+    input[value="F"] - keyup: F {shift}
+    input[value="F"] - keyup: Shift
   `)
 })

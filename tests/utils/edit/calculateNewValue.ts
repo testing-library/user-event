@@ -24,17 +24,17 @@ test('honors maxlength', () => {
     input[value=""] - pointerup
     input[value=""] - mouseup: primary
     input[value=""] - click: primary
-    input[value=""] - keydown: 1 (49)
-    input[value=""] - keypress: 1 (49)
+    input[value=""] - keydown: 1
+    input[value=""] - keypress: 1
     input[value="1"] - input
-    input[value="1"] - keyup: 1 (49)
-    input[value="1"] - keydown: 2 (50)
-    input[value="1"] - keypress: 2 (50)
+    input[value="1"] - keyup: 1
+    input[value="1"] - keydown: 2
+    input[value="1"] - keypress: 2
     input[value="12"] - input
-    input[value="12"] - keyup: 2 (50)
-    input[value="12"] - keydown: 3 (51)
-    input[value="12"] - keypress: 3 (51)
-    input[value="12"] - keyup: 3 (51)
+    input[value="12"] - keyup: 2
+    input[value="12"] - keydown: 3
+    input[value="12"] - keypress: 3
+    input[value="12"] - keyup: 3
   `)
 })
 
@@ -58,18 +58,18 @@ test('honors maxlength="" as if there was no maxlength', () => {
     input[value=""] - pointerup
     input[value=""] - mouseup: primary
     input[value=""] - click: primary
-    input[value=""] - keydown: 1 (49)
-    input[value=""] - keypress: 1 (49)
+    input[value=""] - keydown: 1
+    input[value=""] - keypress: 1
     input[value="1"] - input
-    input[value="1"] - keyup: 1 (49)
-    input[value="1"] - keydown: 2 (50)
-    input[value="1"] - keypress: 2 (50)
+    input[value="1"] - keyup: 1
+    input[value="1"] - keydown: 2
+    input[value="1"] - keypress: 2
     input[value="12"] - input
-    input[value="12"] - keyup: 2 (50)
-    input[value="12"] - keydown: 3 (51)
-    input[value="12"] - keypress: 3 (51)
+    input[value="12"] - keyup: 2
+    input[value="12"] - keydown: 3
+    input[value="12"] - keypress: 3
     input[value="123"] - input
-    input[value="123"] - keyup: 3 (51)
+    input[value="123"] - keyup: 3
   `)
 })
 
@@ -97,9 +97,9 @@ test('honors maxlength with existing text', () => {
     input[value="12"] - pointerup
     input[value="12"] - mouseup: primary
     input[value="12"] - click: primary
-    input[value="12"] - keydown: 3 (51)
-    input[value="12"] - keypress: 3 (51)
-    input[value="12"] - keyup: 3 (51)
+    input[value="12"] - keydown: 3
+    input[value="12"] - keypress: 3
+    input[value="12"] - keyup: 3
   `)
 })
 
@@ -127,9 +127,9 @@ test('honors maxlength on textarea', () => {
     textarea[value="12"] - pointerup
     textarea[value="12"] - mouseup: primary
     textarea[value="12"] - click: primary
-    textarea[value="12"] - keydown: 3 (51)
-    textarea[value="12"] - keypress: 3 (51)
-    textarea[value="12"] - keyup: 3 (51)
+    textarea[value="12"] - keydown: 3
+    textarea[value="12"] - keypress: 3
+    textarea[value="12"] - keyup: 3
   `)
 })
 

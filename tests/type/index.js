@@ -22,18 +22,18 @@ test('types text in input', () => {
     input[value=""] - pointerup
     input[value=""] - mouseup: primary
     input[value=""] - click: primary
-    input[value=""] - keydown: S (83)
-    input[value=""] - keypress: S (83)
+    input[value=""] - keydown: S
+    input[value=""] - keypress: S
     input[value="S"] - input
-    input[value="S"] - keyup: S (83)
-    input[value="S"] - keydown: u (117)
-    input[value="S"] - keypress: u (117)
+    input[value="S"] - keyup: S
+    input[value="S"] - keydown: u
+    input[value="S"] - keypress: u
     input[value="Su"] - input
-    input[value="Su"] - keyup: u (117)
-    input[value="Su"] - keydown: p (112)
-    input[value="Su"] - keypress: p (112)
+    input[value="Su"] - keyup: u
+    input[value="Su"] - keydown: p
+    input[value="Su"] - keypress: p
     input[value="Sup"] - input
-    input[value="Sup"] - keyup: p (112)
+    input[value="Sup"] - keyup: p
   `)
 })
 
@@ -45,18 +45,18 @@ test('can skip the initial click', () => {
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value="Sup"]
 
-    input[value=""] - keydown: S (83)
-    input[value=""] - keypress: S (83)
+    input[value=""] - keydown: S
+    input[value=""] - keypress: S
     input[value="S"] - input
-    input[value="S"] - keyup: S (83)
-    input[value="S"] - keydown: u (117)
-    input[value="S"] - keypress: u (117)
+    input[value="S"] - keyup: S
+    input[value="S"] - keydown: u
+    input[value="S"] - keypress: u
     input[value="Su"] - input
-    input[value="Su"] - keyup: u (117)
-    input[value="Su"] - keydown: p (112)
-    input[value="Su"] - keypress: p (112)
+    input[value="Su"] - keyup: u
+    input[value="Su"] - keydown: p
+    input[value="Su"] - keypress: p
     input[value="Sup"] - input
-    input[value="Sup"] - keyup: p (112)
+    input[value="Sup"] - keyup: p
   `)
 })
 
@@ -83,18 +83,18 @@ test('types text inside custom element', () => {
     input[value=""] - pointerup
     input[value=""] - mouseup: primary
     input[value=""] - click: primary
-    input[value=""] - keydown: S (83)
-    input[value=""] - keypress: S (83)
+    input[value=""] - keydown: S
+    input[value=""] - keypress: S
     input[value="S"] - input
-    input[value="S"] - keyup: S (83)
-    input[value="S"] - keydown: u (117)
-    input[value="S"] - keypress: u (117)
+    input[value="S"] - keyup: S
+    input[value="S"] - keydown: u
+    input[value="S"] - keypress: u
     input[value="Su"] - input
-    input[value="Su"] - keyup: u (117)
-    input[value="Su"] - keydown: p (112)
-    input[value="Su"] - keypress: p (112)
+    input[value="Su"] - keyup: u
+    input[value="Su"] - keydown: p
+    input[value="Su"] - keypress: p
     input[value="Sup"] - input
-    input[value="Sup"] - keyup: p (112)
+    input[value="Sup"] - keyup: p
   `)
 })
 
@@ -117,18 +117,18 @@ test('types text in textarea', () => {
     textarea[value=""] - pointerup
     textarea[value=""] - mouseup: primary
     textarea[value=""] - click: primary
-    textarea[value=""] - keydown: S (83)
-    textarea[value=""] - keypress: S (83)
+    textarea[value=""] - keydown: S
+    textarea[value=""] - keypress: S
     textarea[value="S"] - input
-    textarea[value="S"] - keyup: S (83)
-    textarea[value="S"] - keydown: u (117)
-    textarea[value="S"] - keypress: u (117)
+    textarea[value="S"] - keyup: S
+    textarea[value="S"] - keydown: u
+    textarea[value="S"] - keypress: u
     textarea[value="Su"] - input
-    textarea[value="Su"] - keyup: u (117)
-    textarea[value="Su"] - keydown: p (112)
-    textarea[value="Su"] - keypress: p (112)
+    textarea[value="Su"] - keyup: u
+    textarea[value="Su"] - keydown: p
+    textarea[value="Su"] - keypress: p
     textarea[value="Sup"] - input
-    textarea[value="Sup"] - keyup: p (112)
+    textarea[value="Sup"] - keyup: p
   `)
 })
 
@@ -154,9 +154,9 @@ test('does not fire input event when keypress calls prevent default', () => {
     input[value=""] - pointerup
     input[value=""] - mouseup: primary
     input[value=""] - click: primary
-    input[value=""] - keydown: a (97)
-    input[value=""] - keypress: a (97)
-    input[value=""] - keyup: a (97)
+    input[value=""] - keydown: a
+    input[value=""] - keypress: a
+    input[value=""] - keyup: a
   `)
 })
 
@@ -182,8 +182,8 @@ test('does not fire keypress or input events when keydown calls prevent default'
     input[value=""] - pointerup
     input[value=""] - mouseup: primary
     input[value=""] - click: primary
-    input[value=""] - keydown: a (97)
-    input[value=""] - keyup: a (97)
+    input[value=""] - keydown: a
+    input[value=""] - keyup: a
   `)
 })
 
@@ -216,9 +216,9 @@ test('does not fire input when readonly', () => {
     input[value=""] - pointerup
     input[value=""] - mouseup: primary
     input[value=""] - click: primary
-    input[value=""] - keydown: a (97)
-    input[value=""] - keypress: a (97)
-    input[value=""] - keyup: a (97)
+    input[value=""] - keydown: a
+    input[value=""] - keypress: a
+    input[value=""] - keyup: a
   `)
 })
 
@@ -315,14 +315,14 @@ test('typing in a textarea with existing text', () => {
     textarea[value="Hello, "] - pointerup
     textarea[value="Hello, "] - mouseup: primary
     textarea[value="Hello, "] - click: primary
-    textarea[value="Hello, "] - keydown: 1 (49)
-    textarea[value="Hello, "] - keypress: 1 (49)
+    textarea[value="Hello, "] - keydown: 1
+    textarea[value="Hello, "] - keypress: 1
     textarea[value="Hello, 1"] - input
-    textarea[value="Hello, 1"] - keyup: 1 (49)
-    textarea[value="Hello, 1"] - keydown: 2 (50)
-    textarea[value="Hello, 1"] - keypress: 2 (50)
+    textarea[value="Hello, 1"] - keyup: 1
+    textarea[value="Hello, 1"] - keydown: 2
+    textarea[value="Hello, 1"] - keypress: 2
     textarea[value="Hello, 12"] - input
-    textarea[value="Hello, 12"] - keyup: 2 (50)
+    textarea[value="Hello, 12"] - keyup: 2
   `)
   expect(element).toHaveValue('Hello, 12')
 })
@@ -355,16 +355,16 @@ test('accepts an initialSelectionStart and initialSelectionEnd', () => {
     textarea[value="Hello, "] - mouseup: primary
     textarea[value="Hello, "] - click: primary
     textarea[value="Hello, "] - select
-    textarea[value="Hello, "] - keydown: 1 (49)
-    textarea[value="Hello, "] - keypress: 1 (49)
+    textarea[value="Hello, "] - keydown: 1
+    textarea[value="Hello, "] - keypress: 1
     textarea[value="1Hello, "] - select
     textarea[value="1Hello, "] - input
-    textarea[value="1Hello, "] - keyup: 1 (49)
-    textarea[value="1Hello, "] - keydown: 2 (50)
-    textarea[value="1Hello, "] - keypress: 2 (50)
+    textarea[value="1Hello, "] - keyup: 1
+    textarea[value="1Hello, "] - keydown: 2
+    textarea[value="1Hello, "] - keypress: 2
     textarea[value="12Hello, "] - select
     textarea[value="12Hello, "] - input
-    textarea[value="12Hello, "] - keyup: 2 (50)
+    textarea[value="12Hello, "] - keyup: 2
   `)
   expect(element).toHaveValue('12Hello, ')
 })
@@ -398,38 +398,38 @@ test('can type into an input with type `date`', () => {
     input[value=""] - pointerup
     input[value=""] - mouseup: primary
     input[value=""] - click: primary
-    input[value=""] - keydown: 2 (50)
-    input[value=""] - keypress: 2 (50)
-    input[value=""] - keyup: 2 (50)
-    input[value=""] - keydown: 0 (48)
-    input[value=""] - keypress: 0 (48)
-    input[value=""] - keyup: 0 (48)
-    input[value=""] - keydown: 2 (50)
-    input[value=""] - keypress: 2 (50)
-    input[value=""] - keyup: 2 (50)
-    input[value=""] - keydown: 0 (48)
-    input[value=""] - keypress: 0 (48)
-    input[value=""] - keyup: 0 (48)
-    input[value=""] - keydown: - (45)
-    input[value=""] - keypress: - (45)
-    input[value=""] - keyup: - (45)
-    input[value=""] - keydown: 0 (48)
-    input[value=""] - keypress: 0 (48)
-    input[value=""] - keyup: 0 (48)
-    input[value=""] - keydown: 6 (54)
-    input[value=""] - keypress: 6 (54)
-    input[value=""] - keyup: 6 (54)
-    input[value=""] - keydown: - (45)
-    input[value=""] - keypress: - (45)
-    input[value=""] - keyup: - (45)
-    input[value=""] - keydown: 2 (50)
-    input[value=""] - keypress: 2 (50)
-    input[value=""] - keyup: 2 (50)
-    input[value=""] - keydown: 9 (57)
-    input[value=""] - keypress: 9 (57)
+    input[value=""] - keydown: 2
+    input[value=""] - keypress: 2
+    input[value=""] - keyup: 2
+    input[value=""] - keydown: 0
+    input[value=""] - keypress: 0
+    input[value=""] - keyup: 0
+    input[value=""] - keydown: 2
+    input[value=""] - keypress: 2
+    input[value=""] - keyup: 2
+    input[value=""] - keydown: 0
+    input[value=""] - keypress: 0
+    input[value=""] - keyup: 0
+    input[value=""] - keydown: -
+    input[value=""] - keypress: -
+    input[value=""] - keyup: -
+    input[value=""] - keydown: 0
+    input[value=""] - keypress: 0
+    input[value=""] - keyup: 0
+    input[value=""] - keydown: 6
+    input[value=""] - keypress: 6
+    input[value=""] - keyup: 6
+    input[value=""] - keydown: -
+    input[value=""] - keypress: -
+    input[value=""] - keyup: -
+    input[value=""] - keydown: 2
+    input[value=""] - keypress: 2
+    input[value=""] - keyup: 2
+    input[value=""] - keydown: 9
+    input[value=""] - keypress: 9
     input[value="2020-06-29"] - input
     input[value="2020-06-29"] - change
-    input[value="2020-06-29"] - keyup: 9 (57)
+    input[value="2020-06-29"] - keyup: 9
   `)
 })
 
@@ -459,14 +459,14 @@ test('can type "-" into number inputs', () => {
     input[value=""] - pointerup
     input[value=""] - mouseup: primary
     input[value=""] - click: primary
-    input[value=""] - keydown: - (45)
-    input[value=""] - keypress: - (45)
+    input[value=""] - keydown: -
+    input[value=""] - keypress: -
     input[value=""] - input
-    input[value=""] - keyup: - (45)
-    input[value=""] - keydown: 3 (51)
-    input[value=""] - keypress: 3 (51)
+    input[value=""] - keyup: -
+    input[value=""] - keydown: 3
+    input[value=""] - keypress: 3
     input[value="-3"] - input
-    input[value="-3"] - keyup: 3 (51)
+    input[value="-3"] - keyup: 3
   `)
 })
 
@@ -492,18 +492,18 @@ test('can type "." into number inputs', () => {
     input[value=""] - pointerup
     input[value=""] - mouseup: primary
     input[value=""] - click: primary
-    input[value=""] - keydown: 3 (51)
-    input[value=""] - keypress: 3 (51)
+    input[value=""] - keydown: 3
+    input[value=""] - keypress: 3
     input[value="3"] - input
-    input[value="3"] - keyup: 3 (51)
-    input[value="3"] - keydown: . (46)
-    input[value="3"] - keypress: . (46)
+    input[value="3"] - keyup: 3
+    input[value="3"] - keydown: .
+    input[value="3"] - keypress: .
     input[value=""] - input
-    input[value=""] - keyup: . (46)
-    input[value=""] - keydown: 3 (51)
-    input[value=""] - keypress: 3 (51)
+    input[value=""] - keyup: .
+    input[value=""] - keydown: 3
+    input[value=""] - keypress: 3
     input[value="3.3"] - input
-    input[value="3.3"] - keyup: 3 (51)
+    input[value="3.3"] - keyup: 3
   `)
 })
 
@@ -718,18 +718,18 @@ test('should type inside a contenteditable div', () => {
     div - pointerup
     div - mouseup: primary
     div - click: primary
-    div - keydown: b (98)
-    div - keypress: b (98)
+    div - keydown: b
+    div - keypress: b
     div - input
-    div - keyup: b (98)
-    div - keydown: a (97)
-    div - keypress: a (97)
+    div - keyup: b
+    div - keydown: a
+    div - keypress: a
     div - input
-    div - keyup: a (97)
-    div - keydown: r (114)
-    div - keypress: r (114)
+    div - keyup: a
+    div - keydown: r
+    div - keypress: r
     div - input
-    div - keyup: r (114)
+    div - keyup: r
   `)
   expect(element).toHaveTextContent('bar')
 })
@@ -757,10 +757,10 @@ test('key event which does not change the contenteditable does not fire input ev
     div - pointerup
     div - mouseup: primary
     div - click: primary
-    div - keydown: Home (36)
-    div - keyup: Home (36)
-    div - keydown: Backspace (8)
-    div - keyup: Backspace (8)
+    div - keydown: Home
+    div - keyup: Home
+    div - keydown: Backspace
+    div - keyup: Backspace
   `)
   expect(getEvents('input')).toHaveLength(0)
 })
@@ -806,25 +806,25 @@ test('navigation key: {arrowleft} and {arrowright} moves the cursor for <input>'
     input[value=""] - pointerup
     input[value=""] - mouseup: primary
     input[value=""] - click: primary
-    input[value=""] - keydown: b (98)
-    input[value=""] - keypress: b (98)
+    input[value=""] - keydown: b
+    input[value=""] - keypress: b
     input[value="b"] - input
-    input[value="b"] - keyup: b (98)
-    input[value="b"] - keydown: ArrowLeft (37)
+    input[value="b"] - keyup: b
+    input[value="b"] - keydown: ArrowLeft
     input[value="b"] - select
-    input[value="b"] - keyup: ArrowLeft (37)
-    input[value="b"] - keydown: a (97)
-    input[value="b"] - keypress: a (97)
+    input[value="b"] - keyup: ArrowLeft
+    input[value="b"] - keydown: a
+    input[value="b"] - keypress: a
     input[value="ab"] - select
     input[value="ab"] - input
-    input[value="ab"] - keyup: a (97)
-    input[value="ab"] - keydown: ArrowRight (39)
+    input[value="ab"] - keyup: a
+    input[value="ab"] - keydown: ArrowRight
     input[value="ab"] - select
-    input[value="ab"] - keyup: ArrowRight (39)
-    input[value="ab"] - keydown: c (99)
-    input[value="ab"] - keypress: c (99)
+    input[value="ab"] - keyup: ArrowRight
+    input[value="ab"] - keydown: c
+    input[value="ab"] - keypress: c
     input[value="abc"] - input
-    input[value="abc"] - keyup: c (99)
+    input[value="abc"] - keyup: c
   `)
 })
 
@@ -847,25 +847,25 @@ test('navigation key: {arrowleft} and {arrowright} moves the cursor for <textare
     textarea[value=""] - pointerup
     textarea[value=""] - mouseup: primary
     textarea[value=""] - click: primary
-    textarea[value=""] - keydown: b (98)
-    textarea[value=""] - keypress: b (98)
+    textarea[value=""] - keydown: b
+    textarea[value=""] - keypress: b
     textarea[value="b"] - input
-    textarea[value="b"] - keyup: b (98)
-    textarea[value="b"] - keydown: ArrowLeft (37)
+    textarea[value="b"] - keyup: b
+    textarea[value="b"] - keydown: ArrowLeft
     textarea[value="b"] - select
-    textarea[value="b"] - keyup: ArrowLeft (37)
-    textarea[value="b"] - keydown: a (97)
-    textarea[value="b"] - keypress: a (97)
+    textarea[value="b"] - keyup: ArrowLeft
+    textarea[value="b"] - keydown: a
+    textarea[value="b"] - keypress: a
     textarea[value="ab"] - select
     textarea[value="ab"] - input
-    textarea[value="ab"] - keyup: a (97)
-    textarea[value="ab"] - keydown: ArrowRight (39)
+    textarea[value="ab"] - keyup: a
+    textarea[value="ab"] - keydown: ArrowRight
     textarea[value="ab"] - select
-    textarea[value="ab"] - keyup: ArrowRight (39)
-    textarea[value="ab"] - keydown: c (99)
-    textarea[value="ab"] - keypress: c (99)
+    textarea[value="ab"] - keyup: ArrowRight
+    textarea[value="ab"] - keydown: c
+    textarea[value="ab"] - keypress: c
     textarea[value="abc"] - input
-    textarea[value="abc"] - keyup: c (99)
+    textarea[value="abc"] - keyup: c
   `)
 })
 
@@ -888,30 +888,30 @@ test('navigation key: {home} and {end} moves the cursor', () => {
     input[value=""] - pointerup
     input[value=""] - mouseup: primary
     input[value=""] - click: primary
-    input[value=""] - keydown: c (99)
-    input[value=""] - keypress: c (99)
+    input[value=""] - keydown: c
+    input[value=""] - keypress: c
     input[value="c"] - input
-    input[value="c"] - keyup: c (99)
-    input[value="c"] - keydown: Home (36)
+    input[value="c"] - keyup: c
+    input[value="c"] - keydown: Home
     input[value="c"] - select
-    input[value="c"] - keyup: Home (36)
-    input[value="c"] - keydown: a (97)
-    input[value="c"] - keypress: a (97)
+    input[value="c"] - keyup: Home
+    input[value="c"] - keydown: a
+    input[value="c"] - keypress: a
     input[value="ac"] - select
     input[value="ac"] - input
-    input[value="ac"] - keyup: a (97)
-    input[value="ac"] - keydown: b (98)
-    input[value="ac"] - keypress: b (98)
+    input[value="ac"] - keyup: a
+    input[value="ac"] - keydown: b
+    input[value="ac"] - keypress: b
     input[value="abc"] - select
     input[value="abc"] - input
-    input[value="abc"] - keyup: b (98)
-    input[value="abc"] - keydown: End (35)
+    input[value="abc"] - keyup: b
+    input[value="abc"] - keydown: End
     input[value="abc"] - select
-    input[value="abc"] - keyup: End (35)
-    input[value="abc"] - keydown: d (100)
-    input[value="abc"] - keypress: d (100)
+    input[value="abc"] - keyup: End
+    input[value="abc"] - keydown: d
+    input[value="abc"] - keypress: d
     input[value="abcd"] - input
-    input[value="abcd"] - keyup: d (100)
+    input[value="abcd"] - keyup: d
   `)
 })
 
@@ -934,30 +934,30 @@ test('navigation key: {pageUp} and {pageDown} moves the cursor for <input>', () 
     input[value=""] - pointerup
     input[value=""] - mouseup: primary
     input[value=""] - click: primary
-    input[value=""] - keydown: c (99)
-    input[value=""] - keypress: c (99)
+    input[value=""] - keydown: c
+    input[value=""] - keypress: c
     input[value="c"] - input
-    input[value="c"] - keyup: c (99)
-    input[value="c"] - keydown: PageUp (33)
+    input[value="c"] - keyup: c
+    input[value="c"] - keydown: PageUp
     input[value="c"] - select
-    input[value="c"] - keyup: PageUp (33)
-    input[value="c"] - keydown: a (97)
-    input[value="c"] - keypress: a (97)
+    input[value="c"] - keyup: PageUp
+    input[value="c"] - keydown: a
+    input[value="c"] - keypress: a
     input[value="ac"] - select
     input[value="ac"] - input
-    input[value="ac"] - keyup: a (97)
-    input[value="ac"] - keydown: b (98)
-    input[value="ac"] - keypress: b (98)
+    input[value="ac"] - keyup: a
+    input[value="ac"] - keydown: b
+    input[value="ac"] - keypress: b
     input[value="abc"] - select
     input[value="abc"] - input
-    input[value="abc"] - keyup: b (98)
-    input[value="abc"] - keydown: PageDown (34)
+    input[value="abc"] - keyup: b
+    input[value="abc"] - keydown: PageDown
     input[value="abc"] - select
-    input[value="abc"] - keyup: PageDown (34)
-    input[value="abc"] - keydown: d (100)
-    input[value="abc"] - keypress: d (100)
+    input[value="abc"] - keyup: PageDown
+    input[value="abc"] - keydown: d
+    input[value="abc"] - keypress: d
     input[value="abcd"] - input
-    input[value="abcd"] - keyup: d (100)
+    input[value="abcd"] - keyup: d
   `)
 })
 
@@ -980,25 +980,25 @@ test('can type into an input with type `time`', () => {
     input[value=""] - pointerup
     input[value=""] - mouseup: primary
     input[value=""] - click: primary
-    input[value=""] - keydown: 0 (48)
-    input[value=""] - keypress: 0 (48)
-    input[value=""] - keyup: 0 (48)
-    input[value=""] - keydown: 1 (49)
-    input[value=""] - keypress: 1 (49)
-    input[value=""] - keyup: 1 (49)
-    input[value=""] - keydown: : (58)
-    input[value=""] - keypress: : (58)
-    input[value=""] - keyup: : (58)
-    input[value=""] - keydown: 0 (48)
-    input[value=""] - keypress: 0 (48)
+    input[value=""] - keydown: 0
+    input[value=""] - keypress: 0
+    input[value=""] - keyup: 0
+    input[value=""] - keydown: 1
+    input[value=""] - keypress: 1
+    input[value=""] - keyup: 1
+    input[value=""] - keydown: :
+    input[value=""] - keypress: :
+    input[value=""] - keyup: :
+    input[value=""] - keydown: 0
+    input[value=""] - keypress: 0
     input[value="01:00"] - input
     input[value="01:00"] - change
-    input[value="01:00"] - keyup: 0 (48)
-    input[value="01:00"] - keydown: 5 (53)
-    input[value="01:00"] - keypress: 5 (53)
+    input[value="01:00"] - keyup: 0
+    input[value="01:00"] - keydown: 5
+    input[value="01:00"] - keypress: 5
     input[value="01:05"] - input
     input[value="01:05"] - change
-    input[value="01:05"] - keyup: 5 (53)
+    input[value="01:05"] - keyup: 5
   `)
   expect(element).toHaveValue('01:05')
 })
@@ -1022,22 +1022,22 @@ test('can type into an input with type `time` without ":"', () => {
     input[value=""] - pointerup
     input[value=""] - mouseup: primary
     input[value=""] - click: primary
-    input[value=""] - keydown: 0 (48)
-    input[value=""] - keypress: 0 (48)
-    input[value=""] - keyup: 0 (48)
-    input[value=""] - keydown: 1 (49)
-    input[value=""] - keypress: 1 (49)
-    input[value=""] - keyup: 1 (49)
-    input[value=""] - keydown: 0 (48)
-    input[value=""] - keypress: 0 (48)
+    input[value=""] - keydown: 0
+    input[value=""] - keypress: 0
+    input[value=""] - keyup: 0
+    input[value=""] - keydown: 1
+    input[value=""] - keypress: 1
+    input[value=""] - keyup: 1
+    input[value=""] - keydown: 0
+    input[value=""] - keypress: 0
     input[value="01:00"] - input
     input[value="01:00"] - change
-    input[value="01:00"] - keyup: 0 (48)
-    input[value="01:00"] - keydown: 5 (53)
-    input[value="01:00"] - keypress: 5 (53)
+    input[value="01:00"] - keyup: 0
+    input[value="01:00"] - keydown: 5
+    input[value="01:00"] - keypress: 5
     input[value="01:05"] - input
     input[value="01:05"] - change
-    input[value="01:05"] - keyup: 5 (53)
+    input[value="01:05"] - keyup: 5
   `)
   expect(element).toHaveValue('01:05')
 })
@@ -1062,25 +1062,25 @@ test('can type more a number higher than 60 minutes into an input `time` and the
     input[value=""] - pointerup
     input[value=""] - mouseup: primary
     input[value=""] - click: primary
-    input[value=""] - keydown: 2 (50)
-    input[value=""] - keypress: 2 (50)
-    input[value=""] - keyup: 2 (50)
-    input[value=""] - keydown: 3 (51)
-    input[value=""] - keypress: 3 (51)
-    input[value=""] - keyup: 3 (51)
-    input[value=""] - keydown: : (58)
-    input[value=""] - keypress: : (58)
-    input[value=""] - keyup: : (58)
-    input[value=""] - keydown: 9 (57)
-    input[value=""] - keypress: 9 (57)
+    input[value=""] - keydown: 2
+    input[value=""] - keypress: 2
+    input[value=""] - keyup: 2
+    input[value=""] - keydown: 3
+    input[value=""] - keypress: 3
+    input[value=""] - keyup: 3
+    input[value=""] - keydown: :
+    input[value=""] - keypress: :
+    input[value=""] - keyup: :
+    input[value=""] - keydown: 9
+    input[value=""] - keypress: 9
     input[value="23:09"] - input
     input[value="23:09"] - change
-    input[value="23:09"] - keyup: 9 (57)
-    input[value="23:09"] - keydown: 0 (48)
-    input[value="23:09"] - keypress: 0 (48)
+    input[value="23:09"] - keyup: 9
+    input[value="23:09"] - keydown: 0
+    input[value="23:09"] - keypress: 0
     input[value="23:59"] - input
     input[value="23:59"] - change
-    input[value="23:59"] - keyup: 0 (48)
+    input[value="23:59"] - keyup: 0
   `)
 
   expect(element).toHaveValue('23:59')
@@ -1106,40 +1106,40 @@ test('can type letters into an input `time` and they are ignored', () => {
     input[value=""] - pointerup
     input[value=""] - mouseup: primary
     input[value=""] - click: primary
-    input[value=""] - keydown: 1 (49)
-    input[value=""] - keypress: 1 (49)
-    input[value=""] - keyup: 1 (49)
-    input[value=""] - keydown: a (97)
-    input[value=""] - keypress: a (97)
-    input[value=""] - keyup: a (97)
-    input[value=""] - keydown: 6 (54)
-    input[value=""] - keypress: 6 (54)
-    input[value=""] - keyup: 6 (54)
-    input[value=""] - keydown: b (98)
-    input[value=""] - keypress: b (98)
-    input[value=""] - keyup: b (98)
-    input[value=""] - keydown: c (99)
-    input[value=""] - keypress: c (99)
-    input[value=""] - keyup: c (99)
-    input[value=""] - keydown: 3 (51)
-    input[value=""] - keypress: 3 (51)
+    input[value=""] - keydown: 1
+    input[value=""] - keypress: 1
+    input[value=""] - keyup: 1
+    input[value=""] - keydown: a
+    input[value=""] - keypress: a
+    input[value=""] - keyup: a
+    input[value=""] - keydown: 6
+    input[value=""] - keypress: 6
+    input[value=""] - keyup: 6
+    input[value=""] - keydown: b
+    input[value=""] - keypress: b
+    input[value=""] - keyup: b
+    input[value=""] - keydown: c
+    input[value=""] - keypress: c
+    input[value=""] - keyup: c
+    input[value=""] - keydown: 3
+    input[value=""] - keypress: 3
     input[value="16:03"] - input
     input[value="16:03"] - change
-    input[value="16:03"] - keyup: 3 (51)
-    input[value="16:03"] - keydown: 6 (54)
-    input[value="16:03"] - keypress: 6 (54)
+    input[value="16:03"] - keyup: 3
+    input[value="16:03"] - keydown: 6
+    input[value="16:03"] - keypress: 6
     input[value="16:36"] - input
     input[value="16:36"] - change
-    input[value="16:36"] - keyup: 6 (54)
-    input[value="16:36"] - keydown: a (97)
-    input[value="16:36"] - keypress: a (97)
-    input[value="16:36"] - keyup: a (97)
-    input[value="16:36"] - keydown: b (98)
-    input[value="16:36"] - keypress: b (98)
-    input[value="16:36"] - keyup: b (98)
-    input[value="16:36"] - keydown: d (100)
-    input[value="16:36"] - keypress: d (100)
-    input[value="16:36"] - keyup: d (100)
+    input[value="16:36"] - keyup: 6
+    input[value="16:36"] - keydown: a
+    input[value="16:36"] - keypress: a
+    input[value="16:36"] - keyup: a
+    input[value="16:36"] - keydown: b
+    input[value="16:36"] - keypress: b
+    input[value="16:36"] - keyup: b
+    input[value="16:36"] - keydown: d
+    input[value="16:36"] - keypress: d
+    input[value="16:36"] - keyup: d
   `)
 
   expect(element).toHaveValue('16:36')
@@ -1165,22 +1165,22 @@ test('can type a digit bigger in the hours section, bigger than 2 and it shows t
     input[value=""] - pointerup
     input[value=""] - mouseup: primary
     input[value=""] - click: primary
-    input[value=""] - keydown: 9 (57)
-    input[value=""] - keypress: 9 (57)
-    input[value=""] - keyup: 9 (57)
-    input[value=""] - keydown: : (58)
-    input[value=""] - keypress: : (58)
-    input[value=""] - keyup: : (58)
-    input[value=""] - keydown: 2 (50)
-    input[value=""] - keypress: 2 (50)
+    input[value=""] - keydown: 9
+    input[value=""] - keypress: 9
+    input[value=""] - keyup: 9
+    input[value=""] - keydown: :
+    input[value=""] - keypress: :
+    input[value=""] - keyup: :
+    input[value=""] - keydown: 2
+    input[value=""] - keypress: 2
     input[value="09:02"] - input
     input[value="09:02"] - change
-    input[value="09:02"] - keyup: 2 (50)
-    input[value="09:02"] - keydown: 5 (53)
-    input[value="09:02"] - keypress: 5 (53)
+    input[value="09:02"] - keyup: 2
+    input[value="09:02"] - keydown: 5
+    input[value="09:02"] - keypress: 5
     input[value="09:25"] - input
     input[value="09:25"] - change
-    input[value="09:25"] - keyup: 5 (53)
+    input[value="09:25"] - keyup: 5
   `)
 
   expect(element).toHaveValue('09:25')
@@ -1206,25 +1206,25 @@ test('can type two digits in the hours section, equals to 24 and it shows the ho
     input[value=""] - pointerup
     input[value=""] - mouseup: primary
     input[value=""] - click: primary
-    input[value=""] - keydown: 2 (50)
-    input[value=""] - keypress: 2 (50)
-    input[value=""] - keyup: 2 (50)
-    input[value=""] - keydown: 4 (52)
-    input[value=""] - keypress: 4 (52)
-    input[value=""] - keyup: 4 (52)
-    input[value=""] - keydown: : (58)
-    input[value=""] - keypress: : (58)
-    input[value=""] - keyup: : (58)
-    input[value=""] - keydown: 5 (53)
-    input[value=""] - keypress: 5 (53)
+    input[value=""] - keydown: 2
+    input[value=""] - keypress: 2
+    input[value=""] - keyup: 2
+    input[value=""] - keydown: 4
+    input[value=""] - keypress: 4
+    input[value=""] - keyup: 4
+    input[value=""] - keydown: :
+    input[value=""] - keypress: :
+    input[value=""] - keyup: :
+    input[value=""] - keydown: 5
+    input[value=""] - keypress: 5
     input[value="23:05"] - input
     input[value="23:05"] - change
-    input[value="23:05"] - keyup: 5 (53)
-    input[value="23:05"] - keydown: 2 (50)
-    input[value="23:05"] - keypress: 2 (50)
+    input[value="23:05"] - keyup: 5
+    input[value="23:05"] - keydown: 2
+    input[value="23:05"] - keypress: 2
     input[value="23:52"] - input
     input[value="23:52"] - change
-    input[value="23:52"] - keyup: 2 (50)
+    input[value="23:52"] - keyup: 2
   `)
 
   expect(element).toHaveValue('23:52')
@@ -1250,25 +1250,25 @@ test('can type two digits in the hours section, bigger than 24 and less than 30,
     input[value=""] - pointerup
     input[value=""] - mouseup: primary
     input[value=""] - click: primary
-    input[value=""] - keydown: 2 (50)
-    input[value=""] - keypress: 2 (50)
-    input[value=""] - keyup: 2 (50)
-    input[value=""] - keydown: 7 (55)
-    input[value=""] - keypress: 7 (55)
-    input[value=""] - keyup: 7 (55)
-    input[value=""] - keydown: : (58)
-    input[value=""] - keypress: : (58)
-    input[value=""] - keyup: : (58)
-    input[value=""] - keydown: 5 (53)
-    input[value=""] - keypress: 5 (53)
+    input[value=""] - keydown: 2
+    input[value=""] - keypress: 2
+    input[value=""] - keyup: 2
+    input[value=""] - keydown: 7
+    input[value=""] - keypress: 7
+    input[value=""] - keyup: 7
+    input[value=""] - keydown: :
+    input[value=""] - keypress: :
+    input[value=""] - keyup: :
+    input[value=""] - keydown: 5
+    input[value=""] - keypress: 5
     input[value="23:05"] - input
     input[value="23:05"] - change
-    input[value="23:05"] - keyup: 5 (53)
-    input[value="23:05"] - keydown: 2 (50)
-    input[value="23:05"] - keypress: 2 (50)
+    input[value="23:05"] - keyup: 5
+    input[value="23:05"] - keydown: 2
+    input[value="23:05"] - keypress: 2
     input[value="23:52"] - input
     input[value="23:52"] - change
-    input[value="23:52"] - keyup: 2 (50)
+    input[value="23:52"] - keyup: 2
   `)
 
   expect(element).toHaveValue('23:52')
@@ -1295,8 +1295,8 @@ test('{arrowdown} fires keyup/keydown events', () => {
     input[value=""] - pointerup
     input[value=""] - mouseup: primary
     input[value=""] - click: primary
-    input[value=""] - keydown: ArrowDown (40)
-    input[value=""] - keyup: ArrowDown (40)
+    input[value=""] - keydown: ArrowDown
+    input[value=""] - keyup: ArrowDown
   `)
 })
 
@@ -1321,8 +1321,8 @@ test('{arrowup} fires keyup/keydown events', () => {
     input[value=""] - pointerup
     input[value=""] - mouseup: primary
     input[value=""] - click: primary
-    input[value=""] - keydown: ArrowUp (38)
-    input[value=""] - keyup: ArrowUp (38)
+    input[value=""] - keydown: ArrowUp
+    input[value=""] - keyup: ArrowUp
   `)
 })
 
@@ -1338,10 +1338,10 @@ test('{enter} fires click on links', () => {
 
     a - focus
     a - focusin
-    a - keydown: Enter (13)
-    a - keypress: Enter (13)
+    a - keydown: Enter
+    a - keypress: Enter
     a - click: primary
-    a - keyup: Enter (13)
+    a - keyup: Enter
   `)
 })
 
@@ -1351,14 +1351,6 @@ test('type non-alphanumeric characters', () => {
   userEvent.type(element, 'https://test.local')
 
   expect(element).toHaveValue('https://test.local')
-})
-
-test('use {selectall} on <input type="number"/>', () => {
-  const {element} = setup(`<input type="number" value="0"/>`)
-
-  userEvent.type(element, '123{selectall}{backspace}4')
-
-  expect(element).toHaveValue(4)
 })
 
 test('move selection with arrows', () => {

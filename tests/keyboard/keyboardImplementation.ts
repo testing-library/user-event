@@ -36,10 +36,10 @@ describe('pressing and releasing keys', () => {
     expect(getEventSnapshot()).toMatchInlineSnapshot(`
       Events fired on: input[value=""]
 
-      input[value=""] - keydown: ArrowLeft (37)
-      input[value=""] - keyup: ArrowLeft (37)
-      input[value=""] - keydown: ArrowLeft (37)
-      input[value=""] - keyup: ArrowLeft (37)
+      input[value=""] - keydown: ArrowLeft
+      input[value=""] - keyup: ArrowLeft
+      input[value=""] - keydown: ArrowLeft
+      input[value=""] - keyup: ArrowLeft
     `)
   })
 
@@ -54,8 +54,8 @@ describe('pressing and releasing keys', () => {
     expect(getEventSnapshot()).toMatchInlineSnapshot(`
       Events fired on: input[value="a"]
 
-      input[value=""] - keydown: a (97)
-      input[value=""] - keypress: a (97)
+      input[value=""] - keydown: a
+      input[value=""] - keypress: a
       input[value="a"] - input
     `)
   })
@@ -70,11 +70,11 @@ describe('pressing and releasing keys', () => {
     expect(getEventSnapshot()).toMatchInlineSnapshot(`
       Events fired on: input[value="aa"]
 
-      input[value=""] - keydown: a (97)
-      input[value=""] - keypress: a (97)
+      input[value=""] - keydown: a
+      input[value=""] - keypress: a
       input[value="a"] - input
-      input[value="a"] - keydown: a (97)
-      input[value="a"] - keypress: a (97)
+      input[value="a"] - keydown: a
+      input[value="a"] - keypress: a
       input[value="aa"] - input
     `)
   })
@@ -89,13 +89,13 @@ describe('pressing and releasing keys', () => {
     expect(getEventSnapshot()).toMatchInlineSnapshot(`
       Events fired on: input[value="aa"]
 
-      input[value=""] - keydown: a (97)
-      input[value=""] - keypress: a (97)
+      input[value=""] - keydown: a
+      input[value=""] - keypress: a
       input[value="a"] - input
-      input[value="a"] - keydown: a (97)
-      input[value="a"] - keypress: a (97)
+      input[value="a"] - keydown: a
+      input[value="a"] - keypress: a
       input[value="aa"] - input
-      input[value="aa"] - keyup: a (97)
+      input[value="aa"] - keyup: a
     `)
   })
 
@@ -109,26 +109,26 @@ describe('pressing and releasing keys', () => {
     expect(getEventSnapshot()).toMatchInlineSnapshot(`
       Events fired on: input[value="aabbcc"]
 
-      input[value=""] - keydown: a (97)
-      input[value=""] - keypress: a (97)
+      input[value=""] - keydown: a
+      input[value=""] - keypress: a
       input[value="a"] - input
-      input[value="a"] - keydown: a (97)
-      input[value="a"] - keypress: a (97)
+      input[value="a"] - keydown: a
+      input[value="a"] - keypress: a
       input[value="aa"] - input
-      input[value="aa"] - keydown: b (98)
-      input[value="aa"] - keypress: b (98)
+      input[value="aa"] - keydown: b
+      input[value="aa"] - keypress: b
       input[value="aab"] - input
-      input[value="aab"] - keydown: b (98)
-      input[value="aab"] - keypress: b (98)
+      input[value="aab"] - keydown: b
+      input[value="aab"] - keypress: b
       input[value="aabb"] - input
-      input[value="aabb"] - keyup: b (98)
-      input[value="aabb"] - keydown: c (99)
-      input[value="aabb"] - keypress: c (99)
+      input[value="aabb"] - keyup: b
+      input[value="aabb"] - keydown: c
+      input[value="aabb"] - keypress: c
       input[value="aabbc"] - input
-      input[value="aabbc"] - keydown: c (99)
-      input[value="aabbc"] - keypress: c (99)
+      input[value="aabbc"] - keydown: c
+      input[value="aabbc"] - keypress: c
       input[value="aabbcc"] - input
-      input[value="aabbcc"] - keyup: a (97)
+      input[value="aabbcc"] - keyup: a
     `)
   })
 })

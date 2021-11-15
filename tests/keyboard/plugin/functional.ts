@@ -17,12 +17,12 @@ test('produce extra events for the Control key when AltGraph is pressed', () => 
     input[value=""] - pointermove
     input[value=""] - mousemove
     input[value=""] - pointerdown
-    input[value=""] - mousedown
+    input[value=""] - mousedown: primary
     input[value=""] - focus
     input[value=""] - focusin
     input[value=""] - pointerup
-    input[value=""] - mouseup
-    input[value=""] - click
+    input[value=""] - mouseup: primary
+    input[value=""] - click: primary
     input[value=""] - keydown: Control (17)
     input[value=""] - keydown: AltGraph (0)
     input[value=""] - keyup: AltGraph (0)
@@ -46,12 +46,12 @@ test('backspace to valid value', () => {
     input[value=""] - pointermove
     input[value=""] - mousemove
     input[value=""] - pointerdown
-    input[value=""] - mousedown
+    input[value=""] - mousedown: primary
     input[value=""] - focus
     input[value=""] - focusin
     input[value=""] - pointerup
-    input[value=""] - mouseup
-    input[value=""] - click
+    input[value=""] - mouseup: primary
+    input[value=""] - click: primary
     input[value=""] - keydown: 5 (53)
     input[value=""] - keypress: 5 (53)
     input[value="5"] - input
@@ -93,7 +93,7 @@ test('trigger click event on [Enter] keydown on HTMLAnchorElement', () => {
     a - focusin
     a - keydown: Enter (13)
     a - keypress: Enter (13)
-    a - click: Left (0)
+    a - click: primary
     a - keyup: Enter (13)
   `)
 })
@@ -113,7 +113,7 @@ test('trigger click event on [Enter] keypress on HTMLButtonElement', () => {
     button - focusin
     button - keydown: Enter (13)
     button - keypress: Enter (13)
-    button - click: Left (0)
+    button - click: primary
     button - keyup: Enter (13)
   `)
 })
@@ -164,7 +164,7 @@ test('trigger click event on [Space] keyup on HTMLButtonElement', () => {
     button - keydown: (32)
     button - keypress: (32)
     button - keyup: (32)
-    button - click: Left (0)
+    button - click: primary
   `)
 })
 
@@ -186,7 +186,7 @@ test('trigger click event on [Space] keyup on HTMLInputElement type=button', () 
     input[value=""] - keydown: (32)
     input[value=""] - keypress: (32)
     input[value=""] - keyup: (32)
-    input[value=""] - click: Left (0)
+    input[value=""] - click: primary
   `)
 })
 
@@ -205,7 +205,7 @@ test('trigger change event on [Space] keyup on HTMLInputElement type=radio', () 
     input[checked=false] - keydown: (32)
     input[checked=false] - keypress: (32)
     input[checked=false] - keyup: (32)
-    input[checked=true] - click: Left (0)
+    input[checked=true] - click: primary
       unchecked -> checked
     input[checked=true] - input
     input[checked=true] - change

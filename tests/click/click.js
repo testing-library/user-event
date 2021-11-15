@@ -14,12 +14,12 @@ test('click in button', () => {
     button - pointermove
     button - mousemove
     button - pointerdown
-    button - mousedown
+    button - mousedown: primary
     button - focus
     button - focusin
     button - pointerup
-    button - mouseup
-    button - click
+    button - mouseup: primary
+    button - click: primary
   `)
 })
 
@@ -49,12 +49,12 @@ test('clicking a checkbox', () => {
     input[checked=false] - pointermove
     input[checked=false] - mousemove
     input[checked=false] - pointerdown
-    input[checked=false] - mousedown
+    input[checked=false] - mousedown: primary
     input[checked=false] - focus
     input[checked=false] - focusin
     input[checked=false] - pointerup
-    input[checked=false] - mouseup
-    input[checked=true] - click
+    input[checked=false] - mouseup: primary
+    input[checked=true] - click: primary
       unchecked -> checked
     input[checked=true] - input
     input[checked=true] - change
@@ -92,12 +92,12 @@ test('clicking a radio button', () => {
     input[checked=false] - pointermove
     input[checked=false] - mousemove
     input[checked=false] - pointerdown
-    input[checked=false] - mousedown
+    input[checked=false] - mousedown: primary
     input[checked=false] - focus
     input[checked=false] - focusin
     input[checked=false] - pointerup
-    input[checked=false] - mouseup
-    input[checked=true] - click
+    input[checked=false] - mouseup: primary
+    input[checked=true] - click: primary
       unchecked -> checked
     input[checked=true] - input
     input[checked=true] - change
@@ -135,10 +135,10 @@ test('should fire the correct events for <div>', () => {
     div - pointermove
     div - mousemove
     div - pointerdown
-    div - mousedown
+    div - mousedown: primary
     div - pointerup
-    div - mouseup
-    div - click
+    div - mouseup: primary
+    div - click: primary
   `)
 })
 
@@ -182,12 +182,12 @@ test('should blur the previous element', () => {
     input[name="b"][value=""] - pointermove
     input[name="b"][value=""] - mousemove
     input[name="b"][value=""] - pointerdown
-    input[name="b"][value=""] - mousedown
+    input[name="b"][value=""] - mousedown: primary
     input[name="a"][value=""] - focusout
     input[name="b"][value=""] - focusin
     input[name="b"][value=""] - pointerup
-    input[name="b"][value=""] - mouseup
-    input[name="b"][value=""] - click
+    input[name="b"][value=""] - mouseup: primary
+    input[name="b"][value=""] - click: primary
   `)
   // focus/blur events don't bubble (but the focusout/focusin do!)
   // we just want to make sure the blur was fired on a
@@ -220,10 +220,10 @@ test('should not blur the previous element when mousedown prevents default', () 
     input[name="b"][value=""] - pointermove
     input[name="b"][value=""] - mousemove
     input[name="b"][value=""] - pointerdown
-    input[name="b"][value=""] - mousedown
+    input[name="b"][value=""] - mousedown: primary
     input[name="b"][value=""] - pointerup
-    input[name="b"][value=""] - mouseup
-    input[name="b"][value=""] - click
+    input[name="b"][value=""] - mouseup: primary
+    input[name="b"][value=""] - click: primary
   `)
   // focus/blur events don't bubble (but the focusout do!)
   // we just want to make sure the blur was fired on a
@@ -290,10 +290,10 @@ test('fires no events when clicking a label with a nested control that is disabl
     label - pointermove
     label - mousemove
     label - pointerdown
-    label - mousedown
+    label - mousedown: primary
     label - pointerup
-    label - mouseup
-    label - click
+    label - mouseup: primary
+    label - click: primary
   `)
 })
 

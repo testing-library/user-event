@@ -1,24 +1,18 @@
 import userEvent from '#src'
 import {setup} from '#testHelpers/utils'
 
-// Note, use the setup function at the bottom of the file...
-// but don't hurt yourself trying to read it 😅
+// This test suite contains a lot of legacy code.
+// A lot of tests performed here could be skipped
+// as the current keyboard implementation merged different previous implementations
+// that needed to be tested seperately.
+// What will be left should be moved into keyboard/plugins.
+// Keeping these for now to demonstrate changes.
+// TODO: clean up this test suite
 
-// keep in mind that we do not handle modifier interactions. This is primarily
-// because modifiers behave differently on different operating systems.
-// For example: {alt}{backspace}{/alt} will remove everything from the current
-// cursor position to the beginning of the word on Mac, but you need to use
-// {ctrl}{backspace}{/ctrl} to do that on Windows. And that doesn't appear to
-// be consistent within an OS either 🙃
-// So we're not going to even try.
-
-// This also means that '{shift}a' will fire an input event with the shiftKey,
-// but will not capitalize "a".
-
-test('{esc} triggers typing the escape character', () => {
+test('{escape} triggers typing the escape character', () => {
   const {element, getEventSnapshot} = setup('<input />')
 
-  userEvent.type(element, '{esc}')
+  userEvent.type(element, '{escape}')
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value=""]
@@ -231,10 +225,10 @@ test('{backspace} on an input type that does not support selection ranges', () =
   expect(element).toHaveValue('yo@example.ca')
 })
 
-test('{alt}a{/alt}', () => {
+test('{alt>}a{/alt}', () => {
   const {element, getEventSnapshot} = setup('<input />')
 
-  userEvent.type(element, '{alt}a{/alt}')
+  userEvent.type(element, '{alt>}a{/alt}')
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value=""]
@@ -259,10 +253,10 @@ test('{alt}a{/alt}', () => {
   `)
 })
 
-test('{meta}a{/meta}', () => {
+test('{meta>}a{/meta}', () => {
   const {element, getEventSnapshot} = setup('<input />')
 
-  userEvent.type(element, '{meta}a{/meta}')
+  userEvent.type(element, '{meta>}a{/meta}')
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value="a"]
@@ -289,10 +283,10 @@ test('{meta}a{/meta}', () => {
   `)
 })
 
-test('{ctrl}a{/ctrl}', () => {
+test('{control>}a{/control}', () => {
   const {element, getEventSnapshot} = setup('<input />')
 
-  userEvent.type(element, '{ctrl}a{/ctrl}')
+  userEvent.type(element, '{control>}a{/control}')
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value=""]
@@ -317,10 +311,10 @@ test('{ctrl}a{/ctrl}', () => {
   `)
 })
 
-test('{shift}a{/shift}', () => {
+test('{shift>}a{/shift}', () => {
   const {element, getEventSnapshot} = setup('<input />')
 
-  userEvent.type(element, '{shift}a{/shift}')
+  userEvent.type(element, '{shift>}a{/shift}')
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value="a"]
@@ -530,10 +524,10 @@ test('{enter} on a button when keypress calls prevent default', () => {
   `)
 })
 
-test('{space} on a button', () => {
+test('[space] on a button', () => {
   const {element, getEventSnapshot} = setup('<button />')
 
-  userEvent.type(element, '{space}')
+  userEvent.type(element, '[space]')
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: button
@@ -558,7 +552,7 @@ test('{space} on a button', () => {
   `)
 })
 
-test(`' ' on a button is the same as '{space}'`, () => {
+test(`' ' on a button is the same as '[space]'`, () => {
   const {element, getEventSnapshot} = setup('<button />')
 
   userEvent.type(element, ' ')
@@ -586,14 +580,14 @@ test(`' ' on a button is the same as '{space}'`, () => {
   `)
 })
 
-test('{space} with preventDefault keydown on button', () => {
+test('[space] with preventDefault keydown on button', () => {
   const {element, getEventSnapshot} = setup('<button />', {
     eventHandlers: {
       keyDown: e => e.preventDefault(),
     },
   })
 
-  userEvent.type(element, '{space}')
+  userEvent.type(element, '[space]')
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: button
@@ -616,14 +610,14 @@ test('{space} with preventDefault keydown on button', () => {
   `)
 })
 
-test('{space} with preventDefault keyup on button', () => {
+test('[space] with preventDefault keyup on button', () => {
   const {element, getEventSnapshot} = setup('<button />', {
     eventHandlers: {
       keyUp: e => e.preventDefault(),
     },
   })
 
-  userEvent.type(element, '{space}')
+  userEvent.type(element, '[space]')
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: button
@@ -647,10 +641,10 @@ test('{space} with preventDefault keyup on button', () => {
   `)
 })
 
-test('{space} on an input', () => {
+test('[space] on an input', () => {
   const {element, getEventSnapshot} = setup(`<input value="" />`)
 
-  userEvent.type(element, '{space}')
+  userEvent.type(element, '[space]')
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value=" "]
@@ -705,12 +699,12 @@ test('{enter} on an input type="color" fires same events as a button', () => {
   `)
 })
 
-test('{space} on an input type="color" fires same events as a button', () => {
+test('[space] on an input type="color" fires same events as a button', () => {
   const {element, getEventSnapshot} = setup(
     `<input value="#ffffff" type="color" />`,
   )
 
-  userEvent.type(element, '{space}')
+  userEvent.type(element, '[space]')
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value="#ffffff"]
@@ -735,7 +729,7 @@ test('{space} on an input type="color" fires same events as a button', () => {
   `)
 })
 
-test(`' ' on input type="color" is the same as '{space}'`, () => {
+test(`' ' on input type="color" is the same as '[space]'`, () => {
   const {element, getEventSnapshot} = setup(
     `<input value="#ffffff" type="color" />`,
   )
@@ -850,10 +844,10 @@ test('{enter} on a textarea when keypress calls prevent default', () => {
   `)
 })
 
-test('{meta}{enter}{/meta} on a button', () => {
+test('{meta>}{enter}{/meta} on a button', () => {
   const {element, getEventSnapshot} = setup('<button />')
 
-  userEvent.type(element, '{meta}{enter}{/meta}')
+  userEvent.type(element, '{meta>}{enter}{/meta}')
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: button
@@ -880,10 +874,10 @@ test('{meta}{enter}{/meta} on a button', () => {
   `)
 })
 
-test('{meta}{alt}{ctrl}a{/ctrl}{/alt}{/meta}', () => {
+test('{meta>}{alt>}{control>}a{/control}{/alt}{/meta}', () => {
   const {element, getEventSnapshot} = setup('<input />')
 
-  userEvent.type(element, '{meta}{alt}{ctrl}a{/ctrl}{/alt}{/meta}')
+  userEvent.type(element, '{meta>}{alt>}{control>}a{/control}{/alt}{/meta}')
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value=""]
@@ -912,10 +906,10 @@ test('{meta}{alt}{ctrl}a{/ctrl}{/alt}{/meta}', () => {
   `)
 })
 
-test('{del} at the start of the input', () => {
+test('{delete} at the start of the input', () => {
   const {element, getEventSnapshot} = setup(`<input value="hello" />`)
 
-  userEvent.type(element, '{del}', {
+  userEvent.type(element, '{delete}', {
     initialSelectionStart: 0,
     initialSelectionEnd: 0,
   })
@@ -947,10 +941,10 @@ test('{del} at the start of the input', () => {
   `)
 })
 
-test('{del} at end of the input', () => {
+test('{delete} at end of the input', () => {
   const {element, getEventSnapshot} = setup(`<input value="hello" />`)
 
-  userEvent.type(element, '{del}')
+  userEvent.type(element, '{delete}')
 
   expect(element.selectionStart).toBe(element.value.length)
   expect(element.selectionEnd).toBe(element.value.length)
@@ -976,10 +970,10 @@ test('{del} at end of the input', () => {
   `)
 })
 
-test('{del} in the middle of the input', () => {
+test('{delete} in the middle of the input', () => {
   const {element, getEventSnapshot} = setup(`<input value="hello" />`)
 
-  userEvent.type(element, '{del}', {
+  userEvent.type(element, '{delete}', {
     initialSelectionStart: 2,
     initialSelectionEnd: 2,
   })
@@ -1011,10 +1005,10 @@ test('{del} in the middle of the input', () => {
   `)
 })
 
-test('{del} with a selection range', () => {
+test('{delete} with a selection range', () => {
   const {element, getEventSnapshot} = setup(`<input value="hello" />`)
 
-  userEvent.type(element, '{del}', {
+  userEvent.type(element, '{delete}', {
     initialSelectionStart: 1,
     initialSelectionEnd: 3,
   })
@@ -1049,20 +1043,20 @@ test('{del} with a selection range', () => {
 // TODO: eventually we'll want to support this, but currently we cannot
 // because selection ranges are (intentially) unsupported in certain input types
 // per the spec.
-test('{del} on an input that does not support selection range does not change the value', () => {
+test('{delete} on an input that does not support selection range does not change the value', () => {
   const {element, eventWasFired} = setup(`<input type="email" value="a@b.c" />`)
 
-  userEvent.type(element, '{del}')
+  userEvent.type(element, '{delete}')
   expect(element).toHaveValue('a@b.c')
   expect(eventWasFired('input')).not.toBe(true)
 })
 
-test('{del} does not delete if keydown is prevented', () => {
+test('{delete} does not delete if keydown is prevented', () => {
   const {element, eventWasFired} = setup(`<input value="hello" />`, {
     eventHandlers: {keyDown: e => e.preventDefault()},
   })
 
-  userEvent.type(element, '{del}', {
+  userEvent.type(element, '{delete}', {
     initialSelectionStart: 2,
     initialSelectionEnd: 2,
   })
@@ -1075,7 +1069,7 @@ test('{del} does not delete if keydown is prevented', () => {
 test('any remaining type modifiers are automatically released at the end', () => {
   const {element, getEventSnapshot} = setup('<input />')
 
-  userEvent.type(element, '{meta}{alt}{ctrl}a{/alt}')
+  userEvent.type(element, '{meta>}{alt>}{control>}a{/alt}')
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value=""]
@@ -1107,7 +1101,7 @@ test('any remaining type modifiers are automatically released at the end', () =>
 test('modifiers will not be closed if skipAutoClose is enabled', () => {
   const {element, getEventSnapshot} = setup('<input />')
 
-  userEvent.type(element, '{meta}a', {skipAutoClose: true})
+  userEvent.type(element, '{meta>}a', {skipAutoClose: true})
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value="a"]

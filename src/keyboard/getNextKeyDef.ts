@@ -1,20 +1,6 @@
 import {readNextDescriptor} from '../utils'
 import {keyboardKey, keyboardOptions} from './types'
 
-enum legacyModifiers {
-  'alt' = 'alt',
-  'ctrl' = 'ctrl',
-  'meta' = 'meta',
-  'shift' = 'shift',
-}
-
-enum legacyKeyMap {
-  ctrl = 'Control',
-  del = 'Delete',
-  esc = 'Escape',
-  space = ' ',
-}
-
 /**
  * Get the next key from keyMap
  *
@@ -24,7 +10,6 @@ enum legacyKeyMap {
  * Keeping the key pressed can be written as `{key>}`.
  * When keeping the key pressed you can choose how long (how many keydown and keypress) the key is pressed `{key>3}`.
  * You can then release the key per `{key>3/}` or keep it pressed and continue with the next key.
- * Modifiers like `{shift}` imply being kept pressed. This can be turned of per `{shift/}`.
  */
 export function getNextKeyDef(
   text: string,
@@ -41,9 +26,7 @@ export function getNextKeyDef(
     descriptor,
     consumedLength,
     releasePrevious,
-    releaseSelf = !(
-      type === '{' && getEnumValue(legacyModifiers, descriptor.toLowerCase())
-    ),
+    releaseSelf = true,
     repeat,
   } = readNextDescriptor(text)
 
@@ -51,8 +34,7 @@ export function getNextKeyDef(
     if (type === '[') {
       return def.code?.toLowerCase() === descriptor.toLowerCase()
     } else if (type === '{') {
-      const key = mapLegacyKey(descriptor)
-      return def.key?.toLowerCase() === key.toLowerCase()
+      return def.key?.toLowerCase() === descriptor.toLowerCase()
     }
     return def.key === descriptor
   }) ?? {
@@ -68,12 +50,4 @@ export function getNextKeyDef(
     releaseSelf,
     repeat,
   }
-}
-
-function getEnumValue<T>(f: Record<string, T>, key: string): T | undefined {
-  return f[key]
-}
-
-function mapLegacyKey(descriptor: string) {
-  return getEnumValue(legacyKeyMap, descriptor) ?? descriptor
 }

@@ -16,12 +16,12 @@ test('types text in input', () => {
     input[value=""] - pointermove
     input[value=""] - mousemove
     input[value=""] - pointerdown
-    input[value=""] - mousedown
+    input[value=""] - mousedown: primary
     input[value=""] - focus
     input[value=""] - focusin
     input[value=""] - pointerup
-    input[value=""] - mouseup
-    input[value=""] - click
+    input[value=""] - mouseup: primary
+    input[value=""] - click: primary
     input[value=""] - keydown: S (83)
     input[value=""] - keypress: S (83)
     input[value="S"] - input
@@ -77,12 +77,12 @@ test('types text inside custom element', () => {
     input[value=""] - pointermove
     input[value=""] - mousemove
     input[value=""] - pointerdown
-    input[value=""] - mousedown
+    input[value=""] - mousedown: primary
     input[value=""] - focus
     input[value=""] - focusin
     input[value=""] - pointerup
-    input[value=""] - mouseup
-    input[value=""] - click
+    input[value=""] - mouseup: primary
+    input[value=""] - click: primary
     input[value=""] - keydown: S (83)
     input[value=""] - keypress: S (83)
     input[value="S"] - input
@@ -111,12 +111,12 @@ test('types text in textarea', () => {
     textarea[value=""] - pointermove
     textarea[value=""] - mousemove
     textarea[value=""] - pointerdown
-    textarea[value=""] - mousedown
+    textarea[value=""] - mousedown: primary
     textarea[value=""] - focus
     textarea[value=""] - focusin
     textarea[value=""] - pointerup
-    textarea[value=""] - mouseup
-    textarea[value=""] - click
+    textarea[value=""] - mouseup: primary
+    textarea[value=""] - click: primary
     textarea[value=""] - keydown: S (83)
     textarea[value=""] - keypress: S (83)
     textarea[value="S"] - input
@@ -148,12 +148,12 @@ test('does not fire input event when keypress calls prevent default', () => {
     input[value=""] - pointermove
     input[value=""] - mousemove
     input[value=""] - pointerdown
-    input[value=""] - mousedown
+    input[value=""] - mousedown: primary
     input[value=""] - focus
     input[value=""] - focusin
     input[value=""] - pointerup
-    input[value=""] - mouseup
-    input[value=""] - click
+    input[value=""] - mouseup: primary
+    input[value=""] - click: primary
     input[value=""] - keydown: a (97)
     input[value=""] - keypress: a (97)
     input[value=""] - keyup: a (97)
@@ -176,12 +176,12 @@ test('does not fire keypress or input events when keydown calls prevent default'
     input[value=""] - pointermove
     input[value=""] - mousemove
     input[value=""] - pointerdown
-    input[value=""] - mousedown
+    input[value=""] - mousedown: primary
     input[value=""] - focus
     input[value=""] - focusin
     input[value=""] - pointerup
-    input[value=""] - mouseup
-    input[value=""] - click
+    input[value=""] - mouseup: primary
+    input[value=""] - click: primary
     input[value=""] - keydown: a (97)
     input[value=""] - keyup: a (97)
   `)
@@ -210,12 +210,12 @@ test('does not fire input when readonly', () => {
     input[value=""] - pointermove
     input[value=""] - mousemove
     input[value=""] - pointerdown
-    input[value=""] - mousedown
+    input[value=""] - mousedown: primary
     input[value=""] - focus
     input[value=""] - focusin
     input[value=""] - pointerup
-    input[value=""] - mouseup
-    input[value=""] - click
+    input[value=""] - mouseup: primary
+    input[value=""] - click: primary
     input[value=""] - keydown: a (97)
     input[value=""] - keypress: a (97)
     input[value=""] - keyup: a (97)
@@ -308,13 +308,13 @@ test('typing in a textarea with existing text', () => {
     textarea[value="Hello, "] - pointermove
     textarea[value="Hello, "] - mousemove
     textarea[value="Hello, "] - pointerdown
-    textarea[value="Hello, "] - mousedown
+    textarea[value="Hello, "] - mousedown: primary
     textarea[value="Hello, "] - focus
     textarea[value="Hello, "] - focusin
     textarea[value="Hello, "] - select
     textarea[value="Hello, "] - pointerup
-    textarea[value="Hello, "] - mouseup
-    textarea[value="Hello, "] - click
+    textarea[value="Hello, "] - mouseup: primary
+    textarea[value="Hello, "] - click: primary
     textarea[value="Hello, "] - keydown: 1 (49)
     textarea[value="Hello, "] - keypress: 1 (49)
     textarea[value="Hello, 1"] - input
@@ -347,13 +347,13 @@ test('accepts an initialSelectionStart and initialSelectionEnd', () => {
     textarea[value="Hello, "] - pointermove
     textarea[value="Hello, "] - mousemove
     textarea[value="Hello, "] - pointerdown
-    textarea[value="Hello, "] - mousedown
+    textarea[value="Hello, "] - mousedown: primary
     textarea[value="Hello, "] - focus
     textarea[value="Hello, "] - focusin
     textarea[value="Hello, "] - select
     textarea[value="Hello, "] - pointerup
-    textarea[value="Hello, "] - mouseup
-    textarea[value="Hello, "] - click
+    textarea[value="Hello, "] - mouseup: primary
+    textarea[value="Hello, "] - click: primary
     textarea[value="Hello, "] - select
     textarea[value="Hello, "] - keydown: 1 (49)
     textarea[value="Hello, "] - keypress: 1 (49)
@@ -392,12 +392,12 @@ test('can type into an input with type `date`', () => {
     input[value=""] - pointermove
     input[value=""] - mousemove
     input[value=""] - pointerdown
-    input[value=""] - mousedown
+    input[value=""] - mousedown: primary
     input[value=""] - focus
     input[value=""] - focusin
     input[value=""] - pointerup
-    input[value=""] - mouseup
-    input[value=""] - click
+    input[value=""] - mouseup: primary
+    input[value=""] - click: primary
     input[value=""] - keydown: 2 (50)
     input[value=""] - keypress: 2 (50)
     input[value=""] - keyup: 2 (50)
@@ -453,12 +453,12 @@ test('can type "-" into number inputs', () => {
     input[value=""] - pointermove
     input[value=""] - mousemove
     input[value=""] - pointerdown
-    input[value=""] - mousedown
+    input[value=""] - mousedown: primary
     input[value=""] - focus
     input[value=""] - focusin
     input[value=""] - pointerup
-    input[value=""] - mouseup
-    input[value=""] - click
+    input[value=""] - mouseup: primary
+    input[value=""] - click: primary
     input[value=""] - keydown: - (45)
     input[value=""] - keypress: - (45)
     input[value=""] - input
@@ -486,12 +486,12 @@ test('can type "." into number inputs', () => {
     input[value=""] - pointermove
     input[value=""] - mousemove
     input[value=""] - pointerdown
-    input[value=""] - mousedown
+    input[value=""] - mousedown: primary
     input[value=""] - focus
     input[value=""] - focusin
     input[value=""] - pointerup
-    input[value=""] - mouseup
-    input[value=""] - click
+    input[value=""] - mouseup: primary
+    input[value=""] - click: primary
     input[value=""] - keydown: 3 (51)
     input[value=""] - keypress: 3 (51)
     input[value="3"] - input
@@ -712,12 +712,12 @@ test('should type inside a contenteditable div', () => {
     div - pointermove
     div - mousemove
     div - pointerdown
-    div - mousedown
+    div - mousedown: primary
     div - focus
     div - focusin
     div - pointerup
-    div - mouseup
-    div - click
+    div - mouseup: primary
+    div - click: primary
     div - keydown: b (98)
     div - keypress: b (98)
     div - input
@@ -749,10 +749,10 @@ test('should not type inside a contenteditable=false div', () => {
     div - pointermove
     div - mousemove
     div - pointerdown
-    div - mousedown
+    div - mousedown: primary
     div - pointerup
-    div - mouseup
-    div - click
+    div - mouseup: primary
+    div - click: primary
   `)
 })
 
@@ -769,12 +769,12 @@ test('navigation key: {arrowleft} and {arrowright} moves the cursor for <input>'
     input[value=""] - pointermove
     input[value=""] - mousemove
     input[value=""] - pointerdown
-    input[value=""] - mousedown
+    input[value=""] - mousedown: primary
     input[value=""] - focus
     input[value=""] - focusin
     input[value=""] - pointerup
-    input[value=""] - mouseup
-    input[value=""] - click
+    input[value=""] - mouseup: primary
+    input[value=""] - click: primary
     input[value=""] - keydown: b (98)
     input[value=""] - keypress: b (98)
     input[value="b"] - input
@@ -810,12 +810,12 @@ test('navigation key: {arrowleft} and {arrowright} moves the cursor for <textare
     textarea[value=""] - pointermove
     textarea[value=""] - mousemove
     textarea[value=""] - pointerdown
-    textarea[value=""] - mousedown
+    textarea[value=""] - mousedown: primary
     textarea[value=""] - focus
     textarea[value=""] - focusin
     textarea[value=""] - pointerup
-    textarea[value=""] - mouseup
-    textarea[value=""] - click
+    textarea[value=""] - mouseup: primary
+    textarea[value=""] - click: primary
     textarea[value=""] - keydown: b (98)
     textarea[value=""] - keypress: b (98)
     textarea[value="b"] - input
@@ -851,12 +851,12 @@ test('navigation key: {home} and {end} moves the cursor', () => {
     input[value=""] - pointermove
     input[value=""] - mousemove
     input[value=""] - pointerdown
-    input[value=""] - mousedown
+    input[value=""] - mousedown: primary
     input[value=""] - focus
     input[value=""] - focusin
     input[value=""] - pointerup
-    input[value=""] - mouseup
-    input[value=""] - click
+    input[value=""] - mouseup: primary
+    input[value=""] - click: primary
     input[value=""] - keydown: c (99)
     input[value=""] - keypress: c (99)
     input[value="c"] - input
@@ -897,12 +897,12 @@ test('navigation key: {pageUp} and {pageDown} moves the cursor for <input>', () 
     input[value=""] - pointermove
     input[value=""] - mousemove
     input[value=""] - pointerdown
-    input[value=""] - mousedown
+    input[value=""] - mousedown: primary
     input[value=""] - focus
     input[value=""] - focusin
     input[value=""] - pointerup
-    input[value=""] - mouseup
-    input[value=""] - click
+    input[value=""] - mouseup: primary
+    input[value=""] - click: primary
     input[value=""] - keydown: c (99)
     input[value=""] - keypress: c (99)
     input[value="c"] - input
@@ -943,12 +943,12 @@ test('can type into an input with type `time`', () => {
     input[value=""] - pointermove
     input[value=""] - mousemove
     input[value=""] - pointerdown
-    input[value=""] - mousedown
+    input[value=""] - mousedown: primary
     input[value=""] - focus
     input[value=""] - focusin
     input[value=""] - pointerup
-    input[value=""] - mouseup
-    input[value=""] - click
+    input[value=""] - mouseup: primary
+    input[value=""] - click: primary
     input[value=""] - keydown: 0 (48)
     input[value=""] - keypress: 0 (48)
     input[value=""] - keyup: 0 (48)
@@ -985,12 +985,12 @@ test('can type into an input with type `time` without ":"', () => {
     input[value=""] - pointermove
     input[value=""] - mousemove
     input[value=""] - pointerdown
-    input[value=""] - mousedown
+    input[value=""] - mousedown: primary
     input[value=""] - focus
     input[value=""] - focusin
     input[value=""] - pointerup
-    input[value=""] - mouseup
-    input[value=""] - click
+    input[value=""] - mouseup: primary
+    input[value=""] - click: primary
     input[value=""] - keydown: 0 (48)
     input[value=""] - keypress: 0 (48)
     input[value=""] - keyup: 0 (48)
@@ -1025,12 +1025,12 @@ test('can type more a number higher than 60 minutes into an input `time` and the
     input[value=""] - pointermove
     input[value=""] - mousemove
     input[value=""] - pointerdown
-    input[value=""] - mousedown
+    input[value=""] - mousedown: primary
     input[value=""] - focus
     input[value=""] - focusin
     input[value=""] - pointerup
-    input[value=""] - mouseup
-    input[value=""] - click
+    input[value=""] - mouseup: primary
+    input[value=""] - click: primary
     input[value=""] - keydown: 2 (50)
     input[value=""] - keypress: 2 (50)
     input[value=""] - keyup: 2 (50)
@@ -1069,12 +1069,12 @@ test('can type letters into an input `time` and they are ignored', () => {
     input[value=""] - pointermove
     input[value=""] - mousemove
     input[value=""] - pointerdown
-    input[value=""] - mousedown
+    input[value=""] - mousedown: primary
     input[value=""] - focus
     input[value=""] - focusin
     input[value=""] - pointerup
-    input[value=""] - mouseup
-    input[value=""] - click
+    input[value=""] - mouseup: primary
+    input[value=""] - click: primary
     input[value=""] - keydown: 1 (49)
     input[value=""] - keypress: 1 (49)
     input[value=""] - keyup: 1 (49)
@@ -1128,12 +1128,12 @@ test('can type a digit bigger in the hours section, bigger than 2 and it shows t
     input[value=""] - pointermove
     input[value=""] - mousemove
     input[value=""] - pointerdown
-    input[value=""] - mousedown
+    input[value=""] - mousedown: primary
     input[value=""] - focus
     input[value=""] - focusin
     input[value=""] - pointerup
-    input[value=""] - mouseup
-    input[value=""] - click
+    input[value=""] - mouseup: primary
+    input[value=""] - click: primary
     input[value=""] - keydown: 9 (57)
     input[value=""] - keypress: 9 (57)
     input[value=""] - keyup: 9 (57)
@@ -1169,12 +1169,12 @@ test('can type two digits in the hours section, equals to 24 and it shows the ho
     input[value=""] - pointermove
     input[value=""] - mousemove
     input[value=""] - pointerdown
-    input[value=""] - mousedown
+    input[value=""] - mousedown: primary
     input[value=""] - focus
     input[value=""] - focusin
     input[value=""] - pointerup
-    input[value=""] - mouseup
-    input[value=""] - click
+    input[value=""] - mouseup: primary
+    input[value=""] - click: primary
     input[value=""] - keydown: 2 (50)
     input[value=""] - keypress: 2 (50)
     input[value=""] - keyup: 2 (50)
@@ -1213,12 +1213,12 @@ test('can type two digits in the hours section, bigger than 24 and less than 30,
     input[value=""] - pointermove
     input[value=""] - mousemove
     input[value=""] - pointerdown
-    input[value=""] - mousedown
+    input[value=""] - mousedown: primary
     input[value=""] - focus
     input[value=""] - focusin
     input[value=""] - pointerup
-    input[value=""] - mouseup
-    input[value=""] - click
+    input[value=""] - mouseup: primary
+    input[value=""] - click: primary
     input[value=""] - keydown: 2 (50)
     input[value=""] - keypress: 2 (50)
     input[value=""] - keyup: 2 (50)
@@ -1258,12 +1258,12 @@ test('{arrowdown} fires keyup/keydown events', () => {
     input[value=""] - pointermove
     input[value=""] - mousemove
     input[value=""] - pointerdown
-    input[value=""] - mousedown
+    input[value=""] - mousedown: primary
     input[value=""] - focus
     input[value=""] - focusin
     input[value=""] - pointerup
-    input[value=""] - mouseup
-    input[value=""] - click
+    input[value=""] - mouseup: primary
+    input[value=""] - click: primary
     input[value=""] - keydown: ArrowDown (40)
     input[value=""] - keyup: ArrowDown (40)
   `)
@@ -1284,12 +1284,12 @@ test('{arrowup} fires keyup/keydown events', () => {
     input[value=""] - pointermove
     input[value=""] - mousemove
     input[value=""] - pointerdown
-    input[value=""] - mousedown
+    input[value=""] - mousedown: primary
     input[value=""] - focus
     input[value=""] - focusin
     input[value=""] - pointerup
-    input[value=""] - mouseup
-    input[value=""] - click
+    input[value=""] - mouseup: primary
+    input[value=""] - click: primary
     input[value=""] - keydown: ArrowUp (38)
     input[value=""] - keyup: ArrowUp (38)
   `)
@@ -1309,7 +1309,7 @@ test('{enter} fires click on links', () => {
     a - focusin
     a - keydown: Enter (13)
     a - keypress: Enter (13)
-    a - click: Left (0)
+    a - click: primary
     a - keyup: Enter (13)
   `)
 })

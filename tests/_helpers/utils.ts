@@ -1,6 +1,6 @@
 /* eslint-disable testing-library/no-node-access */
 import {eventMap} from '@testing-library/dom/dist/event-map'
-import {isElementType} from '#src/utils'
+import {isElementType, MouseButton} from '#src/utils'
 // this is pretty helpful:
 // https://codesandbox.io/s/quizzical-worker-eo909
 
@@ -134,15 +134,22 @@ const eventLabelGetters = {
       .trim()
   },
   MouseEvent(event: MouseEvent) {
-    // https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/button
-    const mouseButtonMap: Record<number, string> = {
-      0: 'Left',
-      1: 'Middle',
-      2: 'Right',
-      3: 'Browser Back',
-      4: 'Browser Forward',
+    if (
+      [
+        'click',
+        'dblclick',
+        'mousedown',
+        'mouseup',
+        'pointerdown',
+        'pointerup',
+      ].includes(event.type)
+    ) {
+      const buttonName = Object.keys(MouseButton).find(
+        k => MouseButton[k as keyof typeof MouseButton] === event.button,
+      )
+      // const buttonName = Object.keys(MouseButton).find(k => MouseButton[k as keyof typeof MouseButton] === event.button)
+      return buttonName ?? `button${event.button}`
     }
-    return `${mouseButtonMap[event.button]} (${event.button})`
   },
 } as const
 

@@ -126,12 +126,7 @@ function setupListbox() {
 
 const eventLabelGetters = {
   KeyboardEvent(event: KeyboardEvent) {
-    return [
-      event.key,
-      typeof event.keyCode === 'undefined' ? null : `(${event.keyCode})`,
-    ]
-      .join(' ')
-      .trim()
+    return [event.key].join(' ').trim()
   },
   MouseEvent(event: MouseEvent) {
     if (

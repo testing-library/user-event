@@ -18,10 +18,10 @@ test('fires events when tabbing between two elements', () => {
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: div
 
-    input#a[value=""] - keydown: Tab (9)
+    input#a[value=""] - keydown: Tab
     input#a[value=""] - focusout
     input#b[value=""] - focusin
-    input#b[value=""] - keyup: Tab (9)
+    input#b[value=""] - keyup: Tab
   `)
   // blur/focus do not bubble
   expect(aListeners.eventWasFired('blur')).toBe(true)
@@ -46,8 +46,8 @@ test('does not change focus if default prevented on keydown', () => {
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: div
 
-    input#a[value=""] - keydown: Tab (9)
-    input#a[value=""] - keyup: Tab (9)
+    input#a[value=""] - keydown: Tab
+    input#a[value=""] - keyup: Tab
   `)
   // blur/focus do not bubble
   expect(aListeners.eventWasFired('blur')).toBe(false)
@@ -71,10 +71,10 @@ test('tabs backward if shift is already pressed', () => {
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: div
 
-    input[value=""] - keydown: Tab (9) {shift}
+    input[value=""] - keydown: Tab {shift}
     input[value=""] - focusout
     input[value=""] - focusin
-    input[value=""] - keyup: Tab (9) {shift}
+    input[value=""] - keyup: Tab {shift}
   `)
 })
 
@@ -95,11 +95,11 @@ test('shift option lifts pressed shift key', () => {
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: div
 
-    input[value=""] - keyup: Shift (16)
-    input[value=""] - keydown: Tab (9)
+    input[value=""] - keyup: Shift
+    input[value=""] - keydown: Tab
     input[value=""] - focusout
     input[value=""] - focusin
-    input[value=""] - keyup: Tab (9)
+    input[value=""] - keyup: Tab
   `)
 })
 
@@ -120,13 +120,13 @@ test('shift option presses shift key', () => {
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: div
 
-    input[value=""] - keyup: Shift (16)
-    input[value=""] - keydown: Shift (16) {shift}
-    input[value=""] - keydown: Tab (9) {shift}
+    input[value=""] - keyup: Shift
+    input[value=""] - keydown: Shift {shift}
+    input[value=""] - keydown: Tab {shift}
     input[value=""] - focusout
     input[value=""] - focusin
-    input[value=""] - keyup: Tab (9) {shift}
-    input[value=""] - keyup: Shift (16)
+    input[value=""] - keyup: Tab {shift}
+    input[value=""] - keyup: Shift
   `)
 })
 
@@ -146,12 +146,12 @@ test('fires correct events with shift key', () => {
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: div
 
-    input#b[value=""] - keydown: Shift (16) {shift}
-    input#b[value=""] - keydown: Tab (9) {shift}
+    input#b[value=""] - keydown: Shift {shift}
+    input#b[value=""] - keydown: Tab {shift}
     input#b[value=""] - focusout
     input#a[value=""] - focusin
-    input#a[value=""] - keyup: Tab (9) {shift}
-    input#a[value=""] - keyup: Shift (16)
+    input#a[value=""] - keyup: Tab {shift}
+    input#a[value=""] - keyup: Shift
   `)
   // blur/focus do not bubble
   expect(aListeners.eventWasFired('focus')).toBe(true)

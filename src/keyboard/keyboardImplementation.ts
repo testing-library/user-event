@@ -21,44 +21,35 @@ export async function keyboardImplementation(
   const {keyDef, consumedLength, releasePrevious, releaseSelf, repeat} =
     state.repeatKey ?? getNextKeyDef(text, options)
 
-  const replace = applyPlugins(
-    plugins.replaceBehavior,
-    keyDef,
-    getCurrentElement(),
-    options,
-    state,
-  )
-  if (!replace) {
-    const pressed = state.pressed.find(p => p.keyDef === keyDef)
+  const pressed = state.pressed.find(p => p.keyDef === keyDef)
 
-    // Release the key automatically if it was pressed before.
-    // Do not release the key on iterations on `state.repeatKey`.
-    if (pressed && !state.repeatKey) {
-      keyup(
-        keyDef,
-        getCurrentElement,
-        options,
-        state,
-        pressed.unpreventedDefault,
-      )
+  // Release the key automatically if it was pressed before.
+  // Do not release the key on iterations on `state.repeatKey`.
+  if (pressed && !state.repeatKey) {
+    keyup(
+      keyDef,
+      getCurrentElement,
+      options,
+      state,
+      pressed.unpreventedDefault,
+    )
+  }
+
+  if (!releasePrevious) {
+    const unpreventedDefault = keydown(
+      keyDef,
+      getCurrentElement,
+      options,
+      state,
+    )
+
+    if (unpreventedDefault && hasKeyPress(keyDef, state)) {
+      keypress(keyDef, getCurrentElement, options, state)
     }
 
-    if (!releasePrevious) {
-      const unpreventedDefault = keydown(
-        keyDef,
-        getCurrentElement,
-        options,
-        state,
-      )
-
-      if (unpreventedDefault && hasKeyPress(keyDef, state)) {
-        keypress(keyDef, getCurrentElement, options, state)
-      }
-
-      // Release the key only on the last iteration on `state.repeatKey`.
-      if (releaseSelf && repeat <= 1) {
-        keyup(keyDef, getCurrentElement, options, state, unpreventedDefault)
-      }
+    // Release the key only on the last iteration on `state.repeatKey`.
+    if (releaseSelf && repeat <= 1) {
+      keyup(keyDef, getCurrentElement, options, state, unpreventedDefault)
     }
   }
 

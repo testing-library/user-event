@@ -1,4 +1,3 @@
-import {specialCharMap} from './keyboard'
 import {userEventApis, UserEventApis, setup, UserEvent} from './setup'
 
 const userEvent: UserEventApis & {
@@ -19,5 +18,4 @@ const userEvent: UserEventApis & {
 
 export default userEvent
 
-export {specialCharMap as specialChars}
 export type {keyboardKey} from './keyboard'

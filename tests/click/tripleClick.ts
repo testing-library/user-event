@@ -27,26 +27,26 @@ test('select input per triple click', () => {
     input[value="foo bar"] - pointermove
     input[value="foo bar"] - mousemove
     input[value="foo bar"] - pointerdown
-    input[value="foo bar"] - mousedown
+    input[value="foo bar"] - mousedown: primary
     input[value="foo bar"] - focus
     input[value="foo bar"] - focusin
     input[value="foo bar"] - select
     input[value="foo bar"] - pointerup
-    input[value="foo bar"] - mouseup
-    input[value="foo bar"] - click
+    input[value="foo bar"] - mouseup: primary
+    input[value="foo bar"] - click: primary
     input[value="foo bar"] - pointerdown
-    input[value="foo bar"] - mousedown
+    input[value="foo bar"] - mousedown: primary
     input[value="foo bar"] - select
     input[value="foo bar"] - pointerup
-    input[value="foo bar"] - mouseup
-    input[value="foo bar"] - click
-    input[value="foo bar"] - dblclick
+    input[value="foo bar"] - mouseup: primary
+    input[value="foo bar"] - click: primary
+    input[value="foo bar"] - dblclick: primary
     input[value="foo bar"] - pointerdown
-    input[value="foo bar"] - mousedown
+    input[value="foo bar"] - mousedown: primary
     input[value="foo bar"] - select
     input[value="foo bar"] - pointerup
-    input[value="foo bar"] - mouseup
-    input[value="foo bar"] - click
+    input[value="foo bar"] - mouseup: primary
+    input[value="foo bar"] - click: primary
   `)
 })
 

@@ -32,6 +32,5 @@ export * from './misc/wait'
 export * from './misc/hasPointerEvents'
 export * from './misc/hasFormSubmit'
 
-export * from './pointer/fakeEvent'
 export * from './pointer/firePointerEvents'
 export * from './pointer/mouseButtons'

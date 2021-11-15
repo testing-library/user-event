@@ -18,7 +18,7 @@ test('double click', () => {
     pointerup - pointerId=1; pointerType=mouse; isPrimary=true
     mouseup - button=0; buttons=0; detail=2
     click - button=0; buttons=0; detail=2
-    dblclick
+    dblclick - button=0; buttons=0; detail=2
   `)
 })
 
@@ -172,7 +172,7 @@ test('other keys reset click counter, but keyup/click still uses the old count',
     pointerup - pointerId=1; pointerType=mouse; isPrimary=true
     mouseup - button=0; buttons=0; detail=2
     click - button=0; buttons=0; detail=2
-    dblclick
+    dblclick - button=0; buttons=0; detail=2
     pointerdown - pointerId=1; pointerType=mouse; isPrimary=true
     mousedown - button=0; buttons=1; detail=1
     pointerup - pointerId=1; pointerType=mouse; isPrimary=true
@@ -230,7 +230,7 @@ test('double click per touch device', () => {
     mousedown - button=0; buttons=0; detail=2
     mouseup - button=0; buttons=0; detail=2
     click - button=0; buttons=0; detail=2
-    dblclick
+    dblclick - button=0; buttons=0; detail=2
   `)
 })
 
@@ -314,9 +314,9 @@ test('move touch over elements', () => {
     div - mouseover
     div - mouseenter
     div - mousemove
-    div - mousedown
-    div - mouseup
-    div - click
+    div - mousedown: primary
+    div - mouseup: primary
+    div - click: primary
   `)
 })
 

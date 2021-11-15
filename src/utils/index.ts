@@ -2,7 +2,7 @@ export * from './click/isClickableInput'
 
 export * from './edit/buildTimeValue'
 export * from './edit/calculateNewValue'
-export * from './edit/fireInputEvent'
+export * from './edit/editInputElement'
 export * from './edit/getValue'
 export * from './edit/isContentEditable'
 export * from './edit/isEditable'

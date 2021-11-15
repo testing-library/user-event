@@ -8,7 +8,7 @@ import {behaviorPlugin} from '../types'
 import {
   buildTimeValue,
   calculateNewValue,
-  fireInputEvent,
+  editInputElement,
   getInputRange,
   getSpaceUntilMaxLength,
   getValue,
@@ -50,7 +50,7 @@ export const keypressBehavior: behaviorPlugin[] = [
       // this check was provided by fireInputEventIfNeeded
       // TODO: verify if it is even needed by this handler
       if (prevValue !== newValue) {
-        fireInputEvent(element as HTMLInputElement, {
+        editInputElement(element as HTMLInputElement, {
           newValue,
           newSelection: {
             node: element,
@@ -98,7 +98,7 @@ export const keypressBehavior: behaviorPlugin[] = [
       // this check was provided by fireInputEventIfNeeded
       // TODO: verify if it is even needed by this handler
       if (prevValue !== newValue) {
-        fireInputEvent(element as HTMLInputElement, {
+        editInputElement(element as HTMLInputElement, {
           newValue,
           newSelection: {
             node: element,
@@ -129,10 +129,11 @@ export const keypressBehavior: behaviorPlugin[] = [
         return
       }
 
-      const {newValue, commit} = prepareInput(
+      const {getNewValue, commit} = prepareInput(
         keyDef.key as string,
         element,
       ) as NonNullable<ReturnType<typeof prepareInput>>
+      const newValue = (getNewValue as () => string)()
 
       // the browser allows some invalid input but not others
       // it allows up to two '-' at any place before any 'e' or one directly following 'e'

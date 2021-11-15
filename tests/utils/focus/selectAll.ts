@@ -1,9 +1,11 @@
 import {setup} from '#testHelpers/utils'
-import {selectAll} from '#src/utils/focus/selectAll'
+import {isAllSelected, selectAll} from '#src/utils/focus/selectAll'
 import {getUISelection} from '#src/document'
 
 test('select all in input', () => {
   const {element} = setup<HTMLInputElement>(`<input value="foo bar baz"/>`)
+
+  expect(isAllSelected(element)).toBe(false)
 
   selectAll(element)
 
@@ -11,6 +13,8 @@ test('select all in input', () => {
   expect(getUISelection(element)).toHaveProperty('endOffset', 11)
   expect(element).toHaveProperty('selectionStart', 0)
   expect(element).toHaveProperty('selectionEnd', 11)
+
+  expect(isAllSelected(element)).toBe(true)
 })
 
 test('select all in textarea', () => {
@@ -18,12 +22,16 @@ test('select all in textarea', () => {
     `<textarea>foo\nbar\nbaz</textarea>`,
   )
 
+  expect(isAllSelected(element)).toBe(false)
+
   selectAll(element)
 
   expect(getUISelection(element)).toHaveProperty('startOffset', 0)
   expect(getUISelection(element)).toHaveProperty('endOffset', 11)
   expect(element).toHaveProperty('selectionStart', 0)
   expect(element).toHaveProperty('selectionEnd', 11)
+
+  expect(isAllSelected(element)).toBe(true)
 })
 
 test('select all in contenteditable', () => {
@@ -32,6 +40,8 @@ test('select all in contenteditable', () => {
         <div>baz</div>
     `)
 
+  expect(isAllSelected(element)).toBe(false)
+
   selectAll(element)
 
   const selection = document.getSelection()
@@ -39,6 +49,8 @@ test('select all in contenteditable', () => {
   expect(selection).toHaveProperty('anchorOffset', 0)
   expect(selection).toHaveProperty('focusNode', element)
   expect(selection).toHaveProperty('focusOffset', 2)
+
+  expect(isAllSelected(element)).toBe(true)
 })
 
 test('select all outside of editable', () => {
@@ -46,6 +58,8 @@ test('select all outside of editable', () => {
         <input type="checkbox"/>
         <div>foo</div>
     `)
+
+  expect(isAllSelected(element)).toBe(false)
 
   selectAll(element)
 
@@ -57,4 +71,6 @@ test('select all outside of editable', () => {
     'focusOffset',
     element.ownerDocument.body.childNodes.length,
   )
+
+  expect(isAllSelected(element)).toBe(true)
 })

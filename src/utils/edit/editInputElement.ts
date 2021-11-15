@@ -1,10 +1,14 @@
 import {fireEvent} from '@testing-library/dom'
 import {setUIValue, startTrackValue, endTrackValue} from '../../document'
-import {isElementType} from '../misc/isElementType'
 import {setSelection} from '../focus/selection'
 
-export function fireInputEvent(
-  element: HTMLElement,
+/**
+ * Change the value of an element as if it was changed as a result of a user input.
+ *
+ * Fires the input event.
+ */
+export function editInputElement(
+  element: HTMLInputElement | HTMLTextAreaElement,
   {
     newValue,
     newSelection,
@@ -20,23 +24,10 @@ export function fireInputEvent(
     }
   },
 ) {
-  const oldValue = (element as HTMLInputElement).value
+  const oldValue = element.value
 
   // apply the changes before firing the input event, so that input handlers can access the altered dom and selection
-  if (isElementType(element, ['input', 'textarea'])) {
-    setUIValue(element, newValue)
-  } else {
-    // The pre-commit hooks keeps changing this
-    // See https://github.com/kentcdodds/kcd-scripts/issues/218
-    /* istanbul ignore else */
-    // eslint-disable-next-line no-lonely-if
-    if (newSelection.node.nodeType === 3) {
-      newSelection.node.textContent = newValue
-    } else {
-      // TODO: properly type guard
-      throw new Error('Invalid Element')
-    }
-  }
+  setUIValue(element, newValue)
   setSelection({
     focusNode: newSelection.node,
     anchorOffset: newSelection.offset,

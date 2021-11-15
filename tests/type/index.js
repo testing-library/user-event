@@ -734,6 +734,37 @@ test('should type inside a contenteditable div', () => {
   expect(element).toHaveTextContent('bar')
 })
 
+test('key event which does not change the contenteditable does not fire input event', () => {
+  const {element, getEventSnapshot, getEvents} = setup(
+    '<div contenteditable>foo</div>',
+  )
+
+  userEvent.type(element, '[Home][Backspace]')
+
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
+    Events fired on: div
+
+    div - pointerover
+    div - pointerenter
+    div - mouseover
+    div - mouseenter
+    div - pointermove
+    div - mousemove
+    div - pointerdown
+    div - mousedown: primary
+    div - focus
+    div - focusin
+    div - pointerup
+    div - mouseup: primary
+    div - click: primary
+    div - keydown: Home (36)
+    div - keyup: Home (36)
+    div - keydown: Backspace (8)
+    div - keyup: Backspace (8)
+  `)
+  expect(getEvents('input')).toHaveLength(0)
+})
+
 test('should not type inside a contenteditable=false div', () => {
   const {element, getEventSnapshot} = setup('<div contenteditable=false></div>')
 

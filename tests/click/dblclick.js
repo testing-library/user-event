@@ -290,6 +290,6 @@ test('throws an error when dblClick element with pointer-events set to none', ()
 
 test('does not throws when clicking element with pointer-events set to none and skipPointerEventsCheck is set', () => {
   const {element, getEvents} = setup(`<div style="pointer-events: none"></div>`)
-  userEvent.dblClick(element, undefined, {skipPointerEventsCheck: true})
+  userEvent.dblClick(element, {skipPointerEventsCheck: true})
   expect(getEvents('click')).toHaveLength(2)
 })

@@ -135,7 +135,7 @@ test('does not throws when hover element with pointer-events set to none and ski
   const {element, getEventSnapshot} = setup(
     `<div style="pointer-events: none"></div>`,
   )
-  userEvent.hover(element, undefined, {skipPointerEventsCheck: true})
+  userEvent.hover(element, {skipPointerEventsCheck: true})
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: div
 

@@ -5,7 +5,6 @@ import {hasPointerEvents, PointerOptions} from './utils'
 export function hover(
   this: UserEvent,
   element: Element,
-  init?: MouseEventInit,
   {skipPointerEventsCheck = false}: PointerOptions = {},
 ) {
   if (!skipPointerEventsCheck && !hasPointerEvents(element)) {
@@ -23,7 +22,6 @@ export function hover(
 export function unhover(
   this: UserEvent,
   element: Element,
-  init?: MouseEventInit,
   {skipPointerEventsCheck = false}: PointerOptions = {},
 ) {
   if (!skipPointerEventsCheck && !hasPointerEvents(element)) {

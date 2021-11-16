@@ -165,7 +165,7 @@ cases<APICase>(
     click: {
       api: 'click',
       elementArg: 0,
-      optionsArg: 2,
+      optionsArg: 1,
       options: {
         skipPointerEventsCheck: true,
       },
@@ -173,7 +173,7 @@ cases<APICase>(
     dblClick: {
       api: 'dblClick',
       elementArg: 0,
-      optionsArg: 2,
+      optionsArg: 1,
       options: {
         skipPointerEventsCheck: true,
       },
@@ -181,7 +181,7 @@ cases<APICase>(
     hover: {
       api: 'hover',
       elementArg: 0,
-      optionsArg: 2,
+      optionsArg: 1,
       options: {
         skipPointerEventsCheck: true,
       },
@@ -189,7 +189,7 @@ cases<APICase>(
     unhover: {
       api: 'unhover',
       elementArg: 0,
-      optionsArg: 2,
+      optionsArg: 1,
       options: {
         skipPointerEventsCheck: true,
       },
@@ -221,7 +221,7 @@ cases<APICase>(
       api: 'selectOptions',
       args: [null, ['foo']],
       elementArg: 0,
-      optionsArg: 3,
+      optionsArg: 2,
       options: {
         skipPointerEventsCheck: true,
       },
@@ -230,7 +230,7 @@ cases<APICase>(
       api: 'deselectOptions',
       args: [null, ['foo']],
       elementArg: 0,
-      optionsArg: 3,
+      optionsArg: 2,
       options: {
         skipPointerEventsCheck: true,
       },

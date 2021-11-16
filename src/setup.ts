@@ -129,22 +129,22 @@ function _setup(
     },
 
     click: (...args: Parameters<typeof click>) => {
-      args[2] = {...pointerDefaults, ...clickDefaults, ...args[2]}
+      args[1] = {...pointerDefaults, ...clickDefaults, ...args[1]}
       return click.call(userEvent, ...args)
     },
 
     dblClick: (...args: Parameters<typeof dblClick>) => {
-      args[2] = {...pointerDefaults, ...clickDefaults, ...args[2]}
+      args[1] = {...pointerDefaults, ...clickDefaults, ...args[1]}
       return dblClick.call(userEvent, ...args)
     },
 
     deselectOptions: (...args: Parameters<typeof deselectOptions>) => {
-      args[3] = {...pointerDefaults, ...args[3]}
+      args[2] = {...pointerDefaults, ...args[2]}
       return deselectOptions.call(userEvent, ...args)
     },
 
     hover: (...args: Parameters<typeof hover>) => {
-      args[2] = {...pointerDefaults, ...args[2]}
+      args[1] = {...pointerDefaults, ...args[1]}
       return hover.call(userEvent, ...args)
     },
 
@@ -171,7 +171,7 @@ function _setup(
     }) as typeof pointer,
 
     selectOptions: (...args: Parameters<typeof selectOptions>) => {
-      args[3] = {...pointerDefaults, ...args[3]}
+      args[2] = {...pointerDefaults, ...args[2]}
       return selectOptions.call(userEvent, ...args)
     },
 
@@ -205,7 +205,7 @@ function _setup(
     }) as typeof type,
 
     unhover: (...args: Parameters<typeof unhover>) => {
-      args[2] = {...pointerDefaults, ...args[2]}
+      args[1] = {...pointerDefaults, ...args[1]}
       return unhover.call(userEvent, ...args)
     },
 

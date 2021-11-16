@@ -3,7 +3,6 @@ import {blur, focus, isDisabled, isElementType} from './utils'
 import type {UserEvent} from './setup'
 
 interface uploadInit {
-  clickInit?: MouseEventInit
   changeInit?: EventInit
 }
 
@@ -29,7 +28,7 @@ export function upload(
   }
   if (isDisabled(element)) return
 
-  this.click(element, init?.clickInit)
+  this.click(element)
 
   const files = (Array.isArray(fileOrFiles) ? fileOrFiles : [fileOrFiles])
     .filter(file => !applyAccept || isAcceptableFile(file, input.accept))

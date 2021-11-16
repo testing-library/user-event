@@ -205,7 +205,7 @@ cases<APICase>(
         keyboardMap: [{key: 'y', code: 'SpecialKey'}],
       },
     },
-    paste: {api: 'paste', args: [null, 'foo'], elementArg: 0},
+    paste: {api: 'paste', args: ['foo']},
     pointer: {
       api: 'pointer',
       args: ['foo'],

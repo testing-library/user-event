@@ -1,84 +1,82 @@
 import {fireEvent} from '@testing-library/dom'
 import type {UserEvent} from './setup'
 import {
+  createDataTransfer,
   getSpaceUntilMaxLength,
-  setSelectionRange,
-  eventWrapper,
-  isDisabled,
-  isElementType,
-  editableInputTypes,
-  getInputRange,
   prepareInput,
+  isEditable,
+  readBlobText,
 } from './utils'
 
-interface pasteOptions {
-  initialSelectionStart?: number
-  initialSelectionEnd?: number
-}
-
-function isSupportedElement(
-  element: HTMLElement,
-): element is
-  | HTMLTextAreaElement
-  | (HTMLInputElement & {type: editableInputTypes}) {
-  return (
-    (isElementType(element, 'input') &&
-      Boolean(editableInputTypes[element.type as editableInputTypes])) ||
-    isElementType(element, 'textarea')
-  )
+export interface pasteOptions {
+  document?: Document
 }
 
 export function paste(
   this: UserEvent,
-  element: HTMLElement,
-  text: string,
-  init?: ClipboardEventInit,
-  {initialSelectionStart, initialSelectionEnd}: pasteOptions = {},
+  clipboardData?: undefined,
+  options?: pasteOptions,
+): Promise<void>
+export function paste(
+  this: UserEvent,
+  clipboardData: DataTransfer | string,
+  options?: pasteOptions,
+): void
+export function paste(
+  this: UserEvent,
+  clipboardData?: DataTransfer | string,
+  options?: pasteOptions,
 ) {
-  // TODO: implement for contenteditable
-  if (!isSupportedElement(element)) {
-    throw new TypeError(
-      `The given ${element.tagName} element is currently unsupported.
-      A PR extending this implementation would be very much welcome at https://github.com/testing-library/user-event`,
+  const doc = options?.document ?? document
+  const target = doc.activeElement ?? /* istanbul ignore next */ doc.body
+
+  const data: DataTransfer | undefined =
+    typeof clipboardData === 'string'
+      ? getClipboardDataFromString(clipboardData)
+      : clipboardData
+
+  return data
+    ? pasteImpl(target, data)
+    : readClipboardDataFromClipboardApi(doc).then(dt => pasteImpl(target, dt))
+}
+
+function pasteImpl(target: Element, clipboardData: DataTransfer) {
+  fireEvent.paste(target, {
+    clipboardData,
+  })
+
+  if (isEditable(target)) {
+    const data = clipboardData
+      .getData('text')
+      .substr(0, getSpaceUntilMaxLength(target))
+
+    if (data) {
+      prepareInput(data, target, 'insertFromPaste')?.commit()
+    }
+  }
+}
+
+function getClipboardDataFromString(text: string) {
+  const dt = createDataTransfer()
+  dt.setData('text', text)
+  return dt
+}
+
+async function readClipboardDataFromClipboardApi(document: Document) {
+  const clipboard = document.defaultView?.navigator.clipboard
+  const items = clipboard && (await clipboard.read())
+
+  if (!items) {
+    throw new Error(
+      '`userEvent.paste() without `clipboardData` requires the `ClipboardAPI` to be available.',
     )
   }
 
-  if (isDisabled(element)) {
-    return
+  const dt = createDataTransfer()
+  for (const item of items) {
+    for (const type of item.types) {
+      dt.setData(type, await item.getType(type).then(b => readBlobText(b)))
+    }
   }
-
-  eventWrapper(() => element.focus())
-
-  // by default, a new element has it's selection start and end at 0
-  // but most of the time when people call "paste", they expect it to paste
-  // at the end of the current input value. So, if the selection start
-  // and end are both the default of 0, then we'll go ahead and change
-  // them to the length of the current value.
-  // the only time it would make sense to pass the initialSelectionStart or
-  // initialSelectionEnd is if you have an input with a value and want to
-  // explicitely start typing with the cursor at 0. Not super common.
-  if (element.selectionStart === 0 && element.selectionEnd === 0) {
-    setSelectionRange(
-      element,
-      initialSelectionStart ?? element.value.length,
-      initialSelectionEnd ?? element.value.length,
-    )
-  }
-
-  fireEvent.paste(element, init)
-
-  if (element.readOnly) {
-    return
-  }
-
-  text = text.substr(0, getSpaceUntilMaxLength(element))
-
-  const inputRange = getInputRange(element)
-
-  /* istanbul ignore if */
-  if (!inputRange) {
-    return
-  }
-
-  prepareInput(text, element, 'insertFromPaste')?.commit()
+  return dt
 }

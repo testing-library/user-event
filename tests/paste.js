@@ -3,9 +3,10 @@ import {setup} from '#testHelpers/utils'
 
 test('should paste text in input', () => {
   const {element, getEventSnapshot} = setup('<input />')
+  element.focus()
 
   const text = 'Hello, world!'
-  userEvent.paste(element, text)
+  userEvent.paste(text)
   expect(element).toHaveValue(text)
   expect(element).toHaveProperty('selectionStart', 13)
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
@@ -20,9 +21,10 @@ test('should paste text in input', () => {
 
 test('should paste text in textarea', () => {
   const {element, getEventSnapshot} = setup('<textarea />')
+  element.focus()
 
   const text = 'Hello, world!'
-  userEvent.paste(element, text)
+  userEvent.paste(text)
   expect(element).toHaveValue(text)
   expect(element).toHaveProperty('selectionStart', 13)
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
@@ -37,8 +39,9 @@ test('should paste text in textarea', () => {
 
 test('does not paste when readOnly', () => {
   const {element, getEventSnapshot} = setup('<input readonly />')
+  element.focus()
 
-  userEvent.paste(element, 'hi')
+  userEvent.paste('hi')
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value=""]
 
@@ -50,8 +53,9 @@ test('does not paste when readOnly', () => {
 
 test('does not paste when disabled', () => {
   const {element, getEventSnapshot} = setup('<input disabled />')
+  element.focus()
 
-  userEvent.paste(element, 'hi')
+  userEvent.paste('hi')
   expect(getEventSnapshot()).toMatchInlineSnapshot(
     `No events were fired on: input[value=""]`,
   )
@@ -66,7 +70,7 @@ test.each(['input', 'textarea'])(
     expect(element).toHaveValue('superlongt')
 
     element.value = ''
-    userEvent.paste(element, 'superlongtext')
+    userEvent.paste('superlongtext')
     expect(element).toHaveValue('superlongt')
   },
 )
@@ -81,7 +85,7 @@ test.each(['input', 'textarea'])(
     expect(element).toHaveValue('superlongt')
 
     element.value = ''
-    userEvent.paste(element, 'superlongtext')
+    userEvent.paste('superlongtext')
     expect(element).toHaveValue('superlongt')
   },
 )
@@ -91,16 +95,42 @@ test('should replace selected text all at once', () => {
 
   const selectionStart = 'hello world'.search('world')
   const selectionEnd = selectionStart + 'world'.length
+  element.focus()
   element.setSelectionRange(selectionStart, selectionEnd)
-  userEvent.paste(element, 'friend')
+  userEvent.paste('friend')
   expect(element).toHaveValue('hello friend')
 })
 
-test('should give error if we are trying to call paste on an invalid element', () => {
-  const {element} = setup('<div  />')
-  expect(() => userEvent.paste(element, "I'm only a div :("))
-    .toThrowErrorMatchingInlineSnapshot(`
-    The given DIV element is currently unsupported.
-          A PR extending this implementation would be very much welcome at https://github.com/testing-library/user-event
-  `)
+describe('paste from clipboard', () => {
+  test('without clipboard API', async () => {
+    const {element, getEvents} = setup(`<input/>`)
+    element.focus()
+
+    await expect(() => userEvent.paste()).rejects.toMatchInlineSnapshot(
+      `[Error: \`userEvent.paste() without \`clipboardData\` requires the \`ClipboardAPI\` to be available.]`,
+    )
+    expect(getEvents('paste')).toHaveLength(0)
+  })
+
+  test('with empty clipboard', async () => {
+    const {element, getEvents} = setup(`<input/>`)
+    element.focus()
+
+    await userEvent.setup().paste()
+    expect(getEvents('paste')).toHaveLength(1)
+    expect(getEvents('input')).toHaveLength(0)
+  })
+
+  test('with text in clipboard', async () => {
+    const {element, getEvents} = setup(`<input/>`)
+    element.focus()
+
+    userEvent.setup()
+
+    element.ownerDocument.defaultView.navigator.clipboard.writeText('foo')
+    await userEvent.paste()
+    expect(getEvents('paste')).toHaveLength(1)
+    expect(getEvents('input')).toHaveLength(1)
+    expect(element).toHaveValue('foo')
+  })
 })

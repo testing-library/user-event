@@ -37,7 +37,6 @@ cases(
     'unimplemented code': {text: '[Foo]', key: 'Unknown', code: 'Foo'},
     key: {text: '{Control}', key: 'Control', code: 'ControlLeft'},
     'unimplemented key': {text: '{Foo}', key: 'Foo', code: 'Unknown'},
-    'legacy modifier': {text: '{ctrl}', key: 'Control', code: 'ControlLeft'},
     'printable character': {text: 'a', key: 'a', code: 'KeyA'},
     'modifiers as printable characters': {text: '/', key: '/', code: 'Unknown'},
     '{ as printable': {text: '{{', key: '{', code: 'Unknown'},
@@ -83,14 +82,6 @@ cases(
     },
     'release after repeatModifier': {
       text: '{Control>2/}',
-      modifiers: {releaseSelf: true},
-    },
-    'no releaseSelf on legacy modifier': {
-      text: '{ctrl}',
-      modifiers: {releaseSelf: false},
-    },
-    'release legacy modifier': {
-      text: '{ctrl/}',
       modifiers: {releaseSelf: true},
     },
   },

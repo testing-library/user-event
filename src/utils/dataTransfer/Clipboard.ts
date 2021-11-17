@@ -173,6 +173,8 @@ export async function writeDataTransferToClipboard(
     clipboard &&
     (await clipboard.write(items).then(
       () => true,
+      // Can happen with other implementations that e.g. require permissions
+      /* istanbul ignore next */
       () => false,
     ))
 

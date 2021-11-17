@@ -4,14 +4,14 @@ import {prepareDocument} from './document'
 import {hover, unhover} from './hover'
 import {createKeyboardState, keyboard, keyboardOptions} from './keyboard'
 import type {keyboardState} from './keyboard/types'
-import {paste} from './paste'
+import {paste, pasteOptions} from './paste'
 import {createPointerState, pointer} from './pointer'
 import type {pointerOptions, pointerState} from './pointer/types'
 import {deselectOptions, selectOptions} from './selectOptions'
 import {tab, tabOptions} from './tab'
 import {type, typeOptions} from './type'
 import {upload, uploadOptions} from './upload'
-import {PointerOptions} from './utils'
+import {PointerOptions, attachClipboardStubToView} from './utils'
 
 export const userEventApis = {
   clear,
@@ -64,7 +64,11 @@ interface SetupOptions
  * All APIs returned by this function share an input device state and a default configuration.
  */
 export function setup(options: SetupOptions = {}) {
-  prepareDocument(options.document ?? document)
+  const doc = options.document ?? document
+  prepareDocument(doc)
+
+  const view = doc.defaultView ?? /* istanbul ignore next */ window
+  attachClipboardStubToView(view)
 
   return _setup(options, {
     keyboardState: createKeyboardState(),
@@ -114,6 +118,9 @@ function _setup(
   const clickDefaults: clickOptions = {
     skipHover,
   }
+  const clipboardDefaults: pasteOptions = {
+    document,
+  }
   const typeDefaults: TypeOptions = {
     delay,
     skipAutoClose,
@@ -157,9 +164,11 @@ function _setup(
       }
     }) as typeof keyboard,
 
-    paste: (...args: Parameters<typeof paste>) => {
+    // paste needs typecasting because of the overloading
+    paste: ((...args: Parameters<typeof paste>) => {
+      args[1] = {...clipboardDefaults, ...args[1]}
       return paste.call(userEvent, ...args)
-    },
+    }) as typeof paste,
 
     // pointer needs typecasting because of the overloading
     pointer: ((...args: Parameters<typeof pointer>) => {

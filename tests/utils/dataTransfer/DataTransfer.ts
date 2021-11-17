@@ -1,4 +1,4 @@
-import {createDataTransfer} from '#src/utils'
+import {createDataTransfer, getBlobFromDataTransferItem} from '#src/utils'
 
 describe('create DataTransfer', () => {
   test('plain string', () => {
@@ -83,4 +83,21 @@ describe('create DataTransfer', () => {
 
     expect(dt.types).toEqual([])
   })
+})
+
+test('get Blob from DataTransfer', () => {
+  const dt = createDataTransfer()
+  dt.items.add('foo', 'text/plain')
+  dt.items.add(new File(['bar'], 'bar.txt', {type: 'text/plain'}))
+
+  expect(getBlobFromDataTransferItem(dt.items[0])).toHaveProperty(
+    'type',
+    'text/plain',
+  )
+  expect(getBlobFromDataTransferItem(dt.items[0])).not.toBeInstanceOf(File)
+  expect(getBlobFromDataTransferItem(dt.items[1])).toHaveProperty(
+    'type',
+    'text/plain',
+  )
+  expect(getBlobFromDataTransferItem(dt.items[1])).toBeInstanceOf(File)
 })

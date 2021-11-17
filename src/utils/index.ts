@@ -17,6 +17,7 @@ export * from './edit/maxLength'
 export * from './edit/prepareInput'
 
 export * from './focus/blur'
+export * from './focus/copySelection'
 export * from './focus/focus'
 export * from './focus/getActiveElement'
 export * from './focus/getTabDestination'

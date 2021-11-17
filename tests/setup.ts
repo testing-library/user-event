@@ -17,9 +17,9 @@ import {setup} from '#testHelpers/utils'
 // List of API modules imported by `setup`
 import '#src/clear'
 import '#src/click'
+import '#src/clipboard'
 import '#src/hover'
 import '#src/keyboard'
-import '#src/paste'
 import '#src/pointer'
 import '#src/selectOptions'
 import '#src/tab'
@@ -73,9 +73,11 @@ jest.mock('#src/clear', () => mockApis('#src/clear', 'clear'))
 jest.mock('#src/click', () =>
   mockApis('#src/click', 'click', 'dblClick', 'tripleClick'),
 )
+jest.mock('#src/clipboard', () =>
+  mockApis('#src/clipboard', 'copy', 'cut', 'paste'),
+)
 jest.mock('#src/hover', () => mockApis('#src/hover', 'hover', 'unhover'))
 jest.mock('#src/keyboard', () => mockApis('#src/keyboard', 'keyboard'))
-jest.mock('#src/paste', () => mockApis('#src/paste', 'paste'))
 jest.mock('#src/pointer', () => mockApis('#src/pointer', 'pointer'))
 jest.mock('#src/selectOptions', () =>
   mockApis('#src/selectOptions', 'selectOptions', 'deselectOptions'),
@@ -170,6 +172,20 @@ cases<APICase>(
         skipPointerEventsCheck: true,
       },
     },
+    copy: {
+      api: 'copy',
+      optionsArg: 0,
+      options: {
+        writeToClipboard: true,
+      },
+    },
+    cut: {
+      api: 'cut',
+      optionsArg: 0,
+      options: {
+        writeToClipboard: true,
+      },
+    },
     dblClick: {
       api: 'dblClick',
       elementArg: 0,
@@ -205,7 +221,11 @@ cases<APICase>(
         keyboardMap: [{key: 'y', code: 'SpecialKey'}],
       },
     },
-    paste: {api: 'paste', args: ['foo']},
+    paste: {
+      api: 'paste',
+      args: ['foo'],
+      optionsArg: 1,
+    },
     pointer: {
       api: 'pointer',
       args: ['foo'],

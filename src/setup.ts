@@ -4,7 +4,14 @@ import {prepareDocument} from './document'
 import {hover, unhover} from './hover'
 import {createKeyboardState, keyboard, keyboardOptions} from './keyboard'
 import type {keyboardState} from './keyboard/types'
-import {paste, pasteOptions} from './paste'
+import {
+  copy,
+  copyOptions,
+  cut,
+  cutOptions,
+  paste,
+  pasteOptions,
+} from './clipboard'
 import {createPointerState, pointer} from './pointer'
 import type {pointerOptions, pointerState} from './pointer/types'
 import {deselectOptions, selectOptions} from './selectOptions'
@@ -16,6 +23,8 @@ import {PointerOptions, attachClipboardStubToView} from './utils'
 export const userEventApis = {
   clear,
   click,
+  copy,
+  cut,
   dblClick,
   deselectOptions,
   hover,
@@ -37,6 +46,8 @@ export type UserEvent = UserEventApis & {
 
 type ClickOptions = Omit<clickOptions, 'clickCount'>
 
+interface ClipboardOptions extends copyOptions, cutOptions, pasteOptions {}
+
 type KeyboardOptions = Partial<keyboardOptions>
 
 type PointerApiOptions = Partial<pointerOptions>
@@ -52,6 +63,7 @@ type UploadOptions = uploadOptions
 
 interface SetupOptions
   extends ClickOptions,
+    ClipboardOptions,
     KeyboardOptions,
     PointerOptions,
     PointerApiOptions,
@@ -88,6 +100,13 @@ function _setup(
     skipClick,
     skipHover,
     skipPointerEventsCheck = false,
+    // Changing default return type from DataTransfer to Promise<DataTransfer>
+    // would require a lot of overloading right now.
+    // The APIs returned by setup will most likely be changed to async before stable release anyway.
+    // See https://github.com/testing-library/user-event/issues/504#issuecomment-944883855
+    // So the default option can be changed during alpha instead of introducing too much code here.
+    // TODO: This should default to true
+    writeToClipboard = false,
   }: SetupOptions,
   {
     keyboardState,
@@ -118,8 +137,9 @@ function _setup(
   const clickDefaults: clickOptions = {
     skipHover,
   }
-  const clipboardDefaults: pasteOptions = {
+  const clipboardDefaults: ClipboardOptions = {
     document,
+    writeToClipboard,
   }
   const typeDefaults: TypeOptions = {
     delay,
@@ -139,6 +159,18 @@ function _setup(
       args[1] = {...pointerDefaults, ...clickDefaults, ...args[1]}
       return click.call(userEvent, ...args)
     },
+
+    // copy needs typecasting because of the overloading
+    copy: ((...args: Parameters<typeof copy>) => {
+      args[0] = {...clipboardDefaults, ...args[0]}
+      return copy.call(userEvent, ...args)
+    }) as typeof copy,
+
+    // cut needs typecasting because of the overloading
+    cut: ((...args: Parameters<typeof cut>) => {
+      args[0] = {...clipboardDefaults, ...args[0]}
+      return cut.call(userEvent, ...args)
+    }) as typeof cut,
 
     dblClick: (...args: Parameters<typeof dblClick>) => {
       args[1] = {...pointerDefaults, ...clickDefaults, ...args[1]}

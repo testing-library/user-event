@@ -1,12 +1,12 @@
 import {fireEvent} from '@testing-library/dom'
-import type {UserEvent} from './setup'
+import type {UserEvent} from '../setup'
 import {
   createDataTransfer,
   getSpaceUntilMaxLength,
   prepareInput,
   isEditable,
-  readBlobText,
-} from './utils'
+  readDataTransferFromClipboard,
+} from '../utils'
 
 export interface pasteOptions {
   document?: Document
@@ -37,7 +37,14 @@ export function paste(
 
   return data
     ? pasteImpl(target, data)
-    : readClipboardDataFromClipboardApi(doc).then(dt => pasteImpl(target, dt))
+    : readDataTransferFromClipboard(doc).then(
+        dt => pasteImpl(target, dt),
+        () => {
+          throw new Error(
+            '`userEvent.paste()` without `clipboardData` requires the `ClipboardAPI` to be available.',
+          )
+        },
+      )
 }
 
 function pasteImpl(target: Element, clipboardData: DataTransfer) {
@@ -59,24 +66,5 @@ function pasteImpl(target: Element, clipboardData: DataTransfer) {
 function getClipboardDataFromString(text: string) {
   const dt = createDataTransfer()
   dt.setData('text', text)
-  return dt
-}
-
-async function readClipboardDataFromClipboardApi(document: Document) {
-  const clipboard = document.defaultView?.navigator.clipboard
-  const items = clipboard && (await clipboard.read())
-
-  if (!items) {
-    throw new Error(
-      '`userEvent.paste()` without `clipboardData` requires the `ClipboardAPI` to be available.',
-    )
-  }
-
-  const dt = createDataTransfer()
-  for (const item of items) {
-    for (const type of item.types) {
-      dt.setData(type, await item.getType(type).then(b => readBlobText(b)))
-    }
-  }
   return dt
 }

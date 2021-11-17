@@ -145,3 +145,14 @@ export function createDataTransfer(files: File[] = []): DataTransfer {
 
   return dt
 }
+
+export function getBlobFromDataTransferItem(item: DataTransferItem) {
+  if (item.kind === 'file') {
+    return item.getAsFile() as File
+  }
+  let data: string = ''
+  item.getAsString(s => {
+    data = s
+  })
+  return new Blob([data], {type: item.type})
+}

@@ -3,6 +3,7 @@
   "compilerOptions": {
     "allowJs": true,
     "esModuleInterop": true,
+    "target": "ES5",
     "baseUrl": ".",
     "paths": {
       "#src": ["./src/index"],

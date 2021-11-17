@@ -1,6 +1,6 @@
 // Clipboard is not available in jsdom
 
-import {readBlobText} from '..'
+import {createDataTransfer, getBlobFromDataTransferItem, readBlobText} from '..'
 
 // Clipboard API is only fully available in secure context or for browser extensions.
 
@@ -136,6 +136,48 @@ export function detachClipboardStubFromView(
 ) {
   if (window.navigator.clipboard instanceof ClipboardStub) {
     window.navigator.clipboard[ClipboardStubControl].detachClipboardStub()
+  }
+}
+
+export async function readDataTransferFromClipboard(document: Document) {
+  const clipboard = document.defaultView?.navigator.clipboard
+  const items = clipboard && (await clipboard.read())
+
+  if (!items) {
+    throw new Error('The Clipboard API is unavailable.')
+  }
+
+  const dt = createDataTransfer()
+  for (const item of items) {
+    for (const type of item.types) {
+      dt.setData(type, await item.getType(type).then(b => readBlobText(b)))
+    }
+  }
+  return dt
+}
+
+export async function writeDataTransferToClipboard(
+  document: Document,
+  clipboardData: DataTransfer,
+) {
+  const clipboard = document.defaultView?.navigator.clipboard
+
+  const items = []
+  for (let i = 0; i < clipboardData.items.length; i++) {
+    const dtItem = clipboardData.items[i]
+    const blob = getBlobFromDataTransferItem(dtItem)
+    items.push(createClipboardItem(blob))
+  }
+
+  const written =
+    clipboard &&
+    (await clipboard.write(items).then(
+      () => true,
+      () => false,
+    ))
+
+  if (!written) {
+    throw new Error('The Clipboard API is unavailable.')
   }
 }
 

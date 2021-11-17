@@ -68,7 +68,7 @@ async function readClipboardDataFromClipboardApi(document: Document) {
 
   if (!items) {
     throw new Error(
-      '`userEvent.paste() without `clipboardData` requires the `ClipboardAPI` to be available.',
+      '`userEvent.paste()` without `clipboardData` requires the `ClipboardAPI` to be available.',
     )
   }
 

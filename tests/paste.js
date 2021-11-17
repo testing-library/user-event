@@ -107,7 +107,7 @@ describe('paste from clipboard', () => {
     element.focus()
 
     await expect(() => userEvent.paste()).rejects.toMatchInlineSnapshot(
-      `[Error: \`userEvent.paste() without \`clipboardData\` requires the \`ClipboardAPI\` to be available.]`,
+      `[Error: \`userEvent.paste()\` without \`clipboardData\` requires the \`ClipboardAPI\` to be available.]`,
     )
     expect(getEvents('paste')).toHaveLength(0)
   })

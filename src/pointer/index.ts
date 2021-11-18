@@ -1,68 +1,31 @@
-import {getConfig as getDOMTestingLibraryConfig} from '@testing-library/dom'
-import {createKeyboardState} from '../keyboard'
+import {Config, UserEvent} from '../setup'
 import {parseKeyDef} from './parseKeyDef'
-import {defaultKeyMap} from './keyMap'
 import {
   pointerAction,
   PointerAction,
   PointerActionTarget,
 } from './pointerAction'
-import type {inputDeviceState, pointerOptions, pointerState} from './types'
+import type {pointerOptions, pointerState, pointerKey} from './types'
 
-export function pointer(
-  input: PointerInput,
-  options?: Partial<pointerOptions & {delay: 0} & inputDeviceState>,
-): pointerState
-export function pointer(
-  input: PointerInput,
-  options: Partial<pointerOptions & {delay: number} & inputDeviceState>,
-): Promise<pointerState>
-export function pointer(
-  input: PointerInput,
-  options: Partial<pointerOptions & inputDeviceState> = {},
-) {
-  const {promise, pointerState} = pointerImplementationWrapper(input, options)
-
-  if ((options.delay ?? 0) > 0) {
-    return getDOMTestingLibraryConfig().asyncWrapper(() =>
-      promise.then(() => pointerState),
-    )
-  } else {
-    // prevent users from dealing with UnhandledPromiseRejectionWarning in sync call
-    promise.catch(console.error)
-
-    return pointerState
-  }
-}
+export type {pointerOptions, pointerState, pointerKey}
 
 type PointerActionInput =
   | string
   | ({keys: string} & PointerActionTarget)
   | PointerAction
-type PointerInput = PointerActionInput | Array<PointerActionInput>
+export type PointerInput = PointerActionInput | Array<PointerActionInput>
 
-export function pointerImplementationWrapper(
+export async function pointer(
+  this: UserEvent,
   input: PointerInput,
-  config: Partial<pointerOptions & inputDeviceState>,
-) {
-  const {
-    pointerState = createPointerState(),
-    keyboardState = createKeyboardState(),
-    delay = 0,
-    pointerMap = defaultKeyMap,
-  } = config
-  const options = {
-    delay,
-    pointerMap,
-  }
-
+): Promise<void> {
   const actions: PointerAction[] = []
   ;(Array.isArray(input) ? input : [input]).forEach(actionInput => {
     if (typeof actionInput === 'string') {
-      actions.push(...parseKeyDef(actionInput, options))
+      actions.push(...parseKeyDef(actionInput, this[Config]))
     } else if ('keys' in actionInput) {
       actions.push(
-        ...parseKeyDef(actionInput.keys, options).map(i => ({
+        ...parseKeyDef(actionInput.keys, this[Config]).map(i => ({
           ...actionInput,
           ...i,
         })),
@@ -72,19 +35,19 @@ export function pointerImplementationWrapper(
     }
   })
 
-  return {
-    promise: pointerAction(actions, options, {pointerState, keyboardState}),
-    pointerState,
-  }
+  return pointerAction(actions, this[Config], this[Config]).then(
+    () => undefined,
+  )
 }
 
-export function createPointerState(): pointerState {
+export function createPointerState(document: Document): pointerState {
   return {
     pointerId: 1,
     position: {
       mouse: {
         pointerType: 'mouse',
         pointerId: 1,
+        target: document.body,
         coords: {
           clientX: 0,
           clientY: 0,

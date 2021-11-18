@@ -52,7 +52,7 @@ export type keyboardOptions = {
   /** Document in which to perform the events */
   document: Document
   /** Delay between keystrokes */
-  delay: number
+  delay: number | null
   /** Add modifiers for given keys - not implemented yet */
   autoModify: boolean
   /** Keyboard layout to use */

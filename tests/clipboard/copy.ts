@@ -1,20 +1,20 @@
 import userEvent from '#src'
 import {setup} from '#testHelpers/utils'
 
-test('copy selected value', () => {
+test('copy selected value', async () => {
   const {element, getEvents} = setup<HTMLInputElement>(
     `<input value="foo bar baz"/>`,
   )
   element.focus()
   element.setSelectionRange(4, 7)
 
-  const dt = userEvent.copy()
+  const dt = await userEvent.copy()
 
-  expect(dt.getData('text')).toBe('bar')
+  expect(dt?.getData('text')).toBe('bar')
   expect(getEvents('copy')).toHaveLength(1)
 })
 
-test('copy selected text outside of editable', () => {
+test('copy selected text outside of editable', async () => {
   const {element, getEvents} = setup(`<div tabindex="-1">foo bar baz</div>`)
   element.focus()
   document
@@ -26,13 +26,13 @@ test('copy selected text outside of editable', () => {
       5,
     )
 
-  const dt = userEvent.copy()
+  const dt = await userEvent.copy()
 
-  expect(dt.getData('text')).toBe('oo b')
+  expect(dt?.getData('text')).toBe('oo b')
   expect(getEvents('copy')).toHaveLength(1)
 })
 
-test('copy selected text in contenteditable', () => {
+test('copy selected text in contenteditable', async () => {
   const {element, getEvents} = setup(`<div contenteditable>foo bar baz</div>`)
   element.focus()
   document
@@ -44,9 +44,9 @@ test('copy selected text in contenteditable', () => {
       5,
     )
 
-  const dt = userEvent.copy()
+  const dt = await userEvent.copy()
 
-  expect(dt.getData('text')).toBe('oo b')
+  expect(dt?.getData('text')).toBe('oo b')
   expect(getEvents('copy')).toHaveLength(1)
 })
 
@@ -70,10 +70,10 @@ describe('write to clipboard', () => {
     element.focus()
     element.setSelectionRange(4, 7)
 
-    const dt = userEvent.setup().copy({writeToClipboard: true})
+    const dt = userEvent.setup().copy()
 
     await expect(dt).resolves.toBeTruthy()
-    expect((await dt).getData('text')).toBe('bar')
+    expect((await dt)?.getData('text')).toBe('bar')
 
     await expect(window.navigator.clipboard.readText()).resolves.toBe('bar')
 
@@ -92,10 +92,10 @@ describe('write to clipboard', () => {
         5,
       )
 
-    const dt = userEvent.setup().copy({writeToClipboard: true})
+    const dt = userEvent.setup().copy()
 
     await expect(dt).resolves.toBeTruthy()
-    expect((await dt).getData('text')).toBe('oo b')
+    expect((await dt)?.getData('text')).toBe('oo b')
 
     await expect(window.navigator.clipboard.readText()).resolves.toBe('oo b')
 
@@ -114,10 +114,10 @@ describe('write to clipboard', () => {
         5,
       )
 
-    const dt = userEvent.setup().copy({writeToClipboard: true})
+    const dt = userEvent.setup().copy()
 
     await expect(dt).resolves.toBeTruthy()
-    expect((await dt).getData('text')).toBe('oo b')
+    expect((await dt)?.getData('text')).toBe('oo b')
 
     await expect(window.navigator.clipboard.readText()).resolves.toBe('oo b')
 

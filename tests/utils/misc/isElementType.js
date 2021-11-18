@@ -2,7 +2,7 @@ import {isElementType} from '#src/utils'
 import {setup} from '#testHelpers/utils'
 
 describe('check element type per namespace, tagname and props', () => {
-  test('check in HTML document', () => {
+  test('check in HTML document', async () => {
     const {elements} = setup(`<input readonly="true"/><textarea/>`)
 
     expect(isElementType(elements[0], 'input')).toBe(true)
@@ -14,7 +14,7 @@ describe('check element type per namespace, tagname and props', () => {
     ).toBe(true)
   })
 
-  test('check in XML document', () => {
+  test('check in XML document', async () => {
     // const {element} = setup(`<input readonly="true"/>`)
     const dom = new DOMParser().parseFromString(
       `

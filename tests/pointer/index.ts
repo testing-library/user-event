@@ -1,11 +1,10 @@
 import userEvent from '#src'
-import {wait} from '#src/utils'
 import {setup} from '#testHelpers/utils'
 
-test('double click', () => {
+test('double click', async () => {
   const {element, getClickEventsSnapshot} = setup(`<div></div>`)
 
-  userEvent.pointer({keys: '[MouseLeft][MouseLeft]', target: element})
+  await userEvent.pointer({keys: '[MouseLeft][MouseLeft]', target: element})
 
   expect(getClickEventsSnapshot()).toMatchInlineSnapshot(`
     pointerdown - pointerId=1; pointerType=mouse; isPrimary=true
@@ -22,11 +21,17 @@ test('double click', () => {
   `)
 })
 
-test('two clicks', () => {
+test('two clicks', async () => {
   const {element, getClickEventsSnapshot} = setup(`<div></div>`)
 
-  const pointerState = userEvent.pointer({keys: '[MouseLeft]', target: element})
-  userEvent.pointer({keys: '[MouseLeft]', target: element}, {pointerState})
+  const pointerState = await userEvent.pointer({
+    keys: '[MouseLeft]',
+    target: element,
+  })
+  await userEvent.pointer(
+    {keys: '[MouseLeft]', target: element},
+    {pointerState},
+  )
 
   expect(getClickEventsSnapshot()).toMatchInlineSnapshot(`
     pointerdown - pointerId=1; pointerType=mouse; isPrimary=true
@@ -42,10 +47,10 @@ test('two clicks', () => {
   `)
 })
 
-test('drag sequence', () => {
+test('drag sequence', async () => {
   const {element, getClickEventsSnapshot} = setup(`<div></div>`)
 
-  userEvent.pointer([
+  await userEvent.pointer([
     {keys: '[MouseLeft>]', target: element},
     {coords: {x: 20, y: 20}},
     '[/MouseLeft]',
@@ -62,10 +67,10 @@ test('drag sequence', () => {
   `)
 })
 
-test('hover to other element', () => {
+test('hover to other element', async () => {
   const {elements, getEventSnapshot} = setup(`<div></div><div></div>`)
 
-  userEvent.pointer([
+  await userEvent.pointer([
     {target: elements[0], coords: {x: 20, y: 20}},
     {target: elements[1], coords: {x: 40, y: 40}},
   ])
@@ -88,10 +93,10 @@ test('hover to other element', () => {
   `)
 })
 
-test('hover inside element', () => {
+test('hover inside element', async () => {
   const {element, getEventSnapshot} = setup(`<div><a></a><p></p></div>`)
 
-  userEvent.pointer([
+  await userEvent.pointer([
     {target: element},
     {target: element.firstChild as Element},
     {target: element.lastChild as Element},
@@ -130,11 +135,14 @@ test('hover inside element', () => {
   `)
 })
 
-test('continue previous target', () => {
+test('continue previous target', async () => {
   const {element, getClickEventsSnapshot} = setup(`<div></div>`)
 
-  const pointerState = userEvent.pointer({keys: '[MouseLeft]', target: element})
-  userEvent.pointer('[MouseLeft]', {pointerState})
+  const pointerState = await userEvent.pointer({
+    keys: '[MouseLeft]',
+    target: element,
+  })
+  await userEvent.pointer('[MouseLeft]', {pointerState})
 
   expect(getClickEventsSnapshot()).toMatchInlineSnapshot(`
     pointerdown - pointerId=1; pointerType=mouse; isPrimary=true
@@ -150,10 +158,10 @@ test('continue previous target', () => {
   `)
 })
 
-test('other keys reset click counter, but keyup/click still uses the old count', () => {
+test('other keys reset click counter, but keyup/click still uses the old count', async () => {
   const {element, getClickEventsSnapshot} = setup(`<div></div>`)
 
-  userEvent.pointer({
+  await userEvent.pointer({
     keys: '[MouseLeft][MouseLeft>][MouseRight][MouseLeft]',
     target: element,
   })
@@ -181,10 +189,10 @@ test('other keys reset click counter, but keyup/click still uses the old count',
   `)
 })
 
-test('click per touch device', () => {
+test('click per touch device', async () => {
   const {element, getClickEventsSnapshot} = setup(`<div></div>`)
 
-  userEvent.pointer({keys: '[TouchA]', target: element})
+  await userEvent.pointer({keys: '[TouchA]', target: element})
 
   expect(getClickEventsSnapshot()).toMatchInlineSnapshot(`
     pointerover - pointerId=2; pointerType=touch; isPrimary=undefined
@@ -202,10 +210,10 @@ test('click per touch device', () => {
   `)
 })
 
-test('double click per touch device', () => {
+test('double click per touch device', async () => {
   const {element, getClickEventsSnapshot} = setup(`<div></div>`)
 
-  userEvent.pointer({keys: '[TouchA][TouchA]', target: element})
+  await userEvent.pointer({keys: '[TouchA][TouchA]', target: element})
 
   expect(getClickEventsSnapshot()).toMatchInlineSnapshot(`
     pointerover - pointerId=2; pointerType=touch; isPrimary=undefined
@@ -234,10 +242,10 @@ test('double click per touch device', () => {
   `)
 })
 
-test('multi touch does not click', () => {
+test('multi touch does not click', async () => {
   const {element, getClickEventsSnapshot} = setup(`<div></div>`)
 
-  userEvent.pointer({keys: '[TouchA>][TouchB][/TouchA]', target: element})
+  await userEvent.pointer({keys: '[TouchA>][TouchB][/TouchA]', target: element})
 
   expect(getClickEventsSnapshot()).toMatchInlineSnapshot(`
     pointerover - pointerId=2; pointerType=touch; isPrimary=undefined
@@ -255,10 +263,10 @@ test('multi touch does not click', () => {
   `)
 })
 
-test('drag touch', () => {
+test('drag touch', async () => {
   const {element, getClickEventsSnapshot} = setup(`<div></div>`)
 
-  userEvent.pointer([
+  await userEvent.pointer([
     {keys: '[TouchA>]', target: element},
     {pointerName: 'TouchA', coords: {x: 20, y: 20}},
     '[/TouchA]',
@@ -281,10 +289,10 @@ test('drag touch', () => {
   `)
 })
 
-test('move touch over elements', () => {
+test('move touch over elements', async () => {
   const {element, getEventSnapshot} = setup(`<div><a></a><p></p></div>`)
 
-  userEvent.pointer([
+  await userEvent.pointer([
     {keys: '[TouchA>]', target: element},
     {pointerName: 'TouchA', target: element.firstChild as Element},
     {pointerName: 'TouchA', target: element.lastChild as Element},
@@ -320,62 +328,36 @@ test('move touch over elements', () => {
   `)
 })
 
-test('unknown button does nothing', () => {
+test('unknown button does nothing', async () => {
   const {element, getEvents} = setup(`<div></div>`)
 
-  userEvent.pointer({keys: '[foo]', target: element})
+  await userEvent.pointer({keys: '[foo]', target: element})
 
   expect(getEvents()).toEqual([])
 })
 
 test('pointer without previous target results in error', async () => {
-  await expect(
-    userEvent.pointer({keys: '[MouseLeft]'}, {delay: 1}),
-  ).rejects.toThrowError('no previous position')
+  await expect(userEvent.pointer({keys: '[TouchA]'})).rejects.toThrowError(
+    'no previous position',
+  )
 })
 
-describe('error', () => {
-  afterEach(() => {
-    ;(console.error as jest.MockedFunction<typeof console.error>).mockClear()
-  })
+it('error for unknown pointer in async', async () => {
+  const {element} = setup(`<div></div>`)
 
-  it('error for unknown pointer in sync', async () => {
-    const err = jest.spyOn(console, 'error')
-    err.mockImplementation(() => {})
-
-    const {element} = setup(`<div></div>`)
-    userEvent.pointer({pointerName: 'foo', target: element})
-
-    // the catch will be asynchronous
-    await wait(10)
-
-    expect(err).toHaveBeenCalledWith(expect.any(Error) as unknown)
-    expect(err.mock.calls[0][0]).toHaveProperty(
-      'message',
-      expect.stringContaining('does not exist'),
-    )
-  })
-
-  it('error for unknown pointer in async', async () => {
-    const {element} = setup(`<div></div>`)
-    const promise = userEvent.pointer(
-      {pointerName: 'foo', target: element},
-      {delay: 1},
-    )
-
-    return expect(promise).rejects.toThrowError('does not exist')
-  })
+  await expect(
+    userEvent.pointer({pointerName: 'foo', target: element}, {delay: 1}),
+  ).rejects.toThrowError('does not exist')
 })
 
 test('asynchronous pointer', async () => {
   const {element, getClickEventsSnapshot} = setup(`<div></div>`)
 
-  // eslint-disable-next-line testing-library/no-await-sync-events
   const pointerState = await userEvent.pointer(
     {keys: '[MouseLeft]', target: element},
     {delay: 1},
   )
-  // eslint-disable-next-line testing-library/no-await-sync-events
+
   await userEvent.pointer([{coords: {x: 20, y: 20}}, '[/MouseLeft]'], {
     delay: 1,
     pointerState,
@@ -396,18 +378,32 @@ test('apply modifiers from keyboardstate', async () => {
   const {element, getEvents} = setup(`<input/>`)
 
   element.focus()
-  let keyboardState = userEvent.keyboard('[ShiftLeft>]')
-  userEvent.pointer({keys: '[MouseLeft]', target: element}, {keyboardState})
-  keyboardState = userEvent.keyboard('[/ShiftLeft][ControlRight>]', {
+  let keyboardState = await userEvent.keyboard('[ShiftLeft>]')
+  await userEvent.pointer(
+    {keys: '[MouseLeft]', target: element},
+    {keyboardState},
+  )
+  keyboardState = await userEvent.keyboard('[/ShiftLeft][ControlRight>]', {
     keyboardState,
   })
-  userEvent.pointer({keys: '[MouseLeft]', target: element}, {keyboardState})
-  keyboardState = userEvent.keyboard('[/ControlRight][AltLeft>]', {
+  await userEvent.pointer(
+    {keys: '[MouseLeft]', target: element},
+    {keyboardState},
+  )
+  keyboardState = await userEvent.keyboard('[/ControlRight][AltLeft>]', {
     keyboardState,
   })
-  userEvent.pointer({keys: '[MouseLeft]', target: element}, {keyboardState})
-  keyboardState = userEvent.keyboard('[/AltLeft][MetaLeft>]', {keyboardState})
-  userEvent.pointer({keys: '[MouseLeft]', target: element}, {keyboardState})
+  await userEvent.pointer(
+    {keys: '[MouseLeft]', target: element},
+    {keyboardState},
+  )
+  keyboardState = await userEvent.keyboard('[/AltLeft][MetaLeft>]', {
+    keyboardState,
+  })
+  await userEvent.pointer(
+    {keys: '[MouseLeft]', target: element},
+    {keyboardState},
+  )
 
   expect(getEvents('click')).toEqual([
     expect.objectContaining({shiftKey: true}),
@@ -423,20 +419,20 @@ describe('mousedown moves selection', () => {
   // So we try an approximation:
   // We treat any mousedown as if it happened on the space after the last character.
 
-  test('single click moves cursor to the end', () => {
+  test('single click moves cursor to the end', async () => {
     const {element} = setup<HTMLInputElement>(`<input value="foo bar baz"/>`)
 
-    userEvent.pointer({keys: '[MouseLeft]', target: element})
+    await userEvent.pointer({keys: '[MouseLeft]', target: element})
 
     expect(element).toHaveProperty('selectionStart', 11)
   })
 
-  test('single click moves cursor to the last text', () => {
+  test('single click moves cursor to the last text', async () => {
     const {element} = setup<HTMLInputElement>(
       `<div contenteditable>foo bar baz</div>`,
     )
 
-    userEvent.pointer({keys: '[MouseLeft]', target: element})
+    await userEvent.pointer({keys: '[MouseLeft]', target: element})
 
     expect(document.getSelection()).toHaveProperty(
       'focusNode',
@@ -445,15 +441,15 @@ describe('mousedown moves selection', () => {
     expect(document.getSelection()).toHaveProperty('focusOffset', 11)
   })
 
-  test('double click selects a word or a sequence of whitespace', () => {
+  test('double click selects a word or a sequence of whitespace', async () => {
     const {element} = setup<HTMLInputElement>(`<input value="foo bar baz"/>`)
 
-    userEvent.pointer({keys: '[MouseLeft][MouseLeft]', target: element})
+    await userEvent.pointer({keys: '[MouseLeft][MouseLeft]', target: element})
 
     expect(element).toHaveProperty('selectionStart', 8)
     expect(element).toHaveProperty('selectionEnd', 11)
 
-    userEvent.pointer({
+    await userEvent.pointer({
       keys: '[MouseLeft][MouseLeft]',
       target: element,
       offset: 0,
@@ -462,7 +458,7 @@ describe('mousedown moves selection', () => {
     expect(element).toHaveProperty('selectionStart', 0)
     expect(element).toHaveProperty('selectionEnd', 3)
 
-    userEvent.pointer({
+    await userEvent.pointer({
       keys: '[MouseLeft][MouseLeft]',
       target: element,
       offset: 11,
@@ -473,16 +469,16 @@ describe('mousedown moves selection', () => {
 
     element.value = 'foo bar  '
 
-    userEvent.pointer({keys: '[MouseLeft][MouseLeft]', target: element})
+    await userEvent.pointer({keys: '[MouseLeft][MouseLeft]', target: element})
 
     expect(element).toHaveProperty('selectionStart', 7)
     expect(element).toHaveProperty('selectionEnd', 9)
   })
 
-  test('triple click selects whole line', () => {
+  test('triple click selects whole line', async () => {
     const {element} = setup<HTMLInputElement>(`<input value="foo bar baz"/>`)
 
-    userEvent.pointer({
+    await userEvent.pointer({
       keys: '[MouseLeft][MouseLeft][MouseLeft]',
       target: element,
     })
@@ -490,7 +486,7 @@ describe('mousedown moves selection', () => {
     expect(element).toHaveProperty('selectionStart', 0)
     expect(element).toHaveProperty('selectionEnd', 11)
 
-    userEvent.pointer({
+    await userEvent.pointer({
       keys: '[MouseLeft][MouseLeft][MouseLeft]',
       target: element,
       offset: 0,
@@ -499,7 +495,7 @@ describe('mousedown moves selection', () => {
     expect(element).toHaveProperty('selectionStart', 0)
     expect(element).toHaveProperty('selectionEnd', 11)
 
-    userEvent.pointer({
+    await userEvent.pointer({
       keys: '[MouseLeft][MouseLeft][MouseLeft]',
       target: element,
       offset: 11,
@@ -509,10 +505,10 @@ describe('mousedown moves selection', () => {
     expect(element).toHaveProperty('selectionEnd', 11)
   })
 
-  test('mousemove with pressed button extends selection', () => {
+  test('mousemove with pressed button extends selection', async () => {
     const {element} = setup<HTMLInputElement>(`<input value="foo bar baz"/>`)
 
-    const pointerState = userEvent.pointer({
+    const pointerState = await userEvent.pointer({
       keys: '[MouseLeft][MouseLeft>]',
       target: element,
       offset: 6,
@@ -521,34 +517,34 @@ describe('mousedown moves selection', () => {
     expect(element).toHaveProperty('selectionStart', 4)
     expect(element).toHaveProperty('selectionEnd', 7)
 
-    userEvent.pointer({offset: 2}, {pointerState})
+    await userEvent.pointer({offset: 2}, {pointerState})
 
     expect(element).toHaveProperty('selectionStart', 2)
     expect(element).toHaveProperty('selectionEnd', 7)
 
-    userEvent.pointer({offset: 10}, {pointerState})
+    await userEvent.pointer({offset: 10}, {pointerState})
 
     expect(element).toHaveProperty('selectionStart', 4)
     expect(element).toHaveProperty('selectionEnd', 10)
 
-    userEvent.pointer({}, {pointerState})
+    await userEvent.pointer({}, {pointerState})
 
     expect(element).toHaveProperty('selectionStart', 4)
     expect(element).toHaveProperty('selectionEnd', 11)
 
-    userEvent.pointer({offset: 5}, {pointerState})
+    await userEvent.pointer({offset: 5}, {pointerState})
 
     expect(element).toHaveProperty('selectionStart', 4)
     expect(element).toHaveProperty('selectionEnd', 7)
   })
 
-  test('selection is moved on non-input elements', () => {
+  test('selection is moved on non-input elements', async () => {
     const {element} = setup(
       `<section><a></a><span>foo</span> <span>bar</span> <span>baz</span></section>`,
     )
     const span = element.querySelectorAll('span')
 
-    const pointerState = userEvent.pointer({
+    const pointerState = await userEvent.pointer({
       keys: '[MouseLeft][MouseLeft>]',
       target: element,
       offset: 6,
@@ -572,7 +568,7 @@ describe('mousedown moves selection', () => {
       3,
     )
 
-    userEvent.pointer({offset: 2}, {pointerState})
+    await userEvent.pointer({offset: 2}, {pointerState})
 
     expect(document.getSelection()?.toString()).toBe('o bar')
     expect(document.getSelection()?.getRangeAt(0)).toHaveProperty(
@@ -592,7 +588,7 @@ describe('mousedown moves selection', () => {
       3,
     )
 
-    userEvent.pointer({offset: 10}, {pointerState})
+    await userEvent.pointer({offset: 10}, {pointerState})
 
     expect(document.getSelection()?.toString()).toBe('bar ba')
     expect(document.getSelection()?.getRangeAt(0)).toHaveProperty(
@@ -612,7 +608,7 @@ describe('mousedown moves selection', () => {
       2,
     )
 
-    userEvent.pointer({}, {pointerState})
+    await userEvent.pointer({}, {pointerState})
 
     expect(document.getSelection()?.toString()).toBe('bar baz')
     expect(document.getSelection()?.getRangeAt(0)).toHaveProperty(
@@ -633,20 +629,20 @@ describe('mousedown moves selection', () => {
     )
   })
 
-  test('`node` overrides the text offset approximation', () => {
+  test('`node` overrides the text offset approximation', async () => {
     const {element} = setup(
       `<section><div><span>foo</span> <span>bar</span></div> <span>baz</span></section>`,
     )
     const div = element.firstChild as HTMLDivElement
     const span = element.querySelectorAll('span')
 
-    const pointerState = userEvent.pointer({
+    const pointerState = await userEvent.pointer({
       keys: '[MouseLeft>]',
       target: element,
       node: span[0].firstChild as Node,
       offset: 1,
     })
-    userEvent.pointer({node: div, offset: 3}, {pointerState})
+    await userEvent.pointer({node: div, offset: 3}, {pointerState})
 
     expect(document.getSelection()?.toString()).toBe('oo bar')
     expect(document.getSelection()?.getRangeAt(0)).toHaveProperty(
@@ -666,7 +662,7 @@ describe('mousedown moves selection', () => {
       3,
     )
 
-    userEvent.pointer({
+    await userEvent.pointer({
       keys: '[MouseLeft]',
       target: element,
       node: span[0].firstChild as Node,
@@ -689,7 +685,7 @@ describe('mousedown moves selection', () => {
       3,
     )
 
-    userEvent.pointer({
+    await userEvent.pointer({
       keys: '[MouseLeft]',
       target: element,
       node: span[0] as Node,

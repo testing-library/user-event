@@ -1,8 +1,8 @@
 import {fireEvent, createEvent} from '@testing-library/dom'
-import {blur, focus, isDisabled, isElementType} from './utils'
-import type {UserEvent} from './setup'
+import {blur, focus, isDisabled, isElementType} from '../utils'
+import {Config, UserEvent} from '../setup'
 
-interface uploadInit {
+export interface uploadInit {
   changeInit?: EventInit
 }
 
@@ -10,12 +10,11 @@ export interface uploadOptions {
   applyAccept?: boolean
 }
 
-export function upload(
+export async function upload(
   this: UserEvent,
   element: HTMLElement,
   fileOrFiles: File | File[],
   init?: uploadInit,
-  {applyAccept = false}: uploadOptions = {},
 ) {
   const input = isElementType(element, 'label') ? element.control : element
 
@@ -28,10 +27,12 @@ export function upload(
   }
   if (isDisabled(element)) return
 
-  this.click(element)
+  await this.click(element)
 
   const files = (Array.isArray(fileOrFiles) ? fileOrFiles : [fileOrFiles])
-    .filter(file => !applyAccept || isAcceptableFile(file, input.accept))
+    .filter(
+      file => !this[Config].applyAccept || isAcceptableFile(file, input.accept),
+    )
     .slice(0, input.multiple ? undefined : 1)
 
   // blur fires when the file selector pops up

@@ -2,7 +2,7 @@ import {setup} from '#testHelpers/utils'
 import {isAllSelected, selectAll} from '#src/utils/focus/selectAll'
 import {getUISelection} from '#src/document'
 
-test('select all in input', () => {
+test('select all in input', async () => {
   const {element} = setup<HTMLInputElement>(`<input value="foo bar baz"/>`)
 
   expect(isAllSelected(element)).toBe(false)
@@ -17,7 +17,7 @@ test('select all in input', () => {
   expect(isAllSelected(element)).toBe(true)
 })
 
-test('select all in textarea', () => {
+test('select all in textarea', async () => {
   const {element} = setup<HTMLTextAreaElement>(
     `<textarea>foo\nbar\nbaz</textarea>`,
   )
@@ -34,7 +34,7 @@ test('select all in textarea', () => {
   expect(isAllSelected(element)).toBe(true)
 })
 
-test('select all in contenteditable', () => {
+test('select all in contenteditable', async () => {
   const {element} = setup(`
         <div contenteditable><div>foo</div><div>bar</div></div>
         <div>baz</div>
@@ -53,7 +53,7 @@ test('select all in contenteditable', () => {
   expect(isAllSelected(element)).toBe(true)
 })
 
-test('select all outside of editable', () => {
+test('select all outside of editable', async () => {
   const {element} = setup(`
         <input type="checkbox"/>
         <div>foo</div>

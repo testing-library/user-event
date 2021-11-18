@@ -1,5 +1,5 @@
 import {fireEvent} from '@testing-library/dom'
-import type {UserEvent} from '../setup'
+import {Config, UserEvent} from '../setup'
 import {copySelection, writeDataTransferToClipboard} from '../utils'
 
 export interface copyOptions {
@@ -7,18 +7,8 @@ export interface copyOptions {
   writeToClipboard?: boolean
 }
 
-export function copy(
-  this: UserEvent,
-  options: Omit<copyOptions, 'writeToClipboard'> & {writeToClipboard: true},
-): Promise<DataTransfer>
-export function copy(
-  this: UserEvent,
-  options?: Omit<copyOptions, 'writeToClipboard'> & {
-    writeToClipboard?: boolean
-  },
-): DataTransfer
-export function copy(this: UserEvent, options?: copyOptions) {
-  const doc = options?.document ?? document
+export async function copy(this: UserEvent) {
+  const doc = this[Config].document
   const target = doc.activeElement ?? /* istanbul ignore next */ doc.body
 
   const clipboardData = copySelection(target)
@@ -31,7 +21,9 @@ export function copy(this: UserEvent, options?: copyOptions) {
     clipboardData,
   })
 
-  return options?.writeToClipboard
-    ? writeDataTransferToClipboard(doc, clipboardData).then(() => clipboardData)
-    : clipboardData
+  if (this[Config].writeToClipboard) {
+    await writeDataTransferToClipboard(doc, clipboardData)
+  }
+
+  return clipboardData
 }

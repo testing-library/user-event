@@ -1,7 +1,7 @@
 import {blur, focus} from '#src/utils'
 import {setup} from '#testHelpers/utils'
 
-test('blur a button', () => {
+test('blur a button', async () => {
   const {element, getEventSnapshot, clearEventCalls} = setup(`<button />`)
   focus(element)
   clearEventCalls()
@@ -15,7 +15,7 @@ test('blur a button', () => {
   expect(element).not.toHaveFocus()
 })
 
-test('no events fired on an unblurable input', () => {
+test('no events fired on an unblurable input', async () => {
   const {element, getEventSnapshot, clearEventCalls} = setup(`<div />`)
   focus(element)
   clearEventCalls()
@@ -26,7 +26,7 @@ test('no events fired on an unblurable input', () => {
   expect(element).not.toHaveFocus()
 })
 
-test('blur with tabindex', () => {
+test('blur with tabindex', async () => {
   const {element, getEventSnapshot, clearEventCalls} =
     setup(`<div tabindex="0" />`)
   focus(element)
@@ -41,7 +41,7 @@ test('blur with tabindex', () => {
   expect(element).not.toHaveFocus()
 })
 
-test('no events fired on a disabled blurable input', () => {
+test('no events fired on a disabled blurable input', async () => {
   const {element, getEventSnapshot, clearEventCalls} =
     setup(`<button disabled />`)
   focus(element)
@@ -53,7 +53,7 @@ test('no events fired on a disabled blurable input', () => {
   expect(element).not.toHaveFocus()
 })
 
-test('no events fired if the element is not focused', () => {
+test('no events fired if the element is not focused', async () => {
   const {element, getEventSnapshot} = setup(`<button />`)
   blur(element)
   expect(getEventSnapshot()).toMatchInlineSnapshot(

@@ -1,7 +1,7 @@
 import {hasPointerEvents} from '#src/utils'
 import {setup} from '#testHelpers/utils'
 
-test('get pointer-events from element or ancestor', () => {
+test('get pointer-events from element or ancestor', async () => {
   const {element} = setup(`
         <div style="pointer-events: none">
             <input style="pointer-events: initial"/>

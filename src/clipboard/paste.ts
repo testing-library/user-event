@@ -1,5 +1,5 @@
 import {fireEvent} from '@testing-library/dom'
-import type {UserEvent} from '../setup'
+import {Config, UserEvent} from '../setup'
 import {
   createDataTransfer,
   getSpaceUntilMaxLength,
@@ -12,39 +12,24 @@ export interface pasteOptions {
   document?: Document
 }
 
-export function paste(
-  this: UserEvent,
-  clipboardData?: undefined,
-  options?: pasteOptions,
-): Promise<void>
-export function paste(
-  this: UserEvent,
-  clipboardData: DataTransfer | string,
-  options?: pasteOptions,
-): void
-export function paste(
+export async function paste(
   this: UserEvent,
   clipboardData?: DataTransfer | string,
-  options?: pasteOptions,
 ) {
-  const doc = options?.document ?? document
+  const doc = this[Config].document
   const target = doc.activeElement ?? /* istanbul ignore next */ doc.body
 
-  const data: DataTransfer | undefined =
-    typeof clipboardData === 'string'
+  const data: DataTransfer =
+    (typeof clipboardData === 'string'
       ? getClipboardDataFromString(clipboardData)
-      : clipboardData
-
-  return data
-    ? pasteImpl(target, data)
-    : readDataTransferFromClipboard(doc).then(
-        dt => pasteImpl(target, dt),
-        () => {
-          throw new Error(
-            '`userEvent.paste()` without `clipboardData` requires the `ClipboardAPI` to be available.',
-          )
-        },
+      : clipboardData) ??
+    (await readDataTransferFromClipboard(doc).catch(() => {
+      throw new Error(
+        '`userEvent.paste()` without `clipboardData` requires the `ClipboardAPI` to be available.',
       )
+    }))
+
+  return pasteImpl(target, data)
 }
 
 function pasteImpl(target: Element, clipboardData: DataTransfer) {

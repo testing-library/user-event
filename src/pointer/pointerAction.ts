@@ -1,8 +1,8 @@
+import {inputDeviceState} from '../setup'
 import {wait} from '../utils'
 import {pointerMove, PointerMoveAction} from './pointerMove'
 import {pointerPress, PointerPressAction} from './pointerPress'
 import {
-  inputDeviceState,
   pointerOptions,
   pointerState,
   PointerTarget,
@@ -22,7 +22,7 @@ export async function pointerAction(
   actions: PointerAction[],
   options: pointerOptions,
   state: inputDeviceState,
-): Promise<unknown[]> {
+) {
   const ret: Array<Promise<void>> = []
 
   for (let i = 0; i < actions.length; i++) {
@@ -51,7 +51,7 @@ export async function pointerAction(
 
     ret.push(promise)
 
-    if (options.delay > 0) {
+    if (typeof options.delay === 'number') {
       await promise
       if (i < actions.length - 1) {
         await wait(options.delay)

@@ -1,5 +1,5 @@
 import {fireEvent} from '@testing-library/dom'
-import type {UserEvent} from '../setup'
+import {Config, UserEvent} from '../setup'
 import {
   copySelection,
   isEditable,
@@ -12,16 +12,8 @@ export interface cutOptions {
   writeToClipboard?: boolean
 }
 
-export function cut(
-  this: UserEvent,
-  options: Omit<cutOptions, 'writeToClipboard'> & {writeToClipboard: true},
-): Promise<DataTransfer>
-export function cut(
-  this: UserEvent,
-  options?: Omit<cutOptions, 'writeToClipboard'> & {writeToClipboard?: boolean},
-): DataTransfer
-export function cut(this: UserEvent, options?: cutOptions) {
-  const doc = options?.document ?? document
+export async function cut(this: UserEvent) {
+  const doc = this[Config].document
   const target = doc.activeElement ?? /* istanbul ignore next */ doc.body
 
   const clipboardData = copySelection(target)
@@ -38,7 +30,9 @@ export function cut(this: UserEvent, options?: cutOptions) {
     prepareInput('', target, 'deleteByCut')?.commit()
   }
 
-  return options?.writeToClipboard
-    ? writeDataTransferToClipboard(doc, clipboardData).then(() => clipboardData)
-    : clipboardData
+  if (this[Config].writeToClipboard) {
+    await writeDataTransferToClipboard(doc, clipboardData)
+  }
+
+  return clipboardData
 }

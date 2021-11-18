@@ -1,10 +1,10 @@
 import userEvent from '#src'
 import {addEventListener, setup} from '#testHelpers/utils'
 
-test('hover', () => {
+test('hover', async () => {
   const {element, getEventSnapshot} = setup('<button />')
 
-  userEvent.hover(element)
+  await userEvent.hover(element)
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: button
 
@@ -17,10 +17,10 @@ test('hover', () => {
   `)
 })
 
-test('hover on disabled element', () => {
+test('hover on disabled element', async () => {
   const {element, getEventSnapshot} = setup('<button disabled />')
 
-  userEvent.hover(element)
+  await userEvent.hover(element)
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: button
 
@@ -30,10 +30,10 @@ test('hover on disabled element', () => {
   `)
 })
 
-test('no events fired on labels that contain disabled controls', () => {
+test('no events fired on labels that contain disabled controls', async () => {
   const {element, getEventSnapshot} = setup('<label><input disabled /></label>')
 
-  userEvent.hover(element)
+  await userEvent.hover(element)
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: label
 
@@ -46,16 +46,16 @@ test('no events fired on labels that contain disabled controls', () => {
   `)
 })
 
-test('fires non-bubbling events on parents for hover', () => {
+test('fires non-bubbling events on parents for hover', async () => {
   // Doesn't use getEventSnapshot() because:
   // 1) We're asserting the events of both elements (not what bubbles to the outer div)
   // 2) We're asserting the order of these events in a single list as they're
   //     interleaved across two elements.
   const {element: div} = setup('<div><button></button></div>')
-  const button = div.firstChild
+  const button = div.firstChild as HTMLButtonElement
 
-  const calls = []
-  function addListeners(el) {
+  const calls: string[] = []
+  function addListeners(el: Element) {
     for (const event of [
       'mouseenter',
       'mouseover',
@@ -74,7 +74,7 @@ test('fires non-bubbling events on parents for hover', () => {
   addListeners(div)
   addListeners(button)
 
-  userEvent.hover(button)
+  await userEvent.hover(button)
 
   expect(calls.join('\n')).toMatchInlineSnapshot(`
     BUTTON: pointerover
@@ -86,16 +86,16 @@ test('fires non-bubbling events on parents for hover', () => {
   `)
 })
 
-test('fires non-bubbling events on parents for unhover', () => {
+test('fires non-bubbling events on parents for unhover', async () => {
   // Doesn't use getEventSnapshot() because:
   // 1) We're asserting the events of both elements (not what bubbles to the outer div)
   // 2) We're asserting the order of these events in a single list as they're
   //     interleaved across two elements.
   const {element: div} = setup('<div><button></button></div>')
-  const button = div.firstChild
+  const button = div.firstChild as HTMLButtonElement
 
-  const calls = []
-  function addListeners(el) {
+  const calls: string[] = []
+  function addListeners(el: Element) {
     for (const event of [
       'mouseenter',
       'mouseover',
@@ -114,7 +114,7 @@ test('fires non-bubbling events on parents for unhover', () => {
   addListeners(div)
   addListeners(button)
 
-  userEvent.unhover(button)
+  await userEvent.unhover(button)
 
   expect(calls.join('\n')).toMatchInlineSnapshot(`
     BUTTON: pointerout
@@ -126,16 +126,18 @@ test('fires non-bubbling events on parents for unhover', () => {
   `)
 })
 
-test('throws when hovering element with pointer-events set to none', () => {
+test('throws when hovering element with pointer-events set to none', async () => {
   const {element} = setup(`<div style="pointer-events: none"></div>`)
-  expect(() => userEvent.hover(element)).toThrowError(/unable to hover/i)
+  await expect(userEvent.hover(element)).rejects.toThrowError(
+    /unable to hover/i,
+  )
 })
 
-test('does not throws when hover element with pointer-events set to none and skipPointerEventsCheck is set', () => {
+test('does not throws when hover element with pointer-events set to none and skipPointerEventsCheck is set', async () => {
   const {element, getEventSnapshot} = setup(
     `<div style="pointer-events: none"></div>`,
   )
-  userEvent.hover(element, {skipPointerEventsCheck: true})
+  await userEvent.hover(element, {skipPointerEventsCheck: true})
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: div
 

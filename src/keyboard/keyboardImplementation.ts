@@ -26,13 +26,7 @@ export async function keyboardImplementation(
   // Release the key automatically if it was pressed before.
   // Do not release the key on iterations on `state.repeatKey`.
   if (pressed && !state.repeatKey) {
-    keyup(
-      keyDef,
-      getCurrentElement,
-      options,
-      state,
-      pressed.unpreventedDefault,
-    )
+    keyup(keyDef, getCurrentElement, options, state, pressed.unpreventedDefault)
   }
 
   if (!releasePrevious) {
@@ -67,7 +61,7 @@ export async function keyboardImplementation(
   }
 
   if (text.length > consumedLength || repeat > 1) {
-    if (options.delay > 0) {
+    if (typeof options.delay === 'number') {
       await wait(options.delay)
     }
 

@@ -5,10 +5,10 @@ import {
   isDisabled,
   isElementType,
   PointerOptions,
-} from './utils'
-import type {UserEvent} from './setup'
+} from '../utils'
+import type {UserEvent} from '../setup'
 
-export function selectOptions(
+export async function selectOptions(
   this: UserEvent,
   select: Element,
   values: HTMLElement | HTMLElement[] | string[] | string,
@@ -17,7 +17,7 @@ export function selectOptions(
   return selectOptionsBase.call(this, true, select, values, options)
 }
 
-export function deselectOptions(
+export async function deselectOptions(
   this: UserEvent,
   select: Element,
   values: HTMLElement | HTMLElement[] | string[] | string,
@@ -26,7 +26,7 @@ export function deselectOptions(
   return selectOptionsBase.call(this, false, select, values, options)
 }
 
-function selectOptionsBase(
+async function selectOptionsBase(
   this: UserEvent,
   newValue: boolean,
   select: Element,
@@ -105,7 +105,7 @@ function selectOptionsBase(
         : hasPointerEvents(select)
       // the click to open the select options
       if (withPointerEvents) {
-        this.click(select, {skipPointerEventsCheck: true})
+        await this.click(select)
       } else {
         focus(select)
       }
@@ -130,11 +130,11 @@ function selectOptionsBase(
       )
     }
   } else if (select.getAttribute('role') === 'listbox') {
-    selectedOptions.forEach(option => {
-      this.hover(option, {skipPointerEventsCheck})
-      this.click(option, {skipPointerEventsCheck})
-      this.unhover(option, {skipPointerEventsCheck})
-    })
+    const sub = this.setup({skipPointerEventsCheck})
+    for (const option of selectedOptions) {
+      await sub.click(option)
+      await sub.unhover(option)
+    }
   } else {
     throw getConfig().getElementError(
       `Cannot select options on elements that are neither select nor listbox elements`,

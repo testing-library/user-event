@@ -30,6 +30,7 @@ export * from './keyDef/readNextDescriptor'
 
 export * from './misc/eventWrapper'
 export * from './misc/findClosest'
+export * from './misc/getDocumentFromNode'
 export * from './misc/isDescendantOrSelf'
 export * from './misc/isElementType'
 export * from './misc/isVisible'

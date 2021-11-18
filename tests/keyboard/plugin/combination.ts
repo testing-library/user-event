@@ -1,12 +1,12 @@
 import userEvent from '#src'
 import {setup} from '#testHelpers/utils'
 
-test('select input per `Control+A`', () => {
+test('select input per `Control+A`', async () => {
   const {element} = setup<HTMLInputElement>(`<input value="foo bar baz"/>`)
   element.focus()
   element.selectionStart = 5
 
-  userEvent.keyboard('{Control>}a')
+  await userEvent.keyboard('{Control>}a')
 
   expect(element).toHaveProperty('selectionStart', 0)
   expect(element).toHaveProperty('selectionEnd', 11)

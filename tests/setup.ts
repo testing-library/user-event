@@ -288,7 +288,7 @@ test('maintain `keyboardState` through different api calls', async () => {
 
   const api = userEvent.setup()
 
-  expect(api.keyboard('{a>}{b>}')).toBe(undefined)
+  await expect(api.keyboard('{a>}{b>}')).resolves.toBe(undefined)
 
   expect(getSpy('keyboard')).toBeCalledTimes(1)
 
@@ -312,7 +312,9 @@ test('maintain `pointerState` through different api calls', async () => {
 
   const api = userEvent.setup()
 
-  expect(api.pointer({keys: '[MouseLeft>]', target: element})).toBe(undefined)
+  await expect(
+    api.pointer({keys: '[MouseLeft>]', target: element}),
+  ).resolves.toBe(undefined)
 
   expect(getSpy('pointer')).toBeCalledTimes(1)
   expect(getEvents('mousedown')).toHaveLength(1)

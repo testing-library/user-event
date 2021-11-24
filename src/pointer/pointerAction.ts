@@ -23,8 +23,6 @@ export async function pointerAction(
   options: pointerOptions,
   state: inputDeviceState,
 ) {
-  const ret: Array<Promise<void>> = []
-
   for (let i = 0; i < actions.length; i++) {
     const action = actions[i]
     const pointerName =
@@ -44,15 +42,11 @@ export async function pointerAction(
         ? state.pointerState.position[pointerName].coords
         : undefined)
 
-    const promise =
-      'keyDef' in action
-        ? pointerPress({...action, target, coords}, state)
-        : pointerMove({...action, target, coords}, state)
-
-    ret.push(promise)
+    await ('keyDef' in action
+      ? pointerPress({...action, target, coords}, state)
+      : pointerMove({...action, target, coords}, state))
 
     if (typeof options.delay === 'number') {
-      await promise
       if (i < actions.length - 1) {
         await wait(options.delay)
       }
@@ -60,8 +54,6 @@ export async function pointerAction(
   }
 
   delete state.pointerState.activeClickCount
-
-  return Promise.all(ret)
 }
 
 function getPrevTarget(pointerName: string, state: pointerState) {

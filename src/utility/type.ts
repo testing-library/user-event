@@ -38,13 +38,9 @@ export async function type(
     )
   }
 
-  const promise = this.keyboard(text)
-
-  await promise
+  await this.keyboard(text)
 
   if (!skipAutoClose) {
-    releaseAllKeys(this[Config], this[Config].keyboardState)
+    await releaseAllKeys(this[Config], this[Config].keyboardState)
   }
-
-  return promise
 }

@@ -6,6 +6,7 @@ import {attachClipboardStubToView, getDocumentFromNode} from '../utils'
 import type {UserEvent, UserEventApi} from './index'
 import {Config, defaultOptionsDirect, defaultOptionsSetup} from './config'
 import {userEventApi} from './api'
+import {wrapAsync} from './wrapAsync'
 
 /**
  * Start a "session" with userEvent.
@@ -56,9 +57,7 @@ function wrapImpl<
   Impl extends (this: This, ...args: Args) => Promise<unknown>,
 >(impl: Impl) {
   function method(this: This, ...args: Args) {
-    return impl.apply(this, args)
-    // TODO: wrap async
-    // return wrapAsync(() => impl.apply(this, args))
+    return wrapAsync(() => impl.apply(this, args))
   }
   Object.defineProperty(method, 'name', {get: () => impl.name})
 

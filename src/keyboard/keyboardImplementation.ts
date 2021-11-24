@@ -26,11 +26,17 @@ export async function keyboardImplementation(
   // Release the key automatically if it was pressed before.
   // Do not release the key on iterations on `state.repeatKey`.
   if (pressed && !state.repeatKey) {
-    keyup(keyDef, getCurrentElement, options, state, pressed.unpreventedDefault)
+    await keyup(
+      keyDef,
+      getCurrentElement,
+      options,
+      state,
+      pressed.unpreventedDefault,
+    )
   }
 
   if (!releasePrevious) {
-    const unpreventedDefault = keydown(
+    const unpreventedDefault = await keydown(
       keyDef,
       getCurrentElement,
       options,
@@ -38,12 +44,12 @@ export async function keyboardImplementation(
     )
 
     if (unpreventedDefault && hasKeyPress(keyDef, state)) {
-      keypress(keyDef, getCurrentElement, options, state)
+      await keypress(keyDef, getCurrentElement, options, state)
     }
 
     // Release the key only on the last iteration on `state.repeatKey`.
     if (releaseSelf && repeat <= 1) {
-      keyup(keyDef, getCurrentElement, options, state, unpreventedDefault)
+      await keyup(keyDef, getCurrentElement, options, state, unpreventedDefault)
     }
   }
 
@@ -74,14 +80,23 @@ function getActive(document: Document): Element {
   return getActiveElement(document) ?? /* istanbul ignore next */ document.body
 }
 
-export function releaseAllKeys(options: keyboardOptions, state: keyboardState) {
+export async function releaseAllKeys(
+  options: keyboardOptions,
+  state: keyboardState,
+) {
   const getCurrentElement = () => getActive(options.document)
   for (const k of state.pressed) {
-    keyup(k.keyDef, getCurrentElement, options, state, k.unpreventedDefault)
+    await keyup(
+      k.keyDef,
+      getCurrentElement,
+      options,
+      state,
+      k.unpreventedDefault,
+    )
   }
 }
 
-function keydown(
+async function keydown(
   keyDef: keyboardKey,
   getCurrentElement: () => Element,
   options: keyboardOptions,
@@ -119,7 +134,7 @@ function keydown(
   return unpreventedDefault
 }
 
-function keypress(
+async function keypress(
   keyDef: keyboardKey,
   getCurrentElement: () => Element,
   options: keyboardOptions,
@@ -143,7 +158,7 @@ function keypress(
   }
 }
 
-function keyup(
+async function keyup(
   keyDef: keyboardKey,
   getCurrentElement: () => Element,
   options: keyboardOptions,

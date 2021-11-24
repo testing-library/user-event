@@ -1,10 +1,10 @@
 import {prepareDocument} from '../document'
 import {createKeyboardState} from '../keyboard'
 import {createPointerState} from '../pointer'
-import {Options} from '../options'
+import {defaultOptionsDirect, defaultOptionsSetup, Options} from '../options'
 import {attachClipboardStubToView, getDocumentFromNode} from '../utils'
 import type {UserEvent, UserEventApi} from './index'
-import {Config, defaultOptionsDirect, defaultOptionsSetup} from './config'
+import {Config} from './config'
 import {userEventApi} from './api'
 import {wrapAsync} from './wrapAsync'
 

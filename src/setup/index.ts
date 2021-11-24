@@ -1,4 +1,4 @@
-import {userEventApi} from './api'
+import type * as userEventApi from './api'
 import {setupMain, setupSub} from './setup'
 import {Config, inputDeviceState} from './config'
 import * as directApi from './directApi'

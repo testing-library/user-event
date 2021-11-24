@@ -5,7 +5,7 @@ import {defaultOptionsDirect, defaultOptionsSetup, Options} from '../options'
 import {attachClipboardStubToView, getDocumentFromNode} from '../utils'
 import type {UserEvent, UserEventApi} from './index'
 import {Config} from './config'
-import {userEventApi} from './api'
+import * as userEventApi from './api'
 import {wrapAsync} from './wrapAsync'
 
 /**

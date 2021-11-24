@@ -1,6 +1,6 @@
-import {keyboardState} from '#src/keyboard/types'
-import {pointerState} from '#src/pointer/types'
-import {Options} from '#src/options'
+import type {keyboardState} from '../keyboard/types'
+import type {pointerState} from '../pointer/types'
+import type {Options} from '../options'
 
 export interface inputDeviceState {
   pointerState: pointerState

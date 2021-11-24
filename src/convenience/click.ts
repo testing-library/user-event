@@ -1,6 +1,6 @@
+import type {PointerInput} from '../pointer'
 import {hasPointerEvents} from '../utils'
 import {Config, UserEvent} from '../setup'
-import {PointerInput} from '#src/pointer'
 
 export declare interface clickOptions {
   skipHover?: boolean

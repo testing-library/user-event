@@ -1,63 +1,62 @@
 import {fireEvent} from '@testing-library/dom'
 import {Config} from '../setup'
 import {getActiveElement, wait} from '../utils'
-import {getNextKeyDef} from './getNextKeyDef'
 import {behaviorPlugin, keyboardKey} from './types'
 import * as plugins from './plugins'
 import {getKeyEventProps} from './getEventProps'
 
-export async function keyboardImplementation(
+export interface KeyboardAction {
+  keyDef: keyboardKey
+  releasePrevious: boolean
+  releaseSelf: boolean
+  repeat: number
+}
+
+export async function keyboardAction(
   config: Config,
-  text: string,
-): Promise<void> {
-  const {document, keyboardState, keyboardMap, delay} = config
+  actions: KeyboardAction[],
+) {
+  for (let i = 0; i < actions.length; i++) {
+    await keyboardKeyAction(config, actions[i])
+
+    if (typeof config.delay === 'number' && i < actions.length - 1) {
+      await wait(config.delay)
+    }
+  }
+}
+
+async function keyboardKeyAction(
+  config: Config,
+  {keyDef, releasePrevious, releaseSelf, repeat}: KeyboardAction,
+) {
+  const {document, keyboardState, delay} = config
   const getCurrentElement = () => getActive(document)
 
-  const {keyDef, consumedLength, releasePrevious, releaseSelf, repeat} =
-    keyboardState.repeatKey ?? getNextKeyDef(keyboardMap, text)
-
-  const pressed = keyboardState.pressed.find(p => p.keyDef === keyDef)
-
   // Release the key automatically if it was pressed before.
-  // Do not release the key on iterations on `state.repeatKey`.
-  if (pressed && !keyboardState.repeatKey) {
+  const pressed = keyboardState.pressed.find(p => p.keyDef === keyDef)
+  if (pressed) {
     await keyup(keyDef, getCurrentElement, config, pressed.unpreventedDefault)
   }
 
   if (!releasePrevious) {
-    const unpreventedDefault = await keydown(keyDef, getCurrentElement, config)
+    let unpreventedDefault = true
+    for (let i = 1; i <= repeat; i++) {
+      unpreventedDefault = await keydown(keyDef, getCurrentElement, config)
 
-    if (unpreventedDefault && hasKeyPress(keyDef, config)) {
-      await keypress(keyDef, getCurrentElement, config)
+      if (unpreventedDefault && hasKeyPress(keyDef, config)) {
+        await keypress(keyDef, getCurrentElement, config)
+      }
+
+      if (typeof delay === 'number' && i < repeat) {
+        await wait(delay)
+      }
     }
 
     // Release the key only on the last iteration on `state.repeatKey`.
-    if (releaseSelf && repeat <= 1) {
+    if (releaseSelf) {
       await keyup(keyDef, getCurrentElement, config, unpreventedDefault)
     }
   }
-
-  if (repeat > 1) {
-    keyboardState.repeatKey = {
-      // don't consume again on the next iteration
-      consumedLength: 0,
-      keyDef,
-      releasePrevious,
-      releaseSelf,
-      repeat: repeat - 1,
-    }
-  } else {
-    delete keyboardState.repeatKey
-  }
-
-  if (text.length > consumedLength || repeat > 1) {
-    if (typeof delay === 'number') {
-      await wait(delay)
-    }
-
-    return keyboardImplementation(config, text.slice(consumedLength))
-  }
-  return void undefined
 }
 
 function getActive(document: Document): Element {

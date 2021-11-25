@@ -1,5 +1,4 @@
 import {Config} from '../setup'
-import {getNextKeyDef} from './getNextKeyDef'
 
 /**
  * @internal Do not create/alter this by yourself as this type might be subject to changes.
@@ -42,11 +41,6 @@ export type keyboardState = {
       E.g. ^1
     */
   carryChar: string
-
-  /**
-      Repeat keydown and keypress event
-   */
-  repeatKey?: ReturnType<typeof getNextKeyDef>
 }
 
 export enum DOM_KEY_LOCATION {

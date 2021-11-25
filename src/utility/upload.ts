@@ -1,6 +1,7 @@
-import {fireEvent, createEvent} from '@testing-library/dom'
-import {blur, focus, isDisabled, isElementType} from '../utils'
+import {fireEvent} from '@testing-library/dom'
+import {blur, createFileList, focus, isDisabled, isElementType} from '../utils'
 import {Config, UserEvent} from '../setup'
+import {setFiles} from '#src/utils/edit/setFiles'
 
 export interface uploadInit {
   changeInit?: EventInit
@@ -10,11 +11,10 @@ export async function upload(
   this: UserEvent,
   element: HTMLElement,
   fileOrFiles: File | File[],
-  init?: uploadInit,
 ) {
   const input = isElementType(element, 'label') ? element.control : element
 
-  if (!input || !isElementType(input, 'input', {type: 'file'})) {
+  if (!input || !isElementType(input, 'input', {type: 'file' as const})) {
     throw new TypeError(
       `The ${input === element ? 'given' : 'associated'} ${
         input?.tagName
@@ -44,38 +44,9 @@ export async function upload(
     return
   }
 
-  // the event fired in the browser isn't actually an "input" or "change" event
-  // but a new Event with a type set to "input" and "change"
-  // Kinda odd...
-  const inputFiles: FileList & Iterable<File> = {
-    ...files,
-    length: files.length,
-    item: (index: number) => files[index],
-    [Symbol.iterator]() {
-      let i = 0
-      return {
-        next: () => ({
-          done: i >= files.length,
-          value: files[i++],
-        }),
-      }
-    },
-  }
-
-  fireEvent(
-    input,
-    createEvent('input', input, {
-      target: {files: inputFiles},
-      bubbles: true,
-      cancelable: false,
-      composed: true,
-    }),
-  )
-
-  fireEvent.change(input, {
-    target: {files: inputFiles},
-    ...init?.changeInit,
-  })
+  setFiles(input, createFileList(files))
+  fireEvent.input(input)
+  fireEvent.change(input)
 }
 
 function isAcceptableFile(file: File, accept: string) {

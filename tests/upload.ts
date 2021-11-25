@@ -11,7 +11,7 @@ test('should fire the correct events for input', async () => {
   // value of the input programmatically. The value in the browser
   // set by a user would be: `C:\\fakepath\\${file.name}`
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
-    Events fired on: input[value=""]
+    Events fired on: input[value="C:\\\\fakepath\\\\hello.png"]
 
     input[value=""] - pointerover
     input[value=""] - pointerenter
@@ -30,8 +30,8 @@ test('should fire the correct events for input', async () => {
     input[value=""] - focusout
     input[value=""] - focus
     input[value=""] - focusin
-    input[value=""] - input
-    input[value=""] - change
+    input[value="C:\\\\fakepath\\\\hello.png"] - input
+    input[value="C:\\\\fakepath\\\\hello.png"] - change
   `)
 })
 
@@ -64,8 +64,8 @@ test('should fire the correct events with label', async () => {
     label[for="element"] - click: primary
     input#element[value=""] - click: primary
     input#element[value=""] - focusin
-    input#element[value=""] - input
-    input#element[value=""] - change
+    input#element[value="C:\\\\fakepath\\\\hello.png"] - input
+    input#element[value="C:\\\\fakepath\\\\hello.png"] - change
   `)
 })
 
@@ -187,7 +187,7 @@ test.each([
     />
   `)
 
-    await userEvent.upload(element, files, undefined, {applyAccept})
+    await userEvent.upload(element, files, {applyAccept})
 
     expect(element.files).toHaveLength(expectedLength)
   },
@@ -254,15 +254,4 @@ test('throw error if trying to use upload on an invalid element', async () => {
   ).rejects.toThrowErrorMatchingInlineSnapshot(
     `The associated INPUT element does not accept file uploads`,
   )
-})
-
-test('apply init options', async () => {
-  const {element, getEvents} = setup('<input type="file"/>')
-
-  await userEvent.upload(element, new File([], 'hello.png'), {
-    changeInit: {cancelable: true},
-  })
-
-  expect(getEvents('click')[0]).toHaveProperty('shiftKey', false)
-  expect(getEvents('change')[0]).toHaveProperty('cancelable', true)
 })

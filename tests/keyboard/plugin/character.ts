@@ -2,20 +2,20 @@ import {getUIValue} from '#src/document/value'
 import userEvent from '#src'
 import {setup} from '#testHelpers/utils'
 
-test('type [Enter] in textarea', () => {
+test('type [Enter] in textarea', async () => {
   const {element, getEvents} = setup(`<textarea>f</textarea>`)
 
-  userEvent.type(element, 'oo[Enter]bar[ShiftLeft>][Enter]baz')
+  await userEvent.type(element, 'oo[Enter]bar[ShiftLeft>][Enter]baz')
 
   expect(element).toHaveValue('foo\nbar\nbaz')
   expect(getEvents('input')[2]).toHaveProperty('inputType', 'insertLineBreak')
   expect(getEvents('input')[6]).toHaveProperty('inputType', 'insertLineBreak')
 })
 
-test('type [Enter] in contenteditable', () => {
+test('type [Enter] in contenteditable', async () => {
   const {element, getEvents} = setup(`<div contenteditable="true">f</div>`)
 
-  userEvent.type(element, 'oo[Enter]bar[ShiftLeft>][Enter]baz')
+  await userEvent.type(element, 'oo[Enter]bar[ShiftLeft>][Enter]baz')
 
   expect(element).toHaveTextContent('foo bar baz')
   expect(element.firstChild).toHaveProperty('nodeValue', 'foo\nbar\nbaz')
@@ -31,13 +31,13 @@ test.each([
   ['1e5-', 1e5, '1e5', 3],
 ])(
   'type invalid values into <input type="number"/>',
-  (text, expectedValue, expectedUiValue, expectedInputEvents) => {
+  async (text, expectedValue, expectedUiValue, expectedInputEvents) => {
     const {element, getEvents} = setup<HTMLInputElement>(
       `<input type="number"/>`,
     )
     element.focus()
 
-    userEvent.keyboard(text)
+    await userEvent.keyboard(text)
 
     expect(element).toHaveValue(expectedValue)
     expect(getUIValue(element)).toBe(expectedUiValue)

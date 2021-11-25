@@ -1,12 +1,12 @@
 import userEvent from '#src'
 import {setup} from '#testHelpers/utils'
 
-test('should paste text in input', () => {
+test('should paste text in input', async () => {
   const {element, getEventSnapshot} = setup('<input />')
   element.focus()
 
   const text = 'Hello, world!'
-  userEvent.paste(text)
+  await userEvent.paste(text)
   expect(element).toHaveValue(text)
   expect(element).toHaveProperty('selectionStart', 13)
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
@@ -19,12 +19,12 @@ test('should paste text in input', () => {
   `)
 })
 
-test('should paste text in textarea', () => {
+test('should paste text in textarea', async () => {
   const {element, getEventSnapshot} = setup('<textarea />')
   element.focus()
 
   const text = 'Hello, world!'
-  userEvent.paste(text)
+  await userEvent.paste(text)
   expect(element).toHaveValue(text)
   expect(element).toHaveProperty('selectionStart', 13)
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
@@ -37,11 +37,11 @@ test('should paste text in textarea', () => {
   `)
 })
 
-test('does not paste when readOnly', () => {
+test('does not paste when readOnly', async () => {
   const {element, getEventSnapshot} = setup('<input readonly />')
   element.focus()
 
-  userEvent.paste('hi')
+  await userEvent.paste('hi')
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value=""]
 
@@ -51,11 +51,11 @@ test('does not paste when readOnly', () => {
   `)
 })
 
-test('does not paste when disabled', () => {
+test('does not paste when disabled', async () => {
   const {element, getEventSnapshot} = setup('<input disabled />')
   element.focus()
 
-  userEvent.paste('hi')
+  await userEvent.paste('hi')
   expect(getEventSnapshot()).toMatchInlineSnapshot(
     `No events were fired on: input[value=""]`,
   )
@@ -63,41 +63,45 @@ test('does not paste when disabled', () => {
 
 test.each(['input', 'textarea'])(
   'should paste text in <%s> up to maxLength if provided',
-  type => {
-    const {element} = setup(`<${type} maxlength="10" />`)
+  async type => {
+    const {element} = setup<HTMLInputElement | HTMLTextAreaElement>(
+      `<${type} maxlength="10" />`,
+    )
 
-    userEvent.type(element, 'superlongtext')
+    await userEvent.type(element, 'superlongtext')
     expect(element).toHaveValue('superlongt')
 
     element.value = ''
-    userEvent.paste('superlongtext')
+    await userEvent.paste('superlongtext')
     expect(element).toHaveValue('superlongt')
   },
 )
 
 test.each(['input', 'textarea'])(
   'should append text in <%s> up to maxLength if provided',
-  type => {
-    const {element} = setup(`<${type} maxlength="10" />`)
+  async type => {
+    const {element} = setup<HTMLInputElement | HTMLTextAreaElement>(
+      `<${type} maxlength="10" />`,
+    )
 
-    userEvent.type(element, 'superlong')
-    userEvent.type(element, 'text')
+    await userEvent.type(element, 'superlong')
+    await userEvent.type(element, 'text')
     expect(element).toHaveValue('superlongt')
 
     element.value = ''
-    userEvent.paste('superlongtext')
+    await userEvent.paste('superlongtext')
     expect(element).toHaveValue('superlongt')
   },
 )
 
-test('should replace selected text all at once', () => {
-  const {element} = setup('<input value="hello world" />')
+test('should replace selected text all at once', async () => {
+  const {element} = setup<HTMLInputElement>('<input value="hello world" />')
 
   const selectionStart = 'hello world'.search('world')
   const selectionEnd = selectionStart + 'world'.length
   element.focus()
   element.setSelectionRange(selectionStart, selectionEnd)
-  userEvent.paste('friend')
+  await userEvent.paste('friend')
   expect(element).toHaveValue('hello friend')
 })
 
@@ -106,7 +110,7 @@ describe('paste from clipboard', () => {
     const {element, getEvents} = setup(`<input/>`)
     element.focus()
 
-    await expect(() => userEvent.paste()).rejects.toMatchInlineSnapshot(
+    await expect(userEvent.paste()).rejects.toMatchInlineSnapshot(
       `[Error: \`userEvent.paste()\` without \`clipboardData\` requires the \`ClipboardAPI\` to be available.]`,
     )
     expect(getEvents('paste')).toHaveLength(0)
@@ -127,7 +131,7 @@ describe('paste from clipboard', () => {
 
     userEvent.setup()
 
-    element.ownerDocument.defaultView.navigator.clipboard.writeText('foo')
+    element.ownerDocument.defaultView?.navigator.clipboard.writeText('foo')
     await userEvent.paste()
     expect(getEvents('paste')).toHaveLength(1)
     expect(getEvents('input')).toHaveLength(1)

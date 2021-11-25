@@ -1,4 +1,5 @@
 import {setUISelection} from '../document'
+import {inputDeviceState} from '../setup'
 import {
   PointerCoords,
   firePointerEvent,
@@ -6,7 +7,7 @@ import {
   isDisabled,
 } from '../utils'
 import {resolveSelectionTarget} from './resolveSelectionTarget'
-import {inputDeviceState, PointerTarget, SelectionTarget} from './types'
+import {PointerTarget, SelectionTarget} from './types'
 
 export interface PointerMoveAction extends PointerTarget, SelectionTarget {
   pointerName?: string

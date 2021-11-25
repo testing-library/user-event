@@ -1,37 +1,37 @@
 import userEvent from '#src'
 import {setup} from '#testHelpers/utils'
 
-test('no character input if `altKey` or `ctrlKey` is pressed', () => {
+test('no character input if `altKey` or `ctrlKey` is pressed', async () => {
   const {element, eventWasFired} = setup(`<input/>`)
   element.focus()
 
-  userEvent.keyboard('[ControlLeft>]g')
+  await userEvent.keyboard('[ControlLeft>]g')
 
   expect(eventWasFired('keypress')).toBe(false)
   expect(eventWasFired('input')).toBe(false)
 
-  userEvent.keyboard('[AltLeft>]g')
+  await userEvent.keyboard('[AltLeft>]g')
 
   expect(eventWasFired('keypress')).toBe(false)
   expect(eventWasFired('input')).toBe(false)
 })
 
-test('do not leak repeatKey in state', () => {
+test('do not leak repeatKey in state', async () => {
   const {element} = setup(`<input/>`)
   ;(element as HTMLInputElement).focus()
 
-  const keyboardState = userEvent.keyboard('{a>2}')
+  const keyboardState = await userEvent.keyboard('{a>2}')
   expect(keyboardState).toHaveProperty('repeatKey', undefined)
 })
 
 describe('pressing and releasing keys', () => {
-  it('fires event with releasing key twice', () => {
+  it('fires event with releasing key twice', async () => {
     const {element, getEventSnapshot, clearEventCalls} = setup(`<input/>`)
 
     ;(element as HTMLInputElement).focus()
     clearEventCalls()
 
-    userEvent.keyboard('{ArrowLeft>}{ArrowLeft}')
+    await userEvent.keyboard('{ArrowLeft>}{ArrowLeft}')
 
     expect(getEventSnapshot()).toMatchInlineSnapshot(`
       Events fired on: input[value=""]
@@ -43,13 +43,13 @@ describe('pressing and releasing keys', () => {
     `)
   })
 
-  it('fires event without releasing key', () => {
+  it('fires event without releasing key', async () => {
     const {element, getEventSnapshot, clearEventCalls} = setup(`<input/>`)
 
     ;(element as HTMLInputElement).focus()
     clearEventCalls()
 
-    userEvent.keyboard('{a>}')
+    await userEvent.keyboard('{a>}')
 
     expect(getEventSnapshot()).toMatchInlineSnapshot(`
       Events fired on: input[value="a"]
@@ -60,12 +60,12 @@ describe('pressing and releasing keys', () => {
     `)
   })
 
-  it('fires event multiple times without releasing key', () => {
+  it('fires event multiple times without releasing key', async () => {
     const {element, getEventSnapshot, clearEventCalls} = setup(`<input/>`)
     ;(element as HTMLInputElement).focus()
     clearEventCalls()
 
-    userEvent.keyboard('{a>2}')
+    await userEvent.keyboard('{a>2}')
 
     expect(getEventSnapshot()).toMatchInlineSnapshot(`
       Events fired on: input[value="aa"]
@@ -79,12 +79,12 @@ describe('pressing and releasing keys', () => {
     `)
   })
 
-  it('fires event multiple times and releases key', () => {
+  it('fires event multiple times and releases key', async () => {
     const {element, getEventSnapshot, clearEventCalls} = setup(`<input/>`)
     ;(element as HTMLInputElement).focus()
     clearEventCalls()
 
-    userEvent.keyboard('{a>2/}')
+    await userEvent.keyboard('{a>2/}')
 
     expect(getEventSnapshot()).toMatchInlineSnapshot(`
       Events fired on: input[value="aa"]
@@ -99,12 +99,12 @@ describe('pressing and releasing keys', () => {
     `)
   })
 
-  it('fires event multiple times for multiple keys', () => {
+  it('fires event multiple times for multiple keys', async () => {
     const {element, getEventSnapshot, clearEventCalls} = setup(`<input/>`)
     ;(element as HTMLInputElement).focus()
     clearEventCalls()
 
-    userEvent.keyboard('{a>2}{b>2/}{c>2}{/a}')
+    await userEvent.keyboard('{a>2}{b>2/}{c>2}{/a}')
 
     expect(getEventSnapshot()).toMatchInlineSnapshot(`
       Events fired on: input[value="aabbcc"]
@@ -131,4 +131,13 @@ describe('pressing and releasing keys', () => {
       input[value="aabbcc"] - keyup: a
     `)
   })
+})
+
+test('do not call setTimeout with delay `null`', async () => {
+  setup(`<div></div>`)
+  const spy = jest.spyOn(global, 'setTimeout')
+  await userEvent.keyboard('ab')
+  expect(spy).toBeCalledTimes(1)
+  await userEvent.keyboard('cd', {delay: null})
+  expect(spy).toBeCalledTimes(1)
 })

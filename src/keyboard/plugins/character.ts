@@ -26,10 +26,10 @@ export const keypressBehavior: behaviorPlugin[] = [
     matches: (keyDef, element) =>
       keyDef.key?.length === 1 &&
       isElementType(element, 'input', {type: 'time', readOnly: false}),
-    handle: (keyDef, element, options, state) => {
+    handle: (keyDef, element, {keyboardState}) => {
       let newEntry = keyDef.key as string
 
-      const textToBeTyped = (state.carryValue ?? '') + newEntry
+      const textToBeTyped = (keyboardState.carryValue ?? '') + newEntry
       const timeNewEntry = buildTimeValue(textToBeTyped)
       if (
         isValidInputTimeValue(
@@ -69,17 +69,17 @@ export const keypressBehavior: behaviorPlugin[] = [
         timeNewEntry,
       )
 
-      state.carryValue = textToBeTyped
+      keyboardState.carryValue = textToBeTyped
     },
   },
   {
     matches: (keyDef, element) =>
       keyDef.key?.length === 1 &&
       isElementType(element, 'input', {type: 'date', readOnly: false}),
-    handle: (keyDef, element, options, state) => {
+    handle: (keyDef, element, {keyboardState}) => {
       let newEntry = keyDef.key as string
 
-      const textToBeTyped = (state.carryValue ?? '') + newEntry
+      const textToBeTyped = (keyboardState.carryValue ?? '') + newEntry
       const isValidToBeTyped = isValidDateValue(
         element as HTMLInputElement & {type: 'date'},
         textToBeTyped,
@@ -117,7 +117,7 @@ export const keypressBehavior: behaviorPlugin[] = [
         })
       }
 
-      state.carryValue = textToBeTyped
+      keyboardState.carryValue = textToBeTyped
     },
   },
   {
@@ -167,11 +167,11 @@ export const keypressBehavior: behaviorPlugin[] = [
       (isElementType(element, 'textarea', {readOnly: false}) ||
         isContentEditable(element)) &&
       getSpaceUntilMaxLength(element) !== 0,
-    handle: (keyDef, element, options, state) => {
+    handle: (keyDef, element, {keyboardState}) => {
       prepareInput(
         '\n',
         element,
-        isContentEditable(element) && !state.modifiers.shift
+        isContentEditable(element) && !keyboardState.modifiers.shift
           ? 'insertParagraph'
           : 'insertLineBreak',
       )?.commit()

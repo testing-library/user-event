@@ -1,5 +1,5 @@
 import {readNextDescriptor} from '../utils'
-import {keyboardKey, keyboardOptions} from './types'
+import {keyboardKey} from './types'
 
 /**
  * Get the next key from keyMap
@@ -12,8 +12,8 @@ import {keyboardKey, keyboardOptions} from './types'
  * You can then release the key per `{key>3/}` or keep it pressed and continue with the next key.
  */
 export function getNextKeyDef(
+  keyboardMap: keyboardKey[],
   text: string,
-  options: keyboardOptions,
 ): {
   keyDef: keyboardKey
   consumedLength: number
@@ -30,7 +30,7 @@ export function getNextKeyDef(
     repeat,
   } = readNextDescriptor(text)
 
-  const keyDef = options.keyboardMap.find(def => {
+  const keyDef = keyboardMap.find(def => {
     if (type === '[') {
       return def.code?.toLowerCase() === descriptor.toLowerCase()
     } else if (type === '{') {

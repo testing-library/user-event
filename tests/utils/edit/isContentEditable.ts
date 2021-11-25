@@ -1,7 +1,7 @@
 import {setup} from '#testHelpers/utils'
 import {isContentEditable} from '#src/utils'
 
-test('report if element is contenteditable', () => {
+test('report if element is contenteditable', async () => {
   const {elements} = setup(
     `<div></div><div contenteditable="false"></div><div contenteditable></div><div contenteditable="true"></div>`,
   )

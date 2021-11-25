@@ -10,8 +10,8 @@ import {
   isFocusable,
 } from '../utils'
 import {getUIValue, setUISelection} from '../document'
+import {inputDeviceState} from '../setup'
 import type {
-  inputDeviceState,
   pointerKey,
   pointerState,
   PointerTarget,

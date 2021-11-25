@@ -1,7 +1,7 @@
 import {createDataTransfer, getBlobFromDataTransferItem} from '#src/utils'
 
 describe('create DataTransfer', () => {
-  test('plain string', () => {
+  test('plain string', async () => {
     const dt = createDataTransfer()
     dt.setData('text/plain', 'foo')
 
@@ -12,7 +12,7 @@ describe('create DataTransfer', () => {
     expect(callback).toBeCalledWith('foo')
   })
 
-  test('multi format', () => {
+  test('multi format', async () => {
     const dt = createDataTransfer()
     dt.setData('text/plain', 'foo')
     dt.setData('text/html', 'bar')
@@ -30,7 +30,7 @@ describe('create DataTransfer', () => {
     expect(dt.getData('text')).toBe('baz')
   })
 
-  test('overwrite item', () => {
+  test('overwrite item', async () => {
     const dt = createDataTransfer()
     dt.setData('text/plain', 'foo')
     dt.setData('text/plain', 'bar')
@@ -39,7 +39,7 @@ describe('create DataTransfer', () => {
     expect(dt.getData('text')).toBe('bar')
   })
 
-  test('files operation', () => {
+  test('files operation', async () => {
     const f0 = new File(['bar'], 'bar0.txt', {type: 'text/plain'})
     const f1 = new File(['bar'], 'bar1.txt', {type: 'text/plain'})
     const dt = createDataTransfer([f0, f1])
@@ -49,7 +49,7 @@ describe('create DataTransfer', () => {
     expect(dt.files.length).toBe(2)
   })
 
-  test('files item', () => {
+  test('files item', async () => {
     const f0 = new File(['bar'], 'bar0.txt', {type: 'text/plain'})
     const dt = createDataTransfer()
     dt.setData('text/html', 'foo')
@@ -65,7 +65,7 @@ describe('create DataTransfer', () => {
     expect(callback).not.toBeCalled()
   })
 
-  test('clear data', () => {
+  test('clear data', async () => {
     const f0 = new File(['bar'], 'bar0.txt', {type: 'text/plain'})
     const dt = createDataTransfer()
     dt.setData('text/html', 'foo')
@@ -85,7 +85,7 @@ describe('create DataTransfer', () => {
   })
 })
 
-test('get Blob from DataTransfer', () => {
+test('get Blob from DataTransfer', async () => {
   const dt = createDataTransfer()
   dt.items.add('foo', 'text/plain')
   dt.items.add(new File(['bar'], 'bar.txt', {type: 'text/plain'}))

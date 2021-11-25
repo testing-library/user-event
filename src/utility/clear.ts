@@ -1,5 +1,4 @@
-import {prepareDocument} from './document'
-import type {UserEvent} from './setup'
+import type {UserEvent} from '../setup'
 import {
   focus,
   isAllSelected,
@@ -7,14 +6,12 @@ import {
   isEditable,
   prepareInput,
   selectAll,
-} from './utils'
+} from '../utils'
 
-export function clear(this: UserEvent, element: Element) {
+export async function clear(this: UserEvent, element: Element) {
   if (!isEditable(element) || isDisabled(element)) {
     throw new Error('clear()` is only supported on editable elements.')
   }
-
-  prepareDocument(element.ownerDocument)
 
   focus(element)
 

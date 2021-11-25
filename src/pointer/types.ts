@@ -1,4 +1,3 @@
-import {keyboardState} from '../keyboard/types'
 import {PointerCoords, MouseButton} from '../utils'
 
 /**
@@ -42,13 +41,6 @@ export type pointerState = {
   pointerId: number
 }
 
-export type pointerOptions = {
-  /** Delay between keystrokes */
-  delay: number
-  /** Available pointer keys */
-  pointerMap: pointerKey[]
-}
-
 export interface pointerKey {
   /** Name of the pointer key */
   name: string
@@ -77,9 +69,4 @@ export interface SelectionInputRange {
   node: HTMLInputElement | HTMLTextAreaElement
   start: number
   end: number
-}
-
-export interface inputDeviceState {
-  pointerState: pointerState
-  keyboardState: keyboardState
 }

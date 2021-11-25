@@ -1,11 +1,11 @@
 import userEvent from '#src'
 import {setup, addListeners} from '#testHelpers/utils'
 
-test('should fire the correct events for input', () => {
+test('should fire the correct events for input', async () => {
   const file = new File(['hello'], 'hello.png', {type: 'image/png'})
   const {element, getEventSnapshot} = setup('<input type="file" />')
 
-  userEvent.upload(element, file)
+  await userEvent.upload(element, file)
 
   // NOTE: A known limitation is that it's impossible to set the
   // value of the input programmatically. The value in the browser
@@ -35,7 +35,7 @@ test('should fire the correct events for input', () => {
   `)
 })
 
-test('should fire the correct events with label', () => {
+test('should fire the correct events with label', async () => {
   const file = new File(['hello'], 'hello.png', {type: 'image/png'})
 
   const {element, getEventSnapshot} = setup(`
@@ -45,7 +45,10 @@ test('should fire the correct events with label', () => {
     </form>
   `)
 
-  userEvent.upload(element.querySelector('label'), file)
+  await userEvent.upload(
+    element.querySelector('label') as HTMLLabelElement,
+    file,
+  )
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: form
@@ -66,34 +69,34 @@ test('should fire the correct events with label', () => {
   `)
 })
 
-test('should upload the file', () => {
+test('should upload the file', async () => {
   const file = new File(['hello'], 'hello.png', {type: 'image/png'})
-  const {element} = setup('<input type="file" />')
+  const {element} = setup<HTMLInputElement>('<input type="file" />')
 
-  userEvent.upload(element, file)
+  await userEvent.upload(element, file)
 
-  expect(element.files[0]).toStrictEqual(file)
-  expect(element.files.item(0)).toStrictEqual(file)
+  expect(element.files?.[0]).toStrictEqual(file)
+  expect(element.files?.item(0)).toStrictEqual(file)
   expect(element.files).toHaveLength(1)
 })
 
-test('should upload multiple files', () => {
+test('should upload multiple files', async () => {
   const files = [
     new File(['hello'], 'hello.png', {type: 'image/png'}),
     new File(['there'], 'there.png', {type: 'image/png'}),
   ]
-  const {element} = setup('<input type="file" multiple />')
+  const {element} = setup<HTMLInputElement>('<input type="file" multiple />')
 
-  userEvent.upload(element, files)
+  await userEvent.upload(element, files)
 
-  expect(element.files[0]).toStrictEqual(files[0])
-  expect(element.files.item(0)).toStrictEqual(files[0])
-  expect(element.files[1]).toStrictEqual(files[1])
-  expect(element.files.item(1)).toStrictEqual(files[1])
+  expect(element.files?.[0]).toStrictEqual(files[0])
+  expect(element.files?.item(0)).toStrictEqual(files[0])
+  expect(element.files?.[1]).toStrictEqual(files[1])
+  expect(element.files?.item(1)).toStrictEqual(files[1])
   expect(element.files).toHaveLength(2)
 })
 
-test('should upload multiple files when firing on the label', () => {
+test('should upload multiple files when firing on the label', async () => {
   const files = [
     new File(['hello'], 'hello.png', {type: 'image/png'}),
     new File(['there'], 'there.png', {type: 'image/png'}),
@@ -105,30 +108,30 @@ test('should upload multiple files when firing on the label', () => {
     </div>
   `)
 
-  const label = element.children[0]
-  const input = element.children[1]
+  const label = element.children[0] as HTMLLabelElement
+  const input = element.children[1] as HTMLInputElement
 
-  userEvent.upload(label, files)
+  await userEvent.upload(label, files)
 
-  expect(input.files[0]).toStrictEqual(files[0])
-  expect(input.files.item(0)).toStrictEqual(files[0])
-  expect(input.files[1]).toStrictEqual(files[1])
-  expect(input.files.item(1)).toStrictEqual(files[1])
+  expect(input.files?.[0]).toStrictEqual(files[0])
+  expect(input.files?.item(0)).toStrictEqual(files[0])
+  expect(input.files?.[1]).toStrictEqual(files[1])
+  expect(input.files?.item(1)).toStrictEqual(files[1])
   expect(input.files).toHaveLength(2)
 })
 
-test('should not upload when is disabled', () => {
+test('should not upload when is disabled', async () => {
   const file = new File(['hello'], 'hello.png', {type: 'image/png'})
-  const {element} = setup('<input type="file" disabled />')
+  const {element} = setup<HTMLInputElement>('<input type="file" disabled />')
 
-  userEvent.upload(element, file)
+  await userEvent.upload(element, file)
 
-  expect(element.files[0]).toBeUndefined()
-  expect(element.files.item(0)).toBeNull()
+  expect(element.files?.[0]).toBeUndefined()
+  expect(element.files?.item(0)).toBeNull()
   expect(element.files).toHaveLength(0)
 })
 
-test('should call onChange/input bubbling up the event when a file is selected', () => {
+test('should call onChange/input bubbling up the event when a file is selected', async () => {
   const file = new File(['hello'], 'hello.png', {type: 'image/png'})
 
   const {element: form} = setup(`
@@ -136,7 +139,7 @@ test('should call onChange/input bubbling up the event when a file is selected',
       <input type="file" />
     </form>
   `)
-  const input = form.querySelector('input')
+  const input = form.querySelector('input') as HTMLInputElement
 
   const onChangeInput = jest.fn()
   const onChangeForm = jest.fn()
@@ -154,7 +157,7 @@ test('should call onChange/input bubbling up the event when a file is selected',
   expect(onInputInput).toHaveBeenCalledTimes(0)
   expect(onInputForm).toHaveBeenCalledTimes(0)
 
-  userEvent.upload(input, file)
+  await userEvent.upload(input, file)
 
   expect(onChangeForm).toHaveBeenCalledTimes(1)
   expect(onChangeInput).toHaveBeenCalledTimes(1)
@@ -170,28 +173,28 @@ test.each([
   [false, 'video/*', 4],
 ])(
   'should filter according to accept attribute applyAccept=%s, acceptAttribute=%s',
-  (applyAccept, acceptAttribute, expectedLength) => {
+  async (applyAccept, acceptAttribute, expectedLength) => {
     const files = [
       new File(['hello'], 'hello.png', {type: 'image/png'}),
       new File(['there'], 'there.jpg', {type: 'audio/mp3'}),
       new File(['there'], 'there.csv', {type: 'text/csv'}),
       new File(['there'], 'there.jpg', {type: 'video/mp4'}),
     ]
-    const {element} = setup(`
+    const {element} = setup<HTMLInputElement>(`
     <input
       type="file"
       accept="${acceptAttribute}" multiple
     />
   `)
 
-    userEvent.upload(element, files, undefined, {applyAccept})
+    await userEvent.upload(element, files, undefined, {applyAccept})
 
     expect(element.files).toHaveLength(expectedLength)
   },
 )
 
-test('should not trigger input event when selected files are the same', () => {
-  const {element, eventWasFired, clearEventCalls} = setup(
+test('should not trigger input event when selected files are the same', async () => {
+  const {element, eventWasFired, clearEventCalls} = setup<HTMLInputElement>(
     '<input type="file" multiple/>',
   )
   const files = [
@@ -199,62 +202,64 @@ test('should not trigger input event when selected files are the same', () => {
     new File(['there'], 'there.png', {type: 'image/png'}),
   ]
 
-  userEvent.upload(element, [])
+  await userEvent.upload(element, [])
   expect(eventWasFired('input')).toBe(false)
   expect(element.files).toHaveLength(0)
 
-  userEvent.upload(element, files)
+  await userEvent.upload(element, files)
   expect(eventWasFired('input')).toBe(true)
   expect(element.files).toHaveLength(2)
 
   clearEventCalls()
 
-  userEvent.upload(element, files)
+  await userEvent.upload(element, files)
   expect(eventWasFired('input')).toBe(false)
   expect(element.files).toHaveLength(2)
 
-  userEvent.upload(element, [])
+  await userEvent.upload(element, [])
   expect(eventWasFired('input')).toBe(true)
   expect(element.files).toHaveLength(0)
 })
 
-test('input.files implements iterable', () => {
-  const {element, getEvents} = setup(`<input type="file" multiple/>`)
+test('input.files implements iterable', async () => {
+  const {element, getEvents} = setup<HTMLInputElement>(
+    `<input type="file" multiple/>`,
+  )
   const files = [
     new File(['hello'], 'hello.png', {type: 'image/png'}),
     new File(['there'], 'there.png', {type: 'image/png'}),
   ]
 
-  userEvent.upload(element, files)
-  const eventTargetFiles = getEvents('input')[0].target.files
+  await userEvent.upload(element, files)
+  const eventTargetFiles = (getEvents('input')[0].target as HTMLInputElement)
+    .files
 
   expect(eventTargetFiles).toBe(element.files)
   expect(eventTargetFiles).not.toEqual(files)
 
-  expect(Array.from(eventTargetFiles)).toEqual(files)
+  expect(eventTargetFiles && Array.from(eventTargetFiles)).toEqual(files)
 })
 
-test('throw error if trying to use upload on an invalid element', () => {
+test('throw error if trying to use upload on an invalid element', async () => {
   const {elements} = setup('<div></div><label><input type="checkbox"/></label>')
 
-  expect(() =>
-    userEvent.upload(elements[0], "I'm only a div :("),
-  ).toThrowErrorMatchingInlineSnapshot(
+  await expect(
+    userEvent.upload(elements[0], new File([], '')),
+  ).rejects.toThrowErrorMatchingInlineSnapshot(
     `The given DIV element does not accept file uploads`,
   )
 
-  expect(() =>
-    userEvent.upload(elements[1], "I'm a checkbox :("),
-  ).toThrowErrorMatchingInlineSnapshot(
+  await expect(
+    userEvent.upload(elements[1], new File([], '')),
+  ).rejects.toThrowErrorMatchingInlineSnapshot(
     `The associated INPUT element does not accept file uploads`,
   )
 })
 
-test('apply init options', () => {
+test('apply init options', async () => {
   const {element, getEvents} = setup('<input type="file"/>')
 
-  userEvent.upload(element, new File([], 'hello.png'), {
-    clickInit: {shiftKey: true},
+  await userEvent.upload(element, new File([], 'hello.png'), {
     changeInit: {cancelable: true},
   })
 

@@ -48,7 +48,7 @@ describe('read from and write to clipboard', () => {
     await expect(window.navigator.clipboard.readText()).resolves.toBe('')
   })
 
-  test('detach clipboard', () => {
+  test('detach clipboard', async () => {
     expect(window.navigator.clipboard).not.toBe(undefined)
     detachClipboardStubFromView(window)
     expect(window.navigator.clipboard).toBe(undefined)

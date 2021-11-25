@@ -3,9 +3,9 @@ import {setup} from '#testHelpers/utils'
 
 // TODO: focus the maxlength tests on the tested aspects
 
-test('honors maxlength', () => {
+test('honors maxlength', async () => {
   const {element, getEventSnapshot} = setup('<input maxlength="2" />')
-  userEvent.type(element, '123')
+  await userEvent.type(element, '123')
 
   // NOTE: no input event when typing "3"
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
@@ -38,9 +38,9 @@ test('honors maxlength', () => {
   `)
 })
 
-test('honors maxlength="" as if there was no maxlength', () => {
+test('honors maxlength="" as if there was no maxlength', async () => {
   const {element, getEventSnapshot} = setup('<input maxlength="" />')
-  userEvent.type(element, '123')
+  await userEvent.type(element, '123')
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value="123"]
@@ -73,11 +73,11 @@ test('honors maxlength="" as if there was no maxlength', () => {
   `)
 })
 
-test('honors maxlength with existing text', () => {
+test('honors maxlength with existing text', async () => {
   const {element, getEventSnapshot} = setup(
     '<input value="12" maxlength="2" />',
   )
-  userEvent.type(element, '3')
+  await userEvent.type(element, '3')
 
   // NOTE: no input event when typing "3"
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
@@ -103,12 +103,12 @@ test('honors maxlength with existing text', () => {
   `)
 })
 
-test('honors maxlength on textarea', () => {
+test('honors maxlength on textarea', async () => {
   const {element, getEventSnapshot} = setup(
     '<textarea maxlength="2">12</textarea>',
   )
 
-  userEvent.type(element, '3')
+  await userEvent.type(element, '3')
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: textarea[value="12"]
@@ -134,10 +134,10 @@ test('honors maxlength on textarea', () => {
 })
 
 // https://github.com/testing-library/user-event/issues/418
-test('ignores maxlength on input[type=number]', () => {
+test('ignores maxlength on input[type=number]', async () => {
   const {element} = setup(`<input maxlength="2" type="number" value="12" />`)
 
-  userEvent.type(element, '3')
+  await userEvent.type(element, '3')
 
   expect(element).toHaveValue(123)
 })

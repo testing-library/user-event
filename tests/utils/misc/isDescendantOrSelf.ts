@@ -1,7 +1,7 @@
 import {setup} from '#testHelpers/utils'
 import {isDescendantOrSelf} from '#src/utils'
 
-test('isDescendantOrSelf', () => {
+test('isDescendantOrSelf', async () => {
   setup(`<div><p><span></span><a></a></p></div>`)
 
   expect(

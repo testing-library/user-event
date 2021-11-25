@@ -1,11 +1,10 @@
 import userEvent from '#src'
-import {wait} from '#src/utils'
 import {setup, addListeners} from '#testHelpers/utils'
 import '#testHelpers/custom-element'
 
-test('types text in input', () => {
+test('types text in input', async () => {
   const {element, getEventSnapshot} = setup('<input />')
-  userEvent.type(element, 'Sup')
+  await userEvent.type(element, 'Sup')
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value="Sup"]
 
@@ -37,11 +36,11 @@ test('types text in input', () => {
   `)
 })
 
-test('can skip the initial click', () => {
+test('can skip the initial click', async () => {
   const {element, getEventSnapshot, clearEventCalls} = setup('<input />')
   element.focus() // users MUST focus themselves if they wish to skip the click
   clearEventCalls()
-  userEvent.type(element, 'Sup', {skipClick: true})
+  await userEvent.type(element, 'Sup', {skipClick: true})
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value="Sup"]
 
@@ -60,13 +59,15 @@ test('can skip the initial click', () => {
   `)
 })
 
-test('types text inside custom element', () => {
+test('types text inside custom element', async () => {
   const element = document.createElement('custom-el')
   document.body.append(element)
-  const inputEl = element.shadowRoot.querySelector('input')
+  const inputEl = (element.shadowRoot as ShadowRoot).querySelector(
+    'input',
+  ) as HTMLInputElement
   const {getEventSnapshot} = addListeners(inputEl)
 
-  userEvent.type(inputEl, 'Sup')
+  await userEvent.type(inputEl, 'Sup')
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value="Sup"]
 
@@ -98,9 +99,9 @@ test('types text inside custom element', () => {
   `)
 })
 
-test('types text in textarea', () => {
+test('types text in textarea', async () => {
   const {element, getEventSnapshot} = setup('<textarea></textarea>')
-  userEvent.type(element, 'Sup')
+  await userEvent.type(element, 'Sup')
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: textarea[value="Sup"]
 
@@ -132,12 +133,12 @@ test('types text in textarea', () => {
   `)
 })
 
-test('does not fire input event when keypress calls prevent default', () => {
+test('does not fire input event when keypress calls prevent default', async () => {
   const {element, getEventSnapshot} = setup('<input />', {
     eventHandlers: {keyPress: e => e.preventDefault()},
   })
 
-  userEvent.type(element, 'a')
+  await userEvent.type(element, 'a')
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value=""]
 
@@ -160,12 +161,12 @@ test('does not fire input event when keypress calls prevent default', () => {
   `)
 })
 
-test('does not fire keypress or input events when keydown calls prevent default', () => {
+test('does not fire keypress or input events when keydown calls prevent default', async () => {
   const {element, getEventSnapshot} = setup('<input />', {
     eventHandlers: {keyDown: e => e.preventDefault()},
   })
 
-  userEvent.type(element, 'a')
+  await userEvent.type(element, 'a')
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value=""]
 
@@ -187,19 +188,19 @@ test('does not fire keypress or input events when keydown calls prevent default'
   `)
 })
 
-test('does not fire events when disabled', () => {
+test('does not fire events when disabled', async () => {
   const {element, getEventSnapshot} = setup('<input disabled />')
 
-  userEvent.type(element, 'a')
+  await userEvent.type(element, 'a')
   expect(getEventSnapshot()).toMatchInlineSnapshot(
     `No events were fired on: input[value=""]`,
   )
 })
 
-test('does not fire input when readonly', () => {
+test('does not fire input when readonly', async () => {
   const {element, getEventSnapshot} = setup('<input readonly />')
 
-  userEvent.type(element, 'a')
+  await userEvent.type(element, 'a')
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value=""]
 
@@ -225,14 +226,16 @@ test('does not fire input when readonly', () => {
 test('should delay the typing when opts.delay is not 0', async () => {
   const inputValues = [{timestamp: Date.now(), value: ''}]
   const onInput = jest.fn(event => {
-    inputValues.push({timestamp: Date.now(), value: event.target.value})
+    inputValues.push({
+      timestamp: Date.now(),
+      value: ((event as InputEvent).target as HTMLInputElement).value,
+    })
   })
 
   const {element} = setup('<input />', {eventHandlers: {input: onInput}})
 
   const text = 'Hello, world!'
   const delay = 10
-  // eslint-disable-next-line testing-library/no-await-sync-events
   await userEvent.type(element, text, {delay})
 
   expect(onInput).toHaveBeenCalledTimes(text.length)
@@ -245,13 +248,13 @@ test('should delay the typing when opts.delay is not 0', async () => {
   }
 })
 
-test('should fire events on the currently focused element', () => {
+test('should fire events on the currently focused element', async () => {
   const {element} = setup(`<div><input /><input /></div>`, {
     eventHandlers: {keyDown: handleKeyDown},
   })
 
-  const input1 = element.children[0]
-  const input2 = element.children[1]
+  const input1 = element.children[0] as HTMLInputElement
+  const input2 = element.children[1] as HTMLInputElement
 
   const text = 'Hello, world!'
   const changeFocusLimit = 7
@@ -261,43 +264,45 @@ test('should fire events on the currently focused element', () => {
     }
   }
 
-  userEvent.type(input1, text)
+  await userEvent.type(input1, text)
 
   expect(input1).toHaveValue(text.slice(0, changeFocusLimit))
   expect(input2).toHaveValue(text.slice(changeFocusLimit))
   expect(input2).toHaveFocus()
 })
 
-test('should replace selected text', () => {
+test('should replace selected text', async () => {
   const {element} = setup('<input value="hello world" />')
-  userEvent.type(element, 'friend', {
+  await userEvent.type(element, 'friend', {
     initialSelectionStart: 6,
     initialSelectionEnd: 11,
   })
   expect(element).toHaveValue('hello friend')
 })
 
-test('does not continue firing events when disabled during typing', () => {
+test('does not continue firing events when disabled during typing', async () => {
   const {element} = setup('<input />', {
-    eventHandlers: {input: e => (e.target.disabled = true)},
+    eventHandlers: {
+      input: e => ((e.target as HTMLInputElement).disabled = true),
+    },
   })
-  userEvent.type(element, 'hi')
+  await userEvent.type(element, 'hi')
   expect(element).toHaveValue('h')
 })
 
 // https://github.com/testing-library/user-event/issues/346
-test('typing in an empty textarea', () => {
+test('typing in an empty textarea', async () => {
   const {element} = setup('<textarea></textarea>')
 
-  userEvent.type(element, '1234')
+  await userEvent.type(element, '1234')
   expect(element).toHaveValue('1234')
 })
 
 // https://github.com/testing-library/user-event/issues/321
-test('typing in a textarea with existing text', () => {
+test('typing in a textarea with existing text', async () => {
   const {element, getEventSnapshot} = setup('<textarea>Hello, </textarea>')
 
-  userEvent.type(element, '12')
+  await userEvent.type(element, '12')
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: textarea[value="Hello, 12"]
 
@@ -328,11 +333,13 @@ test('typing in a textarea with existing text', () => {
 })
 
 // https://github.com/testing-library/user-event/issues/321
-test('accepts an initialSelectionStart and initialSelectionEnd', () => {
-  const {element, getEventSnapshot} = setup('<textarea>Hello, </textarea>')
+test('accepts an initialSelectionStart and initialSelectionEnd', async () => {
+  const {element, getEventSnapshot} = setup<HTMLTextAreaElement>(
+    '<textarea>Hello, </textarea>',
+  )
   element.setSelectionRange(0, 0)
 
-  userEvent.type(element, '12', {
+  await userEvent.type(element, '12', {
     initialSelectionStart: element.selectionStart,
     initialSelectionEnd: element.selectionEnd,
   })
@@ -370,17 +377,17 @@ test('accepts an initialSelectionStart and initialSelectionEnd', () => {
 })
 
 // https://github.com/testing-library/user-event/issues/316#issuecomment-640199908
-test('can type into an input with type `email`', () => {
+test('can type into an input with type `email`', async () => {
   const {element} = setup('<input type="email" />')
   const email = 'yo@example.com'
-  userEvent.type(element, email)
+  await userEvent.type(element, email)
   expect(element).toHaveValue(email)
 })
 
-test('can type into an input with type `date`', () => {
+test('can type into an input with type `date`', async () => {
   const {element, getEventSnapshot} = setup('<input type="date" />')
   const date = '2020-06-29'
-  userEvent.type(element, date)
+  await userEvent.type(element, date)
   expect(element).toHaveValue(date)
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value="2020-06-29"]
@@ -434,10 +441,10 @@ test('can type into an input with type `date`', () => {
 })
 
 // https://github.com/testing-library/user-event/issues/336
-test('can type "-" into number inputs', () => {
+test('can type "-" into number inputs', async () => {
   const {element, getEventSnapshot} = setup('<input type="number" />')
   const negativeNumber = '-3'
-  userEvent.type(element, negativeNumber)
+  await userEvent.type(element, negativeNumber)
   expect(element).toHaveValue(-3)
 
   // NOTE: the input event here does not actually change the value thanks to
@@ -471,9 +478,9 @@ test('can type "-" into number inputs', () => {
 })
 
 // https://github.com/testing-library/user-event/issues/336
-test('can type "." into number inputs', () => {
+test('can type "." into number inputs', async () => {
   const {element, getEventSnapshot} = setup('<input type="number" />')
-  userEvent.type(element, '3.3')
+  await userEvent.type(element, '3.3')
   expect(element).toHaveValue(3.3)
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
@@ -507,23 +514,23 @@ test('can type "." into number inputs', () => {
   `)
 })
 
-test('-{backspace}3', () => {
+test('-{backspace}3', async () => {
   const {element} = setup('<input type="number" />')
   const negativeNumber = '-{backspace}3'
-  userEvent.type(element, negativeNumber)
+  await userEvent.type(element, negativeNumber)
   expect(element).toHaveValue(3)
 })
 
-test('-a3', () => {
+test('-a3', async () => {
   const {element} = setup('<input type="number" />')
   const negativeNumber = '-a3'
-  userEvent.type(element, negativeNumber)
+  await userEvent.type(element, negativeNumber)
   expect(element).toHaveValue(-3)
 })
 
-test('typing an invalid input value', () => {
-  const {element} = setup('<input type="number" />')
-  userEvent.type(element, '3-3')
+test('typing an invalid input value', async () => {
+  const {element} = setup<HTMLInputElement>('<input type="number" />')
+  await userEvent.type(element, '3-3')
 
   expect(element).toHaveValue(null)
 
@@ -534,59 +541,59 @@ test('typing an invalid input value', () => {
   expect(element.validity.badInput).toBe(false)
 })
 
-test('should not throw error if we are trying to call type on an element without a value', () => {
+test('should not throw error if we are trying to call type on an element without a value', async () => {
   const {element} = setup('<div />')
 
-  return expect(userEvent.type(element, ':(', {delay: 1})).resolves.toBe(
+  await expect(userEvent.type(element, ':(', {delay: 1})).resolves.toBe(
     undefined,
   )
 })
 
-test('typing on button should not alter its value', () => {
+test('typing on button should not alter its value', async () => {
   const {element} = setup('<button value="foo" />')
-  userEvent.type(element, 'bar')
+  await userEvent.type(element, 'bar')
   expect(element).toHaveValue('foo')
 })
 
-test('typing on input type button should not alter its value', () => {
+test('typing on input type button should not alter its value', async () => {
   const {element} = setup('<input type="button" value="foo" />')
-  userEvent.type(element, 'bar')
+  await userEvent.type(element, 'bar')
   expect(element).toHaveValue('foo')
 })
 
-test('typing on input type color should not alter its value', () => {
+test('typing on input type color should not alter its value', async () => {
   const {element} = setup('<input type="color" value="#ffffff" />')
-  userEvent.type(element, 'bar')
+  await userEvent.type(element, 'bar')
   expect(element).toHaveValue('#ffffff')
 })
 
-test('typing on input type image should not alter its value', () => {
+test('typing on input type image should not alter its value', async () => {
   const {element} = setup('<input type="image" value="foo" />')
-  userEvent.type(element, 'bar')
+  await userEvent.type(element, 'bar')
   expect(element).toHaveValue('foo')
 })
 
-test('typing on input type reset should not alter its value', () => {
+test('typing on input type reset should not alter its value', async () => {
   const {element} = setup('<input type="reset" value="foo" />')
-  userEvent.type(element, 'bar')
+  await userEvent.type(element, 'bar')
   expect(element).toHaveValue('foo')
 })
 
-test('typing on input type submit should not alter its value', () => {
+test('typing on input type submit should not alter its value', async () => {
   const {element} = setup('<input type="submit" value="foo" />')
-  userEvent.type(element, 'bar')
+  await userEvent.type(element, 'bar')
   expect(element).toHaveValue('foo')
 })
 
-test('typing on input type file should not result in an error', () => {
+test('typing on input type file should not result in an error', async () => {
   const {element} = setup('<input type="file" />')
 
-  return expect(userEvent.type(element, 'bar', {delay: 1})).resolves.toBe(
+  await expect(userEvent.type(element, 'bar', {delay: 1})).resolves.toBe(
     undefined,
   )
 })
 
-test('should submit a form containing multiple text inputs and an input of type submit', () => {
+test('should submit a form containing multiple text inputs and an input of type submit', async () => {
   const handleSubmit = jest.fn()
   const {element} = setup(
     `
@@ -600,12 +607,15 @@ test('should submit a form containing multiple text inputs and an input of type 
       eventHandlers: {submit: handleSubmit},
     },
   )
-  userEvent.type(element.querySelector('input'), '{enter}')
+  await userEvent.type(
+    element.querySelector('input') as HTMLInputElement,
+    '{enter}',
+  )
 
   expect(handleSubmit).toHaveBeenCalledTimes(1)
 })
 
-test('should submit a form containing multiple text inputs and a submit button', () => {
+test('should submit a form containing multiple text inputs and a submit button', async () => {
   const handleSubmit = jest.fn()
 
   const {element} = setup(
@@ -620,12 +630,15 @@ test('should submit a form containing multiple text inputs and a submit button',
       eventHandlers: {submit: handleSubmit},
     },
   )
-  userEvent.type(element.querySelector('input'), '{enter}')
+  await userEvent.type(
+    element.querySelector('input') as HTMLInputElement,
+    '{enter}',
+  )
 
   expect(handleSubmit).toHaveBeenCalledTimes(1)
 })
 
-test('should submit a form with one input element', () => {
+test('should submit a form with one input element', async () => {
   const handleSubmit = jest.fn()
 
   const {element} = setup(
@@ -638,12 +651,15 @@ test('should submit a form with one input element', () => {
       eventHandlers: {submit: handleSubmit},
     },
   )
-  userEvent.type(element.querySelector('input'), '{enter}')
+  await userEvent.type(
+    element.querySelector('input') as HTMLInputElement,
+    '{enter}',
+  )
 
   expect(handleSubmit).toHaveBeenCalledTimes(1)
 })
 
-test('should not submit a form with when keydown calls prevent default', () => {
+test('should not submit a form with when keydown calls prevent default', async () => {
   const handleSubmit = jest.fn()
 
   const {element} = setup(
@@ -656,12 +672,15 @@ test('should not submit a form with when keydown calls prevent default', () => {
       eventHandlers: {submit: handleSubmit, keyDown: e => e.preventDefault()},
     },
   )
-  userEvent.type(element.querySelector('input'), '{enter}')
+  await userEvent.type(
+    element.querySelector('input') as HTMLInputElement,
+    '{enter}',
+  )
 
   expect(handleSubmit).not.toHaveBeenCalled()
 })
 
-test('should not submit a form with when keypress calls prevent default', () => {
+test('should not submit a form with when keypress calls prevent default', async () => {
   const handleSubmit = jest.fn()
 
   const {element} = setup(
@@ -674,12 +693,15 @@ test('should not submit a form with when keypress calls prevent default', () => 
       eventHandlers: {submit: handleSubmit, keyPress: e => e.preventDefault()},
     },
   )
-  userEvent.type(element.querySelector('input'), '{enter}')
+  await userEvent.type(
+    element.querySelector('input') as HTMLInputElement,
+    '{enter}',
+  )
 
   expect(handleSubmit).not.toHaveBeenCalled()
 })
 
-test('should not submit a form with multiple input when ENTER is pressed on one of it', () => {
+test('should not submit a form with multiple input when ENTER is pressed on one of it', async () => {
   const handleSubmit = jest.fn()
   const {element} = setup(
     `
@@ -692,15 +714,18 @@ test('should not submit a form with multiple input when ENTER is pressed on one 
       eventHandlers: {submit: handleSubmit},
     },
   )
-  userEvent.type(element.querySelector('input'), '{enter}')
+  await userEvent.type(
+    element.querySelector('input') as HTMLInputElement,
+    '{enter}',
+  )
 
   expect(handleSubmit).toHaveBeenCalledTimes(0)
 })
 
-test('should type inside a contenteditable div', () => {
+test('should type inside a contenteditable div', async () => {
   const {element, getEventSnapshot} = setup('<div contenteditable=true></div>')
 
-  userEvent.type(element, 'bar')
+  await userEvent.type(element, 'bar')
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: div
@@ -734,12 +759,12 @@ test('should type inside a contenteditable div', () => {
   expect(element).toHaveTextContent('bar')
 })
 
-test('key event which does not change the contenteditable does not fire input event', () => {
+test('key event which does not change the contenteditable does not fire input event', async () => {
   const {element, getEventSnapshot, getEvents} = setup(
     '<div contenteditable>foo</div>',
   )
 
-  userEvent.type(element, '[Home][Backspace]')
+  await userEvent.type(element, '[Home][Backspace]')
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: div
@@ -765,10 +790,10 @@ test('key event which does not change the contenteditable does not fire input ev
   expect(getEvents('input')).toHaveLength(0)
 })
 
-test('should not type inside a contenteditable=false div', () => {
+test('should not type inside a contenteditable=false div', async () => {
   const {element, getEventSnapshot} = setup('<div contenteditable=false></div>')
 
-  userEvent.type(element, 'bar')
+  await userEvent.type(element, 'bar')
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: div
@@ -787,9 +812,9 @@ test('should not type inside a contenteditable=false div', () => {
   `)
 })
 
-test('navigation key: {arrowleft} and {arrowright} moves the cursor for <input>', () => {
+test('navigation key: {arrowleft} and {arrowright} moves the cursor for <input>', async () => {
   const {element, getEventSnapshot} = setup('<input />')
-  userEvent.type(element, 'b{arrowleft}a{arrowright}c')
+  await userEvent.type(element, 'b{arrowleft}a{arrowright}c')
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value="abc"]
 
@@ -828,9 +853,9 @@ test('navigation key: {arrowleft} and {arrowright} moves the cursor for <input>'
   `)
 })
 
-test('navigation key: {arrowleft} and {arrowright} moves the cursor for <textarea>', () => {
+test('navigation key: {arrowleft} and {arrowright} moves the cursor for <textarea>', async () => {
   const {element, getEventSnapshot} = setup('<textarea></textarea>')
-  userEvent.type(element, 'b{arrowleft}a{arrowright}c')
+  await userEvent.type(element, 'b{arrowleft}a{arrowright}c')
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: textarea[value="abc"]
 
@@ -869,9 +894,9 @@ test('navigation key: {arrowleft} and {arrowright} moves the cursor for <textare
   `)
 })
 
-test('navigation key: {home} and {end} moves the cursor', () => {
+test('navigation key: {home} and {end} moves the cursor', async () => {
   const {element, getEventSnapshot} = setup('<input />')
-  userEvent.type(element, 'c{home}ab{end}d')
+  await userEvent.type(element, 'c{home}ab{end}d')
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value="abcd"]
 
@@ -915,9 +940,9 @@ test('navigation key: {home} and {end} moves the cursor', () => {
   `)
 })
 
-test('navigation key: {pageUp} and {pageDown} moves the cursor for <input>', () => {
+test('navigation key: {pageUp} and {pageDown} moves the cursor for <input>', async () => {
   const {element, getEventSnapshot} = setup('<input />')
-  userEvent.type(element, 'c{pageUp}ab{pageDown}d')
+  await userEvent.type(element, 'c{pageUp}ab{pageDown}d')
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value="abcd"]
 
@@ -961,9 +986,9 @@ test('navigation key: {pageUp} and {pageDown} moves the cursor for <input>', () 
   `)
 })
 
-test('can type into an input with type `time`', () => {
+test('can type into an input with type `time`', async () => {
   const {element, getEventSnapshot} = setup('<input type="time" />')
-  userEvent.type(element, '01:05')
+  await userEvent.type(element, '01:05')
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value="01:05"]
 
@@ -1003,9 +1028,9 @@ test('can type into an input with type `time`', () => {
   expect(element).toHaveValue('01:05')
 })
 
-test('can type into an input with type `time` without ":"', () => {
+test('can type into an input with type `time` without ":"', async () => {
   const {element, getEventSnapshot} = setup('<input type="time" />')
-  userEvent.type(element, '0105')
+  await userEvent.type(element, '0105')
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value="01:05"]
 
@@ -1042,9 +1067,9 @@ test('can type into an input with type `time` without ":"', () => {
   expect(element).toHaveValue('01:05')
 })
 
-test('can type more a number higher than 60 minutes into an input `time` and they are converted into 59 minutes', () => {
+test('can type more a number higher than 60 minutes into an input `time` and they are converted into 59 minutes', async () => {
   const {element, getEventSnapshot} = setup('<input type="time" />')
-  userEvent.type(element, '23:90')
+  await userEvent.type(element, '23:90')
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value="23:59"]
@@ -1086,9 +1111,9 @@ test('can type more a number higher than 60 minutes into an input `time` and the
   expect(element).toHaveValue('23:59')
 })
 
-test('can type letters into an input `time` and they are ignored', () => {
+test('can type letters into an input `time` and they are ignored', async () => {
   const {element, getEventSnapshot} = setup('<input type="time" />')
-  userEvent.type(element, '1a6bc36abd')
+  await userEvent.type(element, '1a6bc36abd')
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value="16:36"]
@@ -1145,9 +1170,9 @@ test('can type letters into an input `time` and they are ignored', () => {
   expect(element).toHaveValue('16:36')
 })
 
-test('can type a digit bigger in the hours section, bigger than 2 and it shows the time correctly', () => {
+test('can type a digit bigger in the hours section, bigger than 2 and it shows the time correctly', async () => {
   const {element, getEventSnapshot} = setup('<input type="time" />')
-  userEvent.type(element, '9:25')
+  await userEvent.type(element, '9:25')
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value="09:25"]
@@ -1186,9 +1211,9 @@ test('can type a digit bigger in the hours section, bigger than 2 and it shows t
   expect(element).toHaveValue('09:25')
 })
 
-test('can type two digits in the hours section, equals to 24 and it shows the hours as 23', () => {
+test('can type two digits in the hours section, equals to 24 and it shows the hours as 23', async () => {
   const {element, getEventSnapshot} = setup('<input type="time" />')
-  userEvent.type(element, '24:52')
+  await userEvent.type(element, '24:52')
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value="23:52"]
@@ -1230,9 +1255,9 @@ test('can type two digits in the hours section, equals to 24 and it shows the ho
   expect(element).toHaveValue('23:52')
 })
 
-test('can type two digits in the hours section, bigger than 24 and less than 30, and it shows the hours as 23', () => {
+test('can type two digits in the hours section, bigger than 24 and less than 30, and it shows the hours as 23', async () => {
   const {element, getEventSnapshot} = setup('<input type="time" />')
-  userEvent.type(element, '27:52')
+  await userEvent.type(element, '27:52')
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value="23:52"]
@@ -1274,10 +1299,10 @@ test('can type two digits in the hours section, bigger than 24 and less than 30,
   expect(element).toHaveValue('23:52')
 })
 
-test('{arrowdown} fires keyup/keydown events', () => {
+test('{arrowdown} fires keyup/keydown events', async () => {
   const {element, getEventSnapshot} = setup('<input />')
 
-  userEvent.type(element, '{arrowdown}')
+  await userEvent.type(element, '{arrowdown}')
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value=""]
@@ -1300,10 +1325,10 @@ test('{arrowdown} fires keyup/keydown events', () => {
   `)
 })
 
-test('{arrowup} fires keyup/keydown events', () => {
+test('{arrowup} fires keyup/keydown events', async () => {
   const {element, getEventSnapshot} = setup('<input />')
 
-  userEvent.type(element, '{arrowup}')
+  await userEvent.type(element, '{arrowup}')
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value=""]
@@ -1326,12 +1351,12 @@ test('{arrowup} fires keyup/keydown events', () => {
   `)
 })
 
-test('{enter} fires click on links', () => {
+test('{enter} fires click on links', async () => {
   const {element, getEventSnapshot} = setup('<a href="#">link</a>')
 
-  element?.focus()
+  element.focus()
 
-  userEvent.type(element, '{enter}', {skipClick: true})
+  await userEvent.type(element, '{enter}', {skipClick: true})
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: a
@@ -1345,64 +1370,32 @@ test('{enter} fires click on links', () => {
   `)
 })
 
-test('type non-alphanumeric characters', () => {
+test('type non-alphanumeric characters', async () => {
   const {element} = setup(`<input/>`)
 
-  userEvent.type(element, 'https://test.local')
+  await userEvent.type(element, 'https://test.local')
 
   expect(element).toHaveValue('https://test.local')
 })
 
-test('move selection with arrows', () => {
-  const {element} = setup(`<input/>`)
-  let targetProperties
-  element.addEventListener('input', e => {
-    targetProperties = {
-      value: e.target.value,
-      selectionStart: e.target.selectionStart,
-    }
-  })
+test('move selection with arrows', async () => {
+  const {element} = setup<HTMLInputElement>(`<input/>`)
 
-  userEvent.type(element, 'abc{ArrowLeft}{ArrowLeft}{ArrowRight}{Backspace}')
+  await userEvent.type(
+    element,
+    'abc{ArrowLeft}{ArrowLeft}{ArrowRight}{Backspace}',
+  )
 
   expect(element).toHaveValue('ac')
-  expect(targetProperties).toEqual({
-    value: 'ac',
-    selectionStart: 1,
-  })
+  expect(element).toHaveProperty('selectionStart', 1)
 })
 
-test('overwrite selection with same value', () => {
-  const {element} = setup(`<input value="1"/>`)
+test('overwrite selection with same value', async () => {
+  const {element} = setup<HTMLInputElement>(`<input value="1"/>`)
   element.select()
   element.focus()
 
-  userEvent.type(element, '11123', {skipClick: true})
+  await userEvent.type(element, '11123', {skipClick: true})
 
   expect(element).toHaveValue('11123')
-})
-
-describe('promise rejections', () => {
-  afterEach(() => {
-    console.error.mockReset()
-  })
-
-  test.each([[document.body, '[{', 'Expected key descriptor but found "{"']])(
-    'catch promise rejections and report to the console on synchronous calls',
-    async (element, text, errorMessage) => {
-      const errLog = jest
-        .spyOn(console, 'error')
-        .mockImplementationOnce(() => {})
-
-      userEvent.type(element, text)
-
-      await wait(1)
-
-      expect(errLog).toBeCalledWith(
-        expect.objectContaining({
-          message: expect.stringMatching(errorMessage),
-        }),
-      )
-    },
-  )
 })

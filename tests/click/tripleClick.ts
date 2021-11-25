@@ -2,12 +2,12 @@ import userEvent from '#src'
 import {getUISelection} from '#src/document'
 import {setup} from '#testHelpers/utils'
 
-test('select input per triple click', () => {
+test('select input per triple click', async () => {
   const {element, getEventSnapshot} = setup<HTMLInputElement>(
     `<input value="foo bar"/>`,
   )
 
-  userEvent.tripleClick(element)
+  await userEvent.tripleClick(element)
 
   expect(element).toHaveFocus()
   expect(getUISelection(element)).toEqual(
@@ -50,10 +50,10 @@ test('select input per triple click', () => {
   `)
 })
 
-test('check for pointer-events', () => {
+test('check for pointer-events', async () => {
   const {element} = setup<HTMLInputElement>(
     `<input value="foo bar" style="pointer-events: none"/>`,
   )
 
-  expect(() => userEvent.tripleClick(element)).toThrow()
+  await expect(userEvent.tripleClick(element)).rejects.toThrow()
 })

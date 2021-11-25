@@ -1,10 +1,10 @@
 import userEvent from '#src'
 import {setup} from '#testHelpers/utils'
 
-test('unhover', () => {
+test('unhover', async () => {
   const {element, getEventSnapshot} = setup('<button />')
 
-  userEvent.unhover(element)
+  await userEvent.unhover(element)
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: button
 
@@ -17,10 +17,10 @@ test('unhover', () => {
   `)
 })
 
-test('unhover on disabled element', () => {
+test('unhover on disabled element', async () => {
   const {element, getEventSnapshot} = setup('<button disabled />')
 
-  userEvent.unhover(element)
+  await userEvent.unhover(element)
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: button
 
@@ -30,10 +30,10 @@ test('unhover on disabled element', () => {
   `)
 })
 
-test('no events fired on labels that contain disabled controls', () => {
+test('no events fired on labels that contain disabled controls', async () => {
   const {element, getEventSnapshot} = setup('<label><input disabled /></label>')
 
-  userEvent.unhover(element)
+  await userEvent.unhover(element)
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: label
 
@@ -46,16 +46,18 @@ test('no events fired on labels that contain disabled controls', () => {
   `)
 })
 
-test('throws when unhover element with pointer-events set to none', () => {
+test('throws when unhover element with pointer-events set to none', async () => {
   const {element} = setup(`<div style="pointer-events: none"></div>`)
-  expect(() => userEvent.unhover(element)).toThrowError(/unable to unhover/i)
+  await expect(userEvent.unhover(element)).rejects.toThrowError(
+    /unable to unhover/i,
+  )
 })
 
-test('does not throws when hover element with pointer-events set to none and skipPointerEventsCheck is set', () => {
+test('does not throws when hover element with pointer-events set to none and skipPointerEventsCheck is set', async () => {
   const {element, getEventSnapshot} = setup(
     `<div style="pointer-events: none"></div>`,
   )
-  userEvent.unhover(element, {skipPointerEventsCheck: true})
+  await userEvent.unhover(element, {skipPointerEventsCheck: true})
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: div
 

@@ -1,29 +1,21 @@
 import {createEvent, getConfig, fireEvent} from '@testing-library/dom'
-import {
-  focus,
-  hasPointerEvents,
-  isDisabled,
-  isElementType,
-  PointerOptions,
-} from '../utils'
-import type {UserEvent} from '../setup'
+import {focus, hasPointerEvents, isDisabled, isElementType} from '../utils'
+import {Config, UserEvent} from '../setup'
 
 export async function selectOptions(
   this: UserEvent,
   select: Element,
   values: HTMLElement | HTMLElement[] | string[] | string,
-  options: PointerOptions = {},
 ) {
-  return selectOptionsBase.call(this, true, select, values, options)
+  return selectOptionsBase.call(this, true, select, values)
 }
 
 export async function deselectOptions(
   this: UserEvent,
   select: Element,
   values: HTMLElement | HTMLElement[] | string[] | string,
-  options: PointerOptions = {},
 ) {
-  return selectOptionsBase.call(this, false, select, values, options)
+  return selectOptionsBase.call(this, false, select, values)
 }
 
 async function selectOptionsBase(
@@ -31,7 +23,6 @@ async function selectOptionsBase(
   newValue: boolean,
   select: Element,
   values: HTMLElement | HTMLElement[] | string[] | string,
-  {skipPointerEventsCheck}: PointerOptions,
 ) {
   if (!newValue && !(select as HTMLSelectElement).multiple) {
     throw getConfig().getElementError(
@@ -70,7 +61,7 @@ async function selectOptionsBase(
   if (isElementType(select, 'select')) {
     if (select.multiple) {
       for (const option of selectedOptions) {
-        const withPointerEvents = skipPointerEventsCheck
+        const withPointerEvents = this[Config].skipPointerEventsCheck
           ? true
           : hasPointerEvents(option)
 
@@ -100,7 +91,7 @@ async function selectOptionsBase(
         }
       }
     } else if (selectedOptions.length === 1) {
-      const withPointerEvents = skipPointerEventsCheck
+      const withPointerEvents = this[Config].skipPointerEventsCheck
         ? true
         : hasPointerEvents(select)
       // the click to open the select options
@@ -130,10 +121,9 @@ async function selectOptionsBase(
       )
     }
   } else if (select.getAttribute('role') === 'listbox') {
-    const sub = this.setup({skipPointerEventsCheck})
     for (const option of selectedOptions) {
-      await sub.click(option)
-      await sub.unhover(option)
+      await this.click(option)
+      await this.unhover(option)
     }
   } else {
     throw getConfig().getElementError(

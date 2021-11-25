@@ -6,10 +6,6 @@ export interface uploadInit {
   changeInit?: EventInit
 }
 
-export interface uploadOptions {
-  applyAccept?: boolean
-}
-
 export async function upload(
   this: UserEvent,
   element: HTMLElement,

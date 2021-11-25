@@ -2,10 +2,6 @@ import type {PointerInput} from '../pointer'
 import {hasPointerEvents} from '../utils'
 import {Config, UserEvent} from '../setup'
 
-export declare interface clickOptions {
-  skipHover?: boolean
-}
-
 export async function click(this: UserEvent, element: Element): Promise<void> {
   if (!this[Config].skipPointerEventsCheck && !hasPointerEvents(element)) {
     throw new Error(

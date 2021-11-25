@@ -2,11 +2,6 @@ import {fireEvent} from '@testing-library/dom'
 import {Config, UserEvent} from '../setup'
 import {copySelection, writeDataTransferToClipboard} from '../utils'
 
-export interface copyOptions {
-  document?: Document
-  writeToClipboard?: boolean
-}
-
 export async function copy(this: UserEvent) {
   const doc = this[Config].document
   const target = doc.activeElement ?? /* istanbul ignore next */ doc.body

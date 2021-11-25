@@ -7,11 +7,6 @@ import {
   writeDataTransferToClipboard,
 } from '../utils'
 
-export interface cutOptions {
-  document?: Document
-  writeToClipboard?: boolean
-}
-
 export async function cut(this: UserEvent) {
   const doc = this[Config].document
   const target = doc.activeElement ?? /* istanbul ignore next */ doc.body

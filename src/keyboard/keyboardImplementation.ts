@@ -1,60 +1,44 @@
 import {fireEvent} from '@testing-library/dom'
+import {Config} from '../setup'
 import {getActiveElement, wait} from '../utils'
 import {getNextKeyDef} from './getNextKeyDef'
-import {
-  behaviorPlugin,
-  keyboardKey,
-  keyboardState,
-  keyboardOptions,
-} from './types'
+import {behaviorPlugin, keyboardKey} from './types'
 import * as plugins from './plugins'
 import {getKeyEventProps} from './getEventProps'
 
 export async function keyboardImplementation(
+  config: Config,
   text: string,
-  options: keyboardOptions,
-  state: keyboardState,
 ): Promise<void> {
-  const {document} = options
+  const {document, keyboardState, keyboardMap, delay} = config
   const getCurrentElement = () => getActive(document)
 
   const {keyDef, consumedLength, releasePrevious, releaseSelf, repeat} =
-    state.repeatKey ?? getNextKeyDef(text, options)
+    keyboardState.repeatKey ?? getNextKeyDef(keyboardMap, text)
 
-  const pressed = state.pressed.find(p => p.keyDef === keyDef)
+  const pressed = keyboardState.pressed.find(p => p.keyDef === keyDef)
 
   // Release the key automatically if it was pressed before.
   // Do not release the key on iterations on `state.repeatKey`.
-  if (pressed && !state.repeatKey) {
-    await keyup(
-      keyDef,
-      getCurrentElement,
-      options,
-      state,
-      pressed.unpreventedDefault,
-    )
+  if (pressed && !keyboardState.repeatKey) {
+    await keyup(keyDef, getCurrentElement, config, pressed.unpreventedDefault)
   }
 
   if (!releasePrevious) {
-    const unpreventedDefault = await keydown(
-      keyDef,
-      getCurrentElement,
-      options,
-      state,
-    )
+    const unpreventedDefault = await keydown(keyDef, getCurrentElement, config)
 
-    if (unpreventedDefault && hasKeyPress(keyDef, state)) {
-      await keypress(keyDef, getCurrentElement, options, state)
+    if (unpreventedDefault && hasKeyPress(keyDef, config)) {
+      await keypress(keyDef, getCurrentElement, config)
     }
 
     // Release the key only on the last iteration on `state.repeatKey`.
     if (releaseSelf && repeat <= 1) {
-      await keyup(keyDef, getCurrentElement, options, state, unpreventedDefault)
+      await keyup(keyDef, getCurrentElement, config, unpreventedDefault)
     }
   }
 
   if (repeat > 1) {
-    state.repeatKey = {
+    keyboardState.repeatKey = {
       // don't consume again on the next iteration
       consumedLength: 0,
       keyDef,
@@ -63,15 +47,15 @@ export async function keyboardImplementation(
       repeat: repeat - 1,
     }
   } else {
-    delete state.repeatKey
+    delete keyboardState.repeatKey
   }
 
   if (text.length > consumedLength || repeat > 1) {
-    if (typeof options.delay === 'number') {
-      await wait(options.delay)
+    if (typeof delay === 'number') {
+      await wait(delay)
     }
 
-    return keyboardImplementation(text.slice(consumedLength), options, state)
+    return keyboardImplementation(config, text.slice(consumedLength))
   }
   return void undefined
 }
@@ -80,55 +64,39 @@ function getActive(document: Document): Element {
   return getActiveElement(document) ?? /* istanbul ignore next */ document.body
 }
 
-export async function releaseAllKeys(
-  options: keyboardOptions,
-  state: keyboardState,
-) {
-  const getCurrentElement = () => getActive(options.document)
-  for (const k of state.pressed) {
-    await keyup(
-      k.keyDef,
-      getCurrentElement,
-      options,
-      state,
-      k.unpreventedDefault,
-    )
+export async function releaseAllKeys(config: Config) {
+  const getCurrentElement = () => getActive(config.document)
+  for (const k of config.keyboardState.pressed) {
+    await keyup(k.keyDef, getCurrentElement, config, k.unpreventedDefault)
   }
 }
 
 async function keydown(
   keyDef: keyboardKey,
   getCurrentElement: () => Element,
-  options: keyboardOptions,
-  state: keyboardState,
+  config: Config,
 ) {
   const element = getCurrentElement()
 
   // clear carried characters when focus is moved
-  if (element !== state.activeElement) {
-    state.carryValue = undefined
-    state.carryChar = ''
+  if (element !== config.keyboardState.activeElement) {
+    config.keyboardState.carryValue = undefined
+    config.keyboardState.carryChar = ''
   }
-  state.activeElement = element
+  config.keyboardState.activeElement = element
 
-  applyPlugins(plugins.preKeydownBehavior, keyDef, element, options, state)
+  applyPlugins(plugins.preKeydownBehavior, keyDef, element, config)
 
   const unpreventedDefault = fireEvent.keyDown(
     element,
-    getKeyEventProps(keyDef, state),
+    getKeyEventProps(keyDef, config.keyboardState),
   )
 
-  state.pressed.push({keyDef, unpreventedDefault})
+  config.keyboardState.pressed.push({keyDef, unpreventedDefault})
 
   if (unpreventedDefault) {
     // all default behavior like keypress/submit etc is applied to the currentElement
-    applyPlugins(
-      plugins.keydownBehavior,
-      keyDef,
-      getCurrentElement(),
-      options,
-      state,
-    )
+    applyPlugins(plugins.keydownBehavior, keyDef, getCurrentElement(), config)
   }
 
   return unpreventedDefault
@@ -137,80 +105,65 @@ async function keydown(
 async function keypress(
   keyDef: keyboardKey,
   getCurrentElement: () => Element,
-  options: keyboardOptions,
-  state: keyboardState,
+  config: Config,
 ) {
   const element = getCurrentElement()
 
   const unpreventedDefault = fireEvent.keyPress(element, {
-    ...getKeyEventProps(keyDef, state),
+    ...getKeyEventProps(keyDef, config.keyboardState),
     charCode: keyDef.key === 'Enter' ? 13 : String(keyDef.key).charCodeAt(0),
   })
 
   if (unpreventedDefault) {
-    applyPlugins(
-      plugins.keypressBehavior,
-      keyDef,
-      getCurrentElement(),
-      options,
-      state,
-    )
+    applyPlugins(plugins.keypressBehavior, keyDef, getCurrentElement(), config)
   }
 }
 
 async function keyup(
   keyDef: keyboardKey,
   getCurrentElement: () => Element,
-  options: keyboardOptions,
-  state: keyboardState,
+  config: Config,
   unprevented: boolean,
 ) {
   const element = getCurrentElement()
 
-  applyPlugins(plugins.preKeyupBehavior, keyDef, element, options, state)
+  applyPlugins(plugins.preKeyupBehavior, keyDef, element, config)
 
   const unpreventedDefault = fireEvent.keyUp(
     element,
-    getKeyEventProps(keyDef, state),
+    getKeyEventProps(keyDef, config.keyboardState),
   )
 
   if (unprevented && unpreventedDefault) {
-    applyPlugins(
-      plugins.keyupBehavior,
-      keyDef,
-      getCurrentElement(),
-      options,
-      state,
-    )
+    applyPlugins(plugins.keyupBehavior, keyDef, getCurrentElement(), config)
   }
 
-  state.pressed = state.pressed.filter(k => k.keyDef !== keyDef)
+  config.keyboardState.pressed = config.keyboardState.pressed.filter(
+    k => k.keyDef !== keyDef,
+  )
 
-  applyPlugins(plugins.postKeyupBehavior, keyDef, element, options, state)
+  applyPlugins(plugins.postKeyupBehavior, keyDef, element, config)
 }
 
 function applyPlugins(
   pluginCollection: behaviorPlugin[],
   keyDef: keyboardKey,
   element: Element,
-  options: keyboardOptions,
-  state: keyboardState,
+  config: Config,
 ): boolean {
-  const plugin = pluginCollection.find(p =>
-    p.matches(keyDef, element, options, state),
-  )
+  const plugin = pluginCollection.find(p => p.matches(keyDef, element, config))
 
   if (plugin) {
-    plugin.handle(keyDef, element, options, state)
+    plugin.handle(keyDef, element, config)
   }
 
   return !!plugin
 }
 
-function hasKeyPress(keyDef: keyboardKey, state: keyboardState) {
+function hasKeyPress(keyDef: keyboardKey, config: Config) {
   return (
     (keyDef.key?.length === 1 || keyDef.key === 'Enter') &&
-    !state.modifiers.ctrl &&
-    !state.modifiers.alt
+    !config.keyboardState.modifiers.ctrl &&
+    !config.keyboardState.modifiers.alt
   )
 }

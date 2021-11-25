@@ -41,13 +41,6 @@ export type pointerState = {
   pointerId: number
 }
 
-export type pointerOptions = {
-  /** Delay between keystrokes */
-  delay: number | null
-  /** Available pointer keys */
-  pointerMap: pointerKey[]
-}
-
 export interface pointerKey {
   /** Name of the pointer key */
   name: string

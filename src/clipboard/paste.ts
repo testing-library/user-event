@@ -8,10 +8,6 @@ import {
   readDataTransferFromClipboard,
 } from '../utils'
 
-export interface pasteOptions {
-  document?: Document
-}
-
 export async function paste(
   this: UserEvent,
   clipboardData?: DataTransfer | string,

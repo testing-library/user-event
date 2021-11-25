@@ -1,54 +1,43 @@
-import type {copyOptions, cutOptions, pasteOptions} from '../clipboard'
-import type {clickOptions, tabOptions} from '../convenience'
-import type {keyboardOptions, keyboardState} from '../keyboard'
 import type {PointerOptions} from '../utils'
-import type {typeOptions, uploadInit, uploadOptions} from '../utility'
-import type {PointerInput, pointerOptions} from '../pointer'
+import type {uploadInit} from '../utility'
+import type {PointerInput} from '../pointer'
+import type {UserEventApi} from '.'
 import {setupDirect} from './setup'
-import {Config, inputDeviceState} from './config'
+import {Config} from './config'
 
 export function clear(element: Element) {
   return setupDirect().clear(element)
 }
 
-export function click(
-  element: Element,
-  options: clickOptions & PointerOptions = {},
-) {
+export function click(element: Element, options: Partial<Config> = {}) {
   return setupDirect(options, element).click(element)
 }
 
-export function copy(options: copyOptions = {}) {
+export function copy(options: Partial<Config> = {}) {
   return setupDirect(options).copy()
 }
 
-export function cut(options: cutOptions = {}) {
+export function cut(options: Partial<Config> = {}) {
   return setupDirect(options).cut()
 }
 
-export function dblClick(
-  element: Element,
-  options: clickOptions & PointerOptions = {},
-) {
+export function dblClick(element: Element, options: Partial<Config> = {}) {
   return setupDirect(options).dblClick(element)
 }
 
 export function deselectOptions(
   select: Element,
   values: HTMLElement | HTMLElement[] | string[] | string,
-  options: PointerOptions = {},
+  options: Partial<Config> = {},
 ) {
-  return setupDirect(options).deselectOptions(select, values, options)
+  return setupDirect(options).deselectOptions(select, values)
 }
 
-export function hover(element: Element, options: PointerOptions = {}) {
+export function hover(element: Element, options: Partial<Config> = {}) {
   return setupDirect(options).hover(element)
 }
 
-export async function keyboard(
-  text: string,
-  options: Partial<keyboardOptions & {keyboardState: keyboardState}> = {},
-) {
+export async function keyboard(text: string, options: Partial<Config> = {}) {
   const instance = setupDirect(options)
   const promise = instance.keyboard(text)
 
@@ -57,7 +46,7 @@ export async function keyboard(
 
 export async function pointer(
   input: PointerInput,
-  options: Partial<pointerOptions & inputDeviceState> = {},
+  options: Partial<Config> = {},
 ) {
   const instance = setupDirect(options)
   const promise = instance.pointer(input)
@@ -67,7 +56,7 @@ export async function pointer(
 
 export function paste(
   clipboardData?: DataTransfer | string,
-  options?: pasteOptions,
+  options?: Partial<Config>,
 ) {
   return setupDirect(options).paste(clipboardData)
 }
@@ -75,22 +64,19 @@ export function paste(
 export function selectOptions(
   select: Element,
   values: HTMLElement | HTMLElement[] | string[] | string,
-  options: PointerOptions = {},
+  options: Partial<Config> = {},
 ) {
-  return setupDirect(options).selectOptions(select, values, options)
+  return setupDirect(options).selectOptions(select, values)
 }
 
-export function tripleClick(
-  element: Element,
-  options: clickOptions & PointerOptions = {},
-) {
+export function tripleClick(element: Element, options: Partial<Config> = {}) {
   return setupDirect(options).tripleClick(element)
 }
 
 export function type(
   element: Element,
   text: string,
-  options: typeOptions = {},
+  options: Partial<Config> & Parameters<UserEventApi['type']>[2] = {},
 ) {
   return setupDirect(options, element).type(element, text, options)
 }
@@ -106,11 +92,13 @@ export function upload(
   element: HTMLElement,
   fileOrFiles: File | File[],
   init?: uploadInit,
-  options: uploadOptions = {},
+  options: Partial<Config> = {},
 ) {
   return setupDirect(options).upload(element, fileOrFiles, init)
 }
 
-export function tab(options: tabOptions = {}) {
+export function tab(
+  options: Partial<Config> & Parameters<UserEventApi['tab']>[0] = {},
+) {
   return setupDirect().tab(options)
 }

@@ -1,12 +1,12 @@
 import {Config, UserEvent} from '../setup'
 import {keyboardImplementation, releaseAllKeys} from './keyboardImplementation'
-import {keyboardState, keyboardOptions, keyboardKey} from './types'
+import type {keyboardState, keyboardKey} from './types'
 
 export {releaseAllKeys}
-export type {keyboardOptions, keyboardKey, keyboardState}
+export type {keyboardKey, keyboardState}
 
 export async function keyboard(this: UserEvent, text: string): Promise<void> {
-  return keyboardImplementation(text, this[Config], this[Config].keyboardState)
+  return keyboardImplementation(this[Config], text)
 }
 
 export function createKeyboardState(): keyboardState {

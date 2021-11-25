@@ -4,9 +4,8 @@ import {releaseAllKeys} from '../keyboard'
 import {Config} from '../setup/config'
 
 export interface typeOptions {
-  delay?: number | null
-  skipClick?: boolean
-  skipAutoClose?: boolean
+  skipClick?: Config['skipClick']
+  skipAutoClose?: Config['skipClick']
   initialSelectionStart?: number
   initialSelectionEnd?: number
 }
@@ -41,6 +40,6 @@ export async function type(
   await this.keyboard(text)
 
   if (!skipAutoClose) {
-    await releaseAllKeys(this[Config], this[Config].keyboardState)
+    await releaseAllKeys(this[Config])
   }
 }

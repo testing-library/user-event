@@ -1,10 +1,13 @@
 import type {UserEvent} from '../setup'
 
-export interface tabOptions {
-  shift?: boolean
-}
-
-export async function tab(this: UserEvent, {shift}: tabOptions = {}) {
+export async function tab(
+  this: UserEvent,
+  {
+    shift,
+  }: {
+    shift?: boolean
+  } = {},
+) {
   return this.keyboard(
     shift === true
       ? '{Shift>}{Tab}{/Shift}'

@@ -30,8 +30,8 @@ export const preKeydownBehavior: behaviorPlugin[] = [
   ...Object.entries(modifierKeys).map(
     ([key, modKey]): behaviorPlugin => ({
       matches: keyDef => keyDef.key === key,
-      handle: (keyDef, element, options, state) => {
-        state.modifiers[modKey] = true
+      handle: (keyDef, element, {keyboardState}) => {
+        keyboardState.modifiers[modKey] = true
       },
     }),
   ),
@@ -40,11 +40,11 @@ export const preKeydownBehavior: behaviorPlugin[] = [
   // The modifier does not change
   {
     matches: keyDef => keyDef.key === 'AltGraph',
-    handle: (keyDef, element, options, state) => {
-      const ctrlKeyDef = options.keyboardMap.find(
+    handle: (keyDef, element, {keyboardMap, keyboardState}) => {
+      const ctrlKeyDef = keyboardMap.find(
         k => k.key === 'Control',
       ) ?? /* istanbul ignore next */ {key: 'Control', code: 'Control'}
-      fireEvent.keyDown(element, getKeyEventProps(ctrlKeyDef, state))
+      fireEvent.keyDown(element, getKeyEventProps(ctrlKeyDef, keyboardState))
     },
   },
 ]
@@ -52,8 +52,8 @@ export const preKeydownBehavior: behaviorPlugin[] = [
 export const keydownBehavior: behaviorPlugin[] = [
   {
     matches: keyDef => keyDef.key === 'CapsLock',
-    handle: (keyDef, element, options, state) => {
-      state.modifiers.caps = !state.modifiers.caps
+    handle: (keyDef, element, {keyboardState}) => {
+      keyboardState.modifiers.caps = !keyboardState.modifiers.caps
     },
   },
   {
@@ -65,8 +65,8 @@ export const keydownBehavior: behaviorPlugin[] = [
   },
   {
     matches: keyDef => keyDef.key === 'Tab',
-    handle: (keyDef, element, options, state) => {
-      const dest = getTabDestination(element, state.modifiers.shift)
+    handle: (keyDef, element, {keyboardState}) => {
+      const dest = getTabDestination(element, keyboardState.modifiers.shift)
       if (dest === element.ownerDocument.body) {
         blur(element)
       } else {
@@ -102,8 +102,8 @@ export const keypressBehavior: behaviorPlugin[] = [
       (isClickableInput(element) ||
         // Links with href defined should handle Enter the same as a click
         (isElementType(element, 'a') && Boolean(element.href))),
-    handle: (keyDef, element, options, state) => {
-      fireEvent.click(element, getMouseEventProps(state))
+    handle: (keyDef, element, {keyboardState}) => {
+      fireEvent.click(element, getMouseEventProps(keyboardState))
     },
   },
   {
@@ -127,8 +127,8 @@ export const preKeyupBehavior: behaviorPlugin[] = [
   ...Object.entries(modifierKeys).map(
     ([key, modKey]): behaviorPlugin => ({
       matches: keyDef => keyDef.key === key,
-      handle: (keyDef, element, options, state) => {
-        state.modifiers[modKey] = false
+      handle: (keyDef, element, {keyboardState}) => {
+        keyboardState.modifiers[modKey] = false
       },
     }),
   ),
@@ -138,8 +138,8 @@ export const keyupBehavior: behaviorPlugin[] = [
   {
     matches: (keyDef, element) =>
       keyDef.key === ' ' && isClickableInput(element),
-    handle: (keyDef, element, options, state) => {
-      fireEvent.click(element, getMouseEventProps(state))
+    handle: (keyDef, element, {keyboardState}) => {
+      fireEvent.click(element, getMouseEventProps(keyboardState))
     },
   },
 ]
@@ -149,11 +149,11 @@ export const postKeyupBehavior: behaviorPlugin[] = [
   // The modifier does not change
   {
     matches: keyDef => keyDef.key === 'AltGraph',
-    handle: (keyDef, element, options, state) => {
-      const ctrlKeyDef = options.keyboardMap.find(
+    handle: (keyDef, element, {keyboardMap, keyboardState}) => {
+      const ctrlKeyDef = keyboardMap.find(
         k => k.key === 'Control',
       ) ?? /* istanbul ignore next */ {key: 'Control', code: 'Control'}
-      fireEvent.keyUp(element, getKeyEventProps(ctrlKeyDef, state))
+      fireEvent.keyUp(element, getKeyEventProps(ctrlKeyDef, keyboardState))
     },
   },
 ]

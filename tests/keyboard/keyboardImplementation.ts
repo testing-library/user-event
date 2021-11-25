@@ -132,3 +132,12 @@ describe('pressing and releasing keys', () => {
     `)
   })
 })
+
+test('do not call setTimeout with delay `null`', async () => {
+  setup(`<div></div>`)
+  const spy = jest.spyOn(global, 'setTimeout')
+  await userEvent.keyboard('ab')
+  expect(spy).toBeCalledTimes(1)
+  await userEvent.keyboard('cd', {delay: null})
+  expect(spy).toBeCalledTimes(1)
+})

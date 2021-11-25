@@ -16,7 +16,7 @@ export function setupMain(options: Options = {}) {
   const doc = getDocument(options)
   prepareDocument(doc)
 
-  const view = doc.defaultView ?? window
+  const view = doc.defaultView ?? /* istanbul ignore next */ window
   attachClipboardStubToView(view)
 
   return doSetup({
@@ -75,6 +75,6 @@ function doSetup(config: Config) {
   }
 }
 
-function getDocument(options: Partial<Config> = {}, node?: Node) {
+function getDocument(options: Partial<Config>, node?: Node) {
   return options.document ?? (node && getDocumentFromNode(node)) ?? document
 }

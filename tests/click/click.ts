@@ -450,3 +450,10 @@ test('does not throws when clicking element with pointer-events set to none and 
   await userEvent.click(element, {skipPointerEventsCheck: true})
   expect(getEvents('click')).toHaveLength(1)
 })
+
+test('skip hover', async () => {
+  const {element, getEvents} = setup(`<div></div>`)
+  await userEvent.click(element, {skipHover: true})
+  expect(getEvents('click')).toHaveLength(1)
+  expect(getEvents('mouseover')).toHaveLength(0)
+})

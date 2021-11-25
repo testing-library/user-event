@@ -709,3 +709,12 @@ describe('mousedown moves selection', () => {
     )
   })
 })
+
+test('do not call setTimeout with delay `null`', async () => {
+  setup(`<div></div>`)
+  const spy = jest.spyOn(global, 'setTimeout')
+  await userEvent.pointer(['[MouseLeft]', '[MouseLeft]'])
+  expect(spy).toBeCalledTimes(1)
+  await userEvent.pointer(['[MouseLeft]', '[MouseLeft]'], {delay: null})
+  expect(spy).toBeCalledTimes(1)
+})

@@ -127,6 +127,10 @@ cases<APICase>(
 
     const apis = userEvent.setup()
 
+    // The wrapped API gets the name from the implementation
+    // which in this case is the mock from above wrapping the original implementation.
+    expect(apis[api]).toHaveProperty('name', 'mockConstructor')
+
     await (apis[api] as Function)(...args)
 
     const spy = getSpy(api)

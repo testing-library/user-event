@@ -1,7 +1,7 @@
 import {readNextDescriptor} from '../utils'
-import {pointerKey, pointerOptions} from './types'
+import {pointerKey} from './types'
 
-export function parseKeyDef(keys: string, {pointerMap}: pointerOptions) {
+export function parseKeyDef(pointerMap: pointerKey[], keys: string) {
   const defs: Array<{
     keyDef: pointerKey
     releasePrevious: boolean

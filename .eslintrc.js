@@ -7,6 +7,7 @@ module.exports = {
     },
   },
   rules: {
+    'no-await-in-loop': 0,
     'testing-library/no-dom-import': 0,
     '@typescript-eslint/non-nullable-type-assertion-style': 0,
   },

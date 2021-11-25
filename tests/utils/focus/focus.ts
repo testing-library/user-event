@@ -1,7 +1,7 @@
 import {focus} from '#src/utils'
 import {setup} from '#testHelpers/utils'
 
-test('focus a button', () => {
+test('focus a button', async () => {
   const {element, getEventSnapshot} = setup(`<button />`)
   focus(element)
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
@@ -13,7 +13,7 @@ test('focus a button', () => {
   expect(element).toHaveFocus()
 })
 
-test('no events fired on an unfocusable input', () => {
+test('no events fired on an unfocusable input', async () => {
   const {element, getEventSnapshot} = setup(`<div />`)
   focus(element)
   expect(getEventSnapshot()).toMatchInlineSnapshot(
@@ -22,7 +22,7 @@ test('no events fired on an unfocusable input', () => {
   expect(element).not.toHaveFocus()
 })
 
-test('focus with tabindex', () => {
+test('focus with tabindex', async () => {
   const {element, getEventSnapshot} = setup(`<div tabindex="0" />`)
   focus(element)
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
@@ -34,7 +34,7 @@ test('focus with tabindex', () => {
   expect(element).toHaveFocus()
 })
 
-test('no events fired on a disabled focusable input', () => {
+test('no events fired on a disabled focusable input', async () => {
   const {element, getEventSnapshot} = setup(`<button disabled />`)
   focus(element)
   expect(getEventSnapshot()).toMatchInlineSnapshot(
@@ -43,7 +43,7 @@ test('no events fired on a disabled focusable input', () => {
   expect(element).not.toHaveFocus()
 })
 
-test('no events fired on a hidden input', () => {
+test('no events fired on a hidden input', async () => {
   const {element, getEventSnapshot} = setup(`<input type="hidden" />`)
   focus(element)
   expect(getEventSnapshot()).toMatchInlineSnapshot(
@@ -52,7 +52,7 @@ test('no events fired on a hidden input', () => {
   expect(element).not.toHaveFocus()
 })
 
-test('no events fired if the element is already focused', () => {
+test('no events fired if the element is already focused', async () => {
   const {element, getEventSnapshot, clearEventCalls} = setup(`<button />`)
   focus(element)
 

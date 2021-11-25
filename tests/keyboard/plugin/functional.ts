@@ -2,10 +2,10 @@ import userEvent from '#src'
 import {getUISelection} from '#src/document'
 import {setup} from '#testHelpers/utils'
 
-test('produce extra events for the Control key when AltGraph is pressed', () => {
+test('produce extra events for the Control key when AltGraph is pressed', async () => {
   const {element, getEventSnapshot} = setup(`<input/>`)
 
-  userEvent.type(element as Element, '{AltGraph}')
+  await userEvent.type(element as Element, '{AltGraph}')
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value=""]
@@ -30,10 +30,10 @@ test('produce extra events for the Control key when AltGraph is pressed', () => 
   `)
 })
 
-test('backspace to valid value', () => {
+test('backspace to valid value', async () => {
   const {element, getEventSnapshot} = setup(`<input type="number"/>`)
 
-  userEvent.type(element, '5e-[Backspace][Backspace]')
+  await userEvent.type(element, '5e-[Backspace][Backspace]')
 
   expect(element).toHaveValue(5)
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
@@ -73,13 +73,13 @@ test('backspace to valid value', () => {
   `)
 })
 
-test('trigger click event on [Enter] keydown on HTMLAnchorElement', () => {
+test('trigger click event on [Enter] keydown on HTMLAnchorElement', async () => {
   const {element, getEventSnapshot, getEvents} = setup(
     `<a href="example.com" target="_blank"/>`,
   )
   element.focus()
 
-  userEvent.keyboard('[Enter]')
+  await userEvent.keyboard('[Enter]')
 
   expect(getEvents('click')).toHaveLength(1)
   expect(getEvents('click')[0]).toHaveProperty('detail', 0)
@@ -98,11 +98,11 @@ test('trigger click event on [Enter] keydown on HTMLAnchorElement', () => {
   `)
 })
 
-test('trigger click event on [Enter] keypress on HTMLButtonElement', () => {
+test('trigger click event on [Enter] keypress on HTMLButtonElement', async () => {
   const {element, getEventSnapshot, getEvents} = setup(`<button/>`)
   element.focus()
 
-  userEvent.keyboard('[Enter]')
+  await userEvent.keyboard('[Enter]')
 
   expect(getEvents('click')).toHaveLength(1)
   expect(getEvents('click')[0]).toHaveProperty('detail', 0)
@@ -130,7 +130,7 @@ test.each`
   ${'radio'}    | ${'button'} | ${false}
 `(
   'trigger submit event on [Enter] keypress on HTMLInputElement type=$elementType with submit $submit and hasForm=$hasForm',
-  ({elementType, submit, hasForm}) => {
+  async ({elementType, submit, hasForm}) => {
     const {element, getEvents} = setup(
       `<${hasForm ? 'form' : 'div'}>
             <input type="${elementType}" />
@@ -141,18 +141,18 @@ test.each`
 
     element.querySelector('input')?.focus()
 
-    userEvent.keyboard('[Enter]')
+    await userEvent.keyboard('[Enter]')
 
     expect(getEvents('click')).toHaveLength(0)
     expect(getEvents('submit')).toHaveLength(hasForm ? 1 : 0)
   },
 )
 
-test('trigger click event on [Space] keyup on HTMLButtonElement', () => {
+test('trigger click event on [Space] keyup on HTMLButtonElement', async () => {
   const {element, getEventSnapshot, getEvents} = setup(`<button/>`)
   element.focus()
 
-  userEvent.keyboard('[Space]')
+  await userEvent.keyboard('[Space]')
 
   expect(getEvents('click')).toHaveLength(1)
   expect(getEvents('click')[0]).toHaveProperty('detail', 0)
@@ -168,13 +168,13 @@ test('trigger click event on [Space] keyup on HTMLButtonElement', () => {
   `)
 })
 
-test('trigger click event on [Space] keyup on HTMLInputElement type=button', () => {
+test('trigger click event on [Space] keyup on HTMLInputElement type=button', async () => {
   const {element, getEventSnapshot, getEvents} = setup(
     `<input type="button" />`,
   )
   element.focus()
 
-  userEvent.keyboard('[Space]')
+  await userEvent.keyboard('[Space]')
 
   expect(getEvents('click')).toHaveLength(1)
   expect(getEvents('click')[0]).toHaveProperty('detail', 0)
@@ -190,11 +190,11 @@ test('trigger click event on [Space] keyup on HTMLInputElement type=button', () 
   `)
 })
 
-test('trigger change event on [Space] keyup on HTMLInputElement type=radio', () => {
+test('trigger change event on [Space] keyup on HTMLInputElement type=radio', async () => {
   const {element, getEventSnapshot, getEvents} = setup(`<input type="radio" />`)
   element.focus()
 
-  userEvent.keyboard('[Space]')
+  await userEvent.keyboard('[Space]')
 
   expect(getEvents('change')).toHaveLength(1)
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
@@ -212,36 +212,36 @@ test('trigger change event on [Space] keyup on HTMLInputElement type=radio', () 
   `)
 })
 
-test('tab through elements', () => {
+test('tab through elements', async () => {
   const {elements} = setup<
     [HTMLInputElement, HTMLInputElement, HTMLButtonElement]
   >(`<input value="abc"/><input type="number" value="1e5"/><button/>`)
 
-  userEvent.keyboard('[Tab]')
+  await userEvent.keyboard('[Tab]')
 
   expect(elements[0]).toHaveFocus()
   expect(elements[0]).toHaveProperty('selectionStart', 0)
   expect(elements[0]).toHaveProperty('selectionEnd', 3)
 
-  userEvent.keyboard('[Tab]')
+  await userEvent.keyboard('[Tab]')
 
   expect(elements[1]).toHaveFocus()
   expect(getUISelection(elements[1])).toHaveProperty('startOffset', 0)
   expect(getUISelection(elements[1])).toHaveProperty('endOffset', 3)
 
-  userEvent.keyboard('[Tab]')
+  await userEvent.keyboard('[Tab]')
 
   expect(elements[2]).toHaveFocus()
 
-  userEvent.keyboard('[Tab]')
+  await userEvent.keyboard('[Tab]')
 
   expect(document.body).toHaveFocus()
 
-  userEvent.keyboard('[ShiftLeft>][Tab]')
+  await userEvent.keyboard('[ShiftLeft>][Tab]')
 
   expect(elements[2]).toHaveFocus()
 
-  userEvent.keyboard('[ShiftRight>][Tab]')
+  await userEvent.keyboard('[ShiftRight>][Tab]')
 
   expect(elements[1]).toHaveFocus()
   expect(getUISelection(elements[1])).toHaveProperty('startOffset', 0)

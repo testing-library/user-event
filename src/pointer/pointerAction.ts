@@ -1,13 +1,8 @@
+import {Config} from '../setup'
 import {wait} from '../utils'
 import {pointerMove, PointerMoveAction} from './pointerMove'
 import {pointerPress, PointerPressAction} from './pointerPress'
-import {
-  inputDeviceState,
-  pointerOptions,
-  pointerState,
-  PointerTarget,
-  SelectionTarget,
-} from './types'
+import {pointerState, PointerTarget, SelectionTarget} from './types'
 
 export type PointerActionTarget = Partial<PointerTarget> &
   Partial<SelectionTarget>
@@ -18,13 +13,7 @@ export type PointerAction = PointerActionTarget &
     | Omit<PointerMoveAction, 'target' | 'coords'>
   )
 
-export async function pointerAction(
-  actions: PointerAction[],
-  options: pointerOptions,
-  state: inputDeviceState,
-): Promise<unknown[]> {
-  const ret: Array<Promise<void>> = []
-
+export async function pointerAction(config: Config, actions: PointerAction[]) {
   for (let i = 0; i < actions.length; i++) {
     const action = actions[i]
     const pointerName =
@@ -37,31 +26,25 @@ export async function pointerAction(
         : 'mouse'
 
     const target =
-      action.target ?? getPrevTarget(pointerName, state.pointerState)
+      action.target ?? getPrevTarget(pointerName, config.pointerState)
     const coords =
       action.coords ??
-      (pointerName in state.pointerState.position
-        ? state.pointerState.position[pointerName].coords
+      (pointerName in config.pointerState.position
+        ? config.pointerState.position[pointerName].coords
         : undefined)
 
-    const promise =
-      'keyDef' in action
-        ? pointerPress({...action, target, coords}, state)
-        : pointerMove({...action, target, coords}, state)
+    await ('keyDef' in action
+      ? pointerPress({...action, target, coords}, config)
+      : pointerMove({...action, target, coords}, config))
 
-    ret.push(promise)
-
-    if (options.delay > 0) {
-      await promise
+    if (typeof config.delay === 'number') {
       if (i < actions.length - 1) {
-        await wait(options.delay)
+        await wait(config.delay)
       }
     }
   }
 
-  delete state.pointerState.activeClickCount
-
-  return Promise.all(ret)
+  delete config.pointerState.activeClickCount
 }
 
 function getPrevTarget(pointerName: string, state: pointerState) {

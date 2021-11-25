@@ -1,13 +1,13 @@
 import userEvent from '#src'
 import {addListeners, setupSelect, setup} from '#testHelpers/utils'
 
-test('fires correct events', () => {
+test('fires correct events', async () => {
   const {form, select, options, getEventSnapshot} = setupSelect({
     multiple: true,
   })
   options[0].selected = true
 
-  userEvent.deselectOptions(select, '1')
+  await userEvent.deselectOptions(select, '1')
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: select[name="select"][value=[]]
@@ -32,7 +32,7 @@ test('fires correct events', () => {
   expect(form).toHaveFormValues({select: []})
 })
 
-test('blurs previously focused element', () => {
+test('blurs previously focused element', async () => {
   const {form, select} = setupSelect({multiple: true})
   const button = document.createElement('button')
   form.append(button)
@@ -41,7 +41,7 @@ test('blurs previously focused element', () => {
   button.focus()
 
   clearEventCalls()
-  userEvent.deselectOptions(select, '1')
+  await userEvent.deselectOptions(select, '1')
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: form
@@ -62,7 +62,7 @@ test('blurs previously focused element', () => {
   `)
 })
 
-test('toggle options as expected', () => {
+test('toggle options as expected', async () => {
   const {element} = setup(`
     <form>
       <select name="select" multiple>
@@ -75,47 +75,47 @@ test('toggle options as expected', () => {
     </form>
   `)
 
-  const select = element.querySelector('select')
+  const select = element.querySelector('select') as HTMLSelectElement
 
   // select one
-  userEvent.selectOptions(select, ['1'])
+  await userEvent.selectOptions(select, ['1'])
 
   expect(element).toHaveFormValues({select: ['1']})
 
   // select two and three
-  userEvent.selectOptions(select, ['2', '3'])
+  await userEvent.selectOptions(select, ['2', '3'])
   expect(element).toHaveFormValues({select: ['1', '2', '3']})
 
   // deselect one and three
-  userEvent.deselectOptions(select, ['1', '3'])
+  await userEvent.deselectOptions(select, ['1', '3'])
   expect(element).toHaveFormValues({select: ['2']})
 })
 
-test('sets the selected prop on the selected option using option html elements', () => {
+test('sets the selected prop on the selected option using option html elements', async () => {
   const {select, options} = setupSelect({multiple: true})
   const [o1, o2, o3] = options
   o2.selected = true
   o3.selected = true
 
-  userEvent.deselectOptions(select, [o3, o2])
+  await userEvent.deselectOptions(select, [o3, o2])
   expect(o1.selected).toBe(false)
   expect(o2.selected).toBe(false)
   expect(o3.selected).toBe(false)
 })
 
-test('throws error when provided element is not a multiple select', () => {
+test('throws error when provided element is not a multiple select', async () => {
   const {element} = setup(`<select />`)
-  expect(() => userEvent.deselectOptions(element)).toThrowError(
+  await expect(userEvent.deselectOptions(element, [])).rejects.toThrowError(
     /unable to deselect/i,
   )
 })
 
-test('throws an error one selected option does not match', () => {
+test('throws an error one selected option does not match', async () => {
   const {element} = setup(
     `<select multiple><option value="a">A</option><option value="b">B</option></select>`,
   )
 
-  expect(() =>
+  await expect(
     userEvent.deselectOptions(element, 'Matches nothing'),
-  ).toThrowError(/not found/i)
+  ).rejects.toThrowError(/not found/i)
 })

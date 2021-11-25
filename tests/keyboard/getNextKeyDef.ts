@@ -1,19 +1,12 @@
 import cases from 'jest-in-case'
 import {getNextKeyDef} from '#src/keyboard/getNextKeyDef'
 import {defaultKeyMap} from '#src/keyboard/keyMap'
-import {keyboardKey, keyboardOptions} from '#src/keyboard/types'
-
-const options: keyboardOptions = {
-  document,
-  keyboardMap: defaultKeyMap,
-  autoModify: false,
-  delay: 123,
-}
+import {keyboardKey} from '#src/keyboard/types'
 
 cases(
   'reference key per',
   ({text, key, code}) => {
-    expect(getNextKeyDef(`${text}foo`, options)).toEqual(
+    expect(getNextKeyDef(defaultKeyMap, `${text}foo`)).toEqual(
       expect.objectContaining({
         keyDef: expect.objectContaining({
           key,
@@ -22,7 +15,7 @@ cases(
         consumedLength: text.length,
       }),
     )
-    expect(getNextKeyDef(`${text}/foo`, options)).toEqual(
+    expect(getNextKeyDef(defaultKeyMap, `${text}/foo`)).toEqual(
       expect.objectContaining({
         keyDef: expect.objectContaining({
           key,
@@ -47,7 +40,7 @@ cases(
 cases(
   'modifiers',
   ({text, modifiers}) => {
-    expect(getNextKeyDef(`${text}foo`, options)).toEqual(
+    expect(getNextKeyDef(defaultKeyMap, `${text}foo`)).toEqual(
       expect.objectContaining(modifiers),
     )
   },
@@ -90,7 +83,7 @@ cases(
 cases(
   'errors',
   ({text, expectedError}) => {
-    expect(() => getNextKeyDef(`${text}`, options)).toThrow(expectedError)
+    expect(() => getNextKeyDef(defaultKeyMap, `${text}`)).toThrow(expectedError)
   },
   {
     'invalid descriptor': {

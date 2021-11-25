@@ -14,7 +14,7 @@ function prepare(element: Element) {
   prepareDocument(element.ownerDocument)
 }
 
-test('keep track of value in UI', () => {
+test('keep track of value in UI', async () => {
   const {element} = setup<HTMLInputElement>(`<input type="number"/>`)
   // The element has to either receive focus or be already focused when preparing.
   element.focus()
@@ -32,7 +32,7 @@ test('keep track of value in UI', () => {
   expect(getUIValue(element)).toBe('3')
 })
 
-test('trigger `change` event if value changed since focus/set', () => {
+test('trigger `change` event if value changed since focus/set', async () => {
   const {element, getEvents} = setup<HTMLInputElement>(`<input type="number"/>`)
 
   prepare(element)
@@ -60,7 +60,7 @@ test('trigger `change` event if value changed since focus/set', () => {
   expect(getEvents('change')).toHaveLength(1)
 })
 
-test('maintain selection range like UI', () => {
+test('maintain selection range like UI', async () => {
   const {element} = setup<HTMLInputElement>(`<input type="text" value="abc"/>`)
 
   prepare(element)
@@ -75,7 +75,7 @@ test('maintain selection range like UI', () => {
   expect(element.selectionStart).toBe(2)
 })
 
-test('maintain selection range on elements without support for selection range', () => {
+test('maintain selection range on elements without support for selection range', async () => {
   const {element} = setup<HTMLInputElement>(`<input type="number"/>`)
 
   prepare(element)
@@ -89,7 +89,7 @@ test('maintain selection range on elements without support for selection range',
   expect(element.selectionStart).toBe(null)
 })
 
-test('clear UI selection if selection is programmatically set', () => {
+test('clear UI selection if selection is programmatically set', async () => {
   const {element} = setup<HTMLInputElement>(`<input/>`)
 
   prepare(element)

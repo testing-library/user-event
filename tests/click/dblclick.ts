@@ -1,9 +1,9 @@
 import userEvent from '#src'
 import {setup, addEventListener, addListeners} from '#testHelpers/utils'
 
-test('fires the correct events on buttons', () => {
+test('fires the correct events on buttons', async () => {
   const {element, getEventSnapshot} = setup('<button />')
-  userEvent.dblClick(element)
+  await userEvent.dblClick(element)
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: button
 
@@ -48,9 +48,9 @@ input[checked=false] - input
 input[checked=false] - change
 input[checked=false] - dblclick
 */
-test('fires the correct events on checkboxes', () => {
+test('fires the correct events on checkboxes', async () => {
   const {element, getEventSnapshot} = setup('<input type="checkbox" />')
-  userEvent.dblClick(element)
+  await userEvent.dblClick(element)
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[checked=false]
 
@@ -82,9 +82,9 @@ test('fires the correct events on checkboxes', () => {
   `)
 })
 
-test('fires the correct events on regular inputs', () => {
+test('fires the correct events on regular inputs', async () => {
   const {element, getEventSnapshot} = setup('<input />')
-  userEvent.dblClick(element)
+  await userEvent.dblClick(element)
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value=""]
 
@@ -110,9 +110,9 @@ test('fires the correct events on regular inputs', () => {
   `)
 })
 
-test('fires the correct events on divs', () => {
+test('fires the correct events on divs', async () => {
   const {element, getEventSnapshot} = setup('<div></div>')
-  userEvent.dblClick(element)
+  await userEvent.dblClick(element)
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: div
 
@@ -136,7 +136,7 @@ test('fires the correct events on divs', () => {
   `)
 })
 
-test('blurs the previous element', () => {
+test('blurs the previous element', async () => {
   const {element} = setup(`
     <div>
       <button id="button-a" />
@@ -149,9 +149,9 @@ test('blurs the previous element', () => {
 
   const {getEventSnapshot, clearEventCalls} = addListeners(a)
 
-  userEvent.dblClick(a)
+  await userEvent.dblClick(a)
   clearEventCalls()
-  userEvent.dblClick(b)
+  await userEvent.dblClick(b)
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: button#button-a
 
@@ -160,15 +160,15 @@ test('blurs the previous element', () => {
   `)
 })
 
-test('does not fire focus event if the element is already focused', () => {
+test('does not fire focus event if the element is already focused', async () => {
   const {element, clearEventCalls, eventWasFired} = setup(`<button />`)
   element.focus()
   clearEventCalls()
-  userEvent.dblClick(element)
+  await userEvent.dblClick(element)
   expect(eventWasFired('focus')).toBe(false)
 })
 
-test('clicking an element in a label gives the control focus', () => {
+test('clicking an element in a label gives the control focus', async () => {
   const {element} = setup(`
     <div>
       <label for="nested-input">
@@ -177,11 +177,11 @@ test('clicking an element in a label gives the control focus', () => {
       <input id="nested-input" />
     </div>
   `)
-  userEvent.dblClick(element.querySelector('span'))
+  await userEvent.dblClick(element.querySelector('span') as HTMLSpanElement)
   expect(element.querySelector('input')).toHaveFocus()
 })
 
-test('does not blur the previous element when mousedown prevents default', () => {
+test('does not blur the previous element when mousedown prevents default', async () => {
   const {element} = setup(`
     <div>
       <button id="button-a" />
@@ -196,17 +196,17 @@ test('does not blur the previous element when mousedown prevents default', () =>
 
   const {getEventSnapshot, clearEventCalls} = addListeners(a)
 
-  userEvent.dblClick(a)
+  await userEvent.dblClick(a)
   clearEventCalls()
-  userEvent.dblClick(b)
+  await userEvent.dblClick(b)
   expect(getEventSnapshot()).toMatchInlineSnapshot(
     `No events were fired on: button#button-a`,
   )
 })
 
-test('fires mouse events with the correct properties', () => {
+test('fires mouse events with the correct properties', async () => {
   const {element, getClickEventsSnapshot} = setup('<div></div>')
-  userEvent.dblClick(element)
+  await userEvent.dblClick(element)
   expect(getClickEventsSnapshot()).toMatchInlineSnapshot(`
     pointerover - pointerId=1; pointerType=mouse; isPrimary=undefined
     pointerenter - pointerId=1; pointerType=mouse; isPrimary=undefined
@@ -228,68 +228,15 @@ test('fires mouse events with the correct properties', () => {
   `)
 })
 
-test('fires mouse events with custom button property', () => {
-  const {element, getClickEventsSnapshot} = setup('<div></div>')
-  userEvent.dblClick(element, {
-    button: 1,
-    altKey: true,
-  })
-  expect(getClickEventsSnapshot()).toMatchInlineSnapshot(`
-    pointerover - pointerId=1; pointerType=mouse; isPrimary=undefined
-    pointerenter - pointerId=1; pointerType=mouse; isPrimary=undefined
-    mouseover - button=0; buttons=0; detail=0
-    mouseenter - button=0; buttons=0; detail=0
-    pointermove - pointerId=1; pointerType=mouse; isPrimary=undefined
-    mousemove - button=0; buttons=0; detail=0
-    pointerdown - pointerId=1; pointerType=mouse; isPrimary=true
-    mousedown - button=0; buttons=1; detail=1
-    pointerup - pointerId=1; pointerType=mouse; isPrimary=true
-    mouseup - button=0; buttons=0; detail=1
-    click - button=0; buttons=0; detail=1
-    pointerdown - pointerId=1; pointerType=mouse; isPrimary=true
-    mousedown - button=0; buttons=1; detail=2
-    pointerup - pointerId=1; pointerType=mouse; isPrimary=true
-    mouseup - button=0; buttons=0; detail=2
-    click - button=0; buttons=0; detail=2
-    dblclick - button=0; buttons=0; detail=2
-  `)
-})
-
-test('fires mouse events with custom buttons property', () => {
-  const {element, getClickEventsSnapshot} = setup('<div></div>')
-
-  userEvent.dblClick(element, {buttons: 4})
-
-  expect(getClickEventsSnapshot()).toMatchInlineSnapshot(`
-    pointerover - pointerId=1; pointerType=mouse; isPrimary=undefined
-    pointerenter - pointerId=1; pointerType=mouse; isPrimary=undefined
-    mouseover - button=0; buttons=0; detail=0
-    mouseenter - button=0; buttons=0; detail=0
-    pointermove - pointerId=1; pointerType=mouse; isPrimary=undefined
-    mousemove - button=0; buttons=0; detail=0
-    pointerdown - pointerId=1; pointerType=mouse; isPrimary=true
-    mousedown - button=0; buttons=1; detail=1
-    pointerup - pointerId=1; pointerType=mouse; isPrimary=true
-    mouseup - button=0; buttons=0; detail=1
-    click - button=0; buttons=0; detail=1
-    pointerdown - pointerId=1; pointerType=mouse; isPrimary=true
-    mousedown - button=0; buttons=1; detail=2
-    pointerup - pointerId=1; pointerType=mouse; isPrimary=true
-    mouseup - button=0; buttons=0; detail=2
-    click - button=0; buttons=0; detail=2
-    dblclick - button=0; buttons=0; detail=2
-  `)
-})
-
-test('throws an error when dblClick element with pointer-events set to none', () => {
+test('throws an error when dblClick element with pointer-events set to none', async () => {
   const {element} = setup(`<div style="pointer-events: none"></div>`)
-  expect(() => userEvent.dblClick(element)).toThrowError(
+  await expect(userEvent.dblClick(element)).rejects.toThrowError(
     /unable to double-click/i,
   )
 })
 
-test('does not throws when clicking element with pointer-events set to none and skipPointerEventsCheck is set', () => {
+test('does not throws when clicking element with pointer-events set to none and skipPointerEventsCheck is set', async () => {
   const {element, getEvents} = setup(`<div style="pointer-events: none"></div>`)
-  userEvent.dblClick(element, {skipPointerEventsCheck: true})
+  await userEvent.dblClick(element, {skipPointerEventsCheck: true})
   expect(getEvents('click')).toHaveLength(2)
 })

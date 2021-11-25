@@ -7,7 +7,7 @@ import {
 } from '#src/utils'
 import {setup} from '#testHelpers/utils'
 
-test('range on input', () => {
+test('range on input', async () => {
   const {element} = setup('<input value="foo"/>')
 
   expect(getInputRange(element)).toHaveProperty('startOffset', 0)
@@ -32,7 +32,7 @@ test('range on input', () => {
   expect(getInputRange(element)).toHaveProperty('endOffset', 3)
 })
 
-test('range on contenteditable', () => {
+test('range on contenteditable', async () => {
   const {element} = setup('<div contenteditable="true">foo</div>')
 
   expect(getInputRange(element)).toBe(undefined)
@@ -60,7 +60,7 @@ test('range on contenteditable', () => {
   expect(document.getSelection()).toHaveProperty('focusOffset', 2)
 })
 
-test('range on input without selection support', () => {
+test('range on input without selection support', async () => {
   const {element} = setup(`<input type="number" value="123"/>`)
 
   expect(getInputRange(element)).toHaveProperty('startOffset', 0)
@@ -73,7 +73,7 @@ test('range on input without selection support', () => {
 })
 
 describe('modify selection', () => {
-  test('extend selection on input element', () => {
+  test('extend selection on input element', async () => {
     const {element} = setup<HTMLInputElement>(`<input value="foo bar baz"/>`)
 
     setSelection({focusNode: element, focusOffset: 5})
@@ -89,7 +89,7 @@ describe('modify selection', () => {
     expect(element).toHaveProperty('selectionEnd', 9)
   })
 
-  test('extend selection on other nodes', () => {
+  test('extend selection on other nodes', async () => {
     const {element} = setup(`<div>foo bar baz</div>`)
     const text = element.firstChild as Text
 
@@ -110,7 +110,7 @@ describe('modify selection', () => {
 })
 
 describe('update selection when moving focus into element with own selection implementation', () => {
-  test('replace selection', () => {
+  test('replace selection', async () => {
     const {element} = setup(`<div>foo<input/></div>`)
     const text = element.childNodes.item(0) as Text
     const input = element.childNodes.item(1) as HTMLInputElement
@@ -125,7 +125,7 @@ describe('update selection when moving focus into element with own selection imp
     expect(document.getSelection()).toHaveProperty('focusOffset', 0)
   })
 
-  test('retain cursor position in contenteditable', () => {
+  test('retain cursor position in contenteditable', async () => {
     const {element} = setup(`<div contenteditable>foo<input/></div>`)
     const text = element.childNodes.item(0) as Text
     const input = element.childNodes.item(1) as HTMLInputElement
@@ -141,7 +141,7 @@ describe('update selection when moving focus into element with own selection imp
     expect(document.getSelection()).toHaveProperty('focusOffset', 1)
   })
 
-  test('replace extended selection in contenteditable with cursor in first text', () => {
+  test('replace extended selection in contenteditable with cursor in first text', async () => {
     const {element} = setup(`<div contenteditable>foo<input/></div>`)
     const text = element.childNodes.item(0) as Text
     const input = element.childNodes.item(1) as HTMLInputElement
@@ -162,7 +162,7 @@ describe('update selection when moving focus into element with own selection imp
     expect(document.getSelection()).toHaveProperty('focusOffset', 0)
   })
 
-  test('replace extended selection in contenteditable with cursor at start', () => {
+  test('replace extended selection in contenteditable with cursor at start', async () => {
     const {element} = setup(`<div contenteditable><input/>foo<input/></div>`)
     const text = element.childNodes.item(1) as Text
     const input = element.childNodes.item(2) as HTMLInputElement

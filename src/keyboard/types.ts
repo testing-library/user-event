@@ -1,3 +1,4 @@
+import {Config} from '../setup'
 import {getNextKeyDef} from './getNextKeyDef'
 
 /**
@@ -48,17 +49,6 @@ export type keyboardState = {
   repeatKey?: ReturnType<typeof getNextKeyDef>
 }
 
-export type keyboardOptions = {
-  /** Document in which to perform the events */
-  document: Document
-  /** Delay between keystrokes */
-  delay: number
-  /** Add modifiers for given keys - not implemented yet */
-  autoModify: boolean
-  /** Keyboard layout to use */
-  keyboardMap: keyboardKey[]
-}
-
 export enum DOM_KEY_LOCATION {
   STANDARD = 0,
   LEFT = 1,
@@ -80,16 +70,6 @@ export interface keyboardKey {
 }
 
 export interface behaviorPlugin {
-  matches: (
-    keyDef: keyboardKey,
-    element: Element,
-    options: keyboardOptions,
-    state: keyboardState,
-  ) => boolean
-  handle: (
-    keyDef: keyboardKey,
-    element: Element,
-    options: keyboardOptions,
-    state: keyboardState,
-  ) => void
+  matches: (keyDef: keyboardKey, element: Element, config: Config) => boolean
+  handle: (keyDef: keyboardKey, element: Element, config: Config) => void
 }

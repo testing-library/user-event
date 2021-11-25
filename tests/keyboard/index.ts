@@ -1,11 +1,11 @@
 import userEvent from '#src'
 import {addListeners, setup} from '#testHelpers/utils'
 
-it('type without focus', () => {
+it('type without focus', async () => {
   const {element} = setup('<input/>')
   const {getEventSnapshot} = addListeners(document.body)
 
-  userEvent.keyboard('foo')
+  await userEvent.keyboard('foo')
 
   expect(element).toHaveValue('')
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
@@ -23,12 +23,12 @@ it('type without focus', () => {
   `)
 })
 
-it('type with focus', () => {
+it('type with focus', async () => {
   const {element} = setup('<input/>')
   const {getEventSnapshot} = addListeners(document.body)
   element.focus()
 
-  userEvent.keyboard('foo')
+  await userEvent.keyboard('foo')
 
   expect(element).toHaveValue('foo')
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
@@ -55,7 +55,6 @@ it('type asynchronous', async () => {
   const {getEventSnapshot} = addListeners(document.body)
   element.focus()
 
-  // eslint-disable-next-line testing-library/no-await-sync-events
   await userEvent.keyboard('foo', {delay: 1})
 
   expect(element).toHaveValue('foo')
@@ -78,42 +77,18 @@ it('type asynchronous', async () => {
   `)
 })
 
-describe('error', () => {
-  afterEach(() => {
-    ;(console.error as jest.MockedFunction<typeof console.error>).mockClear()
-  })
-
-  it('error in sync', async () => {
-    const err = jest.spyOn(console, 'error')
-    err.mockImplementation(() => {})
-
-    userEvent.keyboard('{!')
-
-    // the catch will be asynchronous
-    await Promise.resolve()
-
-    expect(err).toHaveBeenCalledWith(expect.any(Error) as unknown)
-    expect(err.mock.calls[0][0]).toHaveProperty(
-      'message',
-      expect.stringContaining('Expected key descriptor but found "!" in "{!"'),
-    )
-  })
-
-  it('error in async', async () => {
-    const promise = userEvent.keyboard('{!', {delay: 1})
-
-    return expect(promise).rejects.toThrowError(
-      'Expected key descriptor but found "!" in "{!"',
-    )
-  })
+it('error in async', async () => {
+  await expect(userEvent.keyboard('{!', {delay: 1})).rejects.toThrowError(
+    'Expected key descriptor but found "!" in "{!"',
+  )
 })
 
-it('continue typing with state', () => {
+it('continue typing with state', async () => {
   const {element, getEventSnapshot, clearEventCalls} = setup('<input/>')
   element.focus()
   clearEventCalls()
 
-  const state = userEvent.keyboard('[ShiftRight>]')
+  const state = await userEvent.keyboard('[ShiftRight>]')
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value=""]
@@ -122,7 +97,7 @@ it('continue typing with state', () => {
   `)
   clearEventCalls()
 
-  userEvent.keyboard('F[/ShiftRight]', {keyboardState: state})
+  await userEvent.keyboard('F[/ShiftRight]', {keyboardState: state})
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value="F"]

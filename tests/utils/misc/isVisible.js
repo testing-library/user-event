@@ -2,7 +2,7 @@ import {screen} from '@testing-library/dom'
 import {isVisible} from '#src/utils'
 import {setup} from '#testHelpers/utils'
 
-test('check if element is visible', () => {
+test('check if element is visible', async () => {
   setup(`
     <input data-testid="visibleInput"/>
     <input data-testid="hiddenInput" hidden/>

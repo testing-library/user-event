@@ -1,5 +1,4 @@
 import type {PointerOptions} from '../utils'
-import type {uploadInit} from '../utility'
 import type {PointerInput} from '../pointer'
 import type {UserEventApi} from '.'
 import {setupDirect} from './setup'
@@ -91,10 +90,9 @@ export function unhover(element: Element, options: PointerOptions = {}) {
 export function upload(
   element: HTMLElement,
   fileOrFiles: File | File[],
-  init?: uploadInit,
   options: Partial<Config> = {},
 ) {
-  return setupDirect(options).upload(element, fileOrFiles, init)
+  return setupDirect(options).upload(element, fileOrFiles)
 }
 
 export function tab(

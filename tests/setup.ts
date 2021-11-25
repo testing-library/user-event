@@ -203,6 +203,7 @@ cases<APICase>(
     upload: {
       api: 'upload',
       elementArg: 0,
+      args: [null, new File(['foo'], 'foo.txt')],
     },
   },
 )

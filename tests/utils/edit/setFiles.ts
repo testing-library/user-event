@@ -1,5 +1,4 @@
-import {createFileList} from '#src/utils'
-import {setFiles} from '#src/utils/edit/setFiles'
+import {createFileList, setFiles} from '#src/utils'
 import {setup} from '#testHelpers/utils'
 
 test('set files', () => {

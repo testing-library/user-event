@@ -1,16 +1,11 @@
 {
   "extends": "./node_modules/kcd-scripts/shared-tsconfig.json",
   "compilerOptions": {
-    "allowJs": true,
     "esModuleInterop": true,
     "target": "ES5",
-    "baseUrl": ".",
-    "paths": {
-      "#src": ["./src/index"],
-      "#src/*": ["./src/*"],
-      "#testHelpers/*": ["./tests/_helpers/*"]
-    },
+    "baseUrl": "/dev/null",
+    "paths": {},
     "noEmit": true
   },
-  "include": ["./src", "./tests"]
+  "include": ["./src"]
 }

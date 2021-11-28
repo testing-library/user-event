@@ -15,6 +15,7 @@ export * from './edit/isValidDateValue'
 export * from './edit/isValidInputTimeValue'
 export * from './edit/maxLength'
 export * from './edit/prepareInput'
+export * from './edit/setFiles'
 
 export * from './focus/blur'
 export * from './focus/copySelection'

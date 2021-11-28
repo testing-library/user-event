@@ -1,6 +1,8 @@
 module.exports = {
   extends: './node_modules/kcd-scripts/eslint.js',
-  parser: '@typescript-eslint/parser',
+  parserOptions: {
+    project: ['./tsconfig.json', './tests/tsconfig.json'],
+  },
   settings: {
     'import/resolver': {
       typescript: {},

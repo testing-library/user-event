@@ -1,7 +1,13 @@
 import {fireEvent} from '@testing-library/dom'
-import {blur, createFileList, focus, isDisabled, isElementType} from '../utils'
+import {
+  blur,
+  createFileList,
+  focus,
+  isDisabled,
+  isElementType,
+  setFiles,
+} from '../utils'
 import {Config, UserEvent} from '../setup'
-import {setFiles} from '#src/utils/edit/setFiles'
 
 export interface uploadInit {
   changeInit?: EventInit

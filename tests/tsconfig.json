@@ -1,0 +1,12 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": "..",
+    "paths": {
+      "#src": ["./src/index"],
+      "#src/*": ["./src/*"],
+      "#testHelpers/*": ["./tests/_helpers/*"]
+    }
+  },
+  "include": ["."]
+}

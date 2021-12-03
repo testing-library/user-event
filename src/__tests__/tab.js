@@ -324,14 +324,8 @@ test('should stay within a focus trap', () => {
     document.querySelector('[data-testid="div1"]'),
     document.querySelector('[data-testid="div2"]'),
   ]
-  const [
-    checkbox1,
-    radio1,
-    number1,
-    checkbox2,
-    radio2,
-    number2,
-  ] = document.querySelectorAll('[data-testid="element"]')
+  const [checkbox1, radio1, number1, checkbox2, radio2, number2] =
+    document.querySelectorAll('[data-testid="element"]')
 
   expect(document.body).toHaveFocus()
 
@@ -436,6 +430,22 @@ test('should not focus elements inside a hidden parent', () => {
 
   userEvent.tab()
   expect(three).toHaveFocus()
+})
+
+test('should not focus on children of element with style `visiblity: hidden`', () => {
+  const {
+    elements: [inputA, , inputB],
+  } = setup(`
+    <input/>
+    <div style="visibility: hidden;">
+      <input/>
+    </div>
+    <input/>
+  `)
+
+  inputA.focus()
+  userEvent.tab()
+  expect(inputB).toHaveFocus()
 })
 
 test('should keep focus on the document if there are no enabled, focusable elements', () => {

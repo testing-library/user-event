@@ -48,6 +48,7 @@ test('check if element is visible', () => {
     <input data-testid="visibleInput"/>
     <input data-testid="hiddenInput" hidden/>
     <input data-testid="styledHiddenInput" style="display: none">
+    <input data-testid="styledVisibiliyHiddenInput" style="visibility: hidden">
     <input data-testid="styledDisplayedInput" hidden style="display: block"/>
     <div style="display: none"><input data-testid="childInput" /></div>
   `)
@@ -57,4 +58,7 @@ test('check if element is visible', () => {
   expect(isVisible(screen.getByTestId('styledHiddenInput'))).toBe(false)
   expect(isVisible(screen.getByTestId('childInput'))).toBe(false)
   expect(isVisible(screen.getByTestId('hiddenInput'))).toBe(false)
+  expect(isVisible(screen.getByTestId('styledVisibiliyHiddenInput'))).toBe(
+    false,
+  )
 })

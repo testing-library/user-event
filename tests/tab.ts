@@ -564,3 +564,19 @@ test('calls FocusEvents with relatedTarget', async () => {
       ?.relatedTarget,
   ).toBe(element0)
 })
+
+test('should not focus on children of element with style `visiblity: hidden`', () => {
+  const {
+    elements: [inputA, , inputB],
+  } = setup(`
+    <input/>
+    <div style="visibility: hidden;">
+      <input/>
+    </div>
+    <input/>
+  `)
+
+  inputA.focus()
+  userEvent.tab()
+  expect(inputB).toHaveFocus()
+})

@@ -8,8 +8,11 @@ export function isVisible(element: Element): boolean {
     el?.ownerDocument;
     el = el.parentElement
   ) {
-    const display = window.getComputedStyle(el).display
+    const {display, visibility} = window.getComputedStyle(el)
     if (display === 'none') {
+      return false
+    }
+    if (visibility === 'hidden') {
       return false
     }
   }

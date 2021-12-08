@@ -133,6 +133,30 @@ describe('pressing and releasing keys', () => {
   })
 })
 
+describe('prevent default behavior', () => {
+  test('per keydown handler', async () => {
+    const {element, getEvents} = setup(`<input/>`)
+    element.focus()
+    element.addEventListener('keydown', e => e.preventDefault())
+
+    await userEvent.keyboard('x')
+
+    expect(getEvents('input')).toHaveLength(0)
+    expect(element).toHaveValue('')
+  })
+
+  test('per keypress handler', async () => {
+    const {element, getEvents} = setup(`<input/>`)
+    element.focus()
+    element.addEventListener('keypress', e => e.preventDefault())
+
+    await userEvent.keyboard('x')
+
+    expect(getEvents('input')).toHaveLength(0)
+    expect(element).toHaveValue('')
+  })
+})
+
 test('do not call setTimeout with delay `null`', async () => {
   setup(`<div></div>`)
   const spy = jest.spyOn(global, 'setTimeout')

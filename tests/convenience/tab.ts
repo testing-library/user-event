@@ -27,4 +27,8 @@ test('tab', async () => {
   // shift=true lifted the shift key
   await user.tab()
   expect(elB).toHaveFocus()
+
+  // call per directApi
+  await userEvent.tab()
+  expect(elC).toHaveFocus()
 })

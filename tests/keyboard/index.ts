@@ -109,3 +109,55 @@ it('continue typing with state', async () => {
     input[value="F"] - keyup: Shift
   `)
 })
+
+describe('delay', () => {
+  const spy = jest.spyOn(global, 'setTimeout')
+
+  beforeEach(() => {
+    spy.mockClear()
+  })
+
+  test('delay keyboard per setTimeout', async () => {
+    const time0 = performance.now()
+    await userEvent.keyboard('foo', {delay: 10})
+
+    // we don't call delay after the last action
+    // TODO: Should we call it?
+    expect(spy).toBeCalledTimes(2)
+    expect(time0).toBeLessThan(performance.now() - 20)
+  })
+
+  test('do not call setTimeout with delay `null`', async () => {
+    await userEvent.keyboard('foo', {delay: null})
+    expect(spy).toBeCalledTimes(0)
+  })
+})
+
+test('disabling activeElement moves action to HTMLBodyElement', async () => {
+  const {element} = setup<HTMLInputElement>(`<input/>`)
+  element.addEventListener('keyup', e => {
+    if (e.key === 'b') {
+      element.disabled = true
+    }
+  })
+  element.focus()
+
+  const {getEventSnapshot} = addListeners(document.body)
+  await userEvent.keyboard('abc')
+
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
+    Events fired on: body
+
+    input[value=""] - keydown: a
+    input[value=""] - keypress: a
+    input[value="a"] - input
+    input[value="a"] - keyup: a
+    input[value="a"] - keydown: b
+    input[value="a"] - keypress: b
+    input[value="ab"] - input
+    input[value="ab"] - keyup: b
+    body - keydown: c
+    body - keypress: c
+    body - keyup: c
+  `)
+})

@@ -1,16 +1,28 @@
 import {focus} from '#src/utils'
-import {setup} from '#testHelpers/utils'
+import {addListeners, setup} from '#testHelpers/utils'
 
-test('focus a button', async () => {
-  const {element, getEventSnapshot} = setup(`<button />`)
-  focus(element)
+test('move focus', async () => {
+  const {elements, clearEventCalls, getEvents, getEventSnapshot} = setup(
+    `<input id="a"><input id="b"/>`,
+  )
+  const [elA, elB] = elements
+
+  focus(elA)
+  expect(elA).toHaveFocus()
+
+  clearEventCalls()
+
+  focus(elB)
+  expect(elB).toHaveFocus()
+
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
-    Events fired on: button
+    Events fired on: div
 
-    button - focus
-    button - focusin
+    input#a[value=""] - focusout
+    input#b[value=""] - focusin
   `)
-  expect(element).toHaveFocus()
+  expect(getEvents('focusout')[0]).toHaveProperty('target', elA)
+  expect(getEvents('focusin')[0]).toHaveProperty('target', elB)
 })
 
 test('no events fired on an unfocusable input', async () => {
@@ -63,4 +75,25 @@ test('no events fired if the element is already focused', async () => {
     `No events were fired on: button`,
   )
   expect(element).toHaveFocus()
+})
+
+test('calls FocusEvents with relatedTarget', async () => {
+  const {element} = setup('<div><input/><input/></div>')
+
+  const element0 = element.children[0] as HTMLInputElement
+  const element1 = element.children[1] as HTMLInputElement
+  element0.focus()
+  const events0 = addListeners(element0)
+  const events1 = addListeners(element1)
+
+  focus(element1)
+
+  expect(
+    events0.getEvents().find((e): e is FocusEvent => e.type === 'blur')
+      ?.relatedTarget,
+  ).toBe(element1)
+  expect(
+    events1.getEvents().find((e): e is FocusEvent => e.type === 'focus')
+      ?.relatedTarget,
+  ).toBe(element0)
 })

@@ -185,3 +185,82 @@ test('multi touch does not click', async () => {
 
   expect(getEvents('click')).toHaveLength(0)
 })
+
+describe('check/uncheck control per click', () => {
+  test('clicking changes checkbox', async () => {
+    const {element} = setup('<input type="checkbox" />')
+
+    await userEvent.pointer({keys: '[MouseLeft]', target: element})
+
+    expect(element).toBeChecked()
+
+    await userEvent.pointer({keys: '[MouseLeft]', target: element})
+
+    expect(element).not.toBeChecked()
+  })
+
+  test('clicking changes radio button', async () => {
+    const {
+      elements: [radioA, radioB],
+    } = setup(`
+      <input type="radio" name="foo"/>
+      <input type="radio" name="foo"/>
+    `)
+
+    await userEvent.pointer({keys: '[MouseLeft]', target: radioA})
+
+    expect(radioA).toBeChecked()
+
+    await userEvent.pointer({keys: '[MouseLeft]', target: radioB})
+
+    expect(radioA).not.toBeChecked()
+  })
+
+  test('clicking label changes checkable input', async () => {
+    const {
+      elements: [input, label],
+    } = setup(`<input type="checkbox" id="a"/><label for="a"></label>`)
+
+    await userEvent.pointer({keys: '[MouseLeft]', target: label})
+
+    expect(input).toBeChecked()
+
+    await userEvent.pointer({keys: '[MouseLeft]', target: label})
+
+    expect(input).not.toBeChecked()
+  })
+})
+
+describe('submit form per click', () => {
+  test('submits a form when clicking on a <button>', async () => {
+    const {element, eventWasFired} = setup(`<form><button></button></form>`)
+
+    await userEvent.pointer({keys: '[MouseLeft]', target: element.children[0]})
+
+    expect(eventWasFired('submit')).toBe(true)
+  })
+
+  test('does not submit a form when clicking on a <button type="button">', async () => {
+    const {element, eventWasFired} = setup(
+      `<form><button type="button"></button></form>`,
+    )
+
+    await userEvent.pointer({keys: '[MouseLeft]', target: element.children[0]})
+
+    expect(eventWasFired('submit')).toBe(false)
+  })
+})
+
+test('secondary mouse button fires `contextmenu` instead of `click`', async () => {
+  const {element, getEvents, clearEventCalls} = setup(`<button/>`)
+
+  await userEvent.pointer({keys: '[MouseLeft]', target: element})
+  expect(getEvents('click')).toHaveLength(1)
+  expect(getEvents('contextmenu')).toHaveLength(0)
+
+  clearEventCalls()
+
+  await userEvent.pointer({keys: '[MouseRight]', target: element})
+  expect(getEvents('contextmenu')).toHaveLength(1)
+  expect(getEvents('click')).toHaveLength(0)
+})

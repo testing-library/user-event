@@ -6,21 +6,48 @@ import {setup} from '#testHelpers/utils'
 // So we try an approximation:
 // We treat any mousedown as if it happened on the space after the last character.
 
-test('single click moves cursor to the end', async () => {
+test('single mousedown moves cursor to the end', async () => {
   const {element} = setup<HTMLInputElement>(`<input value="foo bar baz"/>`)
 
-  await userEvent.pointer({keys: '[MouseLeft]', target: element})
+  await userEvent.pointer({keys: '[MouseLeft>]', target: element})
 
+  expect(element).toHaveFocus()
   expect(element).toHaveProperty('selectionStart', 11)
 })
 
-test('single click moves cursor to the last text', async () => {
+test('move focus to closest focusable element', async () => {
+  const {element} = setup(`
+    <div tabIndex="0">
+      <div>this is not focusable</div>
+      <button>this is focusable</button>
+    </div>
+  `)
+
+  await userEvent.pointer({keys: '[MouseLeft>]', target: element.children[1]})
+  expect(element.children[1]).toHaveFocus()
+
+  await userEvent.pointer({keys: '[MouseLeft>]', target: element.children[0]})
+  expect(element).toHaveFocus()
+})
+
+test('mousedown handlers can prevent moving focus', async () => {
+  const {element} = setup<HTMLInputElement>(`<input/>`)
+  element.addEventListener('mousedown', e => e.preventDefault())
+
+  await userEvent.pointer({keys: '[MouseLeft>]', target: element})
+
+  expect(element).not.toHaveFocus()
+  expect(element).toHaveProperty('selectionStart', 0)
+})
+
+test('single mousedown moves cursor to the last text', async () => {
   const {element} = setup<HTMLInputElement>(
     `<div contenteditable>foo bar baz</div>`,
   )
 
-  await userEvent.pointer({keys: '[MouseLeft]', target: element})
+  await userEvent.pointer({keys: '[MouseLeft>]', target: element})
 
+  expect(element).toHaveFocus()
   expect(document.getSelection()).toHaveProperty(
     'focusNode',
     element.firstChild,
@@ -28,16 +55,16 @@ test('single click moves cursor to the last text', async () => {
   expect(document.getSelection()).toHaveProperty('focusOffset', 11)
 })
 
-test('double click selects a word or a sequence of whitespace', async () => {
+test('double mousedown selects a word or a sequence of whitespace', async () => {
   const {element} = setup<HTMLInputElement>(`<input value="foo bar baz"/>`)
 
-  await userEvent.pointer({keys: '[MouseLeft][MouseLeft]', target: element})
+  await userEvent.pointer({keys: '[MouseLeft][MouseLeft>]', target: element})
 
   expect(element).toHaveProperty('selectionStart', 8)
   expect(element).toHaveProperty('selectionEnd', 11)
 
   await userEvent.pointer({
-    keys: '[MouseLeft][MouseLeft]',
+    keys: '[MouseLeft][MouseLeft>]',
     target: element,
     offset: 0,
   })
@@ -56,17 +83,17 @@ test('double click selects a word or a sequence of whitespace', async () => {
 
   element.value = 'foo bar  '
 
-  await userEvent.pointer({keys: '[MouseLeft][MouseLeft]', target: element})
+  await userEvent.pointer({keys: '[MouseLeft][MouseLeft>]', target: element})
 
   expect(element).toHaveProperty('selectionStart', 7)
   expect(element).toHaveProperty('selectionEnd', 9)
 })
 
-test('triple click selects whole line', async () => {
+test('triple mousedown selects whole line', async () => {
   const {element} = setup<HTMLInputElement>(`<input value="foo bar baz"/>`)
 
   await userEvent.pointer({
-    keys: '[MouseLeft][MouseLeft][MouseLeft]',
+    keys: '[MouseLeft][MouseLeft][MouseLeft>]',
     target: element,
   })
 
@@ -74,7 +101,7 @@ test('triple click selects whole line', async () => {
   expect(element).toHaveProperty('selectionEnd', 11)
 
   await userEvent.pointer({
-    keys: '[MouseLeft][MouseLeft][MouseLeft]',
+    keys: '[MouseLeft][MouseLeft][MouseLeft>]',
     target: element,
     offset: 0,
   })
@@ -83,7 +110,7 @@ test('triple click selects whole line', async () => {
   expect(element).toHaveProperty('selectionEnd', 11)
 
   await userEvent.pointer({
-    keys: '[MouseLeft][MouseLeft][MouseLeft]',
+    keys: '[MouseLeft][MouseLeft][MouseLeft>]',
     target: element,
     offset: 11,
   })
@@ -273,4 +300,52 @@ test('`node` overrides the text offset approximation', async () => {
     span[0],
   )
   expect(document.getSelection()?.getRangeAt(0)).toHaveProperty('endOffset', 1)
+})
+
+describe('focus control when clicking label', () => {
+  test('click event on label moves focus to control', async () => {
+    const {
+      elements: [input, label],
+    } = setup(`<input id="a" value="foo"/><label for="a" tabindex="-1"/>`)
+
+    const pointerState = await userEvent.pointer({
+      keys: '[MouseLeft>]',
+      target: label,
+    })
+
+    expect(label).toHaveFocus()
+
+    await userEvent.pointer('[/MouseLeft]', {pointerState})
+
+    expect(label).not.toHaveFocus()
+    expect(input).toHaveFocus()
+    expect(input).toHaveProperty('selectionStart', 0)
+
+    // TODO: click on label selects input value
+    // expect(input).toHaveProperty('selectionEnd', 3)
+  })
+
+  test('click handlers can prevent moving focus per label', async () => {
+    const {
+      elements: [input, label],
+    } = setup(`<input id="a"/><label for="a" tabindex="-1"/>`)
+    label.addEventListener('click', e => e.preventDefault())
+
+    await userEvent.pointer({keys: '[MouseLeft]', target: label})
+
+    // TODO: honor click handler
+    // expect(input).not.toHaveFocus()
+    expect(input).toBeTruthy()
+  })
+
+  test('do not move focus to disabled control', async () => {
+    const {
+      elements: [input, label],
+    } = setup(`<input id="a" disabled/><label for="a" tabindex="-1"/>`)
+
+    await userEvent.pointer({keys: '[MouseLeft]', target: label})
+
+    expect(label).toHaveFocus()
+    expect(input).not.toHaveFocus()
+  })
 })

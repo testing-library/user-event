@@ -565,7 +565,7 @@ test('calls FocusEvents with relatedTarget', async () => {
   ).toBe(element0)
 })
 
-test('should not focus on children of element with style `visiblity: hidden`', () => {
+test('should not focus on children of element with style `visiblity: hidden`', async () => {
   const {
     elements: [inputA, , inputB],
   } = setup(`
@@ -577,6 +577,6 @@ test('should not focus on children of element with style `visiblity: hidden`', (
   `)
 
   inputA.focus()
-  userEvent.tab()
+  await userEvent.tab()
   expect(inputB).toHaveFocus()
 })

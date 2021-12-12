@@ -319,10 +319,6 @@ describe('focus control when clicking label', () => {
 
     expect(label).not.toHaveFocus()
     expect(input).toHaveFocus()
-    expect(input).toHaveProperty('selectionStart', 0)
-
-    // TODO: click on label selects input value
-    // expect(input).toHaveProperty('selectionEnd', 3)
   })
 
   test('click handlers can prevent moving focus per label', async () => {

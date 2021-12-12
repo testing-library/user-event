@@ -329,9 +329,7 @@ describe('focus control when clicking label', () => {
 
     await userEvent.pointer({keys: '[MouseLeft]', target: label})
 
-    // TODO: honor click handler
-    // expect(input).not.toHaveFocus()
-    expect(input).toBeTruthy()
+    expect(input).not.toHaveFocus()
   })
 
   test('do not move focus to disabled control', async () => {

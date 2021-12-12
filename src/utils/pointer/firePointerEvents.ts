@@ -41,17 +41,15 @@ export function firePointerEvent(
   if (['pointerdown', 'pointerup'].includes(type)) {
     init.isPrimary = isPrimary
   }
+  init.button = getMouseButton(button ?? 0)
+  init.buttons = getMouseButtons(
+    ...pointerState.pressed
+      .filter(p => p.keyDef.pointerType === pointerType)
+      .map(p => p.keyDef.button ?? 0),
+  )
   if (
-    ['mousedown', 'mouseup', 'pointerdown', 'pointerup', 'click'].includes(type)
+    ['mousedown', 'mouseup', 'click', 'dblclick', 'contextmenu'].includes(type)
   ) {
-    init.button = getMouseButton(button ?? 0)
-    init.buttons = getMouseButtons(
-      ...pointerState.pressed
-        .filter(p => p.keyDef.pointerType === pointerType)
-        .map(p => p.keyDef.button ?? 0),
-    )
-  }
-  if (['mousedown', 'mouseup', 'click', 'dblclick'].includes(type)) {
     init.detail = clickCount
   }
 

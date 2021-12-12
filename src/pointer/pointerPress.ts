@@ -1,6 +1,5 @@
 /* eslint-disable complexity */
 
-import {fireEvent} from '@testing-library/dom'
 import {
   findClosest,
   firePointerEvent,
@@ -134,6 +133,10 @@ function down(
     })
   }
 
+  if (pointerType === 'mouse' && button === 'secondary') {
+    fire('contextmenu')
+  }
+
   return pressObj
 
   function fire(type: string) {
@@ -230,10 +233,6 @@ function up(
               target.ownerDocument.body,
           )
         }
-      }
-
-      if (pointerType === 'mouse' && button === 'secondary') {
-        fireEvent.contextMenu(target)
       }
     }
   }

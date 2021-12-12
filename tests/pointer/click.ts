@@ -15,6 +15,18 @@ test('click element', async () => {
   expect(getEvents('click')).toHaveLength(1)
 })
 
+test('secondary button triggers contextmenu', async () => {
+  const {element, getClickEventsSnapshot, getEvents} = setup('<div />')
+  await userEvent.pointer({keys: '[MouseRight>]', target: element})
+
+  expect(getClickEventsSnapshot()).toMatchInlineSnapshot(`
+    pointerdown - pointerId=1; pointerType=mouse; isPrimary=true
+    mousedown - button=2; buttons=2; detail=1
+    contextmenu - button=2; buttons=2; detail=1
+  `)
+  expect(getEvents('contextmenu')).toHaveLength(1)
+})
+
 test('double click', async () => {
   const {element, getClickEventsSnapshot, getEvents} = setup(`<div></div>`)
 
@@ -90,8 +102,8 @@ test('other keys reset click counter, but keyup/click still uses the old count',
     pointerdown - pointerId=1; pointerType=mouse; isPrimary=true
     mousedown - button=0; buttons=1; detail=2
     mousedown - button=2; buttons=3; detail=1
+    contextmenu - button=2; buttons=3; detail=1
     mouseup - button=2; buttons=1; detail=1
-    contextmenu - button=0; buttons=0; detail=0
     pointerup - pointerId=1; pointerType=mouse; isPrimary=true
     mouseup - button=0; buttons=0; detail=2
     click - button=0; buttons=0; detail=2

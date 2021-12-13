@@ -54,10 +54,7 @@ test('get next focusable element in tab order', () => {
         <input id="f" />
     `)
 
-  // TODO: the browser tabs through tabIndex>0 before tabIndex=0
-
-  // assertTabOrder([elE, elA, elB, elD, elF])
-  assertTabOrder([elB, elD, elF, elE, elA])
+  assertTabOrder([elE, elA, elB, elD, elF])
 
   expect(getTabDestination(elC, false)).toBe(elD)
   expect(getTabDestination(elC, true)).toBe(elB)
@@ -102,10 +99,7 @@ test('exclude anchors without `href` from tab order', () => {
         <a tabIndex="1"></a>
     `)
 
-  // TODO: the browser tabs through tabIndex>0 before tabIndex=0
-
-  // assertTabOrder([elC, elB])
-  assertTabOrder([elB, elC])
+  assertTabOrder([elC, elB])
 })
 
 test('skip consecutive radios of same group', () => {

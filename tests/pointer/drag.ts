@@ -14,7 +14,7 @@ test('drag sequence', async () => {
     pointerdown - pointerId=1; pointerType=mouse; isPrimary=true
     mousedown - button=0; buttons=1; detail=1
     pointermove - pointerId=1; pointerType=mouse; isPrimary=undefined
-    mousemove - button=0; buttons=0; detail=0
+    mousemove - button=0; buttons=1; detail=0
     pointerup - pointerId=1; pointerType=mouse; isPrimary=true
     mouseup - button=0; buttons=0; detail=1
     click - button=0; buttons=0; detail=1

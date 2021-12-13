@@ -15,6 +15,18 @@ test('click element', async () => {
   expect(getEvents('click')).toHaveLength(1)
 })
 
+test('secondary button triggers contextmenu', async () => {
+  const {element, getClickEventsSnapshot, getEvents} = setup('<div />')
+  await userEvent.pointer({keys: '[MouseRight>]', target: element})
+
+  expect(getClickEventsSnapshot()).toMatchInlineSnapshot(`
+    pointerdown - pointerId=1; pointerType=mouse; isPrimary=true
+    mousedown - button=2; buttons=2; detail=1
+    contextmenu - button=2; buttons=2; detail=1
+  `)
+  expect(getEvents('contextmenu')).toHaveLength(1)
+})
+
 test('double click', async () => {
   const {element, getClickEventsSnapshot, getEvents} = setup(`<div></div>`)
 
@@ -74,7 +86,7 @@ test('two clicks', async () => {
 })
 
 test('other keys reset click counter, but keyup/click still uses the old count', async () => {
-  const {element, getClickEventsSnapshot} = setup(`<div></div>`)
+  const {element, getClickEventsSnapshot, getEvents} = setup(`<div></div>`)
 
   await userEvent.pointer({
     keys: '[MouseLeft][MouseLeft>][MouseRight][MouseLeft]',
@@ -90,8 +102,8 @@ test('other keys reset click counter, but keyup/click still uses the old count',
     pointerdown - pointerId=1; pointerType=mouse; isPrimary=true
     mousedown - button=0; buttons=1; detail=2
     mousedown - button=2; buttons=3; detail=1
+    contextmenu - button=2; buttons=3; detail=1
     mouseup - button=2; buttons=1; detail=1
-    contextmenu - button=0; buttons=0; detail=0
     pointerup - pointerId=1; pointerType=mouse; isPrimary=true
     mouseup - button=0; buttons=0; detail=2
     click - button=0; buttons=0; detail=2
@@ -103,15 +115,8 @@ test('other keys reset click counter, but keyup/click still uses the old count',
     click - button=0; buttons=0; detail=1
   `)
 
-  // TODO: no click events after other button
-  // TODO: no multiple pointerdown events while another button is still pressed
-  // expect(getEvents('dblclick')).toHaveLength(0)
-  // expect(getEvents('click')).toHaveLength(1)
-  //   expect(getEvents('mousedown')).toHaveLength(3)
-  //   expect(getEvents('mousedown')[1]).toHaveProperty('detail', 2)
-  //   expect(getEvents('mousedown')[3]).toHaveProperty('detail', 1)
-  //   expect(getEvents('mouseup')).toHaveLength(3)
-  //   expect(getEvents('mouseup')[1]).toHaveProperty('detail', 2)
+  expect(getEvents('mouseup')[2]).toHaveProperty('detail', 2)
+  expect(getEvents('mousedown')[3]).toHaveProperty('detail', 1)
 })
 
 test('click per touch device', async () => {

@@ -1,8 +1,6 @@
 export const hasFormSubmit = (
   form: HTMLFormElement | null,
 ): form is HTMLFormElement =>
-  !!(
-    form &&
-    (form.querySelector('input[type="submit"]') ||
-      form.querySelector('button[type="submit"]'))
+  !!form?.querySelector(
+    'input[type="submit"], button:not([type]), button[type="submit"]',
   )

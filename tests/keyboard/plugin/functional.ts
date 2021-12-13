@@ -96,11 +96,10 @@ cases(
       html: `<form><input/><input/><input type="submit"/></form>`,
       submit: true,
     },
-    // TODO: submit with button without type attribute
-    // 'with `<button/>`': {
-    //   html: `<form><input/><input/><button/></form>`,
-    //   submit: true,
-    // },
+    'with `<button/>`': {
+      html: `<form><input/><input/><button/></form>`,
+      submit: true,
+    },
     'with `<button type="submit"/>`': {
       html: `<form><input/><input/><button type="submit"/></form>`,
       submit: true,

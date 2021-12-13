@@ -18,10 +18,18 @@ export function getTabDestination(activeElement: Element, shift: boolean) {
 
   if (activeElement.getAttribute('tabindex') !== '-1') {
     // tabindex has no effect if the active element has tabindex="-1"
-    enabledElements.sort(
-      (a, b) =>
-        Number(a.getAttribute('tabindex')) - Number(b.getAttribute('tabindex')),
-    )
+    enabledElements.sort((a, b) => {
+      const i = Number(a.getAttribute('tabindex'))
+      const j = Number(b.getAttribute('tabindex'))
+      if (i === j) {
+        return 0
+      } else if (i === 0) {
+        return 1
+      } else if (j === 0) {
+        return -1
+      }
+      return i - j
+    })
   }
 
   const checkedRadio: Record<string, HTMLInputElement> = {}

@@ -220,18 +220,14 @@ function up(
 
       const canClick = pointerType !== 'mouse' || button === 'primary'
       if (canClick && target === pressed.downTarget) {
-        fire('click')
+        const unpreventedClick = fire('click')
         if (clickCount === 2) {
           fire('dblclick')
         }
 
-        // If the click happens inside a `label` with a control, the control (or closes focusable) is focused.
-        const label = target.closest('label')
-        if (label?.control) {
-          focus(
-            findClosest(label.control, isFocusable) ??
-              target.ownerDocument.body,
-          )
+        const control = target.closest('label')?.control
+        if (unpreventedClick && control && isFocusable(control)) {
+          focus(control)
         }
       }
     }

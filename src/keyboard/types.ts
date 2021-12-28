@@ -13,11 +13,25 @@ export type keyboardState = {
       Active modifiers
     */
   modifiers: {
-    alt: boolean
-    caps: boolean
-    ctrl: boolean
-    meta: boolean
-    shift: boolean
+    Alt: boolean
+    AltGraph: boolean
+    CapsLock: boolean
+    Control: boolean
+    Fn: boolean
+    FnLock: boolean
+    Meta: boolean
+    NumLock: boolean
+    ScrollLock: boolean
+    Shift: boolean
+    Symbol: boolean
+    SymbolLock: boolean
+  }
+  modifierPhase: {
+    CapsLock?: boolean
+    FnLock?: boolean
+    NumLock?: boolean
+    ScrollLock?: boolean
+    SymbolLock?: boolean
   }
 
   /**

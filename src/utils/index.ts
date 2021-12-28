@@ -27,6 +27,9 @@ export * from './focus/selectAll'
 export * from './focus/selection'
 export * from './focus/selector'
 
+export * from './keyboard/getKeyEventProps'
+export * from './keyboard/getUIEventModifiers'
+
 export * from './keyDef/readNextDescriptor'
 
 export * from './misc/eventWrapper'

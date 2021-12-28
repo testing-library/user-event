@@ -205,37 +205,3 @@ test('tab through elements', async () => {
   expect(getUISelection(elements[1])).toHaveProperty('startOffset', 0)
   expect(getUISelection(elements[1])).toHaveProperty('endOffset', 3)
 })
-
-test.each([
-  ['Shift', 'shiftKey'],
-  ['Control', 'ctrlKey'],
-  ['Alt', 'altKey'],
-  ['Meta', 'metaKey'],
-])('Trigger modifier: %s', async (key, modifier) => {
-  const {element, getEvents} = setup(`<div tabIndex="-1"></div>`)
-  const user = userEvent.setup()
-  element.focus()
-
-  await user.keyboard(`{${key}>}`)
-  const modifierDown = getEvents('keydown')[0]
-  expect(modifierDown).toHaveProperty('key', key)
-  expect(modifierDown).toHaveProperty(modifier, true)
-
-  await user.keyboard('a')
-  expect(getEvents('keydown')[1]).toHaveProperty(modifier, true)
-  expect(getEvents('keyup')[0]).toHaveProperty(modifier, true)
-
-  await user.keyboard(`{/${key}}`)
-  const modifierUp = getEvents('keyup')[1]
-  expect(modifierUp).toHaveProperty('key', key)
-  expect(modifierUp).toHaveProperty(modifier, false)
-})
-
-test('switch CapsLock modifier', async () => {
-  // This is currently an implementation detail,
-  // but will be required for `autoModify`.
-  const keyboardState = await userEvent.keyboard('[CapsLock]')
-  expect(keyboardState.modifiers).toHaveProperty('caps', true)
-  await userEvent.keyboard('[CapsLock]', {keyboardState})
-  expect(keyboardState.modifiers).toHaveProperty('caps', false)
-})

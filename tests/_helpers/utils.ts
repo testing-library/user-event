@@ -340,11 +340,16 @@ function addListeners(
     generalListener.mockClear()
     eventHandlerCalls.current = []
   }
-  const getEvents = (type?: string) =>
+  const getEvents = <T extends keyof GlobalEventHandlersEventMap>(
+    type?: T,
+  ): Array<GlobalEventHandlersEventMap[T]> =>
     generalListener.mock.calls
       .map(([e]) => e)
-      .filter(e => !type || e.type === type)
-  const eventWasFired = (eventType: string) => getEvents(eventType).length > 0
+      .filter(e => !type || e.type === type) as Array<
+      GlobalEventHandlersEventMap[T]
+    >
+  const eventWasFired = (eventType: keyof GlobalEventHandlersEventMap) =>
+    getEvents(eventType).length > 0
 
   function getClickEventsSnapshot() {
     const lines = getEvents().map(e =>

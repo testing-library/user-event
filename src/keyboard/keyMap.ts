@@ -72,5 +72,10 @@ export const defaultKeyMap: keyboardKey[] = [
   {code: 'PageUp', key: 'PageUp'},
   {code: 'PageDown', key: 'PageDown'},
 
+  // Special keys that are not part of a default US-layout but included for specific behavior
+  {code: 'Fn', key: 'Fn'},
+  {code: 'Symbol', key: 'Symbol'},
+  {code: 'AltRight', key: 'AltGraph'},
+
   // TODO: add mappings
 ]

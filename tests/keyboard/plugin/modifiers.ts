@@ -26,6 +26,29 @@ test.each([
   expect(modifierUp).toHaveProperty(modifier, false)
 })
 
+test.each([['AltGraph'], ['Fn'], ['Symbol']])(
+  'Trigger modifier: %s',
+  async key => {
+    const {element, getEvents} = setup(`<div tabIndex="-1"></div>`)
+    const user = userEvent.setup()
+    element.focus()
+
+    await user.keyboard(`{${key}>}`)
+    const modifierDown = getEvents('keydown')[key === 'AltGraph' ? 1 : 0]
+    expect(modifierDown).toHaveProperty('key', key)
+    expect(modifierDown.getModifierState(key)).toBe(true)
+
+    await user.keyboard('a')
+    expect(
+      getEvents('keydown')[key === 'AltGraph' ? 2 : 1].getModifierState(key),
+    ).toBe(true)
+
+    await user.keyboard(`{/${key}}`)
+    const modifierUp = getEvents('keyup')[1]
+    expect(modifierUp.getModifierState(key)).toBe(false)
+  },
+)
+
 test.each([
   ['CapsLock'],
   ['FnLock'],

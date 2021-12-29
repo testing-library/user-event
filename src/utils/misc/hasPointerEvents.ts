@@ -1,4 +1,4 @@
-import {getWindowFromNode} from '@testing-library/dom/dist/helpers'
+import {getWindowFromNode} from '@testing-library/dom/dist/helpers.js'
 
 /**
  * Options that can be passed to any event that relies

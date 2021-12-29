@@ -184,13 +184,11 @@ export async function writeDataTransferToClipboard(
 }
 
 /* istanbul ignore else */
-// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-if (afterEach) {
+if (typeof afterEach === 'function') {
   afterEach(() => resetClipboardStubOnView(window))
 }
 
 /* istanbul ignore else */
-// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-if (afterAll) {
+if (typeof afterAll === 'function') {
   afterAll(() => detachClipboardStubFromView(window))
 }

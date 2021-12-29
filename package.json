@@ -2,7 +2,6 @@
   "name": "@testing-library/user-event",
   "version": "0.0.0-semantically-released",
   "description": "Fire events the same way the user does",
-  "main": "dist/index.js",
   "keywords": [
     "react-testing-library",
     "dom-testing-library",
@@ -26,8 +25,10 @@
   "files": [
     "dist"
   ],
+  "main": "./dist/index.js",
+  "exports": "./dist/index.js",
   "scripts": {
-    "build": "kcd-scripts build --no-ts-defs && tsc -p tsconfig.build.json",
+    "build": "node build.js",
     "lint": "kcd-scripts lint",
     "setup": "npm install && npm run validate -s",
     "test": "kcd-scripts test",
@@ -46,6 +47,7 @@
     "@types/estree": "0.0.45",
     "@types/jest-in-case": "^1.0.3",
     "@types/react": "^17.0.3",
+    "esbuild": "^0.14.9",
     "eslint-import-resolver-typescript": "^2.5.0",
     "is-ci": "^2.0.0",
     "jest-in-case": "^1.0.2",
@@ -57,31 +59,5 @@
   },
   "peerDependencies": {
     "@testing-library/dom": ">=7.21.4"
-  },
-  "eslintConfig": {
-    "extends": "./node_modules/kcd-scripts/eslint.js",
-    "rules": {
-      "jsx-a11y/click-events-have-key-events": "off",
-      "jsx-a11y/tabindex-no-positive": "off",
-      "no-func-assign": "off",
-      "no-return-assign": "off",
-      "react/prop-types": "off",
-      "testing-library/no-dom-import": "off"
-    },
-    "overrides": [
-      {
-        "files": [
-          "**/__tests__/**"
-        ],
-        "rules": {
-          "no-console": "off"
-        }
-      }
-    ]
-  },
-  "eslintIgnore": [
-    "node_modules",
-    "coverage",
-    "dist"
-  ]
+  }
 }

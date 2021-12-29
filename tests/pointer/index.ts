@@ -109,7 +109,9 @@ describe('delay', () => {
 })
 
 test('only pointer events on disabled elements', async () => {
-  const {element, getEventSnapshot, getEvents} = setup('<button disabled />')
+  const {element, getEventSnapshot, eventWasFired} = setup(
+    '<button disabled />',
+  )
 
   await userEvent.pointer([{target: element}, {keys: '[MouseLeft]'}])
 
@@ -119,12 +121,15 @@ test('only pointer events on disabled elements', async () => {
     button - pointerover
     button - pointerenter
     button - pointermove
+    button - pointerdown
+    button - pointerup
   `)
 
-  expect(getEvents('pointerover')).toHaveLength(1)
-  // TODO: pointer down/up also happen on disabled elements
-  // expect(getEvents('pointerdown')).toHaveLength(1)
-  expect(getEvents('mouseover')).toHaveLength(0)
-  expect(getEvents('mousedown')).toHaveLength(0)
-  expect(getEvents('click')).toHaveLength(0)
+  expect(eventWasFired('pointerover')).toBe(true)
+  expect(eventWasFired('pointerdown')).toBe(true)
+  expect(eventWasFired('pointerup')).toBe(true)
+  expect(eventWasFired('mouseover')).toBe(false)
+  expect(eventWasFired('mousedown')).toBe(false)
+  expect(eventWasFired('mouseup')).toBe(false)
+  expect(eventWasFired('click')).toBe(false)
 })

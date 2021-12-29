@@ -102,39 +102,40 @@ function down(
   }
   pointerState.pressed.push(pressObj)
 
-  if (!targetIsDisabled) {
-    if (pointerType !== 'mouse') {
-      fire('pointerover')
-      fire('pointerenter')
-    }
-    if (
-      pointerType !== 'mouse' ||
-      !pointerState.pressed.some(
-        p => p.keyDef !== keyDef && p.keyDef.pointerType === pointerType,
-      )
-    ) {
-      fire('pointerdown')
-    }
-    if (pointerType === 'mouse') {
+  if (pointerType !== 'mouse') {
+    fire('pointerover')
+    fire('pointerenter')
+  }
+  if (
+    pointerType !== 'mouse' ||
+    !pointerState.pressed.some(
+      p => p.keyDef !== keyDef && p.keyDef.pointerType === pointerType,
+    )
+  ) {
+    fire('pointerdown')
+  }
+
+  // TODO: touch...
+
+  if (pointerType === 'mouse') {
+    if (!targetIsDisabled) {
       pressObj.unpreventedDefault = fire('mousedown')
     }
 
-    // TODO: touch...
-  }
+    if (pressObj.unpreventedDefault) {
+      mousedownDefaultBehavior({
+        target,
+        targetIsDisabled,
+        clickCount,
+        position: pointerState.position[pointerName],
+        node,
+        offset,
+      })
+    }
 
-  if (pointerType === 'mouse' && pressObj.unpreventedDefault) {
-    mousedownDefaultBehavior({
-      target,
-      targetIsDisabled,
-      clickCount,
-      position: pointerState.position[pointerName],
-      node,
-      offset,
-    })
-  }
-
-  if (pointerType === 'mouse' && button === 'secondary') {
-    fire('contextmenu')
+    if (button === 'secondary') {
+      fire('contextmenu')
+    }
   }
 
   return pressObj
@@ -179,19 +180,20 @@ function up(
 
   // TODO: pointerleave for touch device
 
-  if (!targetIsDisabled) {
-    if (
-      pointerType !== 'mouse' ||
-      !pointerState.pressed.filter(p => p.keyDef.pointerType === pointerType)
-        .length
-    ) {
-      fire('pointerup')
-    }
-    if (pointerType !== 'mouse') {
-      fire('pointerout')
-      fire('pointerleave')
-    }
-    if (pointerType !== 'mouse' && !isMultiTouch) {
+  if (
+    pointerType !== 'mouse' ||
+    !pointerState.pressed.filter(p => p.keyDef.pointerType === pointerType)
+      .length
+  ) {
+    fire('pointerup')
+  }
+  if (pointerType !== 'mouse') {
+    fire('pointerout')
+    fire('pointerleave')
+  }
+
+  if (pointerType !== 'mouse' && !isMultiTouch) {
+    if (!targetIsDisabled) {
       if (clickCount === 1) {
         fire('mouseover')
         fire('mouseenter')
@@ -199,17 +201,17 @@ function up(
       fire('mousemove')
       unpreventedDefault = fire('mousedown') && unpreventedDefault
     }
-  }
 
-  if (unpreventedDefault && pointerType !== 'mouse' && !isMultiTouch) {
-    mousedownDefaultBehavior({
-      target,
-      targetIsDisabled,
-      clickCount,
-      position: pointerState.position[pointerName],
-      node,
-      offset,
-    })
+    if (unpreventedDefault) {
+      mousedownDefaultBehavior({
+        target,
+        targetIsDisabled,
+        clickCount,
+        position: pointerState.position[pointerName],
+        node,
+        offset,
+      })
+    }
   }
 
   delete pointerState.position[pointerName].selectionRange

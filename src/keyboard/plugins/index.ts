@@ -4,9 +4,10 @@ import * as controlKeys from './control'
 import * as characterKeys from './character'
 import * as functionalKeys from './functional'
 import * as combination from './combination'
+import * as modifiers from './modifiers'
 
 export const preKeydownBehavior: behaviorPlugin[] = [
-  ...functionalKeys.preKeydownBehavior,
+  ...modifiers.preKeydownBehavior,
 ]
 
 export const keydownBehavior: behaviorPlugin[] = [
@@ -22,11 +23,11 @@ export const keypressBehavior: behaviorPlugin[] = [
 ]
 
 export const preKeyupBehavior: behaviorPlugin[] = [
-  ...functionalKeys.preKeyupBehavior,
+  ...modifiers.preKeyupBehavior,
 ]
 
 export const keyupBehavior: behaviorPlugin[] = [...functionalKeys.keyupBehavior]
 
 export const postKeyupBehavior: behaviorPlugin[] = [
-  ...functionalKeys.postKeyupBehavior,
+  ...modifiers.postKeyupBehavior,
 ]

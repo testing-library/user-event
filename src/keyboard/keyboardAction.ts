@@ -1,9 +1,8 @@
 import {fireEvent} from '@testing-library/dom'
 import {Config} from '../setup'
-import {getActiveElement, wait} from '../utils'
+import {getActiveElement, getKeyEventProps, wait} from '../utils'
 import {behaviorPlugin, keyboardKey} from './types'
 import * as plugins from './plugins'
-import {getKeyEventProps} from './getEventProps'
 
 export interface KeyboardAction {
   keyDef: keyboardKey
@@ -162,7 +161,7 @@ function applyPlugins(
 function hasKeyPress(keyDef: keyboardKey, config: Config) {
   return (
     (keyDef.key?.length === 1 || keyDef.key === 'Enter') &&
-    !config.keyboardState.modifiers.ctrl &&
-    !config.keyboardState.modifiers.alt
+    !config.keyboardState.modifiers.Control &&
+    !config.keyboardState.modifiers.Alt
   )
 }

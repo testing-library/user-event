@@ -5,28 +5,66 @@ import {keyboardKey} from '#src/keyboard/types'
 
 cases(
   'reference key per',
-  ({text, key, code}) => {
+  ({text, keyDef}) => {
     const parsed = parseKeyDef(defaultKeyMap, `/${text}/`)
-    expect(parsed).toHaveLength(3)
-    expect(parsed[1]).toEqual({
-      keyDef: expect.objectContaining({
-        key,
-        code,
-      }) as keyboardKey,
-      releasePrevious: false,
-      releaseSelf: true,
-      repeat: 1,
-    })
+    keyDef = Array.isArray(keyDef) ? keyDef : [keyDef]
+    expect(parsed).toHaveLength(2 + keyDef.length)
+    expect(parsed.slice(1, -1)).toEqual(
+      keyDef.map(d =>
+        expect.objectContaining({
+          keyDef: expect.objectContaining(d) as keyboardKey,
+        }),
+      ),
+    )
   },
   {
-    code: {text: '[ControlLeft]', key: 'Control', code: 'ControlLeft'},
-    'unimplemented code': {text: '[Foo]', key: 'Unknown', code: 'Foo'},
-    key: {text: '{Control}', key: 'Control', code: 'ControlLeft'},
-    'unimplemented key': {text: '{Foo}', key: 'Foo', code: 'Unknown'},
-    'printable character': {text: 'a', key: 'a', code: 'KeyA'},
-    'modifiers as printable characters': {text: '/', key: '/', code: 'Unknown'},
-    '{ as printable': {text: '{{', key: '{', code: 'Unknown'},
-    '[ as printable': {text: '[[', key: '[', code: 'Unknown'},
+    code: {
+      text: '[ControlLeft]',
+      keyDef: {key: 'Control', code: 'ControlLeft'},
+    },
+    'unimplemented code': {
+      text: '[Foo]',
+      keyDef: {key: 'Unknown', code: 'Foo'},
+    },
+    key: {
+      text: '{Control}',
+      keyDef: {key: 'Control', code: 'ControlLeft'},
+    },
+    'unimplemented key': {
+      text: '{Foo}',
+      keyDef: {key: 'Foo', code: 'Unknown'},
+    },
+    'printable character': {
+      text: 'a',
+      keyDef: {key: 'a', code: 'KeyA'},
+    },
+    'modifiers as printable characters': {
+      text: '/',
+      keyDef: {key: '/', code: 'Unknown'},
+    },
+    '{ as printable': {
+      text: '{{',
+      keyDef: {key: '{', code: 'Unknown'},
+    },
+    '{ as printable followed by descriptor': {
+      text: '{{{foo}',
+      keyDef: [
+        {key: '{', code: 'Unknown'},
+        {key: 'foo', code: 'Unknown'},
+      ],
+    },
+    '{ as key with modifiers': {
+      text: '{\\{>5/}',
+      keyDef: {key: '{', code: 'Unknown'},
+    },
+    'modifier as key with modifiers': {
+      text: '{/\\/>5/}',
+      keyDef: {key: '/', code: 'Unknown'},
+    },
+    '[ as printable': {
+      text: '[[',
+      keyDef: {key: '[', code: 'Unknown'},
+    },
   },
 )
 
@@ -79,10 +117,6 @@ cases(
     expect(() => parseKeyDef(defaultKeyMap, `${text}`)).toThrow(expectedError)
   },
   {
-    'invalid descriptor': {
-      text: '{!}',
-      expectedError: 'but found "!" in "{!}"',
-    },
     'missing descriptor': {
       text: '',
       expectedError: 'but found "" in ""',
@@ -98,6 +132,10 @@ cases(
     'missing bracket after repeat modifier': {
       text: '{a>3)',
       expectedError: 'but found ")" in "{a>3)"',
+    },
+    'unescaped modifier': {
+      text: '{/>5}',
+      expectedError: 'but found ">" in "{/>5}"',
     },
   },
 )

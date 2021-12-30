@@ -78,8 +78,8 @@ it('type asynchronous', async () => {
 })
 
 it('error in async', async () => {
-  await expect(userEvent.keyboard('{!', {delay: 1})).rejects.toThrowError(
-    'Expected key descriptor but found "!" in "{!"',
+  await expect(userEvent.keyboard('[!', {delay: 1})).rejects.toThrowError(
+    'Expected key descriptor but found "!" in "[!"',
   )
 })
 

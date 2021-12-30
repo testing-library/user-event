@@ -21,15 +21,7 @@ export function readNextDescriptor(text: string) {
 
   pos += startBracket.length
 
-  // `foo{{bar` is an escaped char at position 3,
-  // but `foo{{{>5}bar` should be treated as `{` pressed down for 5 keydowns.
-  const startBracketRepeated = startBracket
-    ? (text.match(new RegExp(`^\\${startBracket}+`)) as RegExpMatchArray)[0]
-        .length
-    : 0
-  const isEscapedChar =
-    startBracketRepeated === 2 ||
-    (startBracket === '{' && startBracketRepeated > 3)
+  const isEscapedChar = new RegExp(`^\\${startBracket}{2}`).test(text)
 
   const type = isEscapedChar ? '' : startBracket
 
@@ -64,7 +56,13 @@ function readTag(
 
   pos += releasePreviousModifier.length
 
-  const descriptor = text.slice(pos).match(/^\w+/)?.[0]
+  const escapedDescriptor = startBracket === '{' && text[pos] === '\\'
+
+  pos += Number(escapedDescriptor)
+
+  const descriptor = escapedDescriptor
+    ? text[pos]
+    : text.slice(pos).match(startBracket === '{' ? /^\w+|^[^}>/]/ : /^\w+/)?.[0]
 
   assertDescriptor(descriptor, text, pos)
 

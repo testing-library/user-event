@@ -171,7 +171,7 @@ export const keypressBehavior: behaviorPlugin[] = [
       prepareInput(
         '\n',
         element,
-        isContentEditable(element) && !keyboardState.modifiers.shift
+        isContentEditable(element) && !keyboardState.modifiers.Shift
           ? 'insertParagraph'
           : 'insertLineBreak',
       )?.commit()

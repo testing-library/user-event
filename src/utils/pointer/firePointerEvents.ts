@@ -3,6 +3,7 @@ import {eventMap} from '@testing-library/dom/dist/event-map'
 import type {pointerState} from '../../pointer/types'
 import type {keyboardState} from '../../keyboard/types'
 import {getMouseButton, getMouseButtons, MouseButton} from './mouseButtons'
+import {getUIEventModifiers} from '../keyboard/getUIEventModifiers'
 
 export function firePointerEvent(
   target: Element,
@@ -29,10 +30,7 @@ export function firePointerEvent(
 ) {
   const init: MouseEventInit & PointerEventInit = {
     ...coords,
-    altKey: keyboardState.modifiers.alt,
-    ctrlKey: keyboardState.modifiers.ctrl,
-    metaKey: keyboardState.modifiers.meta,
-    shiftKey: keyboardState.modifiers.shift,
+    ...getUIEventModifiers(keyboardState),
   }
   if (type === 'click' || type.startsWith('pointer')) {
     init.pointerId = pointerId

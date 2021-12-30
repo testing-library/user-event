@@ -2,9 +2,10 @@
   "extends": "./tsconfig.json",
   "include": ["./src"],
   "compilerOptions": {
-    "outDir": "dist",
+    "outFile": "dist/index.d.ts",
     "noEmit": false,
     "declaration": true,
-    "emitDeclarationOnly": true
+    "emitDeclarationOnly": true,
+    "isolatedModules": false
   }
 }

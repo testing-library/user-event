@@ -1,5 +1,5 @@
 import {createEvent, fireEvent} from '@testing-library/dom'
-import {eventMap} from '@testing-library/dom/dist/event-map'
+import {eventMap} from '@testing-library/dom/dist/event-map.js'
 import type {pointerState} from '../../pointer/types'
 import type {keyboardState} from '../../keyboard/types'
 import {getMouseButton, getMouseButtons, MouseButton} from './mouseButtons'

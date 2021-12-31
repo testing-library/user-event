@@ -25,8 +25,15 @@
   "files": [
     "dist"
   ],
-  "main": "./dist/index.js",
-  "exports": "./dist/index.js",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "exports": {
+    ".": {
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.mjs"
+    }
+  },
+  "types": "./dist/types/index.d.ts",
   "scripts": {
     "build": "node build.js",
     "lint": "kcd-scripts lint",

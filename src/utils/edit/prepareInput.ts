@@ -1,5 +1,6 @@
 import {fireEvent} from '@testing-library/dom'
 import {calculateNewValue, editInputElement, getInputRange} from '../../utils'
+import {getNextCursorPosition} from '../focus/cursor'
 
 export function prepareInput(
   data: string,
@@ -16,11 +17,34 @@ export function prepareInput(
   if ('startContainer' in inputRange) {
     return {
       commit: () => {
-        const del = !inputRange.collapsed
+        let del: boolean = false
 
-        if (del) {
+        if (!inputRange.collapsed) {
+          del = true
           inputRange.deleteContents()
+        } else if (
+          ['deleteContentBackward', 'deleteContentForward'].includes(inputType)
+        ) {
+          const nextPosition = getNextCursorPosition(
+            inputRange.startContainer,
+            inputRange.startOffset,
+            inputType === 'deleteContentBackward' ? -1 : 1,
+            inputType,
+          )
+          if (nextPosition) {
+            del = true
+            const delRange = inputRange.cloneRange()
+            if (
+              delRange.comparePoint(nextPosition.node, nextPosition.offset) < 0
+            ) {
+              delRange.setStart(nextPosition.node, nextPosition.offset)
+            } else {
+              delRange.setEnd(nextPosition.node, nextPosition.offset)
+            }
+            delRange.deleteContents()
+          }
         }
+
         if (data) {
           if (inputRange.endContainer.nodeType === 3) {
             const offset = inputRange.endOffset

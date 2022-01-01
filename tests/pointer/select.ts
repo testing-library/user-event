@@ -26,7 +26,7 @@ test('move focus to closest focusable element', async () => {
   await userEvent.pointer({keys: '[MouseLeft>]', target: element.children[1]})
   expect(element.children[1]).toHaveFocus()
 
-  await userEvent.pointer({keys: '[MouseLeft>]', target: element.children[0]})
+  await userEvent.pointer({keys: '[TouchA]', target: element.children[0]})
   expect(element).toHaveFocus()
 })
 
@@ -35,6 +35,7 @@ test('mousedown handlers can prevent moving focus', async () => {
   element.addEventListener('mousedown', e => e.preventDefault())
 
   await userEvent.pointer({keys: '[MouseLeft>]', target: element})
+  await userEvent.pointer({keys: '[TouchA]', target: element})
 
   expect(element).not.toHaveFocus()
   expect(element).toHaveProperty('selectionStart', 0)

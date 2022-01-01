@@ -191,9 +191,9 @@ cases<{
       expectedOffset: 1,
     },
     'at edge of focus area': {
-      html: `foobar`,
-      nodeSelector: 'text()',
-      offset: 6,
+      html: `foo<span contenteditable>bar</span>baz`,
+      nodeSelector: 'span/text()',
+      offset: 3,
       direction: 1,
       expectedSelector: undefined,
       expectedOffset: undefined,

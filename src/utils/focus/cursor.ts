@@ -1,4 +1,4 @@
-import {isElementType} from '..'
+import {isContentEditable, isElementType} from '..'
 
 declare global {
   interface Text {
@@ -152,7 +152,9 @@ function walkNodes<T extends Node>(
       }
     } else if (
       node.parentNode &&
-      node.parentNode !== node.ownerDocument?.body
+      (!isElement(node.parentNode) ||
+        (!isContentEditable(node.parentNode) &&
+          node.parentNode !== node.ownerDocument?.body))
     ) {
       node = node.parentNode
     } else {

@@ -113,7 +113,11 @@ test('only pointer events on disabled elements', async () => {
     '<button disabled />',
   )
 
-  await userEvent.pointer([{target: element}, {keys: '[MouseLeft]'}])
+  await userEvent.pointer([
+    {target: element},
+    {keys: '[MouseLeft]'},
+    {target: element, keys: '[TouchA]'},
+  ])
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: button
@@ -123,6 +127,12 @@ test('only pointer events on disabled elements', async () => {
     button - pointermove
     button - pointerdown
     button - pointerup
+    button - pointerover
+    button - pointerenter
+    button - pointerdown
+    button - pointerup
+    button - pointerout
+    button - pointerleave
   `)
 
   expect(eventWasFired('pointerover')).toBe(true)

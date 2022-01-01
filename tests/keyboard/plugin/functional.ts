@@ -2,6 +2,7 @@ import cases from 'jest-in-case'
 import userEvent from '#src'
 import {getUISelection, setUISelection, setUIValue} from '#src/document'
 import {setup} from '#testHelpers/utils'
+import {setSelection} from '#src/utils'
 
 test('produce extra events for the Control key when AltGraph is pressed', async () => {
   const {element, getEventSnapshot, clearEventCalls} = setup(`<input/>`)
@@ -204,4 +205,36 @@ test('tab through elements', async () => {
   expect(elements[1]).toHaveFocus()
   expect(getUISelection(elements[1])).toHaveProperty('startOffset', 0)
   expect(getUISelection(elements[1])).toHaveProperty('endOffset', 3)
+})
+
+test('delete content in contenteditable', async () => {
+  const {element, getEvents} = setup(
+    `<div><span>---</span><div contenteditable><span id="foo">foo</span><input type="checkbox"/><span id="bar">bar</span></div><span>---</span></div>`,
+  )
+  element.querySelector('div')?.focus()
+  setSelection({
+    focusNode: document.getElementById('foo')?.firstChild as Text,
+    focusOffset: 2,
+  })
+
+  await userEvent.keyboard('[Backspace][Backspace][Backspace][Backspace]')
+
+  expect(getEvents('input')).toHaveLength(2)
+  expect(element.innerHTML).toMatchInlineSnapshot(
+    `<span>---</span><div contenteditable=""><span id="foo">o</span><input type="checkbox"><span id="bar">bar</span></div><span>---</span>`,
+  )
+
+  await userEvent.keyboard('[ArrowRight][Delete]')
+
+  expect(getEvents('input')).toHaveLength(3)
+  expect(element.innerHTML).toMatchInlineSnapshot(
+    `<span>---</span><div contenteditable=""><span id="foo">o</span><span id="bar">bar</span></div><span>---</span>`,
+  )
+
+  await userEvent.keyboard('[Delete]')
+
+  expect(getEvents('input')).toHaveLength(4)
+  expect(element.innerHTML).toMatchInlineSnapshot(
+    `<span>---</span><div contenteditable=""><span id="foo">o</span><span id="bar">ar</span></div><span>---</span>`,
+  )
 })

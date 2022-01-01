@@ -19,6 +19,7 @@ export * from './edit/setFiles'
 
 export * from './focus/blur'
 export * from './focus/copySelection'
+export * from './focus/cursor'
 export * from './focus/focus'
 export * from './focus/getActiveElement'
 export * from './focus/getTabDestination'

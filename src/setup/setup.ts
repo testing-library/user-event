@@ -2,8 +2,13 @@ import {prepareDocument} from '../document'
 import {createKeyboardState} from '../keyboard'
 import {createPointerState} from '../pointer'
 import {defaultOptionsDirect, defaultOptionsSetup, Options} from '../options'
-import {attachClipboardStubToView, getDocumentFromNode} from '../utils'
-import type {UserEvent, UserEventApi} from './index'
+import {
+  ApiLevel,
+  attachClipboardStubToView,
+  getDocumentFromNode,
+  setLevelRef,
+} from '../utils'
+import type {Instance, UserEvent, UserEventApi} from './index'
 import {Config} from './config'
 import * as userEventApi from './api'
 import {wrapAsync} from './wrapAsync'
@@ -21,6 +26,7 @@ export function setupMain(options: Options = {}) {
 
   return doSetup({
     ...defaultOptionsSetup,
+    ...options,
     keyboardState: createKeyboardState(),
     pointerState: createPointerState(doc),
   })
@@ -33,45 +39,56 @@ export function setupDirect(options: Partial<Config> = {}, node?: Node) {
   const doc = getDocument(options, node)
   prepareDocument(doc)
 
-  return doSetup({
+  const config: Config = {
     keyboardState: createKeyboardState(),
     pointerState: createPointerState(doc),
     ...defaultOptionsDirect,
     ...options,
-  })
+  }
+
+  return {
+    config,
+    api: doSetup(config),
+  }
 }
 
 /**
  * Create a set of callbacks with different default settings but the same state.
  */
-export function setupSub(this: UserEvent, options: Options) {
+export function setupSub(this: Instance, options: Options) {
   return doSetup({
     ...this[Config],
     ...options,
   })
 }
 
-function wrapImpl<
-  This extends UserEvent,
+function wrapAndBindImpl<
   Args extends unknown[],
-  Impl extends (this: This, ...args: Args) => Promise<unknown>,
->(impl: Impl) {
-  function method(this: This, ...args: Args) {
-    return wrapAsync(() => impl.apply(this, args))
+  Impl extends (this: Instance, ...args: Args) => Promise<unknown>,
+>(instance: Instance, impl: Impl) {
+  function method(...args: Args) {
+    setLevelRef(instance[Config], ApiLevel.Call)
+
+    return wrapAsync(() => impl.apply(instance, args))
   }
   Object.defineProperty(method, 'name', {get: () => impl.name})
 
   return method
 }
-const wrappedApis = Object.fromEntries(
-  Object.entries(userEventApi).map(([name, impl]) => [name, wrapImpl(impl)]),
-) as UserEventApi
 
-function doSetup(config: Config) {
-  return {
-    ...wrappedApis,
-    setup: setupSub,
+function doSetup(config: Config): UserEvent {
+  const instance: Instance = {
     [Config]: config,
+    ...userEventApi,
+  }
+  return {
+    ...(Object.fromEntries(
+      Object.entries(userEventApi).map(([name, api]) => [
+        name,
+        wrapAndBindImpl(instance, api),
+      ]),
+    ) as UserEventApi),
+    setup: setupSub.bind(instance),
   }
 }
 

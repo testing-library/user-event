@@ -1,8 +1,8 @@
 import {fireEvent} from '@testing-library/dom'
-import {Config, UserEvent} from '../setup'
+import {Config, Instance} from '../setup'
 import {copySelection, writeDataTransferToClipboard} from '../utils'
 
-export async function copy(this: UserEvent) {
+export async function copy(this: Instance) {
   const doc = this[Config].document
   const target = doc.activeElement ?? /* istanbul ignore next */ doc.body
 

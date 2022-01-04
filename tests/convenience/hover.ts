@@ -1,4 +1,4 @@
-import userEvent from '#src'
+import userEvent, {PointerEventsCheckLevel} from '#src'
 import {setup} from '#testHelpers/utils'
 
 describe.each([
@@ -32,7 +32,9 @@ describe.each([
       `<div style="pointer-events: none"></div>`,
     )
 
-    await userEvent[method](element, {skipPointerEventsCheck: true})
+    await userEvent[method](element, {
+      pointerEventsCheck: PointerEventsCheckLevel.Never,
+    })
 
     expect(getEvents('mousemove')).toHaveLength(1)
   })

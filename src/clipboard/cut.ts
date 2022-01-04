@@ -1,5 +1,5 @@
 import {fireEvent} from '@testing-library/dom'
-import {Config, UserEvent} from '../setup'
+import {Config, Instance} from '../setup'
 import {
   copySelection,
   isEditable,
@@ -7,7 +7,7 @@ import {
   writeDataTransferToClipboard,
 } from '../utils'
 
-export async function cut(this: UserEvent) {
+export async function cut(this: Instance) {
   const doc = this[Config].document
   const target = doc.activeElement ?? /* istanbul ignore next */ doc.body
 

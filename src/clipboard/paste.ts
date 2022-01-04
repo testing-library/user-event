@@ -1,5 +1,5 @@
 import {fireEvent} from '@testing-library/dom'
-import {Config, UserEvent} from '../setup'
+import {Config, Instance} from '../setup'
 import {
   createDataTransfer,
   getSpaceUntilMaxLength,
@@ -9,7 +9,7 @@ import {
 } from '../utils'
 
 export async function paste(
-  this: UserEvent,
+  this: Instance,
   clipboardData?: DataTransfer | string,
 ) {
   const doc = this[Config].document

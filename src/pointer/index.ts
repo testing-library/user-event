@@ -1,4 +1,4 @@
-import {Config, UserEvent} from '../setup'
+import {Config, Instance} from '../setup'
 import {parseKeyDef} from './parseKeyDef'
 import {
   pointerAction,
@@ -16,7 +16,7 @@ type PointerActionInput =
 export type PointerInput = PointerActionInput | Array<PointerActionInput>
 
 export async function pointer(
-  this: UserEvent,
+  this: Instance,
   input: PointerInput,
 ): Promise<void> {
   const {pointerMap} = this[Config]

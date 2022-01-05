@@ -1,4 +1,4 @@
-import type {UserEvent} from '../setup'
+import type {Instance} from '../setup'
 import {
   focus,
   isAllSelected,
@@ -8,7 +8,7 @@ import {
   selectAll,
 } from '../utils'
 
-export async function clear(this: UserEvent, element: Element) {
+export async function clear(this: Instance, element: Element) {
   if (!isEditable(element) || isDisabled(element)) {
     throw new Error('clear()` is only supported on editable elements.')
   }

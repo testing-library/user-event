@@ -7,14 +7,14 @@ import {
   isElementType,
   setFiles,
 } from '../utils'
-import {Config, UserEvent} from '../setup'
+import {Config, Instance} from '../setup'
 
 export interface uploadInit {
   changeInit?: EventInit
 }
 
 export async function upload(
-  this: UserEvent,
+  this: Instance,
   element: HTMLElement,
   fileOrFiles: File | File[],
 ) {

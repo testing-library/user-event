@@ -1,4 +1,4 @@
-import userEvent from '#src'
+import userEvent, {PointerEventsCheckLevel} from '#src'
 import {setup} from '#testHelpers/utils'
 
 test('continue previous target', async () => {
@@ -142,4 +142,104 @@ test('only pointer events on disabled elements', async () => {
   expect(eventWasFired('mousedown')).toBe(false)
   expect(eventWasFired('mouseup')).toBe(false)
   expect(eventWasFired('click')).toBe(false)
+})
+
+describe('check for pointer-events', () => {
+  const getComputedStyle = jest
+    .spyOn(window, 'getComputedStyle')
+    .mockImplementation(
+      () =>
+        ({
+          pointerEvents: 'foo',
+        } as CSSStyleDeclaration),
+    )
+  beforeEach(() => {
+    getComputedStyle.mockClear()
+    document.body.parentElement?.replaceChild(
+      document.createElement('body'),
+      document.body,
+    )
+  })
+
+  test('skip check', async () => {
+    const {element} = setup(`<input>`)
+
+    const user = userEvent.setup({
+      pointerEventsCheck: PointerEventsCheckLevel.Never,
+    })
+    await user.pointer([
+      {target: element},
+      '[MouseLeft]',
+      {target: document.body},
+    ])
+
+    expect(getComputedStyle).not.toBeCalled()
+  })
+
+  test('once per target', async () => {
+    const {element} = setup(`<input>`)
+
+    const user = userEvent.setup({
+      pointerEventsCheck: PointerEventsCheckLevel.EachTarget,
+    })
+    await user.pointer([
+      {target: element},
+      '[MouseLeft]',
+      {target: document.body},
+    ])
+    await user.pointer([
+      {target: element},
+      '[MouseLeft]',
+      {target: document.body},
+    ])
+
+    expect(getComputedStyle).toBeCalledTimes(2)
+    expect(getComputedStyle).toHaveBeenNthCalledWith(1, document.body)
+    expect(getComputedStyle).toHaveBeenNthCalledWith(2, element)
+  })
+
+  test('once per api call', async () => {
+    const {element} = setup(`<input>`)
+
+    const user = userEvent.setup({
+      pointerEventsCheck: PointerEventsCheckLevel.EachApiCall,
+    })
+    await user.pointer([
+      {target: element},
+      '[MouseLeft]',
+      {target: document.body},
+    ])
+    await user.pointer([
+      {target: element},
+      '[MouseLeft]',
+      {target: document.body},
+    ])
+
+    expect(getComputedStyle).toBeCalledTimes(4)
+    expect(getComputedStyle).toHaveBeenNthCalledWith(1, document.body)
+    expect(getComputedStyle).toHaveBeenNthCalledWith(2, element)
+    expect(getComputedStyle).toHaveBeenNthCalledWith(3, document.body)
+    expect(getComputedStyle).toHaveBeenNthCalledWith(4, element)
+  })
+
+  test('once per trigger', async () => {
+    const {element} = setup(`<input>`)
+
+    const user = userEvent.setup({
+      pointerEventsCheck: PointerEventsCheckLevel.EachTrigger,
+    })
+    await user.pointer([
+      {target: element},
+      '[MouseLeft]',
+      {target: document.body},
+    ])
+
+    expect(getComputedStyle).toBeCalledTimes(6)
+    expect(getComputedStyle).toHaveBeenNthCalledWith(1, document.body) // leave
+    expect(getComputedStyle).toHaveBeenNthCalledWith(2, element) // enter
+    expect(getComputedStyle).toHaveBeenNthCalledWith(3, element) // down
+    expect(getComputedStyle).toHaveBeenNthCalledWith(4, element) // up
+    expect(getComputedStyle).toHaveBeenNthCalledWith(5, element) // leave
+    expect(getComputedStyle).toHaveBeenNthCalledWith(6, document.body) // enter
+  })
 })

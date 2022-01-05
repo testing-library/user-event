@@ -3,6 +3,20 @@ import type {pointerKey} from './pointer/types'
 import {defaultKeyMap as defaultKeyboardMap} from './keyboard/keyMap'
 import {defaultKeyMap as defaultPointerMap} from './pointer/keyMap'
 
+export enum PointerEventsCheckLevel {
+  /**
+   * Check pointer events on every user interaction that triggers a bunch of events.
+   * E.g. once for releasing a mouse button even though this triggers `pointerup`, `mouseup`, `click`, etc...
+   */
+  EachTrigger = 4,
+  /** Check each target once per call to pointer (related) API */
+  EachApiCall = 2,
+  /** Check each event target once */
+  EachTarget = 1,
+  /** No pointer events check */
+  Never = 0,
+}
+
 export interface Options {
   /**
    * When using `userEvent.upload`, automatically discard files
@@ -62,6 +76,17 @@ export interface Options {
   pointerMap?: pointerKey[]
 
   /**
+   * The pointer API includes a check if an element has or inherits `pointer-events: none`.
+   * This check is known to be expensive and very expensive when checking deeply nested nodes.
+   * This option determines how often the pointer related APIs perform the check.
+   *
+   * This is a binary flag option. You can combine multiple Levels.
+   *
+   * @default PointerEventsCheckLevel.EachCall
+   */
+  pointerEventsCheck?: PointerEventsCheckLevel | number
+
+  /**
    * `userEvent.type` automatically releases any keys still pressed at the end of the call.
    * This option allows to opt out of this feature.
    *
@@ -86,15 +111,6 @@ export interface Options {
   skipHover?: boolean
 
   /**
-   * Calling pointer related APIs on an element triggers a check if that element can receive pointer events.
-   * This check is known to be expensive.
-   * This option allows to skip the check.
-   *
-   * @default false
-   */
-  skipPointerEventsCheck?: boolean
-
-  /**
    * Write selected data to Clipboard API when a `cut` or `copy` is triggered.
    *
    * The Clipboard API is usually not available to test code.
@@ -116,10 +132,10 @@ export const defaultOptionsDirect: Required<Options> = {
   document: global.document,
   keyboardMap: defaultKeyboardMap,
   pointerMap: defaultPointerMap,
+  pointerEventsCheck: PointerEventsCheckLevel.EachApiCall,
   skipAutoClose: false,
   skipClick: false,
   skipHover: false,
-  skipPointerEventsCheck: false,
   writeToClipboard: false,
 }
 

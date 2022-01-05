@@ -1,4 +1,4 @@
-import userEvent from '#src'
+import userEvent, {PointerEventsCheckLevel} from '#src'
 import {
   setupSelect,
   addListeners,
@@ -260,7 +260,7 @@ test('fires correct events when pointer events set to none but skipPointerEvents
     pointerEvents: 'none',
   })
   await userEvent.selectOptions(select, '2', {
-    skipPointerEventsCheck: true,
+    pointerEventsCheck: PointerEventsCheckLevel.Never,
   })
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: select[name="select"][value="2"]
@@ -300,7 +300,7 @@ test('fires correct events on multi-selects when pointer events is set and skipP
     pointerEvents: 'none',
   })
   await userEvent.selectOptions(select, ['1', '3'], {
-    skipPointerEventsCheck: true,
+    pointerEventsCheck: PointerEventsCheckLevel.Never,
   })
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: select[name="select"][value=["1","3"]]

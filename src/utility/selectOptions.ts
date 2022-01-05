@@ -1,9 +1,9 @@
 import {createEvent, getConfig, fireEvent} from '@testing-library/dom'
 import {focus, hasPointerEvents, isDisabled, isElementType} from '../utils'
-import {Config, UserEvent} from '../setup'
+import {Config, Instance} from '../setup'
 
 export async function selectOptions(
-  this: UserEvent,
+  this: Instance,
   select: Element,
   values: HTMLElement | HTMLElement[] | string[] | string,
 ) {
@@ -11,7 +11,7 @@ export async function selectOptions(
 }
 
 export async function deselectOptions(
-  this: UserEvent,
+  this: Instance,
   select: Element,
   values: HTMLElement | HTMLElement[] | string[] | string,
 ) {
@@ -19,7 +19,7 @@ export async function deselectOptions(
 }
 
 async function selectOptionsBase(
-  this: UserEvent,
+  this: Instance,
   newValue: boolean,
   select: Element,
   values: HTMLElement | HTMLElement[] | string[] | string,
@@ -61,9 +61,10 @@ async function selectOptionsBase(
   if (isElementType(select, 'select')) {
     if (select.multiple) {
       for (const option of selectedOptions) {
-        const withPointerEvents = this[Config].skipPointerEventsCheck
-          ? true
-          : hasPointerEvents(option)
+        const withPointerEvents =
+          this[Config].pointerEventsCheck === 0
+            ? true
+            : hasPointerEvents(option)
 
         // events fired for multiple select are weird. Can't use hover...
         if (withPointerEvents) {
@@ -91,9 +92,8 @@ async function selectOptionsBase(
         }
       }
     } else if (selectedOptions.length === 1) {
-      const withPointerEvents = this[Config].skipPointerEventsCheck
-        ? true
-        : hasPointerEvents(select)
+      const withPointerEvents =
+        this[Config].pointerEventsCheck === 0 ? true : hasPointerEvents(select)
       // the click to open the select options
       if (withPointerEvents) {
         await this.click(select)

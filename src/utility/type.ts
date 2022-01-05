@@ -1,4 +1,4 @@
-import type {UserEvent} from '../setup'
+import type {Instance} from '../setup'
 import {setSelectionRange} from '../utils'
 import {releaseAllKeys} from '../keyboard'
 import {Config} from '../setup/config'
@@ -11,7 +11,7 @@ export interface typeOptions {
 }
 
 export async function type(
-  this: UserEvent,
+  this: Instance,
   element: Element,
   text: string,
   {

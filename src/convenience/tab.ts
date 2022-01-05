@@ -1,7 +1,7 @@
-import type {UserEvent} from '../setup'
+import type {Instance} from '../setup'
 
 export async function tab(
-  this: UserEvent,
+  this: Instance,
   {
     shift,
   }: {

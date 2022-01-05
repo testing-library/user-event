@@ -1,14 +1,7 @@
 import type {PointerInput} from '../pointer'
-import {hasPointerEvents} from '../utils'
-import {Config, UserEvent} from '../setup'
+import {Config, Instance} from '../setup'
 
-export async function click(this: UserEvent, element: Element): Promise<void> {
-  if (!this[Config].skipPointerEventsCheck && !hasPointerEvents(element)) {
-    throw new Error(
-      'unable to click element as it has or inherits pointer-events set to "none".',
-    )
-  }
-
+export async function click(this: Instance, element: Element): Promise<void> {
   const pointerIn: PointerInput = []
   if (!this[Config].skipHover) {
     pointerIn.push({target: element})
@@ -19,27 +12,15 @@ export async function click(this: UserEvent, element: Element): Promise<void> {
 }
 
 export async function dblClick(
-  this: UserEvent,
+  this: Instance,
   element: Element,
 ): Promise<void> {
-  if (!this[Config].skipPointerEventsCheck && !hasPointerEvents(element)) {
-    throw new Error(
-      'unable to double-click element as it has or inherits pointer-events set to "none".',
-    )
-  }
-
   return this.pointer([{target: element}, '[MouseLeft][MouseLeft]'])
 }
 
 export async function tripleClick(
-  this: UserEvent,
+  this: Instance,
   element: Element,
 ): Promise<void> {
-  if (!this[Config].skipPointerEventsCheck && !hasPointerEvents(element)) {
-    throw new Error(
-      'unable to triple-click element as it has or inherits pointer-events set to "none".',
-    )
-  }
-
   return this.pointer([{target: element}, '[MouseLeft][MouseLeft][MouseLeft]'])
 }

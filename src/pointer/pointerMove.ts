@@ -1,10 +1,13 @@
 import {setUISelection} from '../document'
-import {inputDeviceState} from '../setup'
+import {Config} from '../setup'
 import {
   PointerCoords,
   firePointerEvent,
   isDescendantOrSelf,
   isDisabled,
+  assertPointerEvents,
+  setLevelRef,
+  ApiLevel,
 } from '../utils'
 import {resolveSelectionTarget} from './resolveSelectionTarget'
 import {PointerTarget, SelectionTarget} from './types'
@@ -14,9 +17,10 @@ export interface PointerMoveAction extends PointerTarget, SelectionTarget {
 }
 
 export async function pointerMove(
+  config: Config,
   {pointerName = 'mouse', target, coords, node, offset}: PointerMoveAction,
-  {pointerState, keyboardState}: inputDeviceState,
 ): Promise<void> {
+  const {pointerState, keyboardState} = config
   if (!(pointerName in pointerState.position)) {
     throw new Error(
       `Trying to move pointer "${pointerName}" which does not exist.`,
@@ -32,6 +36,9 @@ export async function pointerMove(
   } = pointerState.position[pointerName]
 
   if (prevTarget && prevTarget !== target) {
+    setLevelRef(config, ApiLevel.Trigger)
+    assertPointerEvents(config, prevTarget)
+
     // Here we could probably calculate a few coords to a fake boundary(?)
     fireMove(prevTarget, prevCoords)
 
@@ -39,6 +46,9 @@ export async function pointerMove(
       fireLeave(prevTarget, prevCoords)
     }
   }
+
+  setLevelRef(config, ApiLevel.Trigger)
+  assertPointerEvents(config, target)
 
   pointerState.position[pointerName] = {
     ...pointerState.position[pointerName],

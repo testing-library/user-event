@@ -8,9 +8,16 @@ export {Config}
 
 export type UserEventApi = typeof userEventApi
 
-export type UserEvent = UserEventApi & {
-  readonly setup: typeof setupSub
+export type Instance = UserEventApi & {
   [Config]: Config
+}
+
+export type UserEvent = {
+  readonly setup: (...args: Parameters<typeof setupSub>) => UserEvent
+} & {
+  readonly [k in keyof UserEventApi]: (
+    ...args: Parameters<UserEventApi[k]>
+  ) => ReturnType<UserEventApi[k]>
 }
 
 export const userEvent = {

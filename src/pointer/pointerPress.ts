@@ -1,15 +1,18 @@
 /* eslint-disable complexity */
 
 import {
+  ApiLevel,
+  assertPointerEvents,
   findClosest,
   firePointerEvent,
   focus,
   isDisabled,
   isElementType,
   isFocusable,
+  setLevelRef,
 } from '../utils'
 import {getUIValue, setUISelection} from '../document'
-import {inputDeviceState} from '../setup'
+import {Config} from '../setup'
 import type {
   pointerKey,
   pointerState,
@@ -25,11 +28,11 @@ export interface PointerPressAction extends PointerTarget, SelectionTarget {
 }
 
 export async function pointerPress(
+  config: Config,
   action: PointerPressAction,
-  state: inputDeviceState,
 ): Promise<void> {
   const {keyDef, target, releasePrevious, releaseSelf} = action
-  const previous = state.pointerState.pressed.find(p => p.keyDef === keyDef)
+  const previous = config.pointerState.pressed.find(p => p.keyDef === keyDef)
 
   const pointerName =
     keyDef.pointerType === 'touch' ? keyDef.name : keyDef.pointerType
@@ -37,14 +40,14 @@ export async function pointerPress(
   const targetIsDisabled = isDisabled(target)
 
   if (previous) {
-    up(state, pointerName, action, previous, targetIsDisabled)
+    up(config, pointerName, action, previous, targetIsDisabled)
   }
 
   if (!releasePrevious) {
-    const press = down(state, pointerName, action, targetIsDisabled)
+    const press = down(config, pointerName, action, targetIsDisabled)
 
     if (releaseSelf) {
-      up(state, pointerName, action, press, targetIsDisabled)
+      up(config, pointerName, action, press, targetIsDisabled)
     }
   }
 }
@@ -55,11 +58,15 @@ function getNextPointerId(state: pointerState) {
 }
 
 function down(
-  {pointerState, keyboardState}: inputDeviceState,
+  config: Config,
   pointerName: string,
   {keyDef, node, offset, target, coords}: PointerPressAction,
   targetIsDisabled: boolean,
 ) {
+  setLevelRef(config, ApiLevel.Trigger)
+  assertPointerEvents(config, target)
+
+  const {pointerState, keyboardState} = config
   const {name, pointerType, button} = keyDef
   const pointerId = pointerType === 'mouse' ? 1 : getNextPointerId(pointerState)
 
@@ -155,7 +162,7 @@ function down(
 }
 
 function up(
-  {pointerState, keyboardState}: inputDeviceState,
+  config: Config,
   pointerName: string,
   {
     keyDef: {pointerType, button},
@@ -167,6 +174,10 @@ function up(
   pressed: pointerState['pressed'][number],
   targetIsDisabled: boolean,
 ) {
+  setLevelRef(config, ApiLevel.Trigger)
+  assertPointerEvents(config, target)
+
+  const {pointerState, keyboardState} = config
   pointerState.pressed = pointerState.pressed.filter(p => p !== pressed)
 
   const {isMultiTouch, isPrimary, pointerId, clickCount} = pressed

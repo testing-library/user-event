@@ -34,8 +34,8 @@ export async function pointerAction(config: Config, actions: PointerAction[]) {
         : undefined)
 
     await ('keyDef' in action
-      ? pointerPress({...action, target, coords}, config)
-      : pointerMove({...action, target, coords}, config))
+      ? pointerPress(config, {...action, target, coords})
+      : pointerMove(config, {...action, target, coords}))
 
     if (typeof config.delay === 'number') {
       if (i < actions.length - 1) {

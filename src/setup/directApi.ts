@@ -1,27 +1,26 @@
-import type {PointerOptions} from '../utils'
 import type {PointerInput} from '../pointer'
 import type {UserEventApi} from '.'
 import {setupDirect} from './setup'
 import {Config} from './config'
 
 export function clear(element: Element) {
-  return setupDirect().clear(element)
+  return setupDirect().api.clear(element)
 }
 
 export function click(element: Element, options: Partial<Config> = {}) {
-  return setupDirect(options, element).click(element)
+  return setupDirect(options, element).api.click(element)
 }
 
 export function copy(options: Partial<Config> = {}) {
-  return setupDirect(options).copy()
+  return setupDirect(options).api.copy()
 }
 
 export function cut(options: Partial<Config> = {}) {
-  return setupDirect(options).cut()
+  return setupDirect(options).api.cut()
 }
 
 export function dblClick(element: Element, options: Partial<Config> = {}) {
-  return setupDirect(options).dblClick(element)
+  return setupDirect(options).api.dblClick(element)
 }
 
 export function deselectOptions(
@@ -29,35 +28,33 @@ export function deselectOptions(
   values: HTMLElement | HTMLElement[] | string[] | string,
   options: Partial<Config> = {},
 ) {
-  return setupDirect(options).deselectOptions(select, values)
+  return setupDirect(options).api.deselectOptions(select, values)
 }
 
 export function hover(element: Element, options: Partial<Config> = {}) {
-  return setupDirect(options).hover(element)
+  return setupDirect(options).api.hover(element)
 }
 
 export async function keyboard(text: string, options: Partial<Config> = {}) {
-  const instance = setupDirect(options)
-  const promise = instance.keyboard(text)
+  const {config, api} = setupDirect(options)
 
-  return promise.then(() => instance[Config].keyboardState)
+  return api.keyboard(text).then(() => config.keyboardState)
 }
 
 export async function pointer(
   input: PointerInput,
   options: Partial<Config> = {},
 ) {
-  const instance = setupDirect(options)
-  const promise = instance.pointer(input)
+  const {config, api} = setupDirect(options)
 
-  return promise.then(() => instance[Config].pointerState)
+  return api.pointer(input).then(() => config.pointerState)
 }
 
 export function paste(
   clipboardData?: DataTransfer | string,
   options?: Partial<Config>,
 ) {
-  return setupDirect(options).paste(clipboardData)
+  return setupDirect(options).api.paste(clipboardData)
 }
 
 export function selectOptions(
@@ -65,11 +62,11 @@ export function selectOptions(
   values: HTMLElement | HTMLElement[] | string[] | string,
   options: Partial<Config> = {},
 ) {
-  return setupDirect(options).selectOptions(select, values)
+  return setupDirect(options).api.selectOptions(select, values)
 }
 
 export function tripleClick(element: Element, options: Partial<Config> = {}) {
-  return setupDirect(options).tripleClick(element)
+  return setupDirect(options).api.tripleClick(element)
 }
 
 export function type(
@@ -77,14 +74,14 @@ export function type(
   text: string,
   options: Partial<Config> & Parameters<UserEventApi['type']>[2] = {},
 ) {
-  return setupDirect(options, element).type(element, text, options)
+  return setupDirect(options, element).api.type(element, text, options)
 }
 
-export function unhover(element: Element, options: PointerOptions = {}) {
-  const instance = setupDirect(options)
-  instance[Config].pointerState.position.mouse.target = element
+export function unhover(element: Element, options: Partial<Config> = {}) {
+  const {config, api} = setupDirect(options)
+  config.pointerState.position.mouse.target = element
 
-  return instance.unhover(element)
+  return api.unhover(element)
 }
 
 export function upload(
@@ -92,11 +89,11 @@ export function upload(
   fileOrFiles: File | File[],
   options: Partial<Config> = {},
 ) {
-  return setupDirect(options).upload(element, fileOrFiles)
+  return setupDirect(options).api.upload(element, fileOrFiles)
 }
 
 export function tab(
   options: Partial<Config> & Parameters<UserEventApi['tab']>[0] = {},
 ) {
-  return setupDirect().tab(options)
+  return setupDirect().api.tab(options)
 }

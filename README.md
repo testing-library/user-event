@@ -55,11 +55,6 @@ change the state of the checkbox.
 > [The more your tests resemble the way your software is used, the more
 > confidence they can give you.][guiding-principle]
 
-## Known limitations
-
-- No `<input type="color" />` support.
-  [#423](https://github.com/testing-library/user-event/issues/423#issuecomment-669368863)
-
 ## Issues
 
 Looking to contribute? Look for the [Good First Issue][good-first-issue] label.

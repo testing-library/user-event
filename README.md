@@ -55,20 +55,6 @@ change the state of the checkbox.
 > [The more your tests resemble the way your software is used, the more
 > confidence they can give you.][guiding-principle]
 
-## Installation
-
-With NPM:
-
-```sh
-npm install --save-dev @testing-library/user-event @testing-library/dom
-```
-
-With Yarn:
-
-```sh
-yarn add --dev @testing-library/user-event @testing-library/dom
-```
-
 ## Known limitations
 
 - No `<input type="color" />` support.

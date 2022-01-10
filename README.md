@@ -69,11 +69,6 @@ With Yarn:
 yarn add --dev @testing-library/user-event @testing-library/dom
 ```
 
-## Docs
-
-[**Read The Docs**](https://testing-library.com/docs/ecosystem-user-event) |
-[Edit the docs](https://github.com/testing-library/testing-library-docs)
-
 ## Known limitations
 
 - No `<input type="color" />` support.

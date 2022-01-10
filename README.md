@@ -38,25 +38,6 @@
 [![Tweet][twitter-badge]][twitter]
 <!-- prettier-ignore-end -->
 
-## Table of Contents
-
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-
-- [The problem](#the-problem)
-- [The solution](#the-solution)
-- [Installation](#installation)
-- [Docs](#docs)
-- [Known limitations](#known-limitations)
-- [Issues](#issues)
-  - [🐛 Bugs](#-bugs)
-  - [💡 Feature Requests](#-feature-requests)
-  - [❓ Questions](#-questions)
-- [Contributors](#contributors)
-- [LICENSE](#license)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 ## The problem
 
 From

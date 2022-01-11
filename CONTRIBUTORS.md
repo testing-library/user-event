@@ -147,6 +147,7 @@ Thanks goes to these wonderful people ([emoji key][emojis]):
     <td align="center"><a href="https://github.com/bamthomas"><img src="https://avatars.githubusercontent.com/u/551723?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Bruno Thomas</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3Abamthomas" title="Bug reports">🐛</a></td>
     <td align="center"><a href="https://antfu.me/"><img src="https://avatars.githubusercontent.com/u/11247099?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Anthony Fu</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3Aantfu" title="Bug reports">🐛</a></td>
     <td align="center"><a href="https://github.com/mohetti"><img src="https://avatars.githubusercontent.com/u/73931283?v=4?s=100" width="100px;" alt=""/><br /><sub><b>momokolo</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3Amohetti" title="Bug reports">🐛</a></td>
+    <td align="center"><a href="https://github.com/dannyharding10"><img src="https://avatars.githubusercontent.com/u/11875246?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Danny</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3Adannyharding10" title="Bug reports">🐛</a></td>
   </tr>
 </table>
 

@@ -1048,6 +1048,15 @@
       "contributions": [
         "bug"
       ]
+    },
+    {
+      "login": "antfu",
+      "name": "Anthony Fu",
+      "avatar_url": "https://avatars.githubusercontent.com/u/11247099?v=4",
+      "profile": "https://antfu.me/",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "commitConvention": "none",

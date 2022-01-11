@@ -14,8 +14,7 @@
 
 <br />
 
-[**Read The Docs**](https://testing-library.com/docs/ecosystem-user-event) |
-[Edit the docs](https://github.com/testing-library/testing-library-docs)
+[**Read The Docs**](https://testing-library.com/docs/user-event/intro)
 
 <br />
 </div>
@@ -85,7 +84,7 @@ instead of filing an issue on GitHub.
 We most sincerely thank [the people who make this project
 possible][contributors]. Contributions of any kind are welcome! 💚
 
-## LICENSE
+## License
 
 [MIT](LICENSE)
 

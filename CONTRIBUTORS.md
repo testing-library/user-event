@@ -150,6 +150,9 @@ Thanks goes to these wonderful people ([emoji key][emojis]):
     <td align="center"><a href="https://github.com/dannyharding10"><img src="https://avatars.githubusercontent.com/u/11875246?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Danny</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3Adannyharding10" title="Bug reports">🐛</a></td>
     <td align="center"><a href="https://lucas-levin.com/"><img src="https://avatars.githubusercontent.com/u/32044095?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Lucas Levin</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3Alucaslcode" title="Bug reports">🐛</a></td>
   </tr>
+  <tr>
+    <td align="center"><a href="https://matan.io/"><img src="https://avatars.githubusercontent.com/u/12711091?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Matan Borenkraout</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=MatanBobi" title="Documentation">📖</a></td>
+  </tr>
 </table>
 
 <!-- markdownlint-restore -->

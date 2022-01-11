@@ -976,6 +976,15 @@
       "contributions": [
         "ideas"
       ]
+    },
+    {
+      "login": "wolfe111",
+      "name": "wolfe111",
+      "avatar_url": "https://avatars.githubusercontent.com/u/15180314?v=4",
+      "profile": "https://github.com/wolfe111",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "commitConvention": "none",

@@ -141,6 +141,9 @@ Thanks goes to these wonderful people ([emoji key][emojis]):
     <td align="center"><a href="https://github.com/rbrady-hs"><img src="https://avatars.githubusercontent.com/u/83345629?v=4?s=100" width="100px;" alt=""/><br /><sub><b>rbrady-hs</b></sub></a><br /><a href="#ideas-rbrady-hs" title="Ideas, Planning, & Feedback">🤔</a></td>
     <td align="center"><a href="https://github.com/Dm1Korneev"><img src="https://avatars.githubusercontent.com/u/7955306?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Dmitriy Кorneev</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3ADm1Korneev" title="Bug reports">🐛</a></td>
   </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/kumachan-mis"><img src="https://avatars.githubusercontent.com/u/29433058?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Kumachan</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3Akumachan-mis" title="Bug reports">🐛</a></td>
+  </tr>
 </table>
 
 <!-- markdownlint-restore -->

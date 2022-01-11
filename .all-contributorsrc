@@ -1021,6 +1021,15 @@
       "contributions": [
         "bug"
       ]
+    },
+    {
+      "login": "kumachan-mis",
+      "name": "Kumachan",
+      "avatar_url": "https://avatars.githubusercontent.com/u/29433058?v=4",
+      "profile": "https://github.com/kumachan-mis",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "commitConvention": "none",

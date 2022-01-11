@@ -1012,6 +1012,15 @@
       "contributions": [
         "ideas"
       ]
+    },
+    {
+      "login": "Dm1Korneev",
+      "name": "Dmitriy Кorneev",
+      "avatar_url": "https://avatars.githubusercontent.com/u/7955306?v=4",
+      "profile": "https://github.com/Dm1Korneev",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "commitConvention": "none",

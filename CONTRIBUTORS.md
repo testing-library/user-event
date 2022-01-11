@@ -139,6 +139,7 @@ Thanks goes to these wonderful people ([emoji key][emojis]):
     <td align="center"><a href="https://github.com/tyler2grass"><img src="https://avatars.githubusercontent.com/u/88393125?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Tyler Grass</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3Atyler2grass" title="Bug reports">🐛</a></td>
     <td align="center"><a href="https://www.linkedin.com/in/michael-s-pauly/"><img src="https://avatars.githubusercontent.com/u/7364791?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Michael Pauly</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3Amicscopau" title="Bug reports">🐛</a></td>
     <td align="center"><a href="https://github.com/rbrady-hs"><img src="https://avatars.githubusercontent.com/u/83345629?v=4?s=100" width="100px;" alt=""/><br /><sub><b>rbrady-hs</b></sub></a><br /><a href="#ideas-rbrady-hs" title="Ideas, Planning, & Feedback">🤔</a></td>
+    <td align="center"><a href="https://github.com/Dm1Korneev"><img src="https://avatars.githubusercontent.com/u/7955306?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Dmitriy Кorneev</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3ADm1Korneev" title="Bug reports">🐛</a></td>
   </tr>
 </table>
 

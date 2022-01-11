@@ -572,7 +572,11 @@
       "profile": "https://github.com/ph-fritsche",
       "contributions": [
         "code",
-        "test"
+        "test",
+        "bug",
+        "ideas",
+        "infra",
+        "maintenance"
       ]
     },
     {

@@ -967,6 +967,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "malipramod",
+      "name": "Pramod Mali",
+      "avatar_url": "https://avatars.githubusercontent.com/u/13375870?v=4",
+      "profile": "https://pramodmali.tech/",
+      "contributions": [
+        "ideas"
+      ]
     }
   ],
   "commitConvention": "none",

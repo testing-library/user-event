@@ -134,6 +134,7 @@ Thanks goes to these wonderful people ([emoji key][emojis]):
   </tr>
   <tr>
     <td align="center"><a href="https://github.com/patricklizon"><img src="https://avatars.githubusercontent.com/u/12571855?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Patrick Lizoń</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=patricklizon" title="Code">💻</a></td>
+    <td align="center"><a href="https://pramodmali.tech/"><img src="https://avatars.githubusercontent.com/u/13375870?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Pramod Mali</b></sub></a><br /><a href="#ideas-malipramod" title="Ideas, Planning, & Feedback">🤔</a></td>
   </tr>
 </table>
 

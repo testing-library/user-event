@@ -84,7 +84,7 @@ instead of filing an issue on GitHub.
 We most sincerely thank [the people who make this project
 possible][contributors]. Contributions of any kind are welcome! 💚
 
-## LICENSE
+## License
 
 [MIT](LICENSE)
 

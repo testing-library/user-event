@@ -136,6 +136,7 @@ Thanks goes to these wonderful people ([emoji key][emojis]):
     <td align="center"><a href="https://github.com/patricklizon"><img src="https://avatars.githubusercontent.com/u/12571855?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Patrick Lizoń</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=patricklizon" title="Code">💻</a></td>
     <td align="center"><a href="https://pramodmali.tech/"><img src="https://avatars.githubusercontent.com/u/13375870?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Pramod Mali</b></sub></a><br /><a href="#ideas-malipramod" title="Ideas, Planning, & Feedback">🤔</a></td>
     <td align="center"><a href="https://github.com/wolfe111"><img src="https://avatars.githubusercontent.com/u/15180314?v=4?s=100" width="100px;" alt=""/><br /><sub><b>wolfe111</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3Awolfe111" title="Bug reports">🐛</a></td>
+    <td align="center"><a href="https://github.com/tyler2grass"><img src="https://avatars.githubusercontent.com/u/88393125?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Tyler Grass</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3Atyler2grass" title="Bug reports">🐛</a></td>
   </tr>
 </table>
 

@@ -14,7 +14,7 @@
 
 <br />
 
-[**Read The Docs**](https://testing-library.com/docs/ecosystem-user-event) |
+[**Read The Docs**](https://testing-library.com/docs/user-event/intro) |
 [Edit the docs](https://github.com/testing-library/testing-library-docs)
 
 <br />

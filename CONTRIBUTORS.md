@@ -152,6 +152,7 @@ Thanks goes to these wonderful people ([emoji key][emojis]):
   </tr>
   <tr>
     <td align="center"><a href="https://matan.io/"><img src="https://avatars.githubusercontent.com/u/12711091?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Matan Borenkraout</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=MatanBobi" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://kentcdodds.com/"><img src="https://avatars.githubusercontent.com/u/1500684?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Kent C. Dodds</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=kentcdodds" title="Code">💻</a> <a href="#infra-kentcdodds" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="#maintenance-kentcdodds" title="Maintenance">🚧</a> <a href="https://github.com/testing-library/user-event/pulls?q=is%3Apr+reviewed-by%3Akentcdodds" title="Reviewed Pull Requests">👀</a> <a href="https://github.com/testing-library/user-event/commits?author=kentcdodds" title="Tests">⚠️</a></td>
   </tr>
 </table>
 

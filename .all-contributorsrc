@@ -1096,6 +1096,19 @@
       "contributions": [
         "doc"
       ]
+    },
+    {
+      "login": "kentcdodds",
+      "name": "Kent C. Dodds",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1500684?v=4",
+      "profile": "https://kentcdodds.com/",
+      "contributions": [
+        "code",
+        "infra",
+        "maintenance",
+        "review",
+        "test"
+      ]
     }
   ],
   "commitConvention": "none",

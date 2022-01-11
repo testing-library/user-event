@@ -424,7 +424,9 @@
         "question",
         "code",
         "test",
-        "doc"
+        "doc",
+        "infra",
+        "ideas"
       ]
     },
     {

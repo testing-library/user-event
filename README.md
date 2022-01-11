@@ -14,8 +14,7 @@
 
 <br />
 
-[**Read The Docs**](https://testing-library.com/docs/user-event/intro) |
-[Edit the docs](https://github.com/testing-library/testing-library-docs)
+[**Read The Docs**](https://testing-library.com/docs/user-event/intro)
 
 <br />
 </div>

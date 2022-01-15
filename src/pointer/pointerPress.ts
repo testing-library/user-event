@@ -3,7 +3,6 @@
 import {
   ApiLevel,
   assertPointerEvents,
-  findClosest,
   firePointerEvent,
   focus,
   isDisabled,
@@ -278,7 +277,7 @@ function mousedownDefaultBehavior({
   // The closest focusable element is focused when a `mousedown` would have been fired.
   // Even if there was no `mousedown` because the element was disabled.
   // A `mousedown` that preventsDefault cancels this though.
-  focus(findClosest(target, isFocusable) ?? target.ownerDocument.body)
+  focus(target)
 
   // TODO: What happens if a focus event handler interfers?
 

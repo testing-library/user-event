@@ -65,6 +65,8 @@ test('relay click/upload on label to file input', async () => {
     label[for="element"] - click: primary
     input#element[value=""] - click: primary
     input#element[value=""] - focusin
+    input#element[value=""] - focusout
+    input#element[value=""] - focusin
     input#element[value="C:\\\\fakepath\\\\hello.png"] - input
     input#element[value="C:\\\\fakepath\\\\hello.png"] - change
   `)

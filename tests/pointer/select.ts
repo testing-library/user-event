@@ -30,6 +30,19 @@ test('move focus to closest focusable element', async () => {
   expect(element).toHaveFocus()
 })
 
+test('blur when outside of focusable context', async () => {
+  const {
+    elements: [focusable, notFocusable],
+  } = setup(`
+    <div tabIndex="-1"></div>
+    <div></div>
+  `)
+  focusable.focus()
+
+  await userEvent.pointer({keys: '[MouseLeft>]', target: notFocusable})
+  expect(document.body).toHaveFocus()
+})
+
 test('mousedown handlers can prevent moving focus', async () => {
   const {element} = setup<HTMLInputElement>(`<input/>`)
   element.addEventListener('mousedown', e => e.preventDefault())

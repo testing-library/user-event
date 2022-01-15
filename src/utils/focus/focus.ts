@@ -1,17 +1,25 @@
 import {eventWrapper} from '../misc/eventWrapper'
+import {findClosest} from '../misc/findClosest'
 import {getActiveElement} from './getActiveElement'
 import {isFocusable} from './isFocusable'
 import {updateSelectionOnFocus} from './selection'
 
+/**
+ * Focus closest focusable element.
+ */
 function focus(element: Element) {
-  if (!isFocusable(element)) return
+  const target = findClosest(element, isFocusable)
 
-  const isAlreadyActive = getActiveElement(element.ownerDocument) === element
-  if (isAlreadyActive) return
+  const activeElement = getActiveElement(element.ownerDocument)
+  if ((target ?? element.ownerDocument.body) === activeElement) {
+    return
+  } else if (target) {
+    eventWrapper(() => target.focus())
+  } else {
+    eventWrapper(() => (activeElement as HTMLElement | null)?.blur())
+  }
 
-  eventWrapper(() => element.focus())
-
-  updateSelectionOnFocus(element)
+  updateSelectionOnFocus(target ?? element.ownerDocument.body)
 }
 
 export {focus}

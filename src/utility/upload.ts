@@ -38,9 +38,9 @@ export async function upload(
     .slice(0, input.multiple ? undefined : 1)
 
   // blur fires when the file selector pops up
-  blur(element)
+  blur(input)
   // focus fires when they make their selection
-  focus(element)
+  focus(input)
 
   // do not fire an input event if the file selection does not change
   if (

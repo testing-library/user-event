@@ -17,6 +17,9 @@ export * from './edit/maxLength'
 export * from './edit/prepareInput'
 export * from './edit/setFiles'
 
+export * from './event/createEvent'
+export * from './event/types'
+
 export * from './focus/blur'
 export * from './focus/copySelection'
 export * from './focus/cursor'
@@ -45,5 +48,5 @@ export * from './misc/wait'
 export * from './misc/hasFormSubmit'
 
 export * from './pointer/cssPointerEvents'
-export * from './pointer/firePointerEvents'
+export * from '../pointer/firePointerEvents'
 export * from './pointer/mouseButtons'

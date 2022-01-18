@@ -1,5 +1,11 @@
-import {createEvent, getConfig, fireEvent} from '@testing-library/dom'
-import {focus, hasPointerEvents, isDisabled, isElementType} from '../utils'
+import {getConfig, fireEvent} from '@testing-library/dom'
+import {
+  createEvent,
+  focus,
+  hasPointerEvents,
+  isDisabled,
+  isElementType,
+} from '../utils'
 import {Config, Instance} from '../setup'
 
 export async function selectOptions(

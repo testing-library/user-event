@@ -1,4 +1,4 @@
-import {fireEvent} from '@testing-library/dom'
+import {dispatchUIEvent} from '../../document'
 import {calculateNewValue, editInputElement, getInputRange} from '../../utils'
 import {getNextCursorPosition} from '../focus/cursor'
 
@@ -60,7 +60,7 @@ export function prepareInput(
         }
 
         if (del || data) {
-          fireEvent.input(element, {inputType})
+          dispatchUIEvent(element, 'input', {inputType})
         }
       },
     }

@@ -1,10 +1,10 @@
-import {fireEvent} from '@testing-library/dom'
-import {getUIEventModifiers} from '../utils/keyboard/getUIEventModifiers'
+import {dispatchUIEvent} from '../document'
 import type {keyboardState} from '../keyboard/types'
 import {
-  createEvent,
+  EventType,
   getMouseButton,
   getMouseButtons,
+  getUIEventModifiers,
   MouseButton,
   PointerCoords,
 } from '../utils'
@@ -12,7 +12,7 @@ import type {pointerState} from './types'
 
 export function firePointerEvent(
   target: Element,
-  type: string,
+  type: EventType,
   {
     pointerState,
     keyboardState,
@@ -56,5 +56,5 @@ export function firePointerEvent(
     init.detail = clickCount
   }
 
-  return fireEvent(target, createEvent(type, target, init))
+  return dispatchUIEvent(target, type, init)
 }

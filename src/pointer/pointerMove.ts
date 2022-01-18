@@ -2,13 +2,14 @@ import {setUISelection} from '../document'
 import {Config} from '../setup'
 import {
   PointerCoords,
-  firePointerEvent,
   isDescendantOrSelf,
   isDisabled,
   assertPointerEvents,
   setLevelRef,
   ApiLevel,
+  EventType,
 } from '../utils'
+import {firePointerEvent} from './firePointerEvents'
 import {resolveSelectionTarget} from './resolveSelectionTarget'
 import {PointerTarget, SelectionTarget} from './types'
 
@@ -133,7 +134,7 @@ export async function pointerMove(
 
   function fire(
     eventTarget: Element,
-    type: string,
+    type: EventType,
     eventCoords?: PointerCoords,
   ) {
     return firePointerEvent(eventTarget, type, {

@@ -1,4 +1,4 @@
-import {fireEvent} from '@testing-library/dom'
+import {dispatchUIEvent} from '../document'
 import {Config, Instance} from '../setup'
 import {
   copySelection,
@@ -17,7 +17,7 @@ export async function cut(this: Instance) {
     return
   }
 
-  fireEvent.cut(target, {
+  dispatchUIEvent(target, 'cut', {
     clipboardData,
   })
 

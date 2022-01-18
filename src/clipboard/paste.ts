@@ -1,4 +1,4 @@
-import {fireEvent} from '@testing-library/dom'
+import {dispatchUIEvent} from '../document'
 import {Config, Instance} from '../setup'
 import {
   createDataTransfer,
@@ -29,7 +29,7 @@ export async function paste(
 }
 
 function pasteImpl(target: Element, clipboardData: DataTransfer) {
-  fireEvent.paste(target, {
+  dispatchUIEvent(target, 'paste', {
     clipboardData,
   })
 

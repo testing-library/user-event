@@ -4,7 +4,21 @@ import {PointerCoords} from './types'
 
 const mouseEvents = ['MouseEvent', 'PointerEvent']
 
-type SpecificEventInit<E extends Event> = E extends KeyboardEvent
+export type EventType = keyof DocumentEventMap
+
+export type EventTypeInit<K extends EventType> = SpecificEventInit<
+  FixedDocumentEventMap[K]
+>
+
+interface FixedDocumentEventMap extends DocumentEventMap {
+  input: InputEvent
+}
+
+type SpecificEventInit<E extends Event> = E extends InputEvent
+  ? InputEventInit
+  : E extends ClipboardEvent
+  ? ClipboardEventInit
+  : E extends KeyboardEvent
   ? KeyboardEventInit
   : E extends PointerEvent
   ? PointerEventInit
@@ -14,21 +28,16 @@ type SpecificEventInit<E extends Event> = E extends KeyboardEvent
   ? UIEventInit
   : EventInit
 
-export function createEvent<Type extends keyof DocumentEventMap | string>(
-  type: Type,
+export function createEvent<K extends EventType>(
+  type: K,
   target: Element,
-  init: Type extends keyof DocumentEventMap
-    ? SpecificEventInit<DocumentEventMap[Type]>
-    : EventInit,
+  init?: EventTypeInit<K>,
 ) {
   const eventKey = Object.keys(eventMap).find(
     k => k.toLowerCase() === type,
   ) as keyof typeof createEventBase
 
-  const event = createEventBase[eventKey](
-    target,
-    init,
-  ) as Type extends keyof DocumentEventMap ? DocumentEventMap[Type] : Event
+  const event = createEventBase[eventKey](target, init) as DocumentEventMap[K]
 
   // Can not use instanceof, as MouseEvent might be polyfilled.
   if (mouseEvents.includes(eventMap[eventKey].EventType)) {
@@ -62,7 +71,7 @@ function assignPositionInit(
     pageY,
     screenX,
     screenY,
-  }: PointerCoords & MouseEventInit,
+  }: PointerCoords & MouseEventInit = {},
 ) {
   assignProps(obj, {
     /* istanbul ignore start */
@@ -82,7 +91,7 @@ function assignPositionInit(
 
 function assignPointerInit(
   obj: MouseEvent | PointerEvent,
-  {isPrimary, pointerId, pointerType}: PointerEventInit,
+  {isPrimary, pointerId, pointerType}: PointerEventInit = {},
 ) {
   assignProps(obj, {
     isPrimary,

@@ -2,7 +2,6 @@
  * This file should cover the behavior for keys that produce character input
  */
 
-import {fireEvent} from '@testing-library/dom'
 import {fireChangeForInputTimeIfValid} from '../shared'
 import {behaviorPlugin} from '../types'
 import {
@@ -19,7 +18,7 @@ import {
   isValidInputTimeValue,
   prepareInput,
 } from '../../utils'
-import {UISelectionRange} from '../../document'
+import {dispatchUIEvent, setUIValue, UISelectionRange} from '../../document'
 
 export const keypressBehavior: behaviorPlugin[] = [
   {
@@ -112,9 +111,8 @@ export const keypressBehavior: behaviorPlugin[] = [
       }
 
       if (isValidToBeTyped) {
-        fireEvent.change(element, {
-          target: {value: textToBeTyped},
-        })
+        setUIValue(element as HTMLInputElement, textToBeTyped)
+        dispatchUIEvent(element, 'change')
       }
 
       keyboardState.carryValue = textToBeTyped

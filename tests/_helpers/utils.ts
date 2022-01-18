@@ -1,6 +1,8 @@
 /* eslint-disable testing-library/no-node-access */
 import {eventMap} from '@testing-library/dom/dist/event-map'
+import {TestData, TestDataProps} from './trackProps'
 import {isElementType, MouseButton} from '#src/utils'
+
 // this is pretty helpful:
 // https://codesandbox.io/s/quizzical-worker-eo909
 
@@ -227,14 +229,6 @@ type CallData = {
   testData?: TestData
 }
 
-type TestData = {
-  handled?: boolean
-
-  // Where is this assigned?
-  before?: Element
-  after?: Element
-}
-
 function isElement(target: EventTarget): target is Element {
   return 'tagName' in target
 }
@@ -371,19 +365,21 @@ function addListeners(
   }
 }
 
-function getValueWithSelection(element?: Element) {
-  const {value, selectionStart, selectionEnd} = element as HTMLInputElement
-
+function getValueWithSelection({
+  value,
+  selectionStart,
+  selectionEnd,
+}: TestDataProps = {}) {
   return [
-    value.slice(0, selectionStart ?? undefined),
+    value?.slice(0, selectionStart ?? undefined),
     ...(selectionStart === selectionEnd
       ? ['{CURSOR}']
       : [
           '{SELECTION}',
-          value.slice(selectionStart ?? 0, selectionEnd ?? undefined),
+          value?.slice(selectionStart ?? 0, selectionEnd ?? undefined),
           '{/SELECTION}',
         ]),
-    value.slice(selectionEnd ?? undefined),
+    value?.slice(selectionEnd ?? undefined),
   ].join('')
 }
 

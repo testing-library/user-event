@@ -1,6 +1,7 @@
 import '@testing-library/jest-dom/extend-expect'
 import isCI from 'is-ci'
 import jestSerializerAnsi from 'jest-serializer-ansi'
+import './_helpers/trackProps'
 
 expect.addSnapshotSerializer(jestSerializerAnsi)
 

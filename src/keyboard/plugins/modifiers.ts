@@ -3,7 +3,7 @@
  * https://www.w3.org/TR/uievents-key/#keys-modifier
  */
 
-import {fireEvent} from '@testing-library/dom'
+import {dispatchUIEvent} from '../../document'
 import {getKeyEventProps} from '../../utils'
 import {behaviorPlugin} from '../types'
 
@@ -40,7 +40,11 @@ export const preKeydownBehavior: behaviorPlugin[] = [
         const ctrlKeyDef = keyboardMap.find(
           k => k.key === 'Control',
         ) ?? /* istanbul ignore next */ {key: 'Control', code: 'Control'}
-        fireEvent.keyDown(element, getKeyEventProps(ctrlKeyDef, keyboardState))
+        dispatchUIEvent(
+          element,
+          'keydown',
+          getKeyEventProps(ctrlKeyDef, keyboardState),
+        )
       }
     },
   },
@@ -86,7 +90,11 @@ export const postKeyupBehavior: behaviorPlugin[] = [
       const ctrlKeyDef = keyboardMap.find(
         k => k.key === 'Control',
       ) ?? /* istanbul ignore next */ {key: 'Control', code: 'Control'}
-      fireEvent.keyUp(element, getKeyEventProps(ctrlKeyDef, keyboardState))
+      dispatchUIEvent(
+        element,
+        'keyup',
+        getKeyEventProps(ctrlKeyDef, keyboardState),
+      )
     },
   },
 ]

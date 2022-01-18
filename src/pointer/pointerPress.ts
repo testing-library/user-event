@@ -3,7 +3,7 @@
 import {
   ApiLevel,
   assertPointerEvents,
-  firePointerEvent,
+  EventType,
   focus,
   isDisabled,
   isElementType,
@@ -19,6 +19,7 @@ import type {
   SelectionTarget,
 } from './types'
 import {resolveSelectionTarget} from './resolveSelectionTarget'
+import {firePointerEvent} from './firePointerEvents'
 
 export interface PointerPressAction extends PointerTarget, SelectionTarget {
   keyDef: pointerKey
@@ -146,7 +147,7 @@ function down(
 
   return pressObj
 
-  function fire(type: string) {
+  function fire(type: EventType) {
     return firePointerEvent(target, type, {
       pointerState,
       keyboardState,
@@ -245,7 +246,7 @@ function up(
     }
   }
 
-  function fire(type: string) {
+  function fire(type: EventType) {
     return firePointerEvent(target, type, {
       pointerState,
       keyboardState,

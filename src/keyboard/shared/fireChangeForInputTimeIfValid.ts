@@ -1,4 +1,4 @@
-import {fireEvent} from '@testing-library/dom'
+import {dispatchUIEvent, setUIValue} from '../../document'
 import {isValidInputTimeValue} from '../../utils'
 
 export function fireChangeForInputTimeIfValid(
@@ -7,6 +7,7 @@ export function fireChangeForInputTimeIfValid(
   timeNewEntry: string,
 ) {
   if (isValidInputTimeValue(el, timeNewEntry) && prevValue !== timeNewEntry) {
-    fireEvent.change(el, {target: {value: timeNewEntry}})
+    setUIValue(el, timeNewEntry)
+    dispatchUIEvent(el, 'change')
   }
 }

@@ -1,12 +1,7 @@
-import {getConfig, fireEvent} from '@testing-library/dom'
-import {
-  createEvent,
-  focus,
-  hasPointerEvents,
-  isDisabled,
-  isElementType,
-} from '../utils'
+import {getConfig} from '@testing-library/dom'
+import {focus, hasPointerEvents, isDisabled, isElementType} from '../utils'
 import {Config, Instance} from '../setup'
+import {dispatchUIEvent} from '../document'
 
 export async function selectOptions(
   this: Instance,
@@ -74,27 +69,27 @@ async function selectOptionsBase(
 
         // events fired for multiple select are weird. Can't use hover...
         if (withPointerEvents) {
-          fireEvent.pointerOver(option)
-          fireEvent.pointerEnter(select)
-          fireEvent.mouseOver(option)
-          fireEvent.mouseEnter(select)
-          fireEvent.pointerMove(option)
-          fireEvent.mouseMove(option)
-          fireEvent.pointerDown(option)
-          fireEvent.mouseDown(option)
+          dispatchUIEvent(option, 'pointerover')
+          dispatchUIEvent(select, 'pointerenter')
+          dispatchUIEvent(option, 'mouseover')
+          dispatchUIEvent(select, 'mouseenter')
+          dispatchUIEvent(option, 'pointermove')
+          dispatchUIEvent(option, 'mousemove')
+          dispatchUIEvent(option, 'pointerdown')
+          dispatchUIEvent(option, 'mousedown')
         }
 
         focus(select)
 
         if (withPointerEvents) {
-          fireEvent.pointerUp(option)
-          fireEvent.mouseUp(option)
+          dispatchUIEvent(option, 'pointerup')
+          dispatchUIEvent(option, 'mouseup')
         }
 
         selectOption(option as HTMLOptionElement)
 
         if (withPointerEvents) {
-          fireEvent.click(option)
+          dispatchUIEvent(option, 'click')
         }
       }
     } else if (selectedOptions.length === 1) {
@@ -112,13 +107,13 @@ async function selectOptionsBase(
       if (withPointerEvents) {
         // the browser triggers another click event on the select for the click on the option
         // this second click has no 'down' phase
-        fireEvent.pointerOver(select)
-        fireEvent.pointerEnter(select)
-        fireEvent.mouseOver(select)
-        fireEvent.mouseEnter(select)
-        fireEvent.pointerUp(select)
-        fireEvent.mouseUp(select)
-        fireEvent.click(select)
+        dispatchUIEvent(select, 'pointerover')
+        dispatchUIEvent(select, 'pointerenter')
+        dispatchUIEvent(select, 'mouseover')
+        dispatchUIEvent(select, 'mouseenter')
+        dispatchUIEvent(select, 'pointerup')
+        dispatchUIEvent(select, 'mouseup')
+        dispatchUIEvent(select, 'click')
       }
     } else {
       throw getConfig().getElementError(
@@ -140,14 +135,11 @@ async function selectOptionsBase(
 
   function selectOption(option: HTMLOptionElement) {
     option.selected = newValue
-    fireEvent(
-      select,
-      createEvent('input', select, {
-        bubbles: true,
-        cancelable: false,
-        composed: true,
-      }),
-    )
-    fireEvent.change(select)
+    dispatchUIEvent(select, 'input', {
+      bubbles: true,
+      cancelable: false,
+      composed: true,
+    })
+    dispatchUIEvent(select, 'change')
   }
 }

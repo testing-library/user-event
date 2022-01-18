@@ -3,8 +3,7 @@
  * https://w3c.github.io/uievents-code/#key-alphanumeric-functional
  */
 
-import {fireEvent} from '@testing-library/dom'
-import {setUISelection} from '../../document'
+import {dispatchUIEvent, setUISelection} from '../../document'
 import {
   blur,
   focus,
@@ -55,7 +54,7 @@ export const keypressBehavior: behaviorPlugin[] = [
       const form = (element as HTMLInputElement).form
 
       if (hasFormSubmit(form)) {
-        fireEvent.submit(form)
+        dispatchUIEvent(form, 'submit')
       }
     },
   },
@@ -66,7 +65,7 @@ export const keypressBehavior: behaviorPlugin[] = [
         // Links with href defined should handle Enter the same as a click
         (isElementType(element, 'a') && Boolean(element.href))),
     handle: (keyDef, element, {keyboardState}) => {
-      fireEvent.click(element, getUIEventModifiers(keyboardState))
+      dispatchUIEvent(element, 'click', getUIEventModifiers(keyboardState))
     },
   },
   {
@@ -79,7 +78,7 @@ export const keypressBehavior: behaviorPlugin[] = [
         form &&
         (form.querySelectorAll('input').length === 1 || hasFormSubmit(form))
       ) {
-        fireEvent.submit(form)
+        dispatchUIEvent(form, 'submit')
       }
     },
   },
@@ -90,7 +89,7 @@ export const keyupBehavior: behaviorPlugin[] = [
     matches: (keyDef, element) =>
       keyDef.key === ' ' && isClickableInput(element),
     handle: (keyDef, element, {keyboardState}) => {
-      fireEvent.click(element, getUIEventModifiers(keyboardState))
+      dispatchUIEvent(element, 'click', getUIEventModifiers(keyboardState))
     },
   },
 ]

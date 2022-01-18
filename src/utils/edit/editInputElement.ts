@@ -1,5 +1,9 @@
-import {fireEvent} from '@testing-library/dom'
-import {setUIValue, startTrackValue, endTrackValue} from '../../document'
+import {
+  setUIValue,
+  startTrackValue,
+  endTrackValue,
+  dispatchUIEvent,
+} from '../../document'
 import {setSelection} from '../focus/selection'
 
 /**
@@ -19,9 +23,7 @@ export function editInputElement(
       node: Node
       offset: number
     }
-    eventOverrides: Partial<Parameters<typeof fireEvent>[1]> & {
-      [k: string]: unknown
-    }
+    eventOverrides: InputEventInit
   },
 ) {
   const oldValue = element.value
@@ -43,9 +45,7 @@ export function editInputElement(
   // why the batched update is executed differently in our test environment.
   startTrackValue(element as HTMLInputElement)
 
-  fireEvent.input(element, {
-    ...eventOverrides,
-  })
+  dispatchUIEvent(element, 'input', eventOverrides)
 
   const tracked = endTrackValue(element as HTMLInputElement)
   if (

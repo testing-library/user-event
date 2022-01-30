@@ -1,4 +1,4 @@
-import {fireEvent} from '#src/utils/event/fireEvent'
+import {wrapEvent} from '#src/event/wrapEvent'
 
 declare global {
   interface Element {
@@ -21,8 +21,8 @@ export type TestData = {
   after?: TestDataProps
 }
 
-jest.mock('#src/utils/event/fireEvent', () => ({
-  fireEvent(...[element, event]: Parameters<typeof fireEvent>) {
+jest.mock('#src/event/wrapEvent', () => ({
+  wrapEvent(...[cb, element]: Parameters<typeof wrapEvent>) {
     const before = getTrackedElementValues(element as TestDataProps)
     const testData = {before}
 
@@ -31,9 +31,9 @@ jest.mock('#src/utils/event/fireEvent', () => ({
 
     const result = jest
       .requireActual<{
-        fireEvent: typeof fireEvent
-      }>('#src/utils/event/fireEvent')
-      .fireEvent(element, event)
+        wrapEvent: typeof wrapEvent
+      }>('#src/event/wrapEvent')
+      .wrapEvent(cb, element)
 
     const after = getTrackedElementValues(element as TestDataProps)
     Object.assign(testData, {after})

@@ -1,21 +1,12 @@
-import {dispatchUIEvent} from '../document'
-import type {keyboardState} from '../keyboard/types'
-import {
-  EventType,
-  getMouseButton,
-  getMouseButtons,
-  getUIEventModifiers,
-  MouseButton,
-  PointerCoords,
-} from '../utils'
-import type {pointerState} from './types'
+import {dispatchUIEvent, EventType, PointerCoords} from '../event'
+import {Config} from '../setup'
+import {getMouseButton, getMouseButtons, MouseButton} from '../utils'
 
 export function firePointerEvent(
+  config: Config,
   target: Element,
   type: EventType,
   {
-    pointerState,
-    keyboardState,
     pointerType,
     button,
     coords,
@@ -23,8 +14,6 @@ export function firePointerEvent(
     isPrimary,
     clickCount,
   }: {
-    pointerState: pointerState
-    keyboardState: keyboardState
     pointerType?: 'mouse' | 'pen' | 'touch'
     button?: MouseButton
     coords?: PointerCoords
@@ -35,7 +24,6 @@ export function firePointerEvent(
 ) {
   const init: MouseEventInit & PointerEventInit = {
     ...coords,
-    ...getUIEventModifiers(keyboardState),
   }
   if (type === 'click' || type.startsWith('pointer')) {
     init.pointerId = pointerId
@@ -46,7 +34,7 @@ export function firePointerEvent(
   }
   init.button = getMouseButton(button ?? 0)
   init.buttons = getMouseButtons(
-    ...pointerState.pressed
+    ...config.pointerState.pressed
       .filter(p => p.keyDef.pointerType === pointerType)
       .map(p => p.keyDef.button ?? 0),
   )
@@ -56,5 +44,5 @@ export function firePointerEvent(
     init.detail = clickCount
   }
 
-  return dispatchUIEvent(target, type, init)
+  return dispatchUIEvent(config, target, type, init)
 }

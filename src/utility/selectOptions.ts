@@ -1,7 +1,6 @@
 import {getConfig} from '@testing-library/dom'
 import {focus, hasPointerEvents, isDisabled, isElementType} from '../utils'
 import {Config, Instance} from '../setup'
-import {dispatchUIEvent} from '../document'
 
 export async function selectOptions(
   this: Instance,
@@ -59,6 +58,16 @@ async function selectOptionsBase(
 
   if (isDisabled(select) || !selectedOptions.length) return
 
+  const selectOption = (option: HTMLOptionElement) => {
+    option.selected = newValue
+    this.dispatchUIEvent(select, 'input', {
+      bubbles: true,
+      cancelable: false,
+      composed: true,
+    })
+    this.dispatchUIEvent(select, 'change')
+  }
+
   if (isElementType(select, 'select')) {
     if (select.multiple) {
       for (const option of selectedOptions) {
@@ -69,27 +78,27 @@ async function selectOptionsBase(
 
         // events fired for multiple select are weird. Can't use hover...
         if (withPointerEvents) {
-          dispatchUIEvent(option, 'pointerover')
-          dispatchUIEvent(select, 'pointerenter')
-          dispatchUIEvent(option, 'mouseover')
-          dispatchUIEvent(select, 'mouseenter')
-          dispatchUIEvent(option, 'pointermove')
-          dispatchUIEvent(option, 'mousemove')
-          dispatchUIEvent(option, 'pointerdown')
-          dispatchUIEvent(option, 'mousedown')
+          this.dispatchUIEvent(option, 'pointerover')
+          this.dispatchUIEvent(select, 'pointerenter')
+          this.dispatchUIEvent(option, 'mouseover')
+          this.dispatchUIEvent(select, 'mouseenter')
+          this.dispatchUIEvent(option, 'pointermove')
+          this.dispatchUIEvent(option, 'mousemove')
+          this.dispatchUIEvent(option, 'pointerdown')
+          this.dispatchUIEvent(option, 'mousedown')
         }
 
         focus(select)
 
         if (withPointerEvents) {
-          dispatchUIEvent(option, 'pointerup')
-          dispatchUIEvent(option, 'mouseup')
+          this.dispatchUIEvent(option, 'pointerup')
+          this.dispatchUIEvent(option, 'mouseup')
         }
 
         selectOption(option as HTMLOptionElement)
 
         if (withPointerEvents) {
-          dispatchUIEvent(option, 'click')
+          this.dispatchUIEvent(option, 'click')
         }
       }
     } else if (selectedOptions.length === 1) {
@@ -107,13 +116,13 @@ async function selectOptionsBase(
       if (withPointerEvents) {
         // the browser triggers another click event on the select for the click on the option
         // this second click has no 'down' phase
-        dispatchUIEvent(select, 'pointerover')
-        dispatchUIEvent(select, 'pointerenter')
-        dispatchUIEvent(select, 'mouseover')
-        dispatchUIEvent(select, 'mouseenter')
-        dispatchUIEvent(select, 'pointerup')
-        dispatchUIEvent(select, 'mouseup')
-        dispatchUIEvent(select, 'click')
+        this.dispatchUIEvent(select, 'pointerover')
+        this.dispatchUIEvent(select, 'pointerenter')
+        this.dispatchUIEvent(select, 'mouseover')
+        this.dispatchUIEvent(select, 'mouseenter')
+        this.dispatchUIEvent(select, 'pointerup')
+        this.dispatchUIEvent(select, 'mouseup')
+        this.dispatchUIEvent(select, 'click')
       }
     } else {
       throw getConfig().getElementError(
@@ -131,15 +140,5 @@ async function selectOptionsBase(
       `Cannot select options on elements that are neither select nor listbox elements`,
       select,
     )
-  }
-
-  function selectOption(option: HTMLOptionElement) {
-    option.selected = newValue
-    dispatchUIEvent(select, 'input', {
-      bubbles: true,
-      cancelable: false,
-      composed: true,
-    })
-    dispatchUIEvent(select, 'change')
   }
 }

@@ -1,4 +1,5 @@
-import {dispatchUIEvent} from './event'
+import {dispatchUIEvent} from '../event'
+import {Config} from '../setup'
 import {prepareSelectionInterceptor} from './selection'
 import {
   getInitialValue,
@@ -45,7 +46,7 @@ export function prepareDocument(document: Document) {
       const el = e.target as HTMLInputElement
       const initialValue = getInitialValue(el)
       if (typeof initialValue === 'string' && el.value !== initialValue) {
-        dispatchUIEvent(el, 'change')
+        dispatchUIEvent({} as Config, el, 'change')
       }
     },
     {
@@ -74,7 +75,6 @@ function prepareElement(el: Node | HTMLInputElement) {
   el[isPrepared] = isPrepared
 }
 
-export {dispatchUIEvent}
 export {getUIValue, setUIValue, startTrackValue, endTrackValue} from './value'
 export {getUISelection, setUISelection} from './selection'
 export type {UISelectionRange} from './selection'

@@ -1,4 +1,5 @@
-import {PointerCoords, MouseButton} from '../utils'
+import {PointerCoords} from '../event'
+import {MouseButton} from '../utils'
 
 /**
  * @internal Do not create/alter this by yourself as this type might be subject to changes.

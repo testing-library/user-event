@@ -1,3 +1,5 @@
+export type EventType = keyof DocumentEventMap
+
 export interface PointerCoords {
   x?: number
   y?: number

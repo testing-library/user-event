@@ -1,10 +1,7 @@
 import {createEvent as createEventBase} from '@testing-library/dom'
 import {eventMap} from '@testing-library/dom/dist/event-map.js'
-import {PointerCoords} from './types'
-
-const mouseEvents = ['MouseEvent', 'PointerEvent']
-
-export type EventType = keyof DocumentEventMap
+import {isMouseEvent} from './eventTypes'
+import {EventType, PointerCoords} from './types'
 
 export type EventTypeInit<K extends EventType> = SpecificEventInit<
   FixedDocumentEventMap[K]
@@ -40,7 +37,7 @@ export function createEvent<K extends EventType>(
   const event = createEventBase[eventKey](target, init) as DocumentEventMap[K]
 
   // Can not use instanceof, as MouseEvent might be polyfilled.
-  if (mouseEvents.includes(eventMap[eventKey].EventType)) {
+  if (isMouseEvent(type) && init) {
     // see https://github.com/testing-library/react-testing-library/issues/268
     assignPositionInit(event as MouseEvent, init)
     assignPointerInit(event as PointerEvent, init)
@@ -71,7 +68,7 @@ function assignPositionInit(
     pageY,
     screenX,
     screenY,
-  }: PointerCoords & MouseEventInit = {},
+  }: PointerCoords & MouseEventInit,
 ) {
   assignProps(obj, {
     /* istanbul ignore start */
@@ -91,7 +88,7 @@ function assignPositionInit(
 
 function assignPointerInit(
   obj: MouseEvent | PointerEvent,
-  {isPrimary, pointerId, pointerType}: PointerEventInit = {},
+  {isPrimary, pointerId, pointerType}: PointerEventInit,
 ) {
   assignProps(obj, {
     isPrimary,

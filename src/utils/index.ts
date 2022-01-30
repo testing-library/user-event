@@ -17,10 +17,6 @@ export * from './edit/maxLength'
 export * from './edit/prepareInput'
 export * from './edit/setFiles'
 
-export * from './event/createEvent'
-export * from './event/fireEvent'
-export * from './event/types'
-
 export * from './focus/blur'
 export * from './focus/copySelection'
 export * from './focus/cursor'

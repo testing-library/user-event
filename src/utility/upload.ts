@@ -7,7 +7,6 @@ import {
   setFiles,
 } from '../utils'
 import {Config, Instance} from '../setup'
-import {dispatchUIEvent} from '../document'
 
 export interface uploadInit {
   changeInit?: EventInit
@@ -51,8 +50,8 @@ export async function upload(
   }
 
   setFiles(input, createFileList(files))
-  dispatchUIEvent(input, 'input')
-  dispatchUIEvent(input, 'change')
+  this.dispatchUIEvent(input, 'input')
+  this.dispatchUIEvent(input, 'change')
 }
 
 function isAcceptableFile(file: File, accept: string) {

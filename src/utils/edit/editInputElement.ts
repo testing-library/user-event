@@ -1,9 +1,6 @@
-import {
-  setUIValue,
-  startTrackValue,
-  endTrackValue,
-  dispatchUIEvent,
-} from '../../document'
+import {setUIValue, startTrackValue, endTrackValue} from '../../document'
+import {dispatchUIEvent} from '../../event'
+import {Config} from '../../setup'
 import {setSelection} from '../focus/selection'
 
 /**
@@ -12,6 +9,7 @@ import {setSelection} from '../focus/selection'
  * Fires the input event.
  */
 export function editInputElement(
+  config: Config,
   element: HTMLInputElement | HTMLTextAreaElement,
   {
     newValue,
@@ -45,7 +43,7 @@ export function editInputElement(
   // why the batched update is executed differently in our test environment.
   startTrackValue(element as HTMLInputElement)
 
-  dispatchUIEvent(element, 'input', eventOverrides)
+  dispatchUIEvent(config, element, 'input', eventOverrides)
 
   const tracked = endTrackValue(element as HTMLInputElement)
   if (

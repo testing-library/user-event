@@ -1,4 +1,4 @@
-import {dispatchUIEvent} from '../document'
+import {dispatchUIEvent} from '../event'
 import {Config, Instance} from '../setup'
 import {
   createDataTransfer,
@@ -25,11 +25,15 @@ export async function paste(
       )
     }))
 
-  return pasteImpl(target, data)
+  return pasteImpl(this[Config], target, data)
 }
 
-function pasteImpl(target: Element, clipboardData: DataTransfer) {
-  dispatchUIEvent(target, 'paste', {
+function pasteImpl(
+  config: Config,
+  target: Element,
+  clipboardData: DataTransfer,
+) {
+  dispatchUIEvent(config, target, 'paste', {
     clipboardData,
   })
 
@@ -39,7 +43,7 @@ function pasteImpl(target: Element, clipboardData: DataTransfer) {
       .substr(0, getSpaceUntilMaxLength(target))
 
     if (data) {
-      prepareInput(data, target, 'insertFromPaste')?.commit()
+      prepareInput(config, data, target, 'insertFromPaste')?.commit()
     }
   }
 }

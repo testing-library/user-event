@@ -1,13 +1,12 @@
 import {setUISelection} from '../document'
+import {EventType, PointerCoords} from '../event'
 import {Config} from '../setup'
 import {
-  PointerCoords,
   isDescendantOrSelf,
   isDisabled,
   assertPointerEvents,
   setLevelRef,
   ApiLevel,
-  EventType,
 } from '../utils'
 import {firePointerEvent} from './firePointerEvents'
 import {resolveSelectionTarget} from './resolveSelectionTarget'
@@ -21,7 +20,7 @@ export async function pointerMove(
   config: Config,
   {pointerName = 'mouse', target, coords, node, offset}: PointerMoveAction,
 ): Promise<void> {
-  const {pointerState, keyboardState} = config
+  const {pointerState} = config
   if (!(pointerName in pointerState.position)) {
     throw new Error(
       `Trying to move pointer "${pointerName}" which does not exist.`,
@@ -137,9 +136,7 @@ export async function pointerMove(
     type: EventType,
     eventCoords?: PointerCoords,
   ) {
-    return firePointerEvent(eventTarget, type, {
-      pointerState,
-      keyboardState,
+    return firePointerEvent(config, eventTarget, type, {
       coords: eventCoords,
       pointerId,
       pointerType,

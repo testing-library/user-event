@@ -1,4 +1,4 @@
-import {dispatchUIEvent} from '../document'
+import {dispatchUIEvent} from '../event'
 import {Config} from '../setup'
 import {getActiveElement, getKeyEventProps, wait} from '../utils'
 import {behaviorPlugin, keyboardKey} from './types'
@@ -86,9 +86,10 @@ async function keydown(
   applyPlugins(plugins.preKeydownBehavior, keyDef, element, config)
 
   const unpreventedDefault = dispatchUIEvent(
+    config,
     element,
     'keydown',
-    getKeyEventProps(keyDef, config.keyboardState),
+    getKeyEventProps(keyDef),
   )
 
   config.keyboardState.pressed.push({keyDef, unpreventedDefault})
@@ -108,8 +109,8 @@ async function keypress(
 ) {
   const element = getCurrentElement()
 
-  const unpreventedDefault = dispatchUIEvent(element, 'keypress', {
-    ...getKeyEventProps(keyDef, config.keyboardState),
+  const unpreventedDefault = dispatchUIEvent(config, element, 'keypress', {
+    ...getKeyEventProps(keyDef),
     charCode: keyDef.key === 'Enter' ? 13 : String(keyDef.key).charCodeAt(0),
   })
 
@@ -129,9 +130,10 @@ async function keyup(
   applyPlugins(plugins.preKeyupBehavior, keyDef, element, config)
 
   const unpreventedDefault = dispatchUIEvent(
+    config,
     element,
     'keyup',
-    getKeyEventProps(keyDef, config.keyboardState),
+    getKeyEventProps(keyDef),
   )
 
   if (unprevented && unpreventedDefault) {

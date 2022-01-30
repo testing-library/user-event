@@ -7,9 +7,7 @@ export {releaseAllKeys}
 export type {keyboardKey, keyboardState}
 
 export async function keyboard(this: Instance, text: string): Promise<void> {
-  const {keyboardMap} = this[Config]
-
-  const actions: KeyboardAction[] = parseKeyDef(keyboardMap, text)
+  const actions: KeyboardAction[] = parseKeyDef(this[Config].keyboardMap, text)
 
   return keyboardAction(this[Config], actions)
 }

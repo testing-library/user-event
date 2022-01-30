@@ -3,7 +3,6 @@
 import {
   ApiLevel,
   assertPointerEvents,
-  EventType,
   focus,
   isDisabled,
   isElementType,
@@ -11,6 +10,7 @@ import {
   setLevelRef,
 } from '../utils'
 import {getUIValue, setUISelection} from '../document'
+import {EventType} from '../event'
 import {Config} from '../setup'
 import type {
   pointerKey,
@@ -66,7 +66,7 @@ function down(
   setLevelRef(config, ApiLevel.Trigger)
   assertPointerEvents(config, target)
 
-  const {pointerState, keyboardState} = config
+  const {pointerState} = config
   const {name, pointerType, button} = keyDef
   const pointerId = pointerType === 'mouse' ? 1 : getNextPointerId(pointerState)
 
@@ -148,9 +148,7 @@ function down(
   return pressObj
 
   function fire(type: EventType) {
-    return firePointerEvent(target, type, {
-      pointerState,
-      keyboardState,
+    return firePointerEvent(config, target, type, {
       button,
       clickCount,
       coords,
@@ -177,7 +175,7 @@ function up(
   setLevelRef(config, ApiLevel.Trigger)
   assertPointerEvents(config, target)
 
-  const {pointerState, keyboardState} = config
+  const {pointerState} = config
   pointerState.pressed = pointerState.pressed.filter(p => p !== pressed)
 
   const {isMultiTouch, isPrimary, pointerId, clickCount} = pressed
@@ -234,22 +232,21 @@ function up(
       const canClick = pointerType !== 'mouse' || button === 'primary'
       if (canClick && target === pressed.downTarget) {
         const unpreventedClick = fire('click')
+
         if (clickCount === 2) {
           fire('dblclick')
         }
-
-        const control = target.closest('label')?.control
-        if (unpreventedClick && control && isFocusable(control)) {
-          focus(control)
+        if (unpreventedClick) {
+          clickDefaultBehavior({
+            target,
+          })
         }
       }
     }
   }
 
   function fire(type: EventType) {
-    return firePointerEvent(target, type, {
-      pointerState,
-      keyboardState,
+    return firePointerEvent(config, target, type, {
       button,
       clickCount,
       coords,
@@ -369,4 +366,11 @@ function getTextRange(
       : pos +
         (text.substr(pos).match(/^[^\r\n]*/) as RegExpMatchArray)[0].length,
   ]
+}
+
+function clickDefaultBehavior({target}: {target: Element}) {
+  const control = target.closest('label')?.control
+  if (control && isFocusable(control)) {
+    focus(control)
+  }
 }

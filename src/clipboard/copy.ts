@@ -1,4 +1,3 @@
-import {dispatchUIEvent} from '../document'
 import {Config, Instance} from '../setup'
 import {copySelection, writeDataTransferToClipboard} from '../utils'
 
@@ -12,7 +11,7 @@ export async function copy(this: Instance) {
     return
   }
 
-  dispatchUIEvent(target, 'copy', {
+  this.dispatchUIEvent(target, 'copy', {
     clipboardData,
   })
 

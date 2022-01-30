@@ -1,8 +1,10 @@
-import {dispatchUIEvent} from '../../document'
+import {dispatchUIEvent} from '../../event'
+import {Config} from '../../setup'
 import {calculateNewValue, editInputElement, getInputRange} from '../../utils'
 import {getNextCursorPosition} from '../focus/cursor'
 
 export function prepareInput(
+  config: Config,
   data: string,
   element: Element,
   inputType: string = 'insertText',
@@ -60,7 +62,7 @@ export function prepareInput(
         }
 
         if (del || data) {
-          dispatchUIEvent(element, 'input', {inputType})
+          dispatchUIEvent(config, element, 'input', {inputType})
         }
       },
     }
@@ -89,7 +91,7 @@ export function prepareInput(
           return
         }
 
-        editInputElement(element as HTMLTextAreaElement, {
+        editInputElement(config, element as HTMLTextAreaElement, {
           newValue,
           newSelection: {
             node: element,

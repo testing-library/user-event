@@ -46,8 +46,8 @@ export const keydownBehavior: behaviorPlugin[] = [
   {
     matches: (keyDef, element) =>
       keyDef.key === 'Delete' && isEditable(element),
-    handle: (keDef, element) => {
-      prepareInput('', element, 'deleteContentForward')?.commit()
+    handle: (keDef, element, config) => {
+      prepareInput(config, '', element, 'deleteContentForward')?.commit()
     },
   },
 ]

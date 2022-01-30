@@ -3,7 +3,7 @@
  * https://www.w3.org/TR/uievents-key/#keys-modifier
  */
 
-import {dispatchUIEvent} from '../../document'
+import {dispatchUIEvent} from '../../event'
 import {getKeyEventProps} from '../../utils'
 import {behaviorPlugin} from '../types'
 
@@ -31,19 +31,20 @@ type ModififierLockKey = typeof modifierLocks[number]
 export const preKeydownBehavior: behaviorPlugin[] = [
   {
     matches: keyDef => modifierKeys.includes(keyDef.key as ModififierKey),
-    handle: (keyDef, element, {keyboardMap, keyboardState}) => {
-      keyboardState.modifiers[keyDef.key as ModififierKey] = true
+    handle: (keyDef, element, config) => {
+      config.keyboardState.modifiers[keyDef.key as ModififierKey] = true
 
       // AltGraph produces an extra keydown for Control
       // The modifier does not change
       if (keyDef.key === 'AltGraph') {
-        const ctrlKeyDef = keyboardMap.find(
+        const ctrlKeyDef = config.keyboardMap.find(
           k => k.key === 'Control',
         ) ?? /* istanbul ignore next */ {key: 'Control', code: 'Control'}
         dispatchUIEvent(
+          config,
           element,
           'keydown',
-          getKeyEventProps(ctrlKeyDef, keyboardState),
+          getKeyEventProps(ctrlKeyDef),
         )
       }
     },
@@ -86,15 +87,11 @@ export const postKeyupBehavior: behaviorPlugin[] = [
   // The modifier does not change
   {
     matches: keyDef => keyDef.key === 'AltGraph',
-    handle: (keyDef, element, {keyboardMap, keyboardState}) => {
-      const ctrlKeyDef = keyboardMap.find(
+    handle: (keyDef, element, config) => {
+      const ctrlKeyDef = config.keyboardMap.find(
         k => k.key === 'Control',
       ) ?? /* istanbul ignore next */ {key: 'Control', code: 'Control'}
-      dispatchUIEvent(
-        element,
-        'keyup',
-        getKeyEventProps(ctrlKeyDef, keyboardState),
-      )
+      dispatchUIEvent(config, element, 'keyup', getKeyEventProps(ctrlKeyDef))
     },
   },
 ]

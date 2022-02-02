@@ -1,4 +1,3 @@
-import {dispatchUIEvent} from '../event'
 import {Config, Instance} from '../setup'
 import {
   createDataTransfer,
@@ -15,7 +14,7 @@ export async function paste(
   const doc = this[Config].document
   const target = doc.activeElement ?? /* istanbul ignore next */ doc.body
 
-  const data: DataTransfer =
+  const dataTransfer: DataTransfer =
     (typeof clipboardData === 'string'
       ? getClipboardDataFromString(clipboardData)
       : clipboardData) ??
@@ -25,25 +24,17 @@ export async function paste(
       )
     }))
 
-  return pasteImpl(this[Config], target, data)
-}
-
-function pasteImpl(
-  config: Config,
-  target: Element,
-  clipboardData: DataTransfer,
-) {
-  dispatchUIEvent(config, target, 'paste', {
-    clipboardData,
+  this.dispatchUIEvent(target, 'paste', {
+    clipboardData: dataTransfer,
   })
 
   if (isEditable(target)) {
-    const data = clipboardData
+    const textData = dataTransfer
       .getData('text')
       .substr(0, getSpaceUntilMaxLength(target))
 
-    if (data) {
-      prepareInput(config, data, target, 'insertFromPaste')?.commit()
+    if (textData) {
+      prepareInput(this[Config], textData, target, 'insertFromPaste')?.commit()
     }
   }
 }

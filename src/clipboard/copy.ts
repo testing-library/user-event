@@ -1,4 +1,3 @@
-import {fireEvent} from '@testing-library/dom'
 import {Config, Instance} from '../setup'
 import {copySelection, writeDataTransferToClipboard} from '../utils'
 
@@ -12,7 +11,7 @@ export async function copy(this: Instance) {
     return
   }
 
-  fireEvent.copy(target, {
+  this.dispatchUIEvent(target, 'copy', {
     clipboardData,
   })
 

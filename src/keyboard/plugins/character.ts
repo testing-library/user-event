@@ -2,7 +2,6 @@
  * This file should cover the behavior for keys that produce character input
  */
 
-import {fireEvent} from '@testing-library/dom'
 import {fireChangeForInputTimeIfValid} from '../shared'
 import {behaviorPlugin} from '../types'
 import {
@@ -19,17 +18,18 @@ import {
   isValidInputTimeValue,
   prepareInput,
 } from '../../utils'
-import {UISelectionRange} from '../../document'
+import {setUIValue, UISelectionRange} from '../../document'
+import {dispatchUIEvent} from '../../event'
 
 export const keypressBehavior: behaviorPlugin[] = [
   {
     matches: (keyDef, element) =>
       keyDef.key?.length === 1 &&
       isElementType(element, 'input', {type: 'time', readOnly: false}),
-    handle: (keyDef, element, {keyboardState}) => {
+    handle: (keyDef, element, config) => {
       let newEntry = keyDef.key as string
 
-      const textToBeTyped = (keyboardState.carryValue ?? '') + newEntry
+      const textToBeTyped = (config.keyboardState.carryValue ?? '') + newEntry
       const timeNewEntry = buildTimeValue(textToBeTyped)
       if (
         isValidInputTimeValue(
@@ -50,7 +50,7 @@ export const keypressBehavior: behaviorPlugin[] = [
       // this check was provided by fireInputEventIfNeeded
       // TODO: verify if it is even needed by this handler
       if (prevValue !== newValue) {
-        editInputElement(element as HTMLInputElement, {
+        editInputElement(config, element as HTMLInputElement, {
           newValue,
           newSelection: {
             node: element,
@@ -64,22 +64,23 @@ export const keypressBehavior: behaviorPlugin[] = [
       }
 
       fireChangeForInputTimeIfValid(
+        config,
         element as HTMLInputElement & {type: 'time'},
         prevValue,
         timeNewEntry,
       )
 
-      keyboardState.carryValue = textToBeTyped
+      config.keyboardState.carryValue = textToBeTyped
     },
   },
   {
     matches: (keyDef, element) =>
       keyDef.key?.length === 1 &&
       isElementType(element, 'input', {type: 'date', readOnly: false}),
-    handle: (keyDef, element, {keyboardState}) => {
+    handle: (keyDef, element, config) => {
       let newEntry = keyDef.key as string
 
-      const textToBeTyped = (keyboardState.carryValue ?? '') + newEntry
+      const textToBeTyped = (config.keyboardState.carryValue ?? '') + newEntry
       const isValidToBeTyped = isValidDateValue(
         element as HTMLInputElement & {type: 'date'},
         textToBeTyped,
@@ -98,7 +99,7 @@ export const keypressBehavior: behaviorPlugin[] = [
       // this check was provided by fireInputEventIfNeeded
       // TODO: verify if it is even needed by this handler
       if (prevValue !== newValue) {
-        editInputElement(element as HTMLInputElement, {
+        editInputElement(config, element as HTMLInputElement, {
           newValue,
           newSelection: {
             node: element,
@@ -112,24 +113,24 @@ export const keypressBehavior: behaviorPlugin[] = [
       }
 
       if (isValidToBeTyped) {
-        fireEvent.change(element, {
-          target: {value: textToBeTyped},
-        })
+        setUIValue(element as HTMLInputElement, textToBeTyped)
+        dispatchUIEvent(config, element, 'change')
       }
 
-      keyboardState.carryValue = textToBeTyped
+      config.keyboardState.carryValue = textToBeTyped
     },
   },
   {
     matches: (keyDef, element) =>
       keyDef.key?.length === 1 &&
       isElementType(element, 'input', {type: 'number', readOnly: false}),
-    handle: (keyDef, element) => {
+    handle: (keyDef, element, config) => {
       if (!/[\d.\-e]/.test(keyDef.key as string)) {
         return
       }
 
       const {getNewValue, commit} = prepareInput(
+        config,
         keyDef.key as string,
         element,
       ) as NonNullable<ReturnType<typeof prepareInput>>
@@ -157,8 +158,8 @@ export const keypressBehavior: behaviorPlugin[] = [
         isElementType(element, 'textarea', {readOnly: false}) ||
         isContentEditable(element)) &&
       getSpaceUntilMaxLength(element) !== 0,
-    handle: (keyDef, element) => {
-      prepareInput(keyDef.key as string, element)?.commit()
+    handle: (keyDef, element, config) => {
+      prepareInput(config, keyDef.key as string, element)?.commit()
     },
   },
   {
@@ -167,11 +168,12 @@ export const keypressBehavior: behaviorPlugin[] = [
       (isElementType(element, 'textarea', {readOnly: false}) ||
         isContentEditable(element)) &&
       getSpaceUntilMaxLength(element) !== 0,
-    handle: (keyDef, element, {keyboardState}) => {
+    handle: (keyDef, element, config) => {
       prepareInput(
+        config,
         '\n',
         element,
-        isContentEditable(element) && !keyboardState.modifiers.Shift
+        isContentEditable(element) && !config.keyboardState.modifiers.Shift
           ? 'insertParagraph'
           : 'insertLineBreak',
       )?.commit()

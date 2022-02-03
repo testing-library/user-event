@@ -1,6 +1,7 @@
 import cases from 'jest-in-case'
 import {prepareInput} from '#src/utils'
 import {setup} from '#testHelpers/utils'
+import {createConfig} from '#src/setup/setup'
 
 cases(
   'on input element',
@@ -8,7 +9,7 @@ cases(
     const {element} = setup<HTMLInputElement>(`<input value="abcd"/>`)
     element.setSelectionRange(range[0], range[1])
 
-    prepareInput(input, element, inputType)?.commit()
+    prepareInput(createConfig(), input, element, inputType)?.commit()
 
     expect(element).toHaveValue(value)
   },
@@ -55,7 +56,7 @@ cases(
         range[1],
       )
 
-    prepareInput(input, element, inputType)?.commit()
+    prepareInput(createConfig(), input, element, inputType)?.commit()
 
     expect(element).toHaveTextContent(textContent)
   },
@@ -115,7 +116,7 @@ cases(
         range[1],
       )
 
-    prepareInput(input, element, inputType)?.commit()
+    prepareInput(createConfig(), input, element, inputType)?.commit()
 
     expect(element.innerHTML).toBe(html)
   },

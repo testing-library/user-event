@@ -1,4 +1,5 @@
 import {prepareDocument} from '../document'
+import {bindDispatchUIEvent} from '../event'
 import {createKeyboardState} from '../keyboard'
 import {createPointerState} from '../pointer'
 import {defaultOptionsDirect, defaultOptionsSetup, Options} from '../options'
@@ -13,38 +14,47 @@ import {Config} from './config'
 import * as userEventApi from './api'
 import {wrapAsync} from './wrapAsync'
 
+export function createConfig(
+  options: Partial<Config> = {},
+  defaults: Required<Options> = defaultOptionsSetup,
+  node?: Node,
+): Config {
+  const document = getDocument(options, node)
+
+  const {
+    keyboardState = createKeyboardState(),
+    pointerState = createPointerState(document),
+  } = options
+
+  return {
+    ...defaults,
+    ...options,
+    document,
+    keyboardState,
+    pointerState,
+  }
+}
+
 /**
  * Start a "session" with userEvent.
  * All APIs returned by this function share an input device state and a default configuration.
  */
 export function setupMain(options: Options = {}) {
-  const doc = getDocument(options)
-  prepareDocument(doc)
+  const config = createConfig(options)
+  prepareDocument(config.document)
 
-  const view = doc.defaultView ?? /* istanbul ignore next */ window
+  const view = config.document.defaultView ?? /* istanbul ignore next */ window
   attachClipboardStubToView(view)
 
-  return doSetup({
-    ...defaultOptionsSetup,
-    ...options,
-    keyboardState: createKeyboardState(),
-    pointerState: createPointerState(doc),
-  })
+  return doSetup(config)
 }
 
 /**
  * Setup in direct call per `userEvent.anyApi()`
  */
 export function setupDirect(options: Partial<Config> = {}, node?: Node) {
-  const doc = getDocument(options, node)
-  prepareDocument(doc)
-
-  const config: Config = {
-    keyboardState: createKeyboardState(),
-    pointerState: createPointerState(doc),
-    ...defaultOptionsDirect,
-    ...options,
-  }
+  const config = createConfig(options, defaultOptionsDirect, node)
+  prepareDocument(config.document)
 
   return {
     config,
@@ -79,6 +89,7 @@ function wrapAndBindImpl<
 function doSetup(config: Config): UserEvent {
   const instance: Instance = {
     [Config]: config,
+    dispatchUIEvent: bindDispatchUIEvent(config),
     ...userEventApi,
   }
   return {

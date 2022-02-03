@@ -1,3 +1,4 @@
+import type {bindDispatchUIEvent} from '../event'
 import type * as userEventApi from './api'
 import {setupMain, setupSub} from './setup'
 import {Config, inputDeviceState} from './config'
@@ -10,6 +11,7 @@ export type UserEventApi = typeof userEventApi
 
 export type Instance = UserEventApi & {
   [Config]: Config
+  dispatchUIEvent: ReturnType<typeof bindDispatchUIEvent>
 }
 
 export type UserEvent = {

@@ -1,4 +1,3 @@
-import {fireEvent} from '@testing-library/dom'
 import {
   blur,
   createFileList,
@@ -51,8 +50,8 @@ export async function upload(
   }
 
   setFiles(input, createFileList(files))
-  fireEvent.input(input)
-  fireEvent.change(input)
+  this.dispatchUIEvent(input, 'input')
+  this.dispatchUIEvent(input, 'change')
 }
 
 function isAcceptableFile(file: File, accept: string) {

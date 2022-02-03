@@ -1,4 +1,5 @@
-import {fireEvent} from '@testing-library/dom'
+import {dispatchUIEvent} from '../event'
+import {Config} from '../setup'
 import {prepareSelectionInterceptor} from './selection'
 import {
   getInitialValue,
@@ -45,7 +46,7 @@ export function prepareDocument(document: Document) {
       const el = e.target as HTMLInputElement
       const initialValue = getInitialValue(el)
       if (typeof initialValue === 'string' && el.value !== initialValue) {
-        fireEvent.change(el)
+        dispatchUIEvent({} as Config, el, 'change')
       }
     },
     {

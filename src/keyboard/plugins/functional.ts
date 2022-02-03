@@ -3,13 +3,12 @@
  * https://w3c.github.io/uievents-code/#key-alphanumeric-functional
  */
 
-import {fireEvent} from '@testing-library/dom'
 import {setUISelection} from '../../document'
+import {dispatchUIEvent} from '../../event'
 import {
   blur,
   focus,
   getTabDestination,
-  getUIEventModifiers,
   hasFormSubmit,
   isClickableInput,
   isEditable,
@@ -22,8 +21,8 @@ export const keydownBehavior: behaviorPlugin[] = [
   {
     matches: (keyDef, element) =>
       keyDef.key === 'Backspace' && isEditable(element),
-    handle: (keyDef, element) => {
-      prepareInput('', element, 'deleteContentBackward')?.commit()
+    handle: (keyDef, element, config) => {
+      prepareInput(config, '', element, 'deleteContentBackward')?.commit()
     },
   },
   {
@@ -51,11 +50,11 @@ export const keypressBehavior: behaviorPlugin[] = [
       keyDef.key === 'Enter' &&
       isElementType(element, 'input') &&
       ['checkbox', 'radio'].includes(element.type),
-    handle: (keyDef, element) => {
+    handle: (keyDef, element, config) => {
       const form = (element as HTMLInputElement).form
 
       if (hasFormSubmit(form)) {
-        fireEvent.submit(form)
+        dispatchUIEvent(config, form, 'submit')
       }
     },
   },
@@ -65,21 +64,21 @@ export const keypressBehavior: behaviorPlugin[] = [
       (isClickableInput(element) ||
         // Links with href defined should handle Enter the same as a click
         (isElementType(element, 'a') && Boolean(element.href))),
-    handle: (keyDef, element, {keyboardState}) => {
-      fireEvent.click(element, getUIEventModifiers(keyboardState))
+    handle: (keyDef, element, config) => {
+      dispatchUIEvent(config, element, 'click')
     },
   },
   {
     matches: (keyDef, element) =>
       keyDef.key === 'Enter' && isElementType(element, 'input'),
-    handle: (keyDef, element) => {
+    handle: (keyDef, element, config) => {
       const form = (element as HTMLInputElement).form
 
       if (
         form &&
         (form.querySelectorAll('input').length === 1 || hasFormSubmit(form))
       ) {
-        fireEvent.submit(form)
+        dispatchUIEvent(config, form, 'submit')
       }
     },
   },
@@ -89,8 +88,8 @@ export const keyupBehavior: behaviorPlugin[] = [
   {
     matches: (keyDef, element) =>
       keyDef.key === ' ' && isClickableInput(element),
-    handle: (keyDef, element, {keyboardState}) => {
-      fireEvent.click(element, getUIEventModifiers(keyboardState))
+    handle: (keyDef, element, config) => {
+      dispatchUIEvent(config, element, 'click')
     },
   },
 ]

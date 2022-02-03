@@ -1,4 +1,3 @@
-import {fireEvent} from '@testing-library/dom'
 import {Config, Instance} from '../setup'
 import {
   copySelection,
@@ -17,12 +16,12 @@ export async function cut(this: Instance) {
     return
   }
 
-  fireEvent.cut(target, {
+  this.dispatchUIEvent(target, 'cut', {
     clipboardData,
   })
 
   if (isEditable(target)) {
-    prepareInput('', target, 'deleteByCut')?.commit()
+    prepareInput(this[Config], '', target, 'deleteByCut')?.commit()
   }
 
   if (this[Config].writeToClipboard) {

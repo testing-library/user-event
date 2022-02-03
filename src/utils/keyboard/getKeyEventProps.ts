@@ -1,10 +1,8 @@
-import {keyboardKey, keyboardState} from '../../keyboard/types'
-import {getUIEventModifiers} from './getUIEventModifiers'
+import {keyboardKey} from '../../keyboard/types'
 
-export function getKeyEventProps(keyDef: keyboardKey, state: keyboardState) {
+export function getKeyEventProps(keyDef: keyboardKey) {
   return {
     key: keyDef.key,
     code: keyDef.code,
-    ...getUIEventModifiers(state),
   }
 }

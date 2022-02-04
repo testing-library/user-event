@@ -33,6 +33,7 @@ export * from './keyboard/getUIEventModifiers'
 
 export * from './keyDef/readNextDescriptor'
 
+export * from './misc/cloneEvent'
 export * from './misc/eventWrapper'
 export * from './misc/findClosest'
 export * from './misc/getDocumentFromNode'

@@ -1,11 +1,4 @@
-import {
-  blur,
-  createFileList,
-  focus,
-  isDisabled,
-  isElementType,
-  setFiles,
-} from '../utils'
+import {createFileList, isDisabled, isElementType, setFiles} from '../utils'
 import {Config, Instance} from '../setup'
 
 export interface uploadInit {
@@ -28,30 +21,31 @@ export async function upload(
   }
   if (isDisabled(element)) return
 
-  await this.click(element)
-
   const files = (Array.isArray(fileOrFiles) ? fileOrFiles : [fileOrFiles])
     .filter(
       file => !this[Config].applyAccept || isAcceptableFile(file, input.accept),
     )
     .slice(0, input.multiple ? undefined : 1)
 
-  // blur fires when the file selector pops up
-  blur(input)
-  // focus fires when they make their selection
-  focus(input)
+  const fileDialog = () => {
+    // do not fire an input event if the file selection does not change
+    if (
+      files.length === input.files?.length &&
+      files.every((f, i) => f === input.files?.item(i))
+    ) {
+      return
+    }
 
-  // do not fire an input event if the file selection does not change
-  if (
-    files.length === input.files?.length &&
-    files.every((f, i) => f === input.files?.item(i))
-  ) {
-    return
+    setFiles(input, createFileList(files))
+    this.dispatchUIEvent(input, 'input')
+    this.dispatchUIEvent(input, 'change')
   }
 
-  setFiles(input, createFileList(files))
-  this.dispatchUIEvent(input, 'input')
-  this.dispatchUIEvent(input, 'change')
+  input.addEventListener('fileDialog', fileDialog)
+
+  await this.click(element)
+
+  input.removeEventListener('fileDialog', fileDialog)
 }
 
 function isAcceptableFile(file: File, accept: string) {

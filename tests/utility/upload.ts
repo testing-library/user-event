@@ -73,6 +73,23 @@ test('relay click/upload on label to file input', async () => {
   `)
 })
 
+test('prevent file dialog per click event handler', async () => {
+  const file = new File(['hello'], 'hello.png', {type: 'image/png'})
+
+  const {
+    elements: [label, input],
+    eventWasFired,
+  } = setup<[HTMLLabelElement]>(`
+        <label for="element">Element</label>
+        <input type="file" id="element" />
+    `)
+  input.addEventListener('click', e => e.preventDefault())
+
+  await userEvent.upload(label, file)
+
+  expect(eventWasFired('input')).toBe(false)
+})
+
 test('upload multiple files', async () => {
   const files = [
     new File(['hello'], 'hello.png', {type: 'image/png'}),

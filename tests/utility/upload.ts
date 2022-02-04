@@ -29,12 +29,13 @@ test('change file input', async () => {
     input[value=""] - pointerup
     input[value=""] - mouseup: primary
     input[value=""] - click: primary
+      "{CURSOR}" -> "C:\\\\fakepath\\\\hello.png{CURSOR}C:\\\\fakepath\\\\hello.png"
     input[value=""] - blur
     input[value=""] - focusout
-    input[value=""] - focus
-    input[value=""] - focusin
     input[value="C:\\\\fakepath\\\\hello.png"] - input
     input[value="C:\\\\fakepath\\\\hello.png"] - change
+    input[value="C:\\\\fakepath\\\\hello.png"] - focus
+    input[value="C:\\\\fakepath\\\\hello.png"] - focusin
   `)
 })
 
@@ -63,12 +64,12 @@ test('relay click/upload on label to file input', async () => {
     label[for="element"] - pointerup
     label[for="element"] - mouseup: primary
     label[for="element"] - click: primary
+    input#element[value=""] - focusin
     input#element[value=""] - click: primary
-    input#element[value=""] - focusin
     input#element[value=""] - focusout
-    input#element[value=""] - focusin
     input#element[value="C:\\\\fakepath\\\\hello.png"] - input
     input#element[value="C:\\\\fakepath\\\\hello.png"] - change
+    input#element[value="C:\\\\fakepath\\\\hello.png"] - focusin
   `)
 })
 

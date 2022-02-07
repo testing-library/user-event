@@ -6,7 +6,6 @@ import {
   focus,
   isDisabled,
   isElementType,
-  isFocusable,
   setLevelRef,
 } from '../utils'
 import {getUIValue, setUISelection} from '../document'
@@ -231,15 +230,10 @@ function up(
 
       const canClick = pointerType !== 'mouse' || button === 'primary'
       if (canClick && target === pressed.downTarget) {
-        const unpreventedClick = fire('click')
+        fire('click')
 
         if (clickCount === 2) {
           fire('dblclick')
-        }
-        if (unpreventedClick) {
-          clickDefaultBehavior({
-            target,
-          })
         }
       }
     }
@@ -366,11 +360,4 @@ function getTextRange(
       : pos +
         (text.substr(pos).match(/^[^\r\n]*/) as RegExpMatchArray)[0].length,
   ]
-}
-
-function clickDefaultBehavior({target}: {target: Element}) {
-  const control = target.closest('label')?.control
-  if (control && isFocusable(control)) {
-    focus(control)
-  }
 }

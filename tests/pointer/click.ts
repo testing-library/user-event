@@ -191,6 +191,26 @@ test('multi touch does not click', async () => {
   expect(getEvents('click')).toHaveLength(0)
 })
 
+describe('label', () => {
+  test('click associated control per label', async () => {
+    const {element, getEvents} = setup(
+      `<label for="in">foo</label><input id="in"/>`,
+    )
+
+    await userEvent.pointer({keys: '[MouseLeft]', target: element})
+
+    expect(getEvents('click')).toHaveLength(2)
+  })
+
+  test('click nested control per label', async () => {
+    const {element, getEvents} = setup(`<label><input/></label>`)
+
+    await userEvent.pointer({keys: '[MouseLeft]', target: element})
+
+    expect(getEvents('click')).toHaveLength(2)
+  })
+})
+
 describe('check/uncheck control per click', () => {
   test('clicking changes checkbox', async () => {
     const {element} = setup('<input type="checkbox" />')

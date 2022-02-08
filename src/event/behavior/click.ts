@@ -3,7 +3,8 @@ import {dispatchEvent} from '../dispatchEvent'
 import {behavior} from './registry'
 
 behavior.click = (event, target, config) => {
-  const control = target.closest('label')?.control
+  const context = target.closest('button,input,label,textarea')
+  const control = context && isElementType(context, 'label') && context.control
   if (control) {
     return () => {
       if (isFocusable(control)) {

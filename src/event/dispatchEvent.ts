@@ -1,12 +1,22 @@
 import {Config} from '../setup'
 import {EventType} from './types'
 import {behavior, BehaviorPlugin} from './behavior'
+import {wrapEvent} from './wrapEvent'
 
-export function dispatchEvent(config: Config, target: Element, event: Event) {
+export function dispatchEvent(
+  config: Config,
+  target: Element,
+  event: Event,
+  preventDefault: boolean = false,
+) {
   const type = event.type as EventType
-  const behaviorImplementation = (
-    behavior[type] as BehaviorPlugin<EventType> | undefined
-  )?.(event, target, config)
+  const behaviorImplementation = preventDefault
+    ? () => {}
+    : (behavior[type] as BehaviorPlugin<EventType> | undefined)?.(
+        event,
+        target,
+        config,
+      )
 
   if (behaviorImplementation) {
     event.preventDefault()
@@ -20,7 +30,7 @@ export function dispatchEvent(config: Config, target: Element, event: Event) {
       },
     })
 
-    target.dispatchEvent(event)
+    wrapEvent(() => target.dispatchEvent(event), target)
 
     if (!defaultPrevented as boolean) {
       behaviorImplementation()
@@ -29,5 +39,5 @@ export function dispatchEvent(config: Config, target: Element, event: Event) {
     return !defaultPrevented
   }
 
-  return target.dispatchEvent(event)
+  return wrapEvent(() => target.dispatchEvent(event), target)
 }

@@ -69,14 +69,17 @@ test('types text inside custom element', async () => {
     input[value=""] - click: primary
     input[value=""] - keydown: S
     input[value=""] - keypress: S
+    input[value=""] - beforeinput
     input[value="S"] - input
     input[value="S"] - keyup: S
     input[value="S"] - keydown: u
     input[value="S"] - keypress: u
+    input[value="S"] - beforeinput
     input[value="Su"] - input
     input[value="Su"] - keyup: u
     input[value="Su"] - keydown: p
     input[value="Su"] - keypress: p
+    input[value="Su"] - beforeinput
     input[value="Sup"] - input
     input[value="Sup"] - keyup: p
   `)

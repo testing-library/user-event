@@ -1,10 +1,10 @@
 import {Config, Instance} from '../setup'
 import {
   focus,
+  input,
   isAllSelected,
   isDisabled,
   isEditable,
-  prepareInput,
   selectAll,
 } from '../utils'
 
@@ -25,5 +25,5 @@ export async function clear(this: Instance, element: Element) {
     throw new Error('The element content to be cleared could not be selected.')
   }
 
-  prepareInput(this[Config], '', element, 'deleteContentBackward')?.commit()
+  input(this[Config], element, '', 'deleteContentBackward')
 }

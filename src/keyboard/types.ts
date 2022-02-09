@@ -1,5 +1,3 @@
-import {Config} from '../setup'
-
 /**
  * @internal Do not create/alter this by yourself as this type might be subject to changes.
  */
@@ -75,9 +73,4 @@ export interface keyboardKey {
   altGr?: boolean
   /** Does the character in `key` require/imply a shiftKey to be pressed? */
   shift?: boolean
-}
-
-export interface behaviorPlugin {
-  matches: (keyDef: keyboardKey, element: Element, config: Config) => boolean
-  handle: (keyDef: keyboardKey, element: Element, config: Config) => void
 }

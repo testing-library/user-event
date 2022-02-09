@@ -1,10 +1,9 @@
 import {Config, Instance} from '../setup'
 import {
   createDataTransfer,
-  getSpaceUntilMaxLength,
-  prepareInput,
   isEditable,
   readDataTransferFromClipboard,
+  input,
 } from '../utils'
 
 export async function paste(
@@ -29,13 +28,7 @@ export async function paste(
   })
 
   if (isEditable(target)) {
-    const textData = dataTransfer
-      .getData('text')
-      .substr(0, getSpaceUntilMaxLength(target))
-
-    if (textData) {
-      prepareInput(this[Config], textData, target, 'insertFromPaste')?.commit()
-    }
+    input(this[Config], target, dataTransfer.getData('text'), 'insertFromPaste')
   }
 }
 

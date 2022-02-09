@@ -1,22 +1,22 @@
 import cases from 'jest-in-case'
-import {prepareInput} from '#src/utils'
+import {input} from '#src/utils'
 import {setup} from '#testHelpers/utils'
 import {createConfig} from '#src/setup/setup'
 
 cases(
   'on input element',
-  ({range, input = '', inputType, value}) => {
+  ({range, data = '', inputType, value}) => {
     const {element} = setup<HTMLInputElement>(`<input value="abcd"/>`)
     element.setSelectionRange(range[0], range[1])
 
-    prepareInput(createConfig(), input, element, inputType)?.commit()
+    input(createConfig(), element, data, inputType)
 
     expect(element).toHaveValue(value)
   },
   {
     insertText: {
       range: [1, 3],
-      input: 'XYZ',
+      data: 'XYZ',
       value: 'aXYZd',
     },
     'deleteContentBackward extended': {
@@ -44,7 +44,7 @@ cases(
 
 cases(
   'on text node',
-  ({range, input = '', inputType, textContent}) => {
+  ({range, data = '', inputType, textContent}) => {
     const {element} = setup(`<div contenteditable="true">abcd</div>`)
     element.focus()
     document
@@ -56,14 +56,14 @@ cases(
         range[1],
       )
 
-    prepareInput(createConfig(), input, element, inputType)?.commit()
+    input(createConfig(), element, data, inputType)
 
     expect(element).toHaveTextContent(textContent)
   },
   {
     insertText: {
       range: [1, 3],
-      input: 'XYZ',
+      data: 'XYZ',
       textContent: 'aXYZd',
     },
     'deleteContentBackward extended': {
@@ -86,23 +86,22 @@ cases(
       inputType: 'deleteContentForward',
       textContent: 'abcd',
     },
-    // TODO: implement deleteContent for collapsed range
-    // 'deleteContentBackward collapsed': {
-    //   range: [2, 2],
-    //   inputType: 'deleteContentBackward',
-    //   textContent: 'acd',
-    // },
-    // 'deleteContentForward collapsed': {
-    //   range: [2, 2],
-    //   inputType: 'deleteContentForward',
-    //   textContent: 'abd',
-    // },
+    'deleteContentBackward collapsed': {
+      range: [2, 2],
+      inputType: 'deleteContentBackward',
+      textContent: 'acd',
+    },
+    'deleteContentForward collapsed': {
+      range: [2, 2],
+      inputType: 'deleteContentForward',
+      textContent: 'abd',
+    },
   },
 )
 
 cases(
   'between nodes',
-  ({range, input = '', inputType, html}) => {
+  ({range, data = '', inputType, html}) => {
     const {element} = setup(
       `<div contenteditable="true"><button>a</button><button>b</button><button>c</button><button>d</button></div>`,
     )
@@ -116,14 +115,14 @@ cases(
         range[1],
       )
 
-    prepareInput(createConfig(), input, element, inputType)?.commit()
+    input(createConfig(), element, data, inputType)
 
     expect(element.innerHTML).toBe(html)
   },
   {
     insertText: {
       range: [1, 3],
-      input: 'XYZ',
+      data: 'XYZ',
       html: '<button>a</button>XYZ<button>d</button>',
     },
     'deleteContentBackward extended': {
@@ -159,3 +158,21 @@ cases(
     // },
   },
 )
+
+test('prevent input on `beforeinput` event', () => {
+  const {element, eventWasFired} = setup(`<input/>`)
+  element.addEventListener(
+    'beforeinput',
+    e => e.data === 'a' && e.preventDefault(),
+  )
+
+  input(createConfig(), element, 'a')
+
+  expect(eventWasFired('beforeinput')).toBe(true)
+  expect(eventWasFired('input')).toBe(false)
+  expect(element).toHaveValue('')
+
+  input(createConfig(), element, 'b')
+  expect(eventWasFired('input')).toBe(true)
+  expect(element).toHaveValue('b')
+})

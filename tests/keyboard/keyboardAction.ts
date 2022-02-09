@@ -56,6 +56,7 @@ describe('pressing and releasing keys', () => {
 
       input[value=""] - keydown: a
       input[value=""] - keypress: a
+      input[value=""] - beforeinput
       input[value="a"] - input
     `)
   })
@@ -72,9 +73,11 @@ describe('pressing and releasing keys', () => {
 
       input[value=""] - keydown: a
       input[value=""] - keypress: a
+      input[value=""] - beforeinput
       input[value="a"] - input
       input[value="a"] - keydown: a
       input[value="a"] - keypress: a
+      input[value="a"] - beforeinput
       input[value="aa"] - input
     `)
   })
@@ -91,9 +94,11 @@ describe('pressing and releasing keys', () => {
 
       input[value=""] - keydown: a
       input[value=""] - keypress: a
+      input[value=""] - beforeinput
       input[value="a"] - input
       input[value="a"] - keydown: a
       input[value="a"] - keypress: a
+      input[value="a"] - beforeinput
       input[value="aa"] - input
       input[value="aa"] - keyup: a
     `)
@@ -111,22 +116,28 @@ describe('pressing and releasing keys', () => {
 
       input[value=""] - keydown: a
       input[value=""] - keypress: a
+      input[value=""] - beforeinput
       input[value="a"] - input
       input[value="a"] - keydown: a
       input[value="a"] - keypress: a
+      input[value="a"] - beforeinput
       input[value="aa"] - input
       input[value="aa"] - keydown: b
       input[value="aa"] - keypress: b
+      input[value="aa"] - beforeinput
       input[value="aab"] - input
       input[value="aab"] - keydown: b
       input[value="aab"] - keypress: b
+      input[value="aab"] - beforeinput
       input[value="aabb"] - input
       input[value="aabb"] - keyup: b
       input[value="aabb"] - keydown: c
       input[value="aabb"] - keypress: c
+      input[value="aabb"] - beforeinput
       input[value="aabbc"] - input
       input[value="aabbc"] - keydown: c
       input[value="aabbc"] - keypress: c
+      input[value="aabbc"] - beforeinput
       input[value="aabbcc"] - input
       input[value="aabbcc"] - keyup: a
     `)

@@ -2,6 +2,7 @@ import {isElementType} from '../misc/isElementType'
 import {getUISelection, setUISelection, UISelectionRange} from '../../document'
 import {editableInputTypes} from '../edit/isEditable'
 import {isContentEditable, getContentEditable} from '../edit/isContentEditable'
+import {getNextCursorPosition} from './cursor'
 
 /**
  * Backward-compatible selection.
@@ -193,4 +194,48 @@ export function setSelection({
   anchorNode.ownerDocument
     ?.getSelection()
     ?.setBaseAndExtent(anchorNode, anchorOffset, focusNode, focusOffset)
+}
+
+/**
+ * Move the selection
+ */
+export function moveSelection(node: Element, direction: -1 | 1) {
+  // TODO: implement shift
+
+  if (hasOwnSelection(node)) {
+    const selection = getUISelection(node)
+
+    setSelection({
+      focusNode: node,
+      focusOffset:
+        selection.startOffset === selection.endOffset
+          ? selection.focusOffset + direction
+          : direction < 0
+          ? selection.startOffset
+          : selection.endOffset,
+    })
+  } else {
+    const selection = node.ownerDocument.getSelection()
+
+    /* istanbul ignore if */
+    if (!selection) {
+      return
+    }
+
+    if (selection.isCollapsed) {
+      const nextPosition = getNextCursorPosition(
+        selection.focusNode as Node,
+        selection.focusOffset,
+        direction,
+      )
+      if (nextPosition) {
+        setSelection({
+          focusNode: nextPosition.node,
+          focusOffset: nextPosition.offset,
+        })
+      }
+    } else {
+      selection[direction < 0 ? 'collapseToStart' : 'collapseToEnd']()
+    }
+  }
 }

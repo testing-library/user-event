@@ -15,6 +15,7 @@ test('should paste text in input', async () => {
     input[value=""] - focus
     input[value=""] - focusin
     input[value=""] - paste
+    input[value=""] - beforeinput
     input[value="Hello, world!"] - input
   `)
 })
@@ -33,6 +34,7 @@ test('should paste text in textarea', async () => {
     textarea[value=""] - focus
     textarea[value=""] - focusin
     textarea[value=""] - paste
+    textarea[value=""] - beforeinput
     textarea[value="Hello, world!"] - input
   `)
 })

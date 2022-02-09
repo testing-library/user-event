@@ -37,14 +37,17 @@ it('type with focus', async () => {
     input[value=""] - focusin
     input[value=""] - keydown: f
     input[value=""] - keypress: f
+    input[value=""] - beforeinput
     input[value="f"] - input
     input[value="f"] - keyup: f
     input[value="f"] - keydown: o
     input[value="f"] - keypress: o
+    input[value="f"] - beforeinput
     input[value="fo"] - input
     input[value="fo"] - keyup: o
     input[value="fo"] - keydown: o
     input[value="fo"] - keypress: o
+    input[value="fo"] - beforeinput
     input[value="foo"] - input
     input[value="foo"] - keyup: o
   `)
@@ -64,14 +67,17 @@ it('type asynchronous', async () => {
     input[value=""] - focusin
     input[value=""] - keydown: f
     input[value=""] - keypress: f
+    input[value=""] - beforeinput
     input[value="f"] - input
     input[value="f"] - keyup: f
     input[value="f"] - keydown: o
     input[value="f"] - keypress: o
+    input[value="f"] - beforeinput
     input[value="fo"] - input
     input[value="fo"] - keyup: o
     input[value="fo"] - keydown: o
     input[value="fo"] - keypress: o
+    input[value="fo"] - beforeinput
     input[value="foo"] - input
     input[value="foo"] - keyup: o
   `)
@@ -104,6 +110,7 @@ it('continue typing with state', async () => {
 
     input[value=""] - keydown: F {shift}
     input[value=""] - keypress: F {shift}
+    input[value=""] - beforeinput
     input[value="F"] - input
     input[value="F"] - keyup: F {shift}
     input[value="F"] - keyup: Shift
@@ -150,10 +157,12 @@ test('disabling activeElement moves action to HTMLBodyElement', async () => {
 
     input[value=""] - keydown: a
     input[value=""] - keypress: a
+    input[value=""] - beforeinput
     input[value="a"] - input
     input[value="a"] - keyup: a
     input[value="a"] - keydown: b
     input[value="a"] - keypress: b
+    input[value="a"] - beforeinput
     input[value="ab"] - input
     input[value="ab"] - keyup: b
     body - keydown: c

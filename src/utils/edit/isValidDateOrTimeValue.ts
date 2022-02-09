@@ -1,7 +1,7 @@
-export function isValidDateValue(
-  element: HTMLInputElement & {type: 'date'},
+export function isValidDateOrTimeValue(
+  element: HTMLInputElement & {type: 'date' | 'time'},
   value: string,
-): boolean {
+) {
   const clone = element.cloneNode() as HTMLInputElement
   clone.value = value
   return clone.value === value

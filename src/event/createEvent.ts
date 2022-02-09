@@ -1,5 +1,5 @@
 import {createEvent as createEventBase} from '@testing-library/dom'
-import {eventMap} from '@testing-library/dom/dist/event-map.js'
+import {eventMap} from './eventMap'
 import {isMouseEvent} from './eventTypes'
 import {EventType, PointerCoords} from './types'
 
@@ -32,9 +32,14 @@ export function createEvent<K extends EventType>(
 ) {
   const eventKey = Object.keys(eventMap).find(
     k => k.toLowerCase() === type,
-  ) as keyof typeof createEventBase
+  ) as keyof typeof eventMap
 
-  const event = createEventBase[eventKey](target, init) as DocumentEventMap[K]
+  const event = createEventBase(
+    type,
+    target,
+    init,
+    eventMap[eventKey],
+  ) as DocumentEventMap[K]
 
   // Can not use instanceof, as MouseEvent might be polyfilled.
   if (isMouseEvent(type) && init) {

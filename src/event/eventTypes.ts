@@ -3,11 +3,13 @@ import {eventMap} from '@testing-library/dom/dist/event-map.js'
 const eventKeys = Object.fromEntries(
   Object.keys(eventMap).map(k => [k.toLowerCase(), k]),
 ) as {
-  [k in keyof DocumentEventMap]: keyof typeof eventMap
+  [k in keyof DocumentEventMap]?: keyof typeof eventMap
 }
 
 function getEventClass(type: keyof DocumentEventMap) {
-  return eventMap[eventKeys[type]].EventType
+  return type in eventKeys
+    ? eventMap[eventKeys[type] as keyof typeof eventMap].EventType
+    : 'Event'
 }
 
 const mouseEvents = ['MouseEvent', 'PointerEvent']

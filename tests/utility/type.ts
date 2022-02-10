@@ -26,14 +26,17 @@ test('type into input', async () => {
     input[value="foo"] - click: primary
     input[value="foo"] - keydown: b
     input[value="foo"] - keypress: b
+    input[value="foo"] - beforeinput
     input[value="foob"] - input
     input[value="foob"] - keyup: b
     input[value="foob"] - keydown: a
     input[value="foob"] - keypress: a
+    input[value="foob"] - beforeinput
     input[value="fooba"] - input
     input[value="fooba"] - keyup: a
     input[value="fooba"] - keydown: r
     input[value="fooba"] - keypress: r
+    input[value="fooba"] - beforeinput
     input[value="foobar"] - input
     input[value="foobar"] - keyup: r
   `)

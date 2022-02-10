@@ -1,6 +1,6 @@
 /* eslint-disable testing-library/no-node-access */
-import {eventMap} from '@testing-library/dom/dist/event-map'
 import {TestData, TestDataProps} from './trackProps'
+import {eventMap} from '#src/event/eventMap'
 import {isElementType, MouseButton} from '#src/utils'
 
 // this is pretty helpful:

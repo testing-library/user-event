@@ -67,11 +67,13 @@ describe('typing in a controlled input', () => {
       input[value=""] - click: primary
       input[value=""] - keydown: 2
       input[value=""] - keypress: 2
+      input[value=""] - beforeinput
       input[value="2"] - input
         "2{CURSOR}" -> "$2{CURSOR}"
       input[value="$2"] - keyup: 2
       input[value="$2"] - keydown: 3
       input[value="$2"] - keypress: 3
+      input[value="$2"] - beforeinput
       input[value="$23"] - input
       input[value="$23"] - keyup: 3
     `)
@@ -105,6 +107,7 @@ describe('typing in a controlled input', () => {
       input[value="$23"] - select
       input[value="$23"] - keydown: 1
       input[value="$23"] - keypress: 1
+      input[value="$23"] - beforeinput
       input[value="$213"] - select
       input[value="$213"] - input
         "$21{CURSOR}3" -> "$213{CURSOR}"
@@ -150,6 +153,7 @@ describe('typing in a controlled input', () => {
       input[value="$23"] - click: primary
       input[value="$23"] - select
       input[value="$23"] - keydown: Backspace
+      input[value="$23"] - beforeinput
       input[value="23"] - select
       input[value="23"] - input
         "{CURSOR}23" -> "$23{CURSOR}"
@@ -167,6 +171,7 @@ describe('typing in a controlled input', () => {
       input[value="$23"] - click: primary
       input[value="$23"] - keydown: 4
       input[value="$23"] - keypress: 4
+      input[value="$23"] - beforeinput
       input[value="$234"] - input
       input[value="$234"] - keyup: 4
     `)

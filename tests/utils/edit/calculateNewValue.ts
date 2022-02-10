@@ -26,14 +26,17 @@ test('honors maxlength', async () => {
     input[value=""] - click: primary
     input[value=""] - keydown: 1
     input[value=""] - keypress: 1
+    input[value=""] - beforeinput
     input[value="1"] - input
     input[value="1"] - keyup: 1
     input[value="1"] - keydown: 2
     input[value="1"] - keypress: 2
+    input[value="1"] - beforeinput
     input[value="12"] - input
     input[value="12"] - keyup: 2
     input[value="12"] - keydown: 3
     input[value="12"] - keypress: 3
+    input[value="12"] - beforeinput
     input[value="12"] - keyup: 3
   `)
 })
@@ -60,14 +63,17 @@ test('honors maxlength="" as if there was no maxlength', async () => {
     input[value=""] - click: primary
     input[value=""] - keydown: 1
     input[value=""] - keypress: 1
+    input[value=""] - beforeinput
     input[value="1"] - input
     input[value="1"] - keyup: 1
     input[value="1"] - keydown: 2
     input[value="1"] - keypress: 2
+    input[value="1"] - beforeinput
     input[value="12"] - input
     input[value="12"] - keyup: 2
     input[value="12"] - keydown: 3
     input[value="12"] - keypress: 3
+    input[value="12"] - beforeinput
     input[value="123"] - input
     input[value="123"] - keyup: 3
   `)
@@ -99,6 +105,7 @@ test('honors maxlength with existing text', async () => {
     input[value="12"] - click: primary
     input[value="12"] - keydown: 3
     input[value="12"] - keypress: 3
+    input[value="12"] - beforeinput
     input[value="12"] - keyup: 3
   `)
 })
@@ -129,6 +136,7 @@ test('honors maxlength on textarea', async () => {
     textarea[value="12"] - click: primary
     textarea[value="12"] - keydown: 3
     textarea[value="12"] - keypress: 3
+    textarea[value="12"] - beforeinput
     textarea[value="12"] - keyup: 3
   `)
 })

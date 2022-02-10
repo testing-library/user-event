@@ -12,6 +12,7 @@ describe('clear elements', () => {
       input[value="hello"] - focus
       input[value="hello"] - focusin
       input[value="hello"] - select
+      input[value="hello"] - beforeinput
       input[value=""] - input
     `)
   })
@@ -26,6 +27,7 @@ describe('clear elements', () => {
       textarea[value="hello"] - focus
       textarea[value="hello"] - focusin
       textarea[value="hello"] - select
+      textarea[value="hello"] - beforeinput
       textarea[value=""] - input
     `)
   })
@@ -41,6 +43,7 @@ describe('clear elements', () => {
 
       div - focus
       div - focusin
+      div - beforeinput
       div - input
     `)
   })

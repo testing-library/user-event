@@ -4,7 +4,6 @@ import {createEvent, EventTypeInit} from './createEvent'
 import {dispatchEvent} from './dispatchEvent'
 import {isKeyboardEvent, isMouseEvent} from './eventTypes'
 import {EventType, PointerCoords} from './types'
-import {wrapEvent} from './wrapEvent'
 
 export type {EventType, PointerCoords}
 
@@ -13,6 +12,7 @@ export function dispatchUIEvent<K extends EventType>(
   target: Element,
   type: K,
   init?: EventTypeInit<K>,
+  preventDefault: boolean = false,
 ) {
   if (isMouseEvent(type) || isKeyboardEvent(type)) {
     init = {
@@ -23,7 +23,7 @@ export function dispatchUIEvent<K extends EventType>(
 
   const event = createEvent(type, target, init)
 
-  return wrapEvent(() => dispatchEvent(config, target, event), target)
+  return dispatchEvent(config, target, event, preventDefault)
 }
 
 export function bindDispatchUIEvent(config: Config) {

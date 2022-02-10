@@ -83,50 +83,59 @@ test.each([
 
 cases(
   'submit form on [Enter]',
-  async ({html, submit}) => {
+  async ({html, click, submit}) => {
     const {element, getEvents} = setup(html)
     ;(element.children[1] as HTMLInputElement).focus()
 
     await userEvent.keyboard('[Enter]')
 
-    expect(getEvents('click')).toHaveLength(0)
+    expect(getEvents('click')).toHaveLength(click ? 1 : 0)
     expect(getEvents('submit')).toHaveLength(submit ? 1 : 0)
   },
   {
     'with `<input type="submit"/>`': {
       html: `<form><input/><input/><input type="submit"/></form>`,
+      click: true,
       submit: true,
     },
     'with `<button/>`': {
       html: `<form><input/><input/><button/></form>`,
+      click: true,
       submit: true,
     },
     'with `<button type="submit"/>`': {
       html: `<form><input/><input/><button type="submit"/></form>`,
+      click: true,
       submit: true,
     },
     'with `<button type="button"/>`': {
       html: `<form><input/><input/><button type="button"/></form>`,
+      click: false,
       submit: false,
     },
     'on checkbox': {
       html: `<form><input/><input type="checkbox"/><button type="submit"/></form>`,
+      click: true,
       submit: true,
     },
     'on radio': {
       html: `<form><input/><input type="radio"/><button type="submit"/></form>`,
+      click: true,
       submit: true,
     },
     'with single input': {
       html: `<form><div></div><input/></form>`,
+      click: false,
       submit: true,
     },
     'without submit button': {
       html: `<form><input/><input/></form>`,
+      click: false,
       submit: false,
     },
     'on radio/checkbox without submit button': {
       html: `<form><input/><input type="radio"/></form>`,
+      click: false,
       submit: false,
     },
   },

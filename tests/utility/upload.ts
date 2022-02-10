@@ -29,7 +29,6 @@ test('change file input', async () => {
     input[value=""] - pointerup
     input[value=""] - mouseup: primary
     input[value=""] - click: primary
-      "{CURSOR}" -> "C:\\\\fakepath\\\\hello.png{CURSOR}C:\\\\fakepath\\\\hello.png"
     input[value=""] - blur
     input[value=""] - focusout
     input[value="C:\\\\fakepath\\\\hello.png"] - input

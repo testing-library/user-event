@@ -1,8 +1,12 @@
 import {dispatchUIEvent} from '../event'
 import {Config} from '../setup'
 import {getActiveElement, getKeyEventProps, wait} from '../utils'
-import {behaviorPlugin, keyboardKey} from './types'
-import * as plugins from './plugins'
+import {keyboardKey} from './types'
+import {
+  postKeyupBehavior,
+  preKeydownBehavior,
+  preKeyupBehavior,
+} from './modifiers'
 
 export interface KeyboardAction {
   keyDef: keyboardKey
@@ -83,7 +87,7 @@ async function keydown(
   }
   config.keyboardState.activeElement = element
 
-  applyPlugins(plugins.preKeydownBehavior, keyDef, element, config)
+  preKeydownBehavior(config, keyDef, element)
 
   const unpreventedDefault = dispatchUIEvent(
     config,
@@ -93,11 +97,6 @@ async function keydown(
   )
 
   config.keyboardState.pressed.push({keyDef, unpreventedDefault})
-
-  if (unpreventedDefault) {
-    // all default behavior like keypress/submit etc is applied to the currentElement
-    applyPlugins(plugins.keydownBehavior, keyDef, getCurrentElement(), config)
-  }
 
   return unpreventedDefault
 }
@@ -109,14 +108,10 @@ async function keypress(
 ) {
   const element = getCurrentElement()
 
-  const unpreventedDefault = dispatchUIEvent(config, element, 'keypress', {
+  dispatchUIEvent(config, element, 'keypress', {
     ...getKeyEventProps(keyDef),
     charCode: keyDef.key === 'Enter' ? 13 : String(keyDef.key).charCodeAt(0),
   })
-
-  if (unpreventedDefault) {
-    applyPlugins(plugins.keypressBehavior, keyDef, getCurrentElement(), config)
-  }
 }
 
 async function keyup(
@@ -127,39 +122,21 @@ async function keyup(
 ) {
   const element = getCurrentElement()
 
-  applyPlugins(plugins.preKeyupBehavior, keyDef, element, config)
+  preKeyupBehavior(config, keyDef)
 
-  const unpreventedDefault = dispatchUIEvent(
+  dispatchUIEvent(
     config,
     element,
     'keyup',
     getKeyEventProps(keyDef),
+    !unprevented,
   )
-
-  if (unprevented && unpreventedDefault) {
-    applyPlugins(plugins.keyupBehavior, keyDef, getCurrentElement(), config)
-  }
 
   config.keyboardState.pressed = config.keyboardState.pressed.filter(
     k => k.keyDef !== keyDef,
   )
 
-  applyPlugins(plugins.postKeyupBehavior, keyDef, element, config)
-}
-
-function applyPlugins(
-  pluginCollection: behaviorPlugin[],
-  keyDef: keyboardKey,
-  element: Element,
-  config: Config,
-): boolean {
-  const plugin = pluginCollection.find(p => p.matches(keyDef, element, config))
-
-  if (plugin) {
-    plugin.handle(keyDef, element, config)
-  }
-
-  return !!plugin
+  postKeyupBehavior(config, keyDef, element)
 }
 
 function hasKeyPress(keyDef: keyboardKey, config: Config) {

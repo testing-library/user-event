@@ -1,8 +1,8 @@
 import {Config, Instance} from '../setup'
 import {
   copySelection,
+  input,
   isEditable,
-  prepareInput,
   writeDataTransferToClipboard,
 } from '../utils'
 
@@ -21,7 +21,7 @@ export async function cut(this: Instance) {
   })
 
   if (isEditable(target)) {
-    prepareInput(this[Config], '', target, 'deleteByCut')?.commit()
+    input(this[Config], target, '', 'deleteByCut')
   }
 
   if (this[Config].writeToClipboard) {

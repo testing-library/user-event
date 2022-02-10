@@ -1,10 +1,6 @@
+import {setupListbox, setupSelect} from './_setup'
 import userEvent, {PointerEventsCheckLevel} from '#src'
-import {
-  setupSelect,
-  addListeners,
-  setupListbox,
-  setup,
-} from '#testHelpers/utils'
+import {addListeners, setup} from '#testHelpers'
 
 test('fires correct events', async () => {
   const {select, options, getEventSnapshot} = setupSelect()

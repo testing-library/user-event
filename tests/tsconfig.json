@@ -5,7 +5,7 @@
     "paths": {
       "#src": ["./src/index"],
       "#src/*": ["./src/*"],
-      "#testHelpers/*": ["./tests/_helpers/*"]
+      "#testHelpers": ["./tests/_helpers/index"]
     }
   },
   "include": ["."]

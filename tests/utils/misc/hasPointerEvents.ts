@@ -1,5 +1,5 @@
 import {hasPointerEvents} from '#src/utils'
-import {setup} from '#testHelpers/utils'
+import {setup} from '#testHelpers'
 
 test('get pointer-events from element or ancestor', async () => {
   const {element} = setup(`

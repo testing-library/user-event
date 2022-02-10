@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import {render, screen} from '@testing-library/react'
 import userEvent from '#src'
-import {addListeners} from '#testHelpers/utils'
+import {addListeners} from '#testHelpers'
 
 test('trigger onChange SyntheticEvent on input', async () => {
   const inputHandler = jest.fn()

@@ -1,7 +1,7 @@
 import cases from 'jest-in-case'
 import {getUIValue} from '#src/document/value'
 import userEvent from '#src'
-import {setup} from '#testHelpers/utils'
+import {setup} from '#testHelpers'
 
 test('type character into input', async () => {
   const {element} = setup<HTMLInputElement>(`<input value="aXd"/>`)

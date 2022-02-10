@@ -1,4 +1,4 @@
-import {setup} from '#testHelpers/utils'
+import {setup} from '#testHelpers'
 import {isAllSelected, selectAll} from '#src/utils/focus/selectAll'
 import {getUISelection} from '#src/document'
 

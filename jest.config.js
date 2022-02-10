@@ -5,7 +5,7 @@ config.roots = ['<rootDir>']
 config.moduleNameMapper = {
   '^#src$': '<rootDir>/src/index',
   '^#src/(.*)$': '<rootDir>/src/$1',
-  '^#testHelpers/(.*)$': '<rootDir>/tests/_helpers/$1',
+  '^#testHelpers$': '<rootDir>/tests/_helpers/index',
 }
 
 config.testEnvironment = 'jsdom'

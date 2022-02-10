@@ -1,5 +1,5 @@
 import userEvent from '#src'
-import {setup} from '#testHelpers/utils'
+import {setup} from '#testHelpers'
 
 describe('clear elements', () => {
   test('clear text input', async () => {

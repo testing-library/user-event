@@ -1,6 +1,6 @@
 import cases from 'jest-in-case'
 import {getNextCursorPosition} from '#src/utils'
-import {setup} from '#testHelpers/utils'
+import {setup} from '#testHelpers'
 
 cases<{
   html: string

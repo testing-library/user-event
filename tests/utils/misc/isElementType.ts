@@ -1,5 +1,5 @@
 import {isElementType} from '#src/utils'
-import {setup} from '#testHelpers/utils'
+import {setup} from '#testHelpers'
 
 describe('check element type per namespace, tagname and props', () => {
   test('check in HTML document', async () => {

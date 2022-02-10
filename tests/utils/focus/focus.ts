@@ -1,5 +1,5 @@
 import {focus} from '#src/utils'
-import {addListeners, setup} from '#testHelpers/utils'
+import {addListeners, setup} from '#testHelpers'
 
 test('move focus', async () => {
   const {elements, clearEventCalls, getEvents, getEventSnapshot} = setup(

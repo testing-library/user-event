@@ -1,5 +1,5 @@
 import userEvent from '#src'
-import {setup} from '#testHelpers/utils'
+import {setup} from '#testHelpers'
 
 test('change file input', async () => {
   const file = new File(['hello'], 'hello.png', {type: 'image/png'})

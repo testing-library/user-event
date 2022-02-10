@@ -1,7 +1,7 @@
 import cases from 'jest-in-case'
 import userEvent from '#src'
 import {UserEventApi} from '#src/setup'
-import {setup} from '#testHelpers/utils'
+import {setup} from '#testHelpers'
 
 /// start of mocking
 

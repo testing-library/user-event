@@ -1,7 +1,7 @@
 import {dispatchUIEvent} from '#src/event'
 import {behavior, BehaviorPlugin} from '#src/event/behavior'
 import {createConfig} from '#src/setup/setup'
-import {setup} from '#testHelpers/utils'
+import {setup} from '#testHelpers'
 
 jest.mock('#src/event/behavior', () => ({
   behavior: {

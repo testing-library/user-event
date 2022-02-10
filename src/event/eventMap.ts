@@ -8,3 +8,7 @@ export const eventMap = {
     defaultInit: {bubbles: true, cancelable: true, composed: true},
   },
 }
+
+export const eventMapKeys: {
+  [k in keyof DocumentEventMap]?: keyof typeof eventMap
+} = Object.fromEntries(Object.keys(eventMap).map(k => [k.toLowerCase(), k]))

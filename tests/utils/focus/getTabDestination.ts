@@ -1,5 +1,5 @@
 import {getTabDestination} from '#src/utils'
-import {setup} from '#testHelpers/utils'
+import {setup} from '#testHelpers'
 
 function assertTabOrderForward(tabOrder: Element[]) {
   expect(getTabDestination(document.body, false)).toBe(

@@ -5,7 +5,7 @@ import {
   setSelectionRange,
   modifySelection,
 } from '#src/utils'
-import {setup} from '#testHelpers/utils'
+import {setup} from '#testHelpers'
 
 test('range on input', async () => {
   const {element} = setup('<input value="foo"/>')

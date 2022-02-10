@@ -1,5 +1,5 @@
 import userEvent from '#src'
-import {addListeners, setup} from '#testHelpers/utils'
+import {addListeners, setup} from '#testHelpers'
 
 it('type without focus', async () => {
   const {element} = setup('<input/>')

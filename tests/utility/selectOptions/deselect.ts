@@ -1,5 +1,6 @@
+import {setupSelect} from './_setup'
 import userEvent from '#src'
-import {addListeners, setupSelect, setup} from '#testHelpers/utils'
+import {addListeners, setup} from '#testHelpers'
 
 test('fires correct events', async () => {
   const {form, select, options, getEventSnapshot} = setupSelect({

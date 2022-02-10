@@ -1,6 +1,6 @@
 import userEvent from '#src'
 import {setSelection} from '#src/utils'
-import {setup} from '#testHelpers/utils'
+import {setup} from '#testHelpers'
 
 describe('in text input', () => {
   test('collapse selection to the left', async () => {

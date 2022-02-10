@@ -1,5 +1,5 @@
 import userEvent, {PointerEventsCheckLevel} from '#src'
-import {setup} from '#testHelpers/utils'
+import {setup} from '#testHelpers'
 
 test('continue previous target', async () => {
   const {element, getEvents} = setup(`<div></div>`)

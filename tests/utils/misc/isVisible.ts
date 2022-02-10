@@ -1,6 +1,6 @@
 import {screen} from '@testing-library/dom'
 import {isVisible} from '#src/utils'
-import {setup} from '#testHelpers/utils'
+import {setup} from '#testHelpers'
 
 test('check if element is visible', async () => {
   setup(`

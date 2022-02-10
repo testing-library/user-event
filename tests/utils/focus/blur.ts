@@ -1,5 +1,5 @@
 import {blur, focus} from '#src/utils'
-import {setup} from '#testHelpers/utils'
+import {setup} from '#testHelpers'
 
 test('blur a button', async () => {
   const {element, getEventSnapshot, clearEventCalls} = setup(`<button />`)

@@ -1,5 +1,5 @@
 import userEvent from '#src'
-import {setup} from '#testHelpers/utils'
+import {setup} from '#testHelpers'
 
 test('select input per `Control+A`', async () => {
   const {element} = setup<HTMLInputElement>(`<input value="foo bar baz"/>`)

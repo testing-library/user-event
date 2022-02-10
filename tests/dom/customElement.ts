@@ -1,5 +1,5 @@
 import userEvent from '#src'
-import {addListeners} from '#testHelpers/utils'
+import {addListeners} from '#testHelpers'
 
 // It is unclear which part of our implementation is targeted with this test.
 // Can this be removed? Is it sufficient?

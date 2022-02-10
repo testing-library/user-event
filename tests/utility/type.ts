@@ -1,5 +1,5 @@
 import userEvent from '#src'
-import {setup} from '#testHelpers/utils'
+import {setup} from '#testHelpers'
 
 test('type into input', async () => {
   const {element, getEventSnapshot} = setup('<input value="foo"/>')

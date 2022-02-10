@@ -1,5 +1,5 @@
 import userEvent from '#src'
-import {setup} from '#testHelpers/utils'
+import {setup} from '#testHelpers'
 
 test('no character input if `altKey` or `ctrlKey` is pressed', async () => {
   const {element, eventWasFired} = setup(`<input/>`)

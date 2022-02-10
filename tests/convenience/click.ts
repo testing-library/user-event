@@ -1,5 +1,5 @@
 import userEvent, {PointerEventsCheckLevel} from '#src'
-import {setup} from '#testHelpers/utils'
+import {setup} from '#testHelpers'
 
 describe.each([
   ['click', {clickCount: 1}],

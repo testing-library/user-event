@@ -1,4 +1,4 @@
-import {setup} from '#testHelpers/utils'
+import {setup} from '#testHelpers'
 import {isContentEditable} from '#src/utils'
 
 test('report if element is contenteditable', async () => {

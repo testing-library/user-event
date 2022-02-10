@@ -1,4 +1,4 @@
-import {setup} from '#testHelpers/utils'
+import {setup} from '#testHelpers'
 import {isDescendantOrSelf} from '#src/utils'
 
 test('isDescendantOrSelf', async () => {

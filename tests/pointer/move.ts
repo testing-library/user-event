@@ -1,5 +1,5 @@
 import userEvent from '#src'
-import {setup} from '#testHelpers/utils'
+import {setup} from '#testHelpers'
 
 test('hover to other element', async () => {
   const {elements, getEventSnapshot} = setup(`<div></div><div></div>`)

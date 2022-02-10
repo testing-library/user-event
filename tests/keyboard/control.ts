@@ -1,5 +1,5 @@
 import userEvent from '#src'
-import {setup} from '#testHelpers/utils'
+import {setup} from '#testHelpers'
 
 test('press [Home] in textarea', async () => {
   const {element} = setup<HTMLTextAreaElement>(

@@ -1,5 +1,5 @@
 import userEvent from '#src'
-import {setup} from '#testHelpers/utils'
+import {setup} from '#testHelpers'
 
 test('drag sequence', async () => {
   const {element, getClickEventsSnapshot} = setup(`<div></div>`)

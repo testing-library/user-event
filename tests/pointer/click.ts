@@ -1,5 +1,5 @@
 import userEvent from '#src'
-import {setup} from '#testHelpers/utils'
+import {setup} from '#testHelpers'
 
 test('click element', async () => {
   const {element, getClickEventsSnapshot, getEvents} = setup('<div />')

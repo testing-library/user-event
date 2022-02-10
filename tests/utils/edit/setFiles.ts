@@ -1,5 +1,5 @@
 import {createFileList, setFiles} from '#src/utils'
-import {setup} from '#testHelpers/utils'
+import {setup} from '#testHelpers'
 
 test('set files', () => {
   const {element} = setup<HTMLInputElement & {type: 'file'}>(

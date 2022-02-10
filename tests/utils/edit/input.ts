@@ -1,6 +1,6 @@
 import cases from 'jest-in-case'
 import {input} from '#src/utils'
-import {setup} from '#testHelpers/utils'
+import {setup} from '#testHelpers'
 import {createConfig} from '#src/setup/setup'
 
 cases(

@@ -1,7 +1,7 @@
 import cases from 'jest-in-case'
 import userEvent from '#src'
 import {getUISelection, setUISelection, setUIValue} from '#src/document'
-import {setup} from '#testHelpers/utils'
+import {setup} from '#testHelpers'
 import {setSelection} from '#src/utils'
 
 test('produce extra events for the Control key when AltGraph is pressed', async () => {
@@ -170,9 +170,9 @@ test('trigger change event on [Space] keyup on HTMLInputElement type=radio', asy
 
     input[checked=false] - focus
     input[checked=false] - focusin
-    input[checked=false] - keydown
-    input[checked=false] - keypress
-    input[checked=false] - keyup
+    input[checked=false] - keydown: Space
+    input[checked=false] - keypress: Space
+    input[checked=false] - keyup: Space
     input[checked=true] - click: primary
       unchecked -> checked
     input[checked=true] - input

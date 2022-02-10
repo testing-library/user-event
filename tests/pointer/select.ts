@@ -1,5 +1,5 @@
 import userEvent from '#src'
-import {setup} from '#testHelpers/utils'
+import {setup} from '#testHelpers'
 
 // On an unprevented mousedown the browser moves the cursor to the closest character.
 // As we have no layout, we are not able to determine the correct character.

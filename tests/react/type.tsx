@@ -8,8 +8,9 @@ test('trigger onChange SyntheticEvent on input', async () => {
   const changeHandler = jest.fn()
 
   render(<input onInput={inputHandler} onChange={changeHandler} />)
+  const user = userEvent.setup()
 
-  await userEvent.type(screen.getByRole('textbox'), 'abcdef')
+  await user.type(screen.getByRole('textbox'), 'abcdef')
 
   expect(inputHandler).toHaveBeenCalledTimes(6)
   expect(changeHandler).toHaveBeenCalledTimes(6)
@@ -39,14 +40,15 @@ describe('typing in a controlled input', () => {
 
     return {
       element,
+      user: userEvent.setup(),
       ...addListeners(element),
     }
   }
 
   test('typing in empty controlled input', async () => {
-    const {element, getEventSnapshot} = setupDollarInput()
+    const {element, getEventSnapshot, user} = setupDollarInput()
 
-    await userEvent.type(element, '23')
+    await user.type(element, '23')
 
     expect(element).toHaveValue('$23')
     expect(getEventSnapshot()).toMatchInlineSnapshot(`
@@ -80,9 +82,11 @@ describe('typing in a controlled input', () => {
   })
 
   test('typing in the middle of a controlled input', async () => {
-    const {element, getEventSnapshot} = setupDollarInput({initialValue: '$23'})
+    const {element, getEventSnapshot, user} = setupDollarInput({
+      initialValue: '$23',
+    })
 
-    await userEvent.type(element, '1', {initialSelectionStart: 2})
+    await user.type(element, '1', {initialSelectionStart: 2})
 
     expect(element).toHaveValue('$213')
     expect(element).toHaveProperty('selectionStart', 3)
@@ -117,9 +121,11 @@ describe('typing in a controlled input', () => {
   })
 
   test('ignored {backspace} in controlled input', async () => {
-    const {element, getEventSnapshot} = setupDollarInput({initialValue: '$23'})
+    const {element, getEventSnapshot, user} = setupDollarInput({
+      initialValue: '$23',
+    })
 
-    await userEvent.type(element, '{backspace}', {
+    await user.type(element, '{backspace}', {
       initialSelectionStart: 1,
       initialSelectionEnd: 1,
     })
@@ -131,7 +137,7 @@ describe('typing in a controlled input', () => {
     // the selection start and end to the end of the input
     expect(element.selectionStart).toBe(element.value.length)
     expect(element.selectionEnd).toBe(element.value.length)
-    await userEvent.type(element, '4')
+    await user.type(element, '4')
 
     expect(element).toHaveValue('$234')
     // the backslash in the inline snapshot is to escape the $ before {CURSOR}
@@ -158,10 +164,6 @@ describe('typing in a controlled input', () => {
       input[value="23"] - input
         "{CURSOR}23" -> "$23{CURSOR}"
       input[value="$23"] - keyup: Backspace
-      input[value="$23"] - pointerover
-      input[value="$23"] - pointerenter
-      input[value="$23"] - mouseover
-      input[value="$23"] - mouseenter
       input[value="$23"] - pointermove
       input[value="$23"] - mousemove
       input[value="$23"] - pointerdown

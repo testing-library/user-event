@@ -1,10 +1,9 @@
-import userEvent from '#src'
 import {setup} from '#testHelpers'
 
 test('type into input', async () => {
-  const {element, getEventSnapshot} = setup('<input value="foo"/>')
+  const {element, getEventSnapshot, user} = setup('<input value="foo"/>')
 
-  await userEvent.type(element, 'bar')
+  await user.type(element, 'bar')
 
   expect(element).toHaveValue('foobar')
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
@@ -43,22 +42,24 @@ test('type into input', async () => {
 })
 
 test('can skip the initial click', async () => {
-  const {element, getEvents, clearEventCalls} = setup('<input value="foo"/>')
+  const {element, getEvents, clearEventCalls, user} = setup(
+    '<input value="foo"/>',
+  )
   element.focus() // users MUST focus themselves if they wish to skip the click
   clearEventCalls()
 
-  await userEvent.type(element, 'bar', {skipClick: true})
+  await user.type(element, 'bar', {skipClick: true})
 
   expect(getEvents('click')).toHaveLength(0)
   expect(element).toHaveValue('barfoo')
 })
 
 test('type with initialSelection', async () => {
-  const {element} = setup<HTMLTextAreaElement>(
+  const {element, user} = setup<HTMLTextAreaElement>(
     '<textarea>Hello World</textarea>',
   )
 
-  await userEvent.type(element, 'Frien', {
+  await user.type(element, 'Frien', {
     initialSelectionStart: 6,
     initialSelectionEnd: 10,
   })
@@ -68,26 +69,26 @@ test('type with initialSelection', async () => {
 
 describe('automatically release pressed keys', () => {
   test('release keys', async () => {
-    const {element, getEvents} = setup('<input />')
+    const {element, getEvents, user} = setup('<input />')
 
-    await userEvent.type(element, '{meta>}{alt>}{control>}a{/alt}')
+    await user.type(element, '{meta>}{alt>}{control>}a{/alt}')
 
     expect(getEvents('keyup')).toHaveLength(4)
   })
 
   test('skipAutoClose', async () => {
-    const {element, getEvents} = setup('<input />')
+    const {element, getEvents, user} = setup('<input />')
 
-    await userEvent.type(element, '{meta>}a', {skipAutoClose: true})
+    await user.type(element, '{meta>}a', {skipAutoClose: true})
 
     expect(getEvents('keyup')).toHaveLength(1)
   })
 })
 
 test('do nothing on disabled element', async () => {
-  const {element, getEvents} = setup('<input disabled/>')
+  const {element, getEvents, user} = setup('<input disabled/>')
 
-  await userEvent.type(element, 'foo')
+  await user.type(element, 'foo')
 
   expect(getEvents()).toHaveLength(0)
 })

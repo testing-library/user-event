@@ -1,34 +1,33 @@
 import cases from 'jest-in-case'
 import {getUIValue} from '#src/document/value'
-import userEvent from '#src'
 import {setup} from '#testHelpers'
 
 test('type character into input', async () => {
-  const {element} = setup<HTMLInputElement>(`<input value="aXd"/>`)
+  const {element, user} = setup<HTMLInputElement>(`<input value="aXd"/>`)
   element.focus()
   element.selectionStart = 1
   element.selectionEnd = 2
 
-  await userEvent.keyboard('bc')
+  await user.keyboard('bc')
 
   expect(element).toHaveValue('abcd')
 })
 
 test('overwrite input with same value', async () => {
-  const {element} = setup<HTMLInputElement>(`<input value="1"/>`)
+  const {element, user} = setup<HTMLInputElement>(`<input value="1"/>`)
   element.select()
   element.focus()
 
-  await userEvent.keyboard('11123')
+  await user.keyboard('11123')
 
   expect(element).toHaveValue('11123')
 })
 
 test('edit `<input type="date"/>`', async () => {
-  const {element} = setup('<input type="date" />')
+  const {element, user} = setup('<input type="date" />')
   element.focus()
 
-  await userEvent.keyboard('2020-06-29')
+  await user.keyboard('2020-06-29')
 
   expect(element).toHaveValue('2020-06-29')
 })
@@ -36,10 +35,10 @@ test('edit `<input type="date"/>`', async () => {
 cases(
   'edit `<input type="time"/>`',
   async ({input, value}) => {
-    const {element} = setup('<input type="time" />')
+    const {element, user} = setup('<input type="time" />')
     element.focus()
 
-    await userEvent.keyboard(input)
+    await user.keyboard(input)
 
     expect(element).toHaveValue(value)
   },
@@ -54,18 +53,18 @@ cases(
 )
 
 test('type character into textarea', async () => {
-  const {element} = setup<HTMLInputElement>(`<textarea>aXd</textarea>`)
+  const {element, user} = setup<HTMLInputElement>(`<textarea>aXd</textarea>`)
   element.focus()
   element.selectionStart = 1
   element.selectionEnd = 2
 
-  await userEvent.keyboard('bc')
+  await user.keyboard('bc')
 
   expect(element).toHaveValue('abcd')
 })
 
 test('type characters into contenteditable', async () => {
-  const {element} = setup('<div contenteditable=true>aXd</div>')
+  const {element, user} = setup('<div contenteditable=true>aXd</div>')
   element.focus()
   element.ownerDocument
     .getSelection()
@@ -76,7 +75,7 @@ test('type characters into contenteditable', async () => {
       2,
     )
 
-  await userEvent.keyboard('bc')
+  await user.keyboard('bc')
 
   expect(element).toHaveTextContent('abcd')
 })
@@ -93,21 +92,21 @@ test.each([
   [`<div tabIndex="-1"/>`],
   [`<div tabIndex="-1" contenteditable="false"/>`],
 ])('do not change non-editable element: %s', async html => {
-  const {element, getEvents} = setup(html)
+  const {element, getEvents, user} = setup(html)
   element.focus()
 
   const value = (element as HTMLInputElement).value
 
-  await userEvent.keyboard('x')
+  await user.keyboard('x')
 
   expect(getEvents('input')).toHaveLength(0)
   expect(element).toHaveProperty('value', value)
 })
 
 test('type [Enter] in textarea', async () => {
-  const {element, getEvents} = setup(`<textarea>f</textarea>`)
+  const {element, getEvents, user} = setup(`<textarea>f</textarea>`)
 
-  await userEvent.type(element, 'oo[Enter]bar[ShiftLeft>][Enter]baz')
+  await user.type(element, 'oo[Enter]bar[ShiftLeft>][Enter]baz')
 
   expect(element).toHaveValue('foo\nbar\nbaz')
   expect(getEvents('input')[2]).toHaveProperty('inputType', 'insertLineBreak')
@@ -115,9 +114,11 @@ test('type [Enter] in textarea', async () => {
 })
 
 test('type [Enter] in contenteditable', async () => {
-  const {element, getEvents} = setup(`<div contenteditable="true">f</div>`)
+  const {element, getEvents, user} = setup(
+    `<div contenteditable="true">f</div>`,
+  )
 
-  await userEvent.type(element, 'oo[Enter]bar[ShiftLeft>][Enter]baz')
+  await user.type(element, 'oo[Enter]bar[ShiftLeft>][Enter]baz')
 
   expect(element).toHaveTextContent('foo bar baz')
   expect(element.firstChild).toHaveProperty('nodeValue', 'foo\nbar\nbaz')
@@ -136,12 +137,12 @@ test.each([
 ])(
   'type invalid values into <input type="number"/>',
   async (text, expectedValue, expectedUiValue, expectedInputEvents) => {
-    const {element, getEvents} = setup<HTMLInputElement>(
+    const {element, getEvents, user} = setup<HTMLInputElement>(
       `<input type="number"/>`,
     )
     element.focus()
 
-    await userEvent.keyboard(text)
+    await user.keyboard(text)
 
     expect(element).toHaveValue(expectedValue)
     expect(getUIValue(element)).toBe(expectedUiValue)

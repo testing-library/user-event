@@ -1,7 +1,7 @@
 import {getSpy} from './_mockApis'
 import userEvent from '#src'
 import {Config, Instance, UserEventApi} from '#src/setup'
-import {setup} from '#testHelpers'
+import {render} from '#testHelpers'
 
 type ApiDeclarations = {
   [api in keyof UserEventApi]: {
@@ -83,7 +83,7 @@ declare module '#src/options' {
 test.each(apiDeclarationsEntries)(
   'call `%s` api on instance',
   async (name, {args = [], elementArg, elementHtml = `<input/>`}) => {
-    const {element} = setup<HTMLInputElement>(elementHtml)
+    const {element} = render<HTMLInputElement>(elementHtml)
     element.focus()
 
     if (elementArg !== undefined) {
@@ -132,7 +132,7 @@ test.each(apiDeclarationsEntries)(
     name,
     {args = [], elementArg, elementHtml = `<input/>`, optionsArg},
   ) => {
-    const {element} = setup<HTMLInputElement>(elementHtml)
+    const {element} = render<HTMLInputElement>(elementHtml)
     element.focus()
 
     if (elementArg !== undefined) {

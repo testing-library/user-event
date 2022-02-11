@@ -1,7 +1,7 @@
 import {dispatchUIEvent} from '#src/event'
 import {behavior, BehaviorPlugin} from '#src/event/behavior'
 import {createConfig} from '#src/setup/setup'
-import {setup} from '#testHelpers'
+import {render} from '#testHelpers'
 
 jest.mock('#src/event/behavior', () => ({
   behavior: {
@@ -18,7 +18,7 @@ afterEach(() => {
 })
 
 test('keep default behavior', () => {
-  const {element} = setup(`<input type="checkbox"/>`)
+  const {element} = render(`<input type="checkbox"/>`)
 
   dispatchUIEvent(createConfig(), element, 'click')
 
@@ -27,7 +27,7 @@ test('keep default behavior', () => {
 })
 
 test('replace default behavior', () => {
-  const {element} = setup(`<input type="checkbox"/>`)
+  const {element} = render(`<input type="checkbox"/>`)
 
   const mockBehavior = jest.fn()
   mockPlugin.mockImplementationOnce(() => mockBehavior)
@@ -40,7 +40,7 @@ test('replace default behavior', () => {
 })
 
 test('prevent replaced default behavior', () => {
-  const {element} = setup(`<input type="checkbox"/>`)
+  const {element} = render(`<input type="checkbox"/>`)
   element.addEventListener('click', e => {
     expect(e).toHaveProperty('defaultPrevented', false)
     e.preventDefault()

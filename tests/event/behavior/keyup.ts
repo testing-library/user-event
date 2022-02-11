@@ -1,4 +1,3 @@
-import userEvent from '#src'
 import {setup} from '#testHelpers'
 
 describe('release [Space]', () => {
@@ -7,9 +6,8 @@ describe('release [Space]', () => {
     [`<button></button>`, true],
     [`<input/>`, false],
   ])('dispatch `click` on `%s`: %s', async (html, click) => {
-    const {element, clearEventCalls, eventWasFired} = setup(html)
+    const {element, clearEventCalls, eventWasFired, user} = setup(html)
     element.focus()
-    const user = userEvent.setup()
     await user.keyboard('[Space>]')
     clearEventCalls()
 

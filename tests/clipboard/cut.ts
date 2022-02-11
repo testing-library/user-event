@@ -1,22 +1,26 @@
 import userEvent from '#src'
-import {setup} from '#testHelpers'
+import {render, setup} from '#testHelpers'
 
 test('cut selected value', async () => {
-  const {element, getEvents} = setup<HTMLInputElement>(
+  const {element, getEvents, user} = setup<HTMLInputElement>(
     `<input value="foo bar baz"/>`,
   )
   element.focus()
   element.setSelectionRange(4, 7)
 
-  const dt = await userEvent.cut()
+  const dt = await user.cut()
 
   expect(dt?.getData('text')).toBe('bar')
   expect(getEvents('cut')).toHaveLength(1)
   expect(getEvents('input')).toHaveLength(1)
+
+  await expect(window.navigator.clipboard.readText()).resolves.toBe('bar')
 })
 
 test('cut selected text outside of editable', async () => {
-  const {element, getEvents} = setup(`<div tabindex="-1">foo bar baz</div>`)
+  const {element, getEvents, user} = setup(
+    `<div tabindex="-1">foo bar baz</div>`,
+  )
   element.focus()
   document
     .getSelection()
@@ -27,15 +31,19 @@ test('cut selected text outside of editable', async () => {
       5,
     )
 
-  const dt = await userEvent.cut()
+  const dt = await user.cut()
 
   expect(dt?.getData('text')).toBe('oo b')
   expect(getEvents('cut')).toHaveLength(1)
   expect(getEvents('input')).toHaveLength(0)
+
+  await expect(window.navigator.clipboard.readText()).resolves.toBe('oo b')
 })
 
 test('cut selected text in contenteditable', async () => {
-  const {element, getEvents} = setup(`<div contenteditable>foo bar baz</div>`)
+  const {element, getEvents, user} = setup(
+    `<div contenteditable>foo bar baz</div>`,
+  )
   element.focus()
   document
     .getSelection()
@@ -46,17 +54,26 @@ test('cut selected text in contenteditable', async () => {
       5,
     )
 
-  const dt = await userEvent.cut()
+  const dt = await user.cut()
 
   expect(dt?.getData('text')).toBe('oo b')
   expect(getEvents('cut')).toHaveLength(1)
   expect(getEvents('input')).toHaveLength(1)
   expect(element).toHaveTextContent('far baz')
+
+  await expect(window.navigator.clipboard.readText()).resolves.toBe('oo b')
 })
 
-describe('write to clipboard', () => {
-  test('without Clipboard API', async () => {
-    const {element} = setup<HTMLInputElement>(`<input value="foo bar baz"/>`)
+describe('without Clipboard API', () => {
+  beforeEach(() => {
+    Object.defineProperty(window.navigator, 'clipboard', {
+      value: undefined,
+      configurable: true,
+    })
+  })
+
+  test('reject if trying to use missing API', async () => {
+    const {element} = render<HTMLInputElement>(`<input value="foo bar baz"/>`)
     element.focus()
     element.setSelectionRange(4, 7)
 
@@ -67,69 +84,12 @@ describe('write to clipboard', () => {
     )
   })
 
-  test('cut selected value', async () => {
-    const {element, getEvents} = setup<HTMLInputElement>(
-      `<input value="foo bar baz"/>`,
-    )
+  test('skip using missing API', async () => {
+    const {element} = render<HTMLInputElement>(`<input value="foo bar baz"/>`)
     element.focus()
     element.setSelectionRange(4, 7)
 
-    const dt = userEvent.setup().cut()
-
-    await expect(dt).resolves.toBeTruthy()
-    expect((await dt)?.getData('text')).toBe('bar')
-
-    await expect(window.navigator.clipboard.readText()).resolves.toBe('bar')
-
-    expect(getEvents('cut')).toHaveLength(1)
-    expect(getEvents('input')).toHaveLength(1)
-    expect(element).toHaveValue('foo  baz')
-  })
-
-  test('cut selected text outside of editable', async () => {
-    const {element, getEvents} = setup(`<div tabindex="-1">foo bar baz</div>`)
-    element.focus()
-    document
-      .getSelection()
-      ?.setBaseAndExtent(
-        element.firstChild as Text,
-        1,
-        element.firstChild as Text,
-        5,
-      )
-
-    const dt = userEvent.setup().cut()
-
-    await expect(dt).resolves.toBeTruthy()
-    expect((await dt)?.getData('text')).toBe('oo b')
-
-    await expect(window.navigator.clipboard.readText()).resolves.toBe('oo b')
-
-    expect(getEvents('cut')).toHaveLength(1)
-    expect(getEvents('input')).toHaveLength(0)
-  })
-
-  test('cut selected text in contenteditable', async () => {
-    const {element, getEvents} = setup(`<div contenteditable>foo bar baz</div>`)
-    element.focus()
-    document
-      .getSelection()
-      ?.setBaseAndExtent(
-        element.firstChild as Text,
-        1,
-        element.firstChild as Text,
-        5,
-      )
-
-    const dt = userEvent.setup().cut()
-
-    await expect(dt).resolves.toBeTruthy()
-    expect((await dt)?.getData('text')).toBe('oo b')
-
-    await expect(window.navigator.clipboard.readText()).resolves.toBe('oo b')
-
-    expect(getEvents('cut')).toHaveLength(1)
-    expect(getEvents('input')).toHaveLength(1)
-    expect(element).toHaveTextContent('far baz')
+    const dt = await userEvent.cut()
+    expect(dt?.getData('text/plain')).toBe('bar')
   })
 })

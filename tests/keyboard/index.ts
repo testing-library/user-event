@@ -1,11 +1,11 @@
 import userEvent from '#src'
-import {addListeners, setup} from '#testHelpers'
+import {addListeners, render, setup} from '#testHelpers'
 
 it('type without focus', async () => {
-  const {element} = setup('<input/>')
+  const {element, user} = setup('<input/>')
   const {getEventSnapshot} = addListeners(document.body)
 
-  await userEvent.keyboard('foo')
+  await user.keyboard('foo')
 
   expect(element).toHaveValue('')
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
@@ -24,11 +24,11 @@ it('type without focus', async () => {
 })
 
 it('type with focus', async () => {
-  const {element} = setup('<input/>')
+  const {element, user} = setup('<input/>')
   const {getEventSnapshot} = addListeners(document.body)
   element.focus()
 
-  await userEvent.keyboard('foo')
+  await user.keyboard('foo')
 
   expect(element).toHaveValue('foo')
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
@@ -54,11 +54,11 @@ it('type with focus', async () => {
 })
 
 it('type asynchronous', async () => {
-  const {element} = setup('<input/>')
+  const {element, user} = setup('<input/>', {delay: 1})
   const {getEventSnapshot} = addListeners(document.body)
   element.focus()
 
-  await userEvent.keyboard('foo', {delay: 1})
+  await user.keyboard('foo')
 
   expect(element).toHaveValue('foo')
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
@@ -84,13 +84,14 @@ it('type asynchronous', async () => {
 })
 
 it('error in async', async () => {
-  await expect(userEvent.keyboard('[!', {delay: 1})).rejects.toThrowError(
+  const {user} = setup('')
+  await expect(user.keyboard('[!')).rejects.toThrowError(
     'Expected key descriptor but found "!" in "[!"',
   )
 })
 
 it('continue typing with state', async () => {
-  const {element, getEventSnapshot, clearEventCalls} = setup('<input/>')
+  const {element, getEventSnapshot, clearEventCalls} = render('<input/>')
   element.focus()
   clearEventCalls()
 
@@ -125,8 +126,10 @@ describe('delay', () => {
   })
 
   test('delay keyboard per setTimeout', async () => {
+    const {user} = setup('', {delay: 10})
+
     const time0 = performance.now()
-    await userEvent.keyboard('foo', {delay: 10})
+    await user.keyboard('foo')
 
     // we don't call delay after the last action
     // TODO: Should we call it?
@@ -135,13 +138,14 @@ describe('delay', () => {
   })
 
   test('do not call setTimeout with delay `null`', async () => {
-    await userEvent.keyboard('foo', {delay: null})
+    const {user} = setup('', {delay: null})
+    await user.keyboard('foo')
     expect(spy).toBeCalledTimes(0)
   })
 })
 
 test('disabling activeElement moves action to HTMLBodyElement', async () => {
-  const {element} = setup<HTMLInputElement>(`<input/>`)
+  const {element, user} = setup<HTMLInputElement>(`<input/>`)
   element.addEventListener('keyup', e => {
     if (e.key === 'b') {
       element.disabled = true
@@ -150,7 +154,7 @@ test('disabling activeElement moves action to HTMLBodyElement', async () => {
   element.focus()
 
   const {getEventSnapshot} = addListeners(document.body)
-  await userEvent.keyboard('abc')
+  await user.keyboard('abc')
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: body

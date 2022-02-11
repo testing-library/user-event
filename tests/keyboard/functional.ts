@@ -1,15 +1,14 @@
 import cases from 'jest-in-case'
-import userEvent from '#src'
 import {getUISelection, setUISelection, setUIValue} from '#src/document'
 import {setup} from '#testHelpers'
 import {setSelection} from '#src/utils'
 
 test('produce extra events for the Control key when AltGraph is pressed', async () => {
-  const {element, getEventSnapshot, clearEventCalls} = setup(`<input/>`)
+  const {element, getEventSnapshot, clearEventCalls, user} = setup(`<input/>`)
   element.focus()
   clearEventCalls()
 
-  await userEvent.keyboard('{AltGraph}')
+  await user.keyboard('{AltGraph}')
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value=""]
@@ -22,42 +21,43 @@ test('produce extra events for the Control key when AltGraph is pressed', async 
 })
 
 test('delete content per Backspace', async () => {
-  const {element} = setup<HTMLInputElement>(`<input value="abcd"/>`)
+  const {element, user} = setup<HTMLInputElement>(`<input value="abcd"/>`)
   element.focus()
   element.setSelectionRange(2, 3)
 
-  await userEvent.keyboard('[Backspace]')
+  await user.keyboard('[Backspace]')
 
   expect(element).toHaveValue('abd')
 
-  await userEvent.keyboard('[Backspace]')
+  await user.keyboard('[Backspace]')
 
   expect(element).toHaveValue('ad')
 })
 
 test('backspace to valid value', async () => {
-  const {element} = setup<HTMLInputElement>(`<input type="number"/>`)
+  const {element, user} = setup<HTMLInputElement>(`<input type="number"/>`)
   element.focus()
   setUIValue(element, '5e-')
   setUISelection(element, {focusOffset: 3})
 
-  await userEvent.keyboard('[Backspace][Backspace]')
+  await user.keyboard('[Backspace][Backspace]')
 
   expect(element).toHaveValue(5)
 })
 
 test('do not fire input events if delete content does nothing', async () => {
-  const {element, getEvents} = setup<HTMLInputElement>(`<input type="foo"/>`)
+  const {element, getEvents, user} =
+    setup<HTMLInputElement>(`<input type="foo"/>`)
   element.focus()
 
-  await userEvent.keyboard('[Backspace]')
+  await user.keyboard('[Backspace]')
 
   expect(getEvents('input')).toHaveLength(0)
 
   element.setSelectionRange(3, 3)
   element.readOnly = true
 
-  await userEvent.keyboard('[Backspace]')
+  await user.keyboard('[Backspace]')
 
   expect(getEvents('input')).toHaveLength(0)
 })
@@ -69,10 +69,10 @@ test.each([
   [`<button/>`],
   [`<input type="color" />`],
 ])('trigger click event on keypress [Enter] on: %s', async html => {
-  const {element, getEvents} = setup(html)
+  const {element, getEvents, user} = setup(html)
   element.focus()
 
-  await userEvent.keyboard('[Enter]')
+  await user.keyboard('[Enter]')
 
   expect(getEvents('click')).toHaveLength(1)
   expect(getEvents('click')[0]).toHaveProperty('detail', 0)
@@ -84,10 +84,10 @@ test.each([
 cases(
   'submit form on [Enter]',
   async ({html, click, submit}) => {
-    const {element, getEvents} = setup(html)
+    const {element, getEvents, user} = setup(html)
     ;(element.children[1] as HTMLInputElement).focus()
 
-    await userEvent.keyboard('[Enter]')
+    await user.keyboard('[Enter]')
 
     expect(getEvents('click')).toHaveLength(click ? 1 : 0)
     expect(getEvents('submit')).toHaveLength(submit ? 1 : 0)
@@ -146,10 +146,10 @@ test.each([
   [`<input type="button" />`],
   [`<input value="#ffffff" type="color" />`],
 ])('trigger click event on keyup [Space] on: %s', async html => {
-  const {element, getEvents} = setup(html)
+  const {element, getEvents, user} = setup(html)
   element.focus()
 
-  await userEvent.keyboard('[Space]')
+  await user.keyboard('[Space]')
 
   expect(getEvents('click')).toHaveLength(1)
   expect(getEvents('click')[0]).toHaveProperty('detail', 0)
@@ -159,10 +159,12 @@ test.each([
 })
 
 test('trigger change event on [Space] keyup on HTMLInputElement type=radio', async () => {
-  const {element, getEventSnapshot, getEvents} = setup(`<input type="radio" />`)
+  const {element, getEventSnapshot, getEvents, user} = setup(
+    `<input type="radio" />`,
+  )
   element.focus()
 
-  await userEvent.keyboard('[Space]')
+  await user.keyboard('[Space]')
 
   expect(getEvents('change')).toHaveLength(1)
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
@@ -181,35 +183,35 @@ test('trigger change event on [Space] keyup on HTMLInputElement type=radio', asy
 })
 
 test('tab through elements', async () => {
-  const {elements} = setup<
+  const {elements, user} = setup<
     [HTMLInputElement, HTMLInputElement, HTMLButtonElement]
   >(`<input value="abc"/><input type="number" value="1e5"/><button/>`)
 
-  await userEvent.keyboard('[Tab]')
+  await user.keyboard('[Tab]')
 
   expect(elements[0]).toHaveFocus()
   expect(elements[0]).toHaveProperty('selectionStart', 0)
   expect(elements[0]).toHaveProperty('selectionEnd', 3)
 
-  await userEvent.keyboard('[Tab]')
+  await user.keyboard('[Tab]')
 
   expect(elements[1]).toHaveFocus()
   expect(getUISelection(elements[1])).toHaveProperty('startOffset', 0)
   expect(getUISelection(elements[1])).toHaveProperty('endOffset', 3)
 
-  await userEvent.keyboard('[Tab]')
+  await user.keyboard('[Tab]')
 
   expect(elements[2]).toHaveFocus()
 
-  await userEvent.keyboard('[Tab]')
+  await user.keyboard('[Tab]')
 
   expect(document.body).toHaveFocus()
 
-  await userEvent.keyboard('[ShiftLeft>][Tab]')
+  await user.keyboard('[ShiftLeft>][Tab]')
 
   expect(elements[2]).toHaveFocus()
 
-  await userEvent.keyboard('[ShiftRight>][Tab]')
+  await user.keyboard('[ShiftRight>][Tab]')
 
   expect(elements[1]).toHaveFocus()
   expect(getUISelection(elements[1])).toHaveProperty('startOffset', 0)
@@ -217,7 +219,7 @@ test('tab through elements', async () => {
 })
 
 test('delete content in contenteditable', async () => {
-  const {element, getEvents} = setup(
+  const {element, getEvents, user} = setup(
     `<div><span>---</span><div contenteditable><span id="foo">foo</span><input type="checkbox"/><span id="bar">bar</span></div><span>---</span></div>`,
   )
   element.querySelector('div')?.focus()
@@ -226,21 +228,21 @@ test('delete content in contenteditable', async () => {
     focusOffset: 2,
   })
 
-  await userEvent.keyboard('[Backspace][Backspace][Backspace][Backspace]')
+  await user.keyboard('[Backspace][Backspace][Backspace][Backspace]')
 
   expect(getEvents('input')).toHaveLength(2)
   expect(element.innerHTML).toMatchInlineSnapshot(
     `<span>---</span><div contenteditable=""><span id="foo">o</span><input type="checkbox"><span id="bar">bar</span></div><span>---</span>`,
   )
 
-  await userEvent.keyboard('[ArrowRight][Delete]')
+  await user.keyboard('[ArrowRight][Delete]')
 
   expect(getEvents('input')).toHaveLength(3)
   expect(element.innerHTML).toMatchInlineSnapshot(
     `<span>---</span><div contenteditable=""><span id="foo">o</span><span id="bar">bar</span></div><span>---</span>`,
   )
 
-  await userEvent.keyboard('[Delete]')
+  await user.keyboard('[Delete]')
 
   expect(getEvents('input')).toHaveLength(4)
   expect(element.innerHTML).toMatchInlineSnapshot(

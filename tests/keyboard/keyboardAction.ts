@@ -1,8 +1,8 @@
 import userEvent from '#src'
-import {setup} from '#testHelpers'
+import {render, setup} from '#testHelpers'
 
 test('no character input if `altKey` or `ctrlKey` is pressed', async () => {
-  const {element, eventWasFired} = setup(`<input/>`)
+  const {element, eventWasFired} = render(`<input/>`)
   element.focus()
 
   await userEvent.keyboard('[ControlLeft>]g')
@@ -17,7 +17,7 @@ test('no character input if `altKey` or `ctrlKey` is pressed', async () => {
 })
 
 test('do not leak repeatKey in state', async () => {
-  const {element} = setup(`<input/>`)
+  const {element} = render(`<input/>`)
   ;(element as HTMLInputElement).focus()
 
   const keyboardState = await userEvent.keyboard('{a>2}')
@@ -26,12 +26,12 @@ test('do not leak repeatKey in state', async () => {
 
 describe('pressing and releasing keys', () => {
   it('fires event with releasing key twice', async () => {
-    const {element, getEventSnapshot, clearEventCalls} = setup(`<input/>`)
+    const {element, getEventSnapshot, clearEventCalls, user} = setup(`<input/>`)
 
     ;(element as HTMLInputElement).focus()
     clearEventCalls()
 
-    await userEvent.keyboard('{ArrowLeft>}{ArrowLeft}')
+    await user.keyboard('{ArrowLeft>}{ArrowLeft}')
 
     expect(getEventSnapshot()).toMatchInlineSnapshot(`
       Events fired on: input[value=""]
@@ -44,12 +44,12 @@ describe('pressing and releasing keys', () => {
   })
 
   it('fires event without releasing key', async () => {
-    const {element, getEventSnapshot, clearEventCalls} = setup(`<input/>`)
+    const {element, getEventSnapshot, clearEventCalls, user} = setup(`<input/>`)
 
     ;(element as HTMLInputElement).focus()
     clearEventCalls()
 
-    await userEvent.keyboard('{a>}')
+    await user.keyboard('{a>}')
 
     expect(getEventSnapshot()).toMatchInlineSnapshot(`
       Events fired on: input[value="a"]
@@ -62,11 +62,11 @@ describe('pressing and releasing keys', () => {
   })
 
   it('fires event multiple times without releasing key', async () => {
-    const {element, getEventSnapshot, clearEventCalls} = setup(`<input/>`)
+    const {element, getEventSnapshot, clearEventCalls, user} = setup(`<input/>`)
     ;(element as HTMLInputElement).focus()
     clearEventCalls()
 
-    await userEvent.keyboard('{a>2}')
+    await user.keyboard('{a>2}')
 
     expect(getEventSnapshot()).toMatchInlineSnapshot(`
       Events fired on: input[value="aa"]
@@ -83,11 +83,11 @@ describe('pressing and releasing keys', () => {
   })
 
   it('fires event multiple times and releases key', async () => {
-    const {element, getEventSnapshot, clearEventCalls} = setup(`<input/>`)
+    const {element, getEventSnapshot, clearEventCalls, user} = setup(`<input/>`)
     ;(element as HTMLInputElement).focus()
     clearEventCalls()
 
-    await userEvent.keyboard('{a>2/}')
+    await user.keyboard('{a>2/}')
 
     expect(getEventSnapshot()).toMatchInlineSnapshot(`
       Events fired on: input[value="aa"]
@@ -105,11 +105,11 @@ describe('pressing and releasing keys', () => {
   })
 
   it('fires event multiple times for multiple keys', async () => {
-    const {element, getEventSnapshot, clearEventCalls} = setup(`<input/>`)
+    const {element, getEventSnapshot, clearEventCalls, user} = setup(`<input/>`)
     ;(element as HTMLInputElement).focus()
     clearEventCalls()
 
-    await userEvent.keyboard('{a>2}{b>2/}{c>2}{/a}')
+    await user.keyboard('{a>2}{b>2/}{c>2}{/a}')
 
     expect(getEventSnapshot()).toMatchInlineSnapshot(`
       Events fired on: input[value="aabbcc"]
@@ -146,22 +146,22 @@ describe('pressing and releasing keys', () => {
 
 describe('prevent default behavior', () => {
   test('per keydown handler', async () => {
-    const {element, getEvents} = setup(`<input/>`)
+    const {element, getEvents, user} = setup(`<input/>`)
     element.focus()
     element.addEventListener('keydown', e => e.preventDefault())
 
-    await userEvent.keyboard('x')
+    await user.keyboard('x')
 
     expect(getEvents('input')).toHaveLength(0)
     expect(element).toHaveValue('')
   })
 
   test('per keypress handler', async () => {
-    const {element, getEvents} = setup(`<input/>`)
+    const {element, getEvents, user} = setup(`<input/>`)
     element.focus()
     element.addEventListener('keypress', e => e.preventDefault())
 
-    await userEvent.keyboard('x')
+    await user.keyboard('x')
 
     expect(getEvents('input')).toHaveLength(0)
     expect(element).toHaveValue('')
@@ -169,10 +169,10 @@ describe('prevent default behavior', () => {
 })
 
 test('do not call setTimeout with delay `null`', async () => {
-  setup(`<div></div>`)
+  const {user} = setup(`<div></div>`)
   const spy = jest.spyOn(global, 'setTimeout')
-  await userEvent.keyboard('ab')
+  await user.keyboard('ab')
   expect(spy).toBeCalledTimes(1)
-  await userEvent.keyboard('cd', {delay: null})
+  await user.setup({delay: null}).keyboard('cd')
   expect(spy).toBeCalledTimes(1)
 })

@@ -1,11 +1,16 @@
+import userEvent from '#src'
+import {Options} from '#src/options'
 import {addListeners} from '#testHelpers'
 
-export function setupSelect({
-  disabled = false,
-  disabledOptions = false,
-  multiple = false,
-  pointerEvents = 'auto',
-} = {}) {
+export function setupSelect(
+  {
+    disabled = false,
+    disabledOptions = false,
+    multiple = false,
+    pointerEvents = 'auto',
+  } = {},
+  setupOptions: Options = {},
+) {
   const form = document.createElement('form')
   form.innerHTML = `
     <select
@@ -27,6 +32,7 @@ export function setupSelect({
     form,
     select,
     options,
+    user: userEvent.setup(setupOptions),
   }
 }
 
@@ -69,5 +75,6 @@ export function setupListbox() {
     ...addListeners(listbox),
     listbox,
     options,
+    user: userEvent.setup(),
   }
 }

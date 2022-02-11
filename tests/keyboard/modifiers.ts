@@ -1,4 +1,3 @@
-import userEvent from '#src'
 import {setup} from '#testHelpers'
 
 test.each([
@@ -7,8 +6,7 @@ test.each([
   ['Alt', 'altKey'],
   ['Meta', 'metaKey'],
 ])('Trigger modifier: %s', async (key, modifier) => {
-  const {element, getEvents} = setup(`<div tabIndex="-1"></div>`)
-  const user = userEvent.setup()
+  const {element, getEvents, user} = setup(`<div tabIndex="-1"></div>`)
   element.focus()
 
   await user.keyboard(`{${key}>}`)
@@ -29,8 +27,7 @@ test.each([
 test.each([['AltGraph'], ['Fn'], ['Symbol']])(
   'Trigger modifier: %s',
   async key => {
-    const {element, getEvents} = setup(`<div tabIndex="-1"></div>`)
-    const user = userEvent.setup()
+    const {element, getEvents, user} = setup(`<div tabIndex="-1"></div>`)
     element.focus()
 
     await user.keyboard(`{${key}>}`)
@@ -56,8 +53,7 @@ test.each([
   ['ScrollLock'],
   ['SymbolLock'],
 ])('Switch lock modifier: %s', async key => {
-  const {element, getEvents} = setup(`<div tabIndex="-1"></div>`)
-  const user = userEvent.setup()
+  const {element, getEvents, user} = setup(`<div tabIndex="-1"></div>`)
   element.focus()
 
   await user.keyboard(`{${key}}`)

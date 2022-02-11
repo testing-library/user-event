@@ -1,10 +1,9 @@
-import userEvent from '#src'
 import {setup} from '#testHelpers'
 
 test('drag sequence', async () => {
-  const {element, getClickEventsSnapshot} = setup(`<div></div>`)
+  const {element, getClickEventsSnapshot, user} = setup(`<div></div>`)
 
-  await userEvent.pointer([
+  await user.pointer([
     {keys: '[MouseLeft>]', target: element},
     {coords: {x: 20, y: 20}},
     '[/MouseLeft]',
@@ -22,9 +21,9 @@ test('drag sequence', async () => {
 })
 
 test('drag touch', async () => {
-  const {element, getClickEventsSnapshot} = setup(`<div></div>`)
+  const {element, getClickEventsSnapshot, user} = setup(`<div></div>`)
 
-  await userEvent.pointer([
+  await user.pointer([
     {keys: '[TouchA>]', target: element},
     {pointerName: 'TouchA', coords: {x: 20, y: 20}},
     '[/TouchA]',

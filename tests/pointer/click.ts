@@ -1,9 +1,8 @@
-import userEvent from '#src'
 import {setup} from '#testHelpers'
 
 test('click element', async () => {
-  const {element, getClickEventsSnapshot, getEvents} = setup('<div />')
-  await userEvent.pointer({keys: '[MouseLeft]', target: element})
+  const {element, getClickEventsSnapshot, getEvents, user} = setup('<div />')
+  await user.pointer({keys: '[MouseLeft]', target: element})
 
   expect(getClickEventsSnapshot()).toMatchInlineSnapshot(`
     pointerdown - pointerId=1; pointerType=mouse; isPrimary=true
@@ -16,8 +15,8 @@ test('click element', async () => {
 })
 
 test('secondary button triggers contextmenu', async () => {
-  const {element, getClickEventsSnapshot, getEvents} = setup('<div />')
-  await userEvent.pointer({keys: '[MouseRight>]', target: element})
+  const {element, getClickEventsSnapshot, getEvents, user} = setup('<div />')
+  await user.pointer({keys: '[MouseRight>]', target: element})
 
   expect(getClickEventsSnapshot()).toMatchInlineSnapshot(`
     pointerdown - pointerId=1; pointerType=mouse; isPrimary=true
@@ -28,9 +27,10 @@ test('secondary button triggers contextmenu', async () => {
 })
 
 test('double click', async () => {
-  const {element, getClickEventsSnapshot, getEvents} = setup(`<div></div>`)
+  const {element, getClickEventsSnapshot, getEvents, user} =
+    setup(`<div></div>`)
 
-  await userEvent.pointer({keys: '[MouseLeft][MouseLeft]', target: element})
+  await user.pointer({keys: '[MouseLeft][MouseLeft]', target: element})
 
   expect(getClickEventsSnapshot()).toMatchInlineSnapshot(`
     pointerdown - pointerId=1; pointerType=mouse; isPrimary=true
@@ -55,16 +55,14 @@ test('double click', async () => {
 })
 
 test('two clicks', async () => {
-  const {element, getClickEventsSnapshot, getEvents} = setup(`<div></div>`)
+  const {element, getClickEventsSnapshot, getEvents, user} =
+    setup(`<div></div>`)
 
-  const pointerState = await userEvent.pointer({
+  await user.pointer({
     keys: '[MouseLeft]',
     target: element,
   })
-  await userEvent.pointer(
-    {keys: '[MouseLeft]', target: element},
-    {pointerState},
-  )
+  await user.pointer({keys: '[MouseLeft]'})
 
   expect(getClickEventsSnapshot()).toMatchInlineSnapshot(`
     pointerdown - pointerId=1; pointerType=mouse; isPrimary=true
@@ -86,9 +84,10 @@ test('two clicks', async () => {
 })
 
 test('other keys reset click counter, but keyup/click still uses the old count', async () => {
-  const {element, getClickEventsSnapshot, getEvents} = setup(`<div></div>`)
+  const {element, getClickEventsSnapshot, getEvents, user} =
+    setup(`<div></div>`)
 
-  await userEvent.pointer({
+  await user.pointer({
     keys: '[MouseLeft][MouseLeft>][MouseRight][MouseLeft]',
     target: element,
   })
@@ -120,9 +119,10 @@ test('other keys reset click counter, but keyup/click still uses the old count',
 })
 
 test('click per touch device', async () => {
-  const {element, getClickEventsSnapshot, getEvents} = setup(`<div></div>`)
+  const {element, getClickEventsSnapshot, getEvents, user} =
+    setup(`<div></div>`)
 
-  await userEvent.pointer({keys: '[TouchA]', target: element})
+  await user.pointer({keys: '[TouchA]', target: element})
 
   expect(getClickEventsSnapshot()).toMatchInlineSnapshot(`
     pointerover - pointerId=2; pointerType=touch; isPrimary=undefined
@@ -145,9 +145,10 @@ test('click per touch device', async () => {
 })
 
 test('double click per touch device', async () => {
-  const {element, getClickEventsSnapshot, getEvents} = setup(`<div></div>`)
+  const {element, getClickEventsSnapshot, getEvents, user} =
+    setup(`<div></div>`)
 
-  await userEvent.pointer({keys: '[TouchA][TouchA]', target: element})
+  await user.pointer({keys: '[TouchA][TouchA]', target: element})
 
   expect(getClickEventsSnapshot()).toMatchInlineSnapshot(`
     pointerover - pointerId=2; pointerType=touch; isPrimary=undefined
@@ -184,28 +185,28 @@ test('double click per touch device', async () => {
 })
 
 test('multi touch does not click', async () => {
-  const {element, getEvents} = setup(`<div></div>`)
+  const {element, getEvents, user} = setup(`<div></div>`)
 
-  await userEvent.pointer({keys: '[TouchA>][TouchB][/TouchA]', target: element})
+  await user.pointer({keys: '[TouchA>][TouchB][/TouchA]', target: element})
 
   expect(getEvents('click')).toHaveLength(0)
 })
 
 describe('label', () => {
   test('click associated control per label', async () => {
-    const {element, getEvents} = setup(
+    const {element, getEvents, user} = setup(
       `<label for="in">foo</label><input id="in"/>`,
     )
 
-    await userEvent.pointer({keys: '[MouseLeft]', target: element})
+    await user.pointer({keys: '[MouseLeft]', target: element})
 
     expect(getEvents('click')).toHaveLength(2)
   })
 
   test('click nested control per label', async () => {
-    const {element, getEvents} = setup(`<label><input/></label>`)
+    const {element, getEvents, user} = setup(`<label><input/></label>`)
 
-    await userEvent.pointer({keys: '[MouseLeft]', target: element})
+    await user.pointer({keys: '[MouseLeft]', target: element})
 
     expect(getEvents('click')).toHaveLength(2)
   })
@@ -213,13 +214,13 @@ describe('label', () => {
 
 describe('check/uncheck control per click', () => {
   test('clicking changes checkbox', async () => {
-    const {element} = setup('<input type="checkbox" />')
+    const {element, user} = setup('<input type="checkbox" />')
 
-    await userEvent.pointer({keys: '[MouseLeft]', target: element})
+    await user.pointer({keys: '[MouseLeft]', target: element})
 
     expect(element).toBeChecked()
 
-    await userEvent.pointer({keys: '[MouseLeft]', target: element})
+    await user.pointer({keys: '[MouseLeft]', target: element})
 
     expect(element).not.toBeChecked()
   })
@@ -227,16 +228,17 @@ describe('check/uncheck control per click', () => {
   test('clicking changes radio button', async () => {
     const {
       elements: [radioA, radioB],
+      user,
     } = setup(`
       <input type="radio" name="foo"/>
       <input type="radio" name="foo"/>
     `)
 
-    await userEvent.pointer({keys: '[MouseLeft]', target: radioA})
+    await user.pointer({keys: '[MouseLeft]', target: radioA})
 
     expect(radioA).toBeChecked()
 
-    await userEvent.pointer({keys: '[MouseLeft]', target: radioB})
+    await user.pointer({keys: '[MouseLeft]', target: radioB})
 
     expect(radioA).not.toBeChecked()
   })
@@ -244,13 +246,14 @@ describe('check/uncheck control per click', () => {
   test('clicking label changes checkable input', async () => {
     const {
       elements: [input, label],
+      user,
     } = setup(`<input type="checkbox" id="a"/><label for="a"></label>`)
 
-    await userEvent.pointer({keys: '[MouseLeft]', target: label})
+    await user.pointer({keys: '[MouseLeft]', target: label})
 
     expect(input).toBeChecked()
 
-    await userEvent.pointer({keys: '[MouseLeft]', target: label})
+    await user.pointer({keys: '[MouseLeft]', target: label})
 
     expect(input).not.toBeChecked()
   })
@@ -258,34 +261,36 @@ describe('check/uncheck control per click', () => {
 
 describe('submit form per click', () => {
   test('submits a form when clicking on a <button>', async () => {
-    const {element, eventWasFired} = setup(`<form><button></button></form>`)
+    const {element, eventWasFired, user} = setup(
+      `<form><button></button></form>`,
+    )
 
-    await userEvent.pointer({keys: '[MouseLeft]', target: element.children[0]})
+    await user.pointer({keys: '[MouseLeft]', target: element.children[0]})
 
     expect(eventWasFired('submit')).toBe(true)
   })
 
   test('does not submit a form when clicking on a <button type="button">', async () => {
-    const {element, eventWasFired} = setup(
+    const {element, eventWasFired, user} = setup(
       `<form><button type="button"></button></form>`,
     )
 
-    await userEvent.pointer({keys: '[MouseLeft]', target: element.children[0]})
+    await user.pointer({keys: '[MouseLeft]', target: element.children[0]})
 
     expect(eventWasFired('submit')).toBe(false)
   })
 })
 
 test('secondary mouse button fires `contextmenu` instead of `click`', async () => {
-  const {element, getEvents, clearEventCalls} = setup(`<button/>`)
+  const {element, getEvents, clearEventCalls, user} = setup(`<button/>`)
 
-  await userEvent.pointer({keys: '[MouseLeft]', target: element})
+  await user.pointer({keys: '[MouseLeft]', target: element})
   expect(getEvents('click')).toHaveLength(1)
   expect(getEvents('contextmenu')).toHaveLength(0)
 
   clearEventCalls()
 
-  await userEvent.pointer({keys: '[MouseRight]', target: element})
+  await user.pointer({keys: '[MouseRight]', target: element})
   expect(getEvents('contextmenu')).toHaveLength(1)
   expect(getEvents('click')).toHaveLength(0)
 })

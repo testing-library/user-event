@@ -64,6 +64,18 @@ test('cut selected text in contenteditable', async () => {
   await expect(window.navigator.clipboard.readText()).resolves.toBe('oo b')
 })
 
+test('cut on empty selection does nothing', async () => {
+  const {element, getEvents, clearEventCalls, user} = setup(`<input/>`)
+  element.focus()
+  await window.navigator.clipboard.writeText('foo')
+  clearEventCalls()
+
+  await user.cut()
+
+  await expect(window.navigator.clipboard.readText()).resolves.toBe('foo')
+  expect(getEvents()).toHaveLength(0)
+})
+
 describe('without Clipboard API', () => {
   beforeEach(() => {
     Object.defineProperty(window.navigator, 'clipboard', {

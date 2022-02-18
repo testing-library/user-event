@@ -1,16 +1,6 @@
 import userEvent from '#src'
 import {render, setup} from '#testHelpers'
 
-test('without clipboard API', async () => {
-  const {element, getEvents} = render(`<input/>`)
-  element.focus()
-
-  await expect(userEvent.paste()).rejects.toMatchInlineSnapshot(
-    `[Error: \`userEvent.paste()\` without \`clipboardData\` requires the \`ClipboardAPI\` to be available.]`,
-  )
-  expect(getEvents('paste')).toHaveLength(0)
-})
-
 test('paste with empty clipboard', async () => {
   const {element, getEvents, user} = setup(`<input/>`)
   element.focus()

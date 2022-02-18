@@ -1,6 +1,6 @@
 import {getSpy} from './_mockApis'
 import userEvent from '#src'
-import {Config, Instance, UserEventApi} from '#src/setup'
+import {Config, UserEventApi} from '#src/setup'
 import {render} from '#testHelpers'
 
 type ApiDeclarations = {
@@ -90,13 +90,7 @@ test.each(apiDeclarationsEntries)(
       args[elementArg] = element
     }
 
-    type CallWithConfig = {config?: Config}
     const spy = getSpy(name)
-    spy.mockImplementation(async function testApi(this: Instance) {
-      ;(spy.mock.calls[spy.mock.calls.length - 1] as CallWithConfig).config =
-        this[Config]
-      expect(this[Config][opt]).toBe(true)
-    })
 
     const apis = userEvent.setup({[opt]: true})
 
@@ -105,23 +99,27 @@ test.each(apiDeclarationsEntries)(
     await (apis[name] as Function)(...args)
 
     expect(spy).toBeCalledTimes(1)
+    expect(spy.mock.lastCall?.this?.[Config][opt]).toBe(true)
 
     const subApis = apis.setup({})
 
     await (subApis[name] as Function)(...args)
 
     expect(spy).toBeCalledTimes(2)
-    expect(
-      (spy.mock.calls[1] as CallWithConfig).config?.keyboardState,
-    ).toBeTruthy()
-    expect((spy.mock.calls[1] as CallWithConfig).config?.keyboardState).toBe(
-      (spy.mock.calls[0] as CallWithConfig).config?.keyboardState,
+    expect(spy.mock.lastCall?.this?.[Config][opt]).toBe(true)
+    expect(spy.mock.lastCall?.this?.[Config]).toHaveProperty(
+      'keyboardState',
+      expect.objectContaining({}),
     )
-    expect(
-      (spy.mock.calls[1] as CallWithConfig).config?.pointerState,
-    ).toBeTruthy()
-    expect((spy.mock.calls[1] as CallWithConfig).config?.pointerState).toBe(
-      (spy.mock.calls[0] as CallWithConfig).config?.pointerState,
+    expect(spy.mock.calls[1]?.this?.[Config].keyboardState).toBe(
+      spy.mock.calls[0]?.this?.[Config].keyboardState,
+    )
+    expect(spy.mock.lastCall?.this?.[Config]).toHaveProperty(
+      'pointerState',
+      expect.objectContaining({}),
+    )
+    expect(spy.mock.calls[1]?.this?.[Config].pointerState).toBe(
+      spy.mock.calls[0]?.this?.[Config].pointerState,
     )
   },
 )
@@ -144,16 +142,21 @@ test.each(apiDeclarationsEntries)(
       optionsArg === undefined ? args.slice(0, -1) : [...args]
 
     const spy = getSpy(name)
-    spy.mockImplementation(async function testApi(this: Instance) {
-      // TODO: add options param to these direct APIs
-      if (!['clear', 'tab'].includes(name)) {
-        expect(this[Config][opt]).toBe(true)
-      }
-    })
 
     await (userEvent[name] as Function)(...args)
 
     expect(spy).toBeCalledTimes(1)
     expect(spy).toBeCalledWith(...internalArgs)
+
+    if (!['clear', 'tab'].includes(name)) {
+      // TODO: add options param to these direct APIs
+      expect(spy.mock.lastCall?.this?.[Config][opt]).toBe(true)
+    }
+
+    // options arg can be omitted
+    await (userEvent[name] as Function)(...args.slice(0, -1))
+
+    expect(spy).toBeCalledTimes(2)
+    expect(spy.mock.lastCall?.this?.[Config][opt]).toBe(undefined)
   },
 )

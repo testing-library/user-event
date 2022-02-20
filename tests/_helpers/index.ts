@@ -11,5 +11,5 @@ expect.addSnapshotSerializer({
   print: val => String((<null | {snapshot?: string}>val)?.snapshot),
 })
 
-export {setup} from './setup'
+export {render, setup} from './setup'
 export {addEventListener, addListeners} from './listeners'

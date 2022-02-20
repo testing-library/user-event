@@ -1,6 +1,8 @@
 import {addListeners, EventHandlers} from './listeners'
+import userEvent from '#src'
+import {Options} from '#src/options'
 
-export function setup<Elements extends Element | Element[] = HTMLElement>(
+export function render<Elements extends Element | Element[] = HTMLElement>(
   ui: string,
   {
     eventHandlers,
@@ -29,5 +31,15 @@ export function setup<Elements extends Element | Element[] = HTMLElement>(
         eventHandlers,
       },
     ),
+  }
+}
+
+export function setup<Elements extends Element | Element[] = HTMLElement>(
+  ui: string,
+  {eventHandlers, ...options}: Parameters<typeof render>[1] & Options = {},
+) {
+  return {
+    user: userEvent.setup(options),
+    ...render<Elements>(ui, {eventHandlers}),
   }
 }

@@ -1,10 +1,10 @@
 import {setupListbox, setupSelect} from './_setup'
-import userEvent, {PointerEventsCheckLevel} from '#src'
+import {PointerEventsCheckLevel} from '#src'
 import {addListeners, setup} from '#testHelpers'
 
 test('fires correct events', async () => {
-  const {select, options, getEventSnapshot} = setupSelect()
-  await userEvent.selectOptions(select, '2')
+  const {select, options, getEventSnapshot, user} = setupSelect()
+  await user.selectOptions(select, '2')
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: select[name="select"][value="2"]
 
@@ -38,8 +38,8 @@ test('fires correct events', async () => {
 })
 
 test('fires correct events on listBox select', async () => {
-  const {listbox, options, getEventSnapshot} = setupListbox()
-  await userEvent.selectOptions(listbox, '2')
+  const {listbox, options, getEventSnapshot, user} = setupListbox()
+  await user.selectOptions(listbox, '2')
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: ul[value="2"]
 
@@ -64,8 +64,10 @@ test('fires correct events on listBox select', async () => {
 })
 
 test('fires correct events on multi-selects', async () => {
-  const {select, options, getEventSnapshot} = setupSelect({multiple: true})
-  await userEvent.selectOptions(select, ['1', '3'])
+  const {select, options, getEventSnapshot, user} = setupSelect({
+    multiple: true,
+  })
+  await user.selectOptions(select, ['1', '3'])
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: select[name="select"][value=["1","3"]]
 
@@ -105,18 +107,18 @@ test('fires correct events on multi-selects', async () => {
 })
 
 test('sets the selected prop on the selected option using option html elements', async () => {
-  const {select, options} = setupSelect()
+  const {select, options, user} = setupSelect()
   const [o1, o2, o3] = options
-  await userEvent.selectOptions(select, o1)
+  await user.selectOptions(select, o1)
   expect(o1.selected).toBe(true)
   expect(o2.selected).toBe(false)
   expect(o3.selected).toBe(false)
 })
 
 test('sets the selected prop on the selected listbox option using option html elements', async () => {
-  const {listbox, options} = setupListbox()
+  const {listbox, options, user} = setupListbox()
   const [o1, o2, o3] = options
-  await userEvent.selectOptions(listbox, o1)
+  await user.selectOptions(listbox, o1)
   expect(o1).toHaveAttribute('aria-selected', 'true')
   expect(o2).toHaveAttribute('aria-selected', 'false')
   expect(o3).toHaveAttribute('aria-selected', 'false')
@@ -127,8 +129,8 @@ test('a previously focused input gets blurred', async () => {
   document.body.append(button)
   button.focus()
   const {getEventSnapshot} = addListeners(button)
-  const {select} = setupSelect()
-  await userEvent.selectOptions(select, '1')
+  const {select, user} = setupSelect()
+  await user.selectOptions(select, '1')
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: button
 
@@ -138,29 +140,31 @@ test('a previously focused input gets blurred', async () => {
 })
 
 test('throws an error if elements is neither select nor listbox', async () => {
-  const {element} = setup(`<ul><li role='option'>foo</li></ul>`)
-  await expect(userEvent.selectOptions(element, ['foo'])).rejects.toThrowError(
+  const {element, user} = setup(`<ul><li role='option'>foo</li></ul>`)
+  await expect(user.selectOptions(element, ['foo'])).rejects.toThrowError(
     /neither select nor listbox/i,
   )
 })
 
 test('throws an error one selected option does not match', async () => {
-  const {select} = setupSelect({multiple: true})
+  const {select, user} = setupSelect({multiple: true})
   await expect(
-    userEvent.selectOptions(select, ['3', 'Matches nothing']),
+    user.selectOptions(select, ['3', 'Matches nothing']),
   ).rejects.toThrowError(/not found/i)
 })
 
 test('throws an error if multiple are passed but not a multiple select', async () => {
-  const {select} = setupSelect({multiple: false})
-  await expect(
-    userEvent.selectOptions(select, ['2', '3']),
-  ).rejects.toThrowError(/non-multiple select/i)
+  const {select, user} = setupSelect({multiple: false})
+  await expect(user.selectOptions(select, ['2', '3'])).rejects.toThrowError(
+    /non-multiple select/i,
+  )
 })
 
 test('does not select anything if select is disabled', async () => {
-  const {select, options, getEventSnapshot} = setupSelect({disabled: true})
-  await userEvent.selectOptions(select, '2')
+  const {select, options, getEventSnapshot, user} = setupSelect({
+    disabled: true,
+  })
+  await user.selectOptions(select, '2')
   expect(getEventSnapshot()).toMatchInlineSnapshot(
     `No events were fired on: select[name="select"][value="1"]`,
   )
@@ -171,10 +175,10 @@ test('does not select anything if select is disabled', async () => {
 })
 
 test('does not select anything if options are disabled', async () => {
-  const {select, options, getEventSnapshot} = setupSelect({
+  const {select, options, getEventSnapshot, user} = setupSelect({
     disabledOptions: true,
   })
-  await userEvent.selectOptions(select, '2')
+  await user.selectOptions(select, '2')
   expect(getEventSnapshot()).toMatchInlineSnapshot(
     `No events were fired on: select[name="select"][value=""]`,
   )
@@ -185,7 +189,7 @@ test('does not select anything if options are disabled', async () => {
 })
 
 test('should call onChange/input bubbling up the event when a new option is selected', async () => {
-  const {select, form} = setupSelect({multiple: true})
+  const {select, form, user} = setupSelect({multiple: true})
   const onChangeSelect = jest.fn()
   const onChangeForm = jest.fn()
   const onInputSelect = jest.fn()
@@ -202,7 +206,7 @@ test('should call onChange/input bubbling up the event when a new option is sele
   expect(onInputSelect).toHaveBeenCalledTimes(0)
   expect(onInputForm).toHaveBeenCalledTimes(0)
 
-  await userEvent.selectOptions(select, ['1'])
+  await user.selectOptions(select, ['1'])
 
   expect(onChangeForm).toHaveBeenCalledTimes(1)
   expect(onChangeSelect).toHaveBeenCalledTimes(1)
@@ -211,10 +215,10 @@ test('should call onChange/input bubbling up the event when a new option is sele
 })
 
 test('fire no pointer events when select has disabled pointer events', async () => {
-  const {select, options, getEventSnapshot} = setupSelect({
+  const {select, options, getEventSnapshot, user} = setupSelect({
     pointerEvents: 'none',
   })
-  await userEvent.selectOptions(select, '2')
+  await user.selectOptions(select, '2')
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: select[name="select"][value="2"]
 
@@ -230,11 +234,11 @@ test('fire no pointer events when select has disabled pointer events', async () 
 })
 
 test('fire no pointer events when multiple select has disabled pointer events', async () => {
-  const {select, options, getEventSnapshot} = setupSelect({
+  const {select, options, getEventSnapshot, user} = setupSelect({
     multiple: true,
     pointerEvents: 'none',
   })
-  await userEvent.selectOptions(select, ['2', '3'])
+  await user.selectOptions(select, ['2', '3'])
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: select[name="select"][value=["2","3"]]
 
@@ -252,12 +256,15 @@ test('fire no pointer events when multiple select has disabled pointer events', 
 })
 
 test('fires correct events when pointer events set to none but skipPointerEvents is set', async () => {
-  const {select, options, getEventSnapshot} = setupSelect({
-    pointerEvents: 'none',
-  })
-  await userEvent.selectOptions(select, '2', {
-    pointerEventsCheck: PointerEventsCheckLevel.Never,
-  })
+  const {select, options, getEventSnapshot, user} = setupSelect(
+    {
+      pointerEvents: 'none',
+    },
+    {
+      pointerEventsCheck: PointerEventsCheckLevel.Never,
+    },
+  )
+  await user.selectOptions(select, '2')
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: select[name="select"][value="2"]
 
@@ -291,13 +298,16 @@ test('fires correct events when pointer events set to none but skipPointerEvents
 })
 
 test('fires correct events on multi-selects when pointer events is set and skipPointerEventsCheck is set', async () => {
-  const {select, options, getEventSnapshot} = setupSelect({
-    multiple: true,
-    pointerEvents: 'none',
-  })
-  await userEvent.selectOptions(select, ['1', '3'], {
-    pointerEventsCheck: PointerEventsCheckLevel.Never,
-  })
+  const {select, options, getEventSnapshot, user} = setupSelect(
+    {
+      multiple: true,
+      pointerEvents: 'none',
+    },
+    {
+      pointerEventsCheck: PointerEventsCheckLevel.Never,
+    },
+  )
+  await user.selectOptions(select, ['1', '3'])
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: select[name="select"][value=["1","3"]]
 

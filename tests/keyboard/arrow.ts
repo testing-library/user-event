@@ -1,47 +1,46 @@
-import userEvent from '#src'
 import {setSelection} from '#src/utils'
 import {setup} from '#testHelpers'
 
 describe('in text input', () => {
   test('collapse selection to the left', async () => {
-    const {element} = setup<HTMLInputElement>(`<input value="foobar"/>`)
+    const {element, user} = setup<HTMLInputElement>(`<input value="foobar"/>`)
     element.focus()
     element.setSelectionRange(2, 4)
 
-    await userEvent.keyboard('[ArrowLeft]')
+    await user.keyboard('[ArrowLeft]')
 
     expect(element.selectionStart).toBe(2)
     expect(element.selectionEnd).toBe(2)
   })
 
   test('collapse selection to the right', async () => {
-    const {element} = setup<HTMLInputElement>(`<input value="foobar"/>`)
+    const {element, user} = setup<HTMLInputElement>(`<input value="foobar"/>`)
     element.focus()
     element.setSelectionRange(2, 4)
 
-    await userEvent.keyboard('[ArrowRight]')
+    await user.keyboard('[ArrowRight]')
 
     expect(element.selectionStart).toBe(4)
     expect(element.selectionEnd).toBe(4)
   })
 
   test('move cursor left', async () => {
-    const {element} = setup<HTMLInputElement>(`<input value="foobar"/>`)
+    const {element, user} = setup<HTMLInputElement>(`<input value="foobar"/>`)
     element.focus()
     element.setSelectionRange(2, 2)
 
-    await userEvent.keyboard('[ArrowLeft]')
+    await user.keyboard('[ArrowLeft]')
 
     expect(element.selectionStart).toBe(1)
     expect(element.selectionEnd).toBe(1)
   })
 
   test('move cursor right', async () => {
-    const {element} = setup<HTMLInputElement>(`<input value="foobar"/>`)
+    const {element, user} = setup<HTMLInputElement>(`<input value="foobar"/>`)
     element.focus()
     element.setSelectionRange(2, 2)
 
-    await userEvent.keyboard('[ArrowRight]')
+    await user.keyboard('[ArrowRight]')
 
     expect(element.selectionStart).toBe(3)
     expect(element.selectionEnd).toBe(3)
@@ -50,7 +49,7 @@ describe('in text input', () => {
 
 describe('in contenteditable', () => {
   test('collapse selection to the left', async () => {
-    const {element} = setup(
+    const {element, user} = setup(
       `<div contenteditable><span>foo</span><span>bar</span></div>`,
     )
     setSelection({
@@ -60,7 +59,7 @@ describe('in contenteditable', () => {
       focusOffset: 1,
     })
 
-    await userEvent.keyboard('[ArrowLeft]')
+    await user.keyboard('[ArrowLeft]')
 
     expect(element.ownerDocument.getSelection()).toHaveProperty(
       'focusNode',
@@ -73,7 +72,7 @@ describe('in contenteditable', () => {
   })
 
   test('collapse selection to the right', async () => {
-    const {element} = setup(
+    const {element, user} = setup(
       `<div contenteditable><span>foo</span><span>bar</span></div>`,
     )
     setSelection({
@@ -83,7 +82,7 @@ describe('in contenteditable', () => {
       focusOffset: 1,
     })
 
-    await userEvent.keyboard('[ArrowRight]')
+    await user.keyboard('[ArrowRight]')
 
     expect(element.ownerDocument.getSelection()).toHaveProperty(
       'focusNode',
@@ -98,6 +97,7 @@ describe('in contenteditable', () => {
   test('move cursor to the left', async () => {
     const {
       elements: [, div],
+      user,
     } = setup(
       `<span>abc</span><div contenteditable><span>foo</span><span>bar</span></div><span>def</span>`,
     )
@@ -106,7 +106,7 @@ describe('in contenteditable', () => {
       focusOffset: 1,
     })
 
-    await userEvent.keyboard('[ArrowLeft][ArrowLeft]')
+    await user.keyboard('[ArrowLeft][ArrowLeft]')
 
     expect(div.ownerDocument.getSelection()).toHaveProperty(
       'focusNode',
@@ -114,7 +114,7 @@ describe('in contenteditable', () => {
     )
     expect(div.ownerDocument.getSelection()).toHaveProperty('focusOffset', 2)
 
-    await userEvent.keyboard('[ArrowLeft][ArrowLeft][ArrowLeft][ArrowLeft]')
+    await user.keyboard('[ArrowLeft][ArrowLeft][ArrowLeft][ArrowLeft]')
 
     expect(div.ownerDocument.getSelection()).toHaveProperty(
       'focusNode',
@@ -126,6 +126,7 @@ describe('in contenteditable', () => {
   test('move cursor to the right', async () => {
     const {
       elements: [, div],
+      user,
     } = setup(
       `<span>abc</span><div contenteditable><span>foo</span><span>bar</span></div><span>def</span>`,
     )
@@ -134,7 +135,7 @@ describe('in contenteditable', () => {
       focusOffset: 2,
     })
 
-    await userEvent.keyboard('[ArrowRight][ArrowRight]')
+    await user.keyboard('[ArrowRight][ArrowRight]')
 
     expect(div.ownerDocument.getSelection()).toHaveProperty(
       'focusNode',
@@ -142,7 +143,7 @@ describe('in contenteditable', () => {
     )
     expect(div.ownerDocument.getSelection()).toHaveProperty('focusOffset', 1)
 
-    await userEvent.keyboard('[ArrowRight][ArrowRight][ArrowRight][ArrowRight]')
+    await user.keyboard('[ArrowRight][ArrowRight][ArrowRight][ArrowRight]')
 
     expect(div.ownerDocument.getSelection()).toHaveProperty(
       'focusNode',

@@ -1,10 +1,9 @@
-import userEvent from '#src'
 import {setup} from '#testHelpers'
 
 test('hover to other element', async () => {
-  const {elements, getEventSnapshot} = setup(`<div></div><div></div>`)
+  const {elements, getEventSnapshot, user} = setup(`<div></div><div></div>`)
 
-  await userEvent.pointer([
+  await user.pointer([
     {target: elements[0], coords: {x: 20, y: 20}},
     {target: elements[1], coords: {x: 40, y: 40}},
   ])
@@ -28,9 +27,9 @@ test('hover to other element', async () => {
 })
 
 test('hover inside element', async () => {
-  const {element, getEventSnapshot} = setup(`<div><a></a><p></p></div>`)
+  const {element, getEventSnapshot, user} = setup(`<div><a></a><p></p></div>`)
 
-  await userEvent.pointer([
+  await user.pointer([
     {target: element},
     {target: element.firstChild as Element},
     {target: element.lastChild as Element},
@@ -70,9 +69,9 @@ test('hover inside element', async () => {
 })
 
 test('move touch over elements', async () => {
-  const {element, getEventSnapshot} = setup(`<div><a></a><p></p></div>`)
+  const {element, getEventSnapshot, user} = setup(`<div><a></a><p></p></div>`)
 
-  await userEvent.pointer([
+  await user.pointer([
     {keys: '[TouchA>]', target: element},
     {pointerName: 'TouchA', target: element.firstChild as Element},
     {pointerName: 'TouchA', target: element.lastChild as Element},

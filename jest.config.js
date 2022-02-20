@@ -18,4 +18,7 @@ config.testMatch.push('<rootDir>/tests/**/*.+(js|jsx|ts|tsx)')
 // unless the file ends on `.test.{type}` so that we can add tests of our test utilities.
 config.testPathIgnorePatterns.push('/_.*(?<!\\.test\\.[jt]sx?)$')
 
+// Ignore declaration files
+config.testPathIgnorePatterns.push('\\.d\\.ts$')
+
 module.exports = config

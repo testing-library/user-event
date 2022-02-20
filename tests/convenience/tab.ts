@@ -1,11 +1,10 @@
-import userEvent from '#src'
 import {setup} from '#testHelpers'
 
 test('tab', async () => {
   const {
     elements: [elA, elB, elC],
+    user,
   } = setup(`<input id="a"/><input id="b"/><input id="c"/>`)
-  const user = userEvent.setup()
   elB.focus()
 
   await user.tab()
@@ -27,8 +26,4 @@ test('tab', async () => {
   // shift=true lifted the shift key
   await user.tab()
   expect(elB).toHaveFocus()
-
-  // call per directApi
-  await userEvent.tab()
-  expect(elC).toHaveFocus()
 })

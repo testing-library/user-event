@@ -1,70 +1,53 @@
-import userEvent, {PointerEventsCheckLevel} from '#src'
+import {PointerEventsCheckLevel} from '#src'
 import {setup} from '#testHelpers'
 
 test('continue previous target', async () => {
-  const {element, getEvents} = setup(`<div></div>`)
+  const {element, getEvents, user} = setup(`<div></div>`)
 
-  const pointerState = await userEvent.pointer({
+  await user.pointer({
     keys: '[MouseLeft]',
     target: element,
   })
-  await userEvent.pointer('[MouseLeft]', {pointerState})
+  await user.pointer('[MouseLeft]')
 
   expect(getEvents('click')).toHaveLength(2)
 })
 
 test('unknown button does nothing', async () => {
-  const {element, getEvents} = setup(`<div></div>`)
+  const {element, getEvents, user} = setup(`<div></div>`)
 
-  await userEvent.pointer({keys: '[foo]', target: element})
+  await user.pointer({keys: '[foo]', target: element})
 
   expect(getEvents()).toEqual([])
 })
 
 test('pointer without previous target results in error', async () => {
-  await expect(userEvent.pointer({keys: '[TouchA]'})).rejects.toThrowError(
+  const {user} = setup('')
+  await expect(user.pointer({keys: '[TouchA]'})).rejects.toThrowError(
     'no previous position',
   )
 })
 
 test('unknown pointer results in error', async () => {
-  const {element} = setup(`<div></div>`)
+  const {element, user} = setup(`<div></div>`)
 
   await expect(
-    userEvent.pointer({pointerName: 'foo', target: element}, {delay: 1}),
+    user.pointer({pointerName: 'foo', target: element}),
   ).rejects.toThrowError('does not exist')
 })
 
 test('apply modifiers from keyboardstate', async () => {
-  const {element, getEvents} = setup(`<input/>`)
+  const {element, getEvents, user} = setup(`<input/>`)
 
   element.focus()
-  let keyboardState = await userEvent.keyboard('[ShiftLeft>]')
-  await userEvent.pointer(
-    {keys: '[MouseLeft]', target: element},
-    {keyboardState},
-  )
-  keyboardState = await userEvent.keyboard('[/ShiftLeft][ControlRight>]', {
-    keyboardState,
-  })
-  await userEvent.pointer(
-    {keys: '[MouseLeft]', target: element},
-    {keyboardState},
-  )
-  keyboardState = await userEvent.keyboard('[/ControlRight][AltLeft>]', {
-    keyboardState,
-  })
-  await userEvent.pointer(
-    {keys: '[MouseLeft]', target: element},
-    {keyboardState},
-  )
-  keyboardState = await userEvent.keyboard('[/AltLeft][MetaLeft>]', {
-    keyboardState,
-  })
-  await userEvent.pointer(
-    {keys: '[MouseLeft]', target: element},
-    {keyboardState},
-  )
+  await user.keyboard('[ShiftLeft>]')
+  await user.pointer({keys: '[MouseLeft]', target: element})
+  await user.keyboard('[/ShiftLeft][ControlRight>]')
+  await user.pointer({keys: '[MouseLeft]', target: element})
+  await user.keyboard('[/ControlRight][AltLeft>]')
+  await user.pointer({keys: '[MouseLeft]', target: element})
+  await user.keyboard('[/AltLeft][MetaLeft>]')
+  await user.pointer({keys: '[MouseLeft]', target: element})
 
   expect(getEvents('click')).toEqual([
     expect.objectContaining({shiftKey: true}),
@@ -82,17 +65,14 @@ describe('delay', () => {
   })
 
   test('delay pointer actions per setTimeout', async () => {
-    const {element} = setup(`<div></div>`)
+    const {element, user} = setup(`<div></div>`, {delay: 10})
 
     const time0 = performance.now()
-    await userEvent.pointer(
-      [
-        {keys: '[MouseLeft]', target: element},
-        {coords: {x: 20, y: 20}},
-        '[/MouseLeft]',
-      ],
-      {delay: 10},
-    )
+    await user.pointer([
+      {keys: '[MouseLeft]', target: element},
+      {coords: {x: 20, y: 20}},
+      '[/MouseLeft]',
+    ])
 
     // we don't call delay after the last action
     // TODO: Should we call it?
@@ -101,19 +81,19 @@ describe('delay', () => {
   })
 
   test('do not call setTimeout with delay `null`', async () => {
-    setup(`<div></div>`)
+    const {user} = setup(`<div></div>`, {delay: null})
 
-    await userEvent.pointer(['[MouseLeft]', '[MouseLeft]'], {delay: null})
+    await user.pointer(['[MouseLeft]', '[MouseLeft]'])
     expect(spy).toBeCalledTimes(0)
   })
 })
 
 test('only pointer events on disabled elements', async () => {
-  const {element, getEventSnapshot, eventWasFired} = setup(
+  const {element, getEventSnapshot, eventWasFired, user} = setup(
     '<button disabled />',
   )
 
-  await userEvent.pointer([
+  await user.pointer([
     {target: element},
     {keys: '[MouseLeft]'},
     {target: element, keys: '[TouchA]'},
@@ -162,11 +142,10 @@ describe('check for pointer-events', () => {
   })
 
   test('skip check', async () => {
-    const {element} = setup(`<input>`)
-
-    const user = userEvent.setup({
+    const {element, user} = setup(`<input>`, {
       pointerEventsCheck: PointerEventsCheckLevel.Never,
     })
+
     await user.pointer([
       {target: element},
       '[MouseLeft]',
@@ -177,11 +156,10 @@ describe('check for pointer-events', () => {
   })
 
   test('once per target', async () => {
-    const {element} = setup(`<input>`)
-
-    const user = userEvent.setup({
+    const {element, user} = setup(`<input>`, {
       pointerEventsCheck: PointerEventsCheckLevel.EachTarget,
     })
+
     await user.pointer([
       {target: element},
       '[MouseLeft]',
@@ -199,11 +177,10 @@ describe('check for pointer-events', () => {
   })
 
   test('once per api call', async () => {
-    const {element} = setup(`<input>`)
-
-    const user = userEvent.setup({
+    const {element, user} = setup(`<input>`, {
       pointerEventsCheck: PointerEventsCheckLevel.EachApiCall,
     })
+
     await user.pointer([
       {target: element},
       '[MouseLeft]',
@@ -223,11 +200,10 @@ describe('check for pointer-events', () => {
   })
 
   test('once per trigger', async () => {
-    const {element} = setup(`<input>`)
-
-    const user = userEvent.setup({
+    const {element, user} = setup(`<input>`, {
       pointerEventsCheck: PointerEventsCheckLevel.EachTrigger,
     })
+
     await user.pointer([
       {target: element},
       '[MouseLeft]',

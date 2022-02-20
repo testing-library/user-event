@@ -1,4 +1,4 @@
-import {setup} from '#testHelpers'
+import {render} from '#testHelpers'
 import {
   prepareDocument,
   getUIValue,
@@ -15,7 +15,7 @@ function prepare(element: Element) {
 }
 
 test('keep track of value in UI', async () => {
-  const {element} = setup<HTMLInputElement>(`<input type="number"/>`)
+  const {element} = render<HTMLInputElement>(`<input type="number"/>`)
   // The element has to either receive focus or be already focused when preparing.
   element.focus()
 
@@ -33,7 +33,9 @@ test('keep track of value in UI', async () => {
 })
 
 test('trigger `change` event if value changed since focus/set', async () => {
-  const {element, getEvents} = setup<HTMLInputElement>(`<input type="number"/>`)
+  const {element, getEvents} = render<HTMLInputElement>(
+    `<input type="number"/>`,
+  )
 
   prepare(element)
 
@@ -61,7 +63,7 @@ test('trigger `change` event if value changed since focus/set', async () => {
 })
 
 test('maintain selection range like UI', async () => {
-  const {element} = setup<HTMLInputElement>(`<input type="text" value="abc"/>`)
+  const {element} = render<HTMLInputElement>(`<input type="text" value="abc"/>`)
 
   prepare(element)
 
@@ -76,7 +78,7 @@ test('maintain selection range like UI', async () => {
 })
 
 test('maintain selection range on elements without support for selection range', async () => {
-  const {element} = setup<HTMLInputElement>(`<input type="number"/>`)
+  const {element} = render<HTMLInputElement>(`<input type="number"/>`)
 
   prepare(element)
 
@@ -90,7 +92,7 @@ test('maintain selection range on elements without support for selection range',
 })
 
 test('clear UI selection if selection is programmatically set', async () => {
-  const {element} = setup<HTMLInputElement>(`<input/>`)
+  const {element} = render<HTMLInputElement>(`<input/>`)
 
   prepare(element)
 

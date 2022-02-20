@@ -1,4 +1,4 @@
-import userEvent, {PointerEventsCheckLevel} from '#src'
+import {PointerEventsCheckLevel} from '#src'
 import {setup} from '#testHelpers'
 
 describe.each([
@@ -6,9 +6,11 @@ describe.each([
   ['unhover', {events: ['move', 'leave', 'out']}],
 ] as const)('%s', (method, {events}) => {
   test(`${method} element`, async () => {
-    const {element, getEvents} = setup('<div></div>')
+    const {element, getEvents, clearEventCalls, user} = setup('<div></div>')
+    await user.pointer({target: method === 'hover' ? document.body : element})
+    clearEventCalls()
 
-    await userEvent[method](element)
+    await user[method](element)
 
     for (const type of events) {
       expect(getEvents(`pointer${type}`)).toHaveLength(1)
@@ -20,21 +22,32 @@ describe.each([
   })
 
   test('throw on pointer-events set to none', async () => {
-    const {element} = setup(`<div style="pointer-events: none"></div>`)
+    const {element, clearEventCalls, user} = setup(
+      `<div style="pointer-events: none"></div>`,
+    )
+    await user
+      .setup({
+        pointerEventsCheck: PointerEventsCheckLevel.Never,
+      })
+      .pointer({target: method === 'hover' ? document.body : element})
+    clearEventCalls()
 
-    await expect(userEvent[method](element)).rejects.toThrowError(
+    await expect(user[method](element)).rejects.toThrowError(
       /has or inherits pointer-events/i,
     )
   })
 
   test('skip check for pointer-events', async () => {
-    const {element, getEvents} = setup(
+    const {element, getEvents, clearEventCalls, user} = setup(
       `<div style="pointer-events: none"></div>`,
+      {
+        pointerEventsCheck: PointerEventsCheckLevel.Never,
+      },
     )
+    await user.pointer({target: method === 'hover' ? document.body : element})
+    clearEventCalls()
 
-    await userEvent[method](element, {
-      pointerEventsCheck: PointerEventsCheckLevel.Never,
-    })
+    await user[method](element)
 
     expect(getEvents('mousemove')).toHaveLength(1)
   })

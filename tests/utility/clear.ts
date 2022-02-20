@@ -1,10 +1,9 @@
-import userEvent from '#src'
 import {setup} from '#testHelpers'
 
 describe('clear elements', () => {
   test('clear text input', async () => {
-    const {element, getEventSnapshot} = setup('<input value="hello" />')
-    await userEvent.clear(element)
+    const {element, getEventSnapshot, user} = setup('<input value="hello" />')
+    await user.clear(element)
     expect(element).toHaveValue('')
     expect(getEventSnapshot()).toMatchInlineSnapshot(`
       Events fired on: input[value=""]
@@ -18,8 +17,10 @@ describe('clear elements', () => {
   })
 
   test('clear textarea', async () => {
-    const {element, getEventSnapshot} = setup('<textarea>hello</textarea>')
-    await userEvent.clear(element)
+    const {element, getEventSnapshot, user} = setup(
+      '<textarea>hello</textarea>',
+    )
+    await user.clear(element)
     expect(element).toHaveValue('')
     expect(getEventSnapshot()).toMatchInlineSnapshot(`
       Events fired on: textarea[value=""]
@@ -33,10 +34,10 @@ describe('clear elements', () => {
   })
 
   test('clear contenteditable', async () => {
-    const {element, getEventSnapshot} = setup(
+    const {element, getEventSnapshot, user} = setup(
       '<div contenteditable>hello</div>',
     )
-    await userEvent.clear(element)
+    await user.clear(element)
     expect(element).toBeEmptyDOMElement()
     expect(getEventSnapshot()).toMatchInlineSnapshot(`
       Events fired on: div
@@ -51,18 +52,19 @@ describe('clear elements', () => {
   test('clear inputs that cannot (programmatically) have a selection', async () => {
     const {
       elements: [email, password, number],
+      user,
     } = setup(`
       <input value="a@b.c" type="email" />
       <input value="pswrd" type="password" />
       <input value="12" type="number" />
     `)
-    await userEvent.clear(email)
+    await user.clear(email)
     expect(email).toHaveValue('')
 
-    await userEvent.clear(password)
+    await user.clear(password)
     expect(password).toHaveValue('')
 
-    await userEvent.clear(number)
+    await user.clear(number)
     expect(number).toHaveValue(null)
   })
 })
@@ -71,6 +73,7 @@ describe('throw error when clear is impossible', () => {
   test('only editable elements can be cleared', async () => {
     const {
       elements: [disabled, readonly, div],
+      user,
     } = setup(`
       <input value="hello" disabled/>
       <input value="hello" readonly/>
@@ -78,35 +81,33 @@ describe('throw error when clear is impossible', () => {
     `)
 
     await expect(
-      userEvent.clear(disabled),
+      user.clear(disabled),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
       `clear()\` is only supported on editable elements.`,
     )
     await expect(
-      userEvent.clear(readonly),
+      user.clear(readonly),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
       `clear()\` is only supported on editable elements.`,
     )
-    await expect(
-      userEvent.clear(div),
-    ).rejects.toThrowErrorMatchingInlineSnapshot(
+    await expect(user.clear(div)).rejects.toThrowErrorMatchingInlineSnapshot(
       `clear()\` is only supported on editable elements.`,
     )
   })
 
   test('abort if event handler prevents element being focused', async () => {
-    const {element} = setup(`<input value="hello"/>`)
+    const {element, user} = setup(`<input value="hello"/>`)
     element.addEventListener('focus', async () => element.blur())
 
     await expect(
-      userEvent.clear(element),
+      user.clear(element),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
       `The element to be cleared could not be focused.`,
     )
   })
 
   test('abort if event handler prevents content being selected', async () => {
-    const {element} = setup<HTMLInputElement>(`<input value="hello"/>`)
+    const {element, user} = setup<HTMLInputElement>(`<input value="hello"/>`)
     element.addEventListener('select', async () => {
       if (element.selectionStart === 0) {
         element.selectionStart = 1
@@ -114,7 +115,7 @@ describe('throw error when clear is impossible', () => {
     })
 
     await expect(
-      userEvent.clear(element),
+      user.clear(element),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
       `The element content to be cleared could not be selected.`,
     )

@@ -1,4 +1,4 @@
-import userEvent, {PointerEventsCheckLevel} from '#src'
+import {PointerEventsCheckLevel} from '#src'
 import {setup} from '#testHelpers'
 
 describe.each([
@@ -7,9 +7,9 @@ describe.each([
   ['tripleClick', {clickCount: 3}],
 ] as const)('%s', (method, {clickCount}) => {
   test('click element', async () => {
-    const {element, getEvents} = setup(`<div></div>`)
+    const {element, getEvents, user} = setup(`<div></div>`)
 
-    await userEvent[method](element)
+    await user[method](element)
 
     expect(getEvents('mouseover')).toHaveLength(1)
     expect(getEvents('mousedown')).toHaveLength(clickCount)
@@ -18,30 +18,33 @@ describe.each([
   })
 
   test('throw when clicking element with pointer-events set to none', async () => {
-    const {element} = setup(`<div style="pointer-events: none"></div>`)
+    const {element, user} = setup(`<div style="pointer-events: none"></div>`)
 
-    await expect(userEvent[method](element)).rejects.toThrowError(
+    await expect(user[method](element)).rejects.toThrowError(
       /has or inherits pointer-events/i,
     )
   })
 
   test('skip check for pointer-events', async () => {
-    const {element, getEvents} = setup(
+    const {element, getEvents, user} = setup(
       `<div style="pointer-events: none"></div>`,
+      {
+        pointerEventsCheck: PointerEventsCheckLevel.Never,
+      },
     )
 
-    await userEvent[method](element, {
-      pointerEventsCheck: PointerEventsCheckLevel.Never,
-    })
+    await user[method](element)
 
     expect(getEvents('click')).toHaveLength(clickCount)
   })
 
   if (method === 'click') {
     test('skip hover', async () => {
-      const {element, getEvents} = setup(`<div></div>`)
+      const {element, getEvents, user} = setup(`<div></div>`, {
+        skipHover: true,
+      })
 
-      await userEvent[method](element, {skipHover: true})
+      await user[method](element)
 
       expect(getEvents('mouseover')).toHaveLength(0)
       expect(getEvents('click')).toHaveLength(1)

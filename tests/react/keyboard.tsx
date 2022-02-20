@@ -24,13 +24,14 @@ test.each([0, 1])('maintain cursor position on controlled input', async () => {
 test('trigger Synthetic `keypress` event for printable characters', async () => {
   const onKeyPress = jest.fn<unknown, [React.KeyboardEvent]>()
   render(<input onKeyPress={onKeyPress} />)
+  const user = userEvent.setup()
   screen.getByRole('textbox').focus()
 
-  await userEvent.keyboard('a')
+  await user.keyboard('a')
   expect(onKeyPress).toHaveBeenCalledTimes(1)
   expect(onKeyPress.mock.calls[0][0]).toHaveProperty('charCode', 97)
 
-  await userEvent.keyboard('[Enter]')
+  await user.keyboard('[Enter]')
   expect(onKeyPress).toHaveBeenCalledTimes(2)
   expect(onKeyPress.mock.calls[1][0]).toHaveProperty('charCode', 13)
 })

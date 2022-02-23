@@ -1,6 +1,6 @@
 import cases from 'jest-in-case'
 import {input} from '#src/utils'
-import {setup} from '#testHelpers'
+import {render, setup} from '#testHelpers'
 import {createConfig} from '#src/setup/setup'
 
 cases(
@@ -167,3 +167,43 @@ test('prevent input on `beforeinput` event', () => {
   expect(eventWasFired('input')).toBe(true)
   expect(element).toHaveValue('b')
 })
+
+cases(
+  'maxlength',
+  ({html, data, expectedValue}) => {
+    const {element, eventWasFired} = render(html)
+
+    input(createConfig(), element, data)
+
+    expect(element).toHaveValue(expectedValue)
+    expect(eventWasFired('beforeinput')).toBe(true)
+    expect(eventWasFired('input')).toBe(!!expectedValue)
+  },
+  {
+    'on text input': {
+      html: `<input maxlength="2"/>`,
+      data: '123',
+      expectedValue: '12',
+    },
+    'on textarea': {
+      html: `<textarea maxlength="2"/>`,
+      data: '123',
+      expectedValue: '12',
+    },
+    'ignore on number': {
+      html: `<input type="number" maxlength="2"/>`,
+      data: '123',
+      expectedValue: 123,
+    },
+    'ignore empty attribute': {
+      html: `<input maxlength=""/>`,
+      data: '123',
+      expectedValue: '123',
+    },
+    'skip input when inserting nothing': {
+      html: `<input maxlength="0"/>`,
+      data: '',
+      expectedValue: '',
+    },
+  },
+)

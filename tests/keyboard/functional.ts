@@ -1,12 +1,9 @@
 import cases from 'jest-in-case'
 import {getUISelection, setUISelection, setUIValue} from '#src/document'
 import {setup} from '#testHelpers'
-import {setSelection} from '#src/utils'
 
 test('produce extra events for the Control key when AltGraph is pressed', async () => {
-  const {element, getEventSnapshot, clearEventCalls, user} = setup(`<input/>`)
-  element.focus()
-  clearEventCalls()
+  const {getEventSnapshot, user} = setup(`<input/>`)
 
   await user.keyboard('{AltGraph}')
 
@@ -21,9 +18,9 @@ test('produce extra events for the Control key when AltGraph is pressed', async 
 })
 
 test('delete content per Backspace', async () => {
-  const {element, user} = setup<HTMLInputElement>(`<input value="abcd"/>`)
-  element.focus()
-  element.setSelectionRange(2, 3)
+  const {element, user} = setup<HTMLInputElement>(`<input value="abcd"/>`, {
+    selection: {anchorOffset: 2, focusOffset: 3},
+  })
 
   await user.keyboard('[Backspace]')
 
@@ -36,7 +33,6 @@ test('delete content per Backspace', async () => {
 
 test('backspace to valid value', async () => {
   const {element, user} = setup<HTMLInputElement>(`<input type="number"/>`)
-  element.focus()
   setUIValue(element, '5e-')
   setUISelection(element, {focusOffset: 3})
 
@@ -48,7 +44,6 @@ test('backspace to valid value', async () => {
 test('do not fire input events if delete content does nothing', async () => {
   const {element, getEvents, user} =
     setup<HTMLInputElement>(`<input type="foo"/>`)
-  element.focus()
 
   await user.keyboard('[Backspace]')
 
@@ -69,8 +64,7 @@ test.each([
   [`<button/>`],
   [`<input type="color" />`],
 ])('trigger click event on keypress [Enter] on: %s', async html => {
-  const {element, getEvents, user} = setup(html)
-  element.focus()
+  const {getEvents, user} = setup(html)
 
   await user.keyboard('[Enter]')
 
@@ -84,8 +78,7 @@ test.each([
 cases(
   'submit form on [Enter]',
   async ({html, click, submit}) => {
-    const {element, getEvents, user} = setup(html)
-    ;(element.children[1] as HTMLInputElement).focus()
+    const {getEvents, user} = setup(html, {focus: 'form/*[2]'})
 
     await user.keyboard('[Enter]')
 
@@ -146,8 +139,7 @@ test.each([
   [`<input type="button" />`],
   [`<input value="#ffffff" type="color" />`],
 ])('trigger click event on keyup [Space] on: %s', async html => {
-  const {element, getEvents, user} = setup(html)
-  element.focus()
+  const {getEvents, user} = setup(html)
 
   await user.keyboard('[Space]')
 
@@ -159,10 +151,7 @@ test.each([
 })
 
 test('trigger change event on [Space] keyup on HTMLInputElement type=radio', async () => {
-  const {element, getEventSnapshot, getEvents, user} = setup(
-    `<input type="radio" />`,
-  )
-  element.focus()
+  const {getEventSnapshot, getEvents, user} = setup(`<input type="radio" />`)
 
   await user.keyboard('[Space]')
 
@@ -170,8 +159,6 @@ test('trigger change event on [Space] keyup on HTMLInputElement type=radio', asy
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[checked=true]
 
-    input[checked=false] - focus
-    input[checked=false] - focusin
     input[checked=false] - keydown: Space
     input[checked=false] - keypress: Space
     input[checked=false] - keyup: Space
@@ -185,7 +172,9 @@ test('trigger change event on [Space] keyup on HTMLInputElement type=radio', asy
 test('tab through elements', async () => {
   const {elements, user} = setup<
     [HTMLInputElement, HTMLInputElement, HTMLButtonElement]
-  >(`<input value="abc"/><input type="number" value="1e5"/><button/>`)
+  >(`<input value="abc"/><input type="number" value="1e5"/><button/>`, {
+    focus: false,
+  })
 
   await user.keyboard('[Tab]')
 
@@ -221,12 +210,8 @@ test('tab through elements', async () => {
 test('delete content in contenteditable', async () => {
   const {element, getEvents, user} = setup(
     `<div><span>---</span><div contenteditable><span id="foo">foo</span><input type="checkbox"/><span id="bar">bar</span></div><span>---</span></div>`,
+    {selection: {focusNode: '//span[@id="foo"]/text()', focusOffset: 2}},
   )
-  element.querySelector('div')?.focus()
-  setSelection({
-    focusNode: document.getElementById('foo')?.firstChild as Text,
-    focusOffset: 2,
-  })
 
   await user.keyboard('[Backspace][Backspace][Backspace][Backspace]')
 

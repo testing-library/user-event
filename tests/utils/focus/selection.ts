@@ -111,7 +111,7 @@ describe('modify selection', () => {
 
 describe('update selection when moving focus into element with own selection implementation', () => {
   test('replace selection', async () => {
-    const {element} = setup(`<div>foo<input/></div>`)
+    const {element} = setup(`<div>foo<input/></div>`, {focus: false})
     const text = element.childNodes.item(0) as Text
     const input = element.childNodes.item(1) as HTMLInputElement
 

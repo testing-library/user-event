@@ -3,9 +3,8 @@ import {setup} from '#testHelpers'
 test('press [Home] in textarea', async () => {
   const {element, user} = setup<HTMLTextAreaElement>(
     `<textarea>foo\nbar\baz</textarea>`,
+    {selection: {anchorOffset: 2, focusOffset: 4}},
   )
-  element.focus()
-  element.setSelectionRange(2, 4)
 
   await user.keyboard('[Home]')
 
@@ -16,9 +15,8 @@ test('press [Home] in textarea', async () => {
 test('press [Home] in contenteditable', async () => {
   const {element, user} = setup(
     `<div contenteditable="true">foo\nbar\baz</div>`,
+    {selection: {focusNode: '//text()', focusOffset: 2}},
   )
-  element.focus()
-  document.getSelection()?.setPosition(element.firstChild, 2)
 
   await user.keyboard('[Home]')
 
@@ -30,9 +28,8 @@ test('press [Home] in contenteditable', async () => {
 test('press [End] in textarea', async () => {
   const {element, user} = setup<HTMLTextAreaElement>(
     `<textarea>foo\nbar\baz</textarea>`,
+    {selection: {anchorOffset: 2, focusOffset: 4}},
   )
-  element.focus()
-  element.setSelectionRange(2, 4)
 
   await user.keyboard('[End]')
 
@@ -43,9 +40,8 @@ test('press [End] in textarea', async () => {
 test('press [End] in contenteditable', async () => {
   const {element, user} = setup(
     `<div contenteditable="true">foo\nbar\baz</div>`,
+    {selection: {focusNode: '//text()', focusOffset: 2}},
   )
-  element.focus()
-  document.getSelection()?.setPosition(element.firstChild, 2)
 
   await user.keyboard('[End]')
 
@@ -57,9 +53,8 @@ test('press [End] in contenteditable', async () => {
 test('move cursor on [PageUp]', async () => {
   const {element, user} = setup<HTMLInputElement>(
     `<input value="foo bar baz"/>`,
+    {selection: {anchorOffset: 2, focusOffset: 4}},
   )
-  element.focus()
-  element.setSelectionRange(2, 4)
 
   await user.keyboard('[PageUp]')
 
@@ -70,9 +65,8 @@ test('move cursor on [PageUp]', async () => {
 test('move cursor on [PageDown]', async () => {
   const {element, user} = setup<HTMLInputElement>(
     `<input value="foo bar baz"/>`,
+    {selection: {anchorOffset: 2, focusOffset: 4}},
   )
-  element.focus()
-  element.setSelectionRange(2, 4)
 
   await user.keyboard('[PageDown]')
 
@@ -81,9 +75,9 @@ test('move cursor on [PageDown]', async () => {
 })
 
 test('delete content per Delete', async () => {
-  const {element, user} = setup<HTMLInputElement>(`<input value="abcd"/>`)
-  element.focus()
-  element.setSelectionRange(1, 2)
+  const {element, user} = setup<HTMLInputElement>(`<input value="abcd"/>`, {
+    selection: {anchorOffset: 1, focusOffset: 2},
+  })
 
   await user.keyboard('[Delete]')
 
@@ -97,8 +91,7 @@ test('delete content per Delete', async () => {
 test('use [Delete] on number input', async () => {
   const {element, user} = setup(`<input type="number"/>`)
 
-  await user.type(
-    element,
+  await user.keyboard(
     '1e-5[ArrowLeft][Delete]6[ArrowLeft][ArrowLeft][ArrowLeft][Delete][Delete]',
   )
 
@@ -106,10 +99,9 @@ test('use [Delete] on number input', async () => {
 })
 
 test('use [Delete] on contenteditable', async () => {
-  const {element, user} = setup(`<div contenteditable>foo bar baz</div>`)
-  const text = element.firstChild as Text
-  element.focus()
-  document.getSelection()?.setBaseAndExtent(text, 1, text, 9)
+  const {element, user} = setup(`<div contenteditable>foo bar baz</div>`, {
+    selection: {focusNode: '//text()', anchorOffset: 1, focusOffset: 9},
+  })
 
   await user.keyboard('[Delete]')
 
@@ -117,10 +109,10 @@ test('use [Delete] on contenteditable', async () => {
 })
 
 test('do not fire input events if delete content does nothing', async () => {
-  const {element, getEvents, user} =
-    setup<HTMLInputElement>(`<input type="foo"/>`)
-  element.focus()
-  element.setSelectionRange(3, 3)
+  const {element, getEvents, user} = setup<HTMLInputElement>(
+    `<input type="foo"/>`,
+    {selection: {focusOffset: 3}},
+  )
 
   await user.keyboard('[Delete]')
 

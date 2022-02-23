@@ -3,8 +3,6 @@ import {render, setup} from '#testHelpers'
 
 test('paste with empty clipboard', async () => {
   const {element, getEvents, user} = setup(`<input/>`)
-  element.focus()
-
   await element.ownerDocument.defaultView?.navigator.clipboard.write([])
 
   await user.paste()
@@ -19,8 +17,6 @@ test.each([
     `
     Events fired on: input[value="Hello, world!"]
 
-    input[value=""] - focus
-    input[value=""] - focusin
     input[value=""] - paste
     input[value=""] - beforeinput
     input[value="Hello, world!"] - input
@@ -31,8 +27,6 @@ test.each([
     `
     Events fired on: textarea[value="Hello, world!"]
 
-    textarea[value=""] - focus
-    textarea[value=""] - focusin
     textarea[value=""] - paste
     textarea[value=""] - beforeinput
     textarea[value="Hello, world!"] - input
@@ -40,7 +34,6 @@ test.each([
   ],
 ])('should paste text in %s', async (html, events) => {
   const {element, getEventSnapshot, user} = setup(html)
-  element.focus()
 
   const text = 'Hello, world!'
   await element.ownerDocument.defaultView?.navigator.clipboard.writeText(text)
@@ -53,22 +46,18 @@ test.each([
 })
 
 test('does not paste when readOnly', async () => {
-  const {element, getEventSnapshot, user} = setup('<input readonly />')
-  element.focus()
+  const {getEventSnapshot, user} = setup('<input readonly />')
 
   await user.paste('hi')
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: input[value=""]
 
-    input[value=""] - focus
-    input[value=""] - focusin
     input[value=""] - paste
   `)
 })
 
 test('does not paste when disabled', async () => {
-  const {element, getEventSnapshot, user} = setup('<input disabled />')
-  element.focus()
+  const {getEventSnapshot, user} = setup('<input disabled />')
 
   await user.paste('hi')
   expect(getEventSnapshot()).toMatchInlineSnapshot(
@@ -112,13 +101,13 @@ test.each(['input', 'textarea'])(
 test('should replace selected text all at once', async () => {
   const {element, user} = setup<HTMLInputElement>(
     '<input value="hello world" />',
+    {
+      selection: {anchorOffset: 6, focusOffset: 11},
+    },
   )
 
-  const selectionStart = 'hello world'.search('world')
-  const selectionEnd = selectionStart + 'world'.length
-  element.focus()
-  element.setSelectionRange(selectionStart, selectionEnd)
   await user.paste('friend')
+
   expect(element).toHaveValue('hello friend')
 })
 
@@ -131,12 +120,11 @@ describe('without Clipboard API', () => {
   })
 
   test('reject if trying to use missing API', async () => {
-    const {element, getEvents} = render(`<input/>`)
-    element.focus()
+    const {getEvents} = render(`<input/>`)
 
     await expect(userEvent.paste()).rejects.toMatchInlineSnapshot(
       `[Error: \`userEvent.paste()\` without \`clipboardData\` requires the \`ClipboardAPI\` to be available.]`,
     )
-    expect(getEvents('paste')).toHaveLength(0)
+    expect(getEvents()).toHaveLength(0)
   })
 })

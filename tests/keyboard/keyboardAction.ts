@@ -2,8 +2,7 @@ import userEvent from '#src'
 import {render, setup} from '#testHelpers'
 
 test('no character input if `altKey` or `ctrlKey` is pressed', async () => {
-  const {element, eventWasFired} = render(`<input/>`)
-  element.focus()
+  const {eventWasFired} = render(`<input/>`)
 
   await userEvent.keyboard('[ControlLeft>]g')
 
@@ -17,8 +16,7 @@ test('no character input if `altKey` or `ctrlKey` is pressed', async () => {
 })
 
 test('do not leak repeatKey in state', async () => {
-  const {element} = render(`<input/>`)
-  ;(element as HTMLInputElement).focus()
+  render(`<input/>`)
 
   const keyboardState = await userEvent.keyboard('{a>2}')
   expect(keyboardState).toHaveProperty('repeatKey', undefined)
@@ -26,10 +24,7 @@ test('do not leak repeatKey in state', async () => {
 
 describe('pressing and releasing keys', () => {
   it('fires event with releasing key twice', async () => {
-    const {element, getEventSnapshot, clearEventCalls, user} = setup(`<input/>`)
-
-    ;(element as HTMLInputElement).focus()
-    clearEventCalls()
+    const {getEventSnapshot, user} = setup(`<input/>`)
 
     await user.keyboard('{ArrowLeft>}{ArrowLeft}')
 
@@ -44,10 +39,7 @@ describe('pressing and releasing keys', () => {
   })
 
   it('fires event without releasing key', async () => {
-    const {element, getEventSnapshot, clearEventCalls, user} = setup(`<input/>`)
-
-    ;(element as HTMLInputElement).focus()
-    clearEventCalls()
+    const {getEventSnapshot, user} = setup(`<input/>`)
 
     await user.keyboard('{a>}')
 
@@ -62,9 +54,7 @@ describe('pressing and releasing keys', () => {
   })
 
   it('fires event multiple times without releasing key', async () => {
-    const {element, getEventSnapshot, clearEventCalls, user} = setup(`<input/>`)
-    ;(element as HTMLInputElement).focus()
-    clearEventCalls()
+    const {getEventSnapshot, user} = setup(`<input/>`)
 
     await user.keyboard('{a>2}')
 
@@ -83,9 +73,7 @@ describe('pressing and releasing keys', () => {
   })
 
   it('fires event multiple times and releases key', async () => {
-    const {element, getEventSnapshot, clearEventCalls, user} = setup(`<input/>`)
-    ;(element as HTMLInputElement).focus()
-    clearEventCalls()
+    const {getEventSnapshot, user} = setup(`<input/>`)
 
     await user.keyboard('{a>2/}')
 
@@ -105,9 +93,7 @@ describe('pressing and releasing keys', () => {
   })
 
   it('fires event multiple times for multiple keys', async () => {
-    const {element, getEventSnapshot, clearEventCalls, user} = setup(`<input/>`)
-    ;(element as HTMLInputElement).focus()
-    clearEventCalls()
+    const {getEventSnapshot, user} = setup(`<input/>`)
 
     await user.keyboard('{a>2}{b>2/}{c>2}{/a}')
 
@@ -147,7 +133,6 @@ describe('pressing and releasing keys', () => {
 describe('prevent default behavior', () => {
   test('per keydown handler', async () => {
     const {element, getEvents, user} = setup(`<input/>`)
-    element.focus()
     element.addEventListener('keydown', e => e.preventDefault())
 
     await user.keyboard('x')
@@ -158,7 +143,6 @@ describe('prevent default behavior', () => {
 
   test('per keypress handler', async () => {
     const {element, getEvents, user} = setup(`<input/>`)
-    element.focus()
     element.addEventListener('keypress', e => e.preventDefault())
 
     await user.keyboard('x')

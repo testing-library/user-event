@@ -35,7 +35,9 @@ test('no events fired on an unfocusable input', async () => {
 })
 
 test('focus with tabindex', async () => {
-  const {element, getEventSnapshot} = setup(`<div tabindex="0" />`)
+  const {element, getEventSnapshot} = setup(`<div tabindex="0" />`, {
+    focus: false,
+  })
   focus(element)
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: div
@@ -78,14 +80,14 @@ test('no events fired if the element is already focused', async () => {
 })
 
 test('calls FocusEvents with relatedTarget', async () => {
-  const {element} = setup('<div><input/><input/></div>')
+  const {
+    elements: [element0, element1],
+  } = setup('<input/><input/>')
 
-  const element0 = element.children[0] as HTMLInputElement
-  const element1 = element.children[1] as HTMLInputElement
-  element0.focus()
   const events0 = addListeners(element0)
   const events1 = addListeners(element1)
 
+  expect(element0).toHaveFocus()
   focus(element1)
 
   expect(

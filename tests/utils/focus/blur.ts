@@ -1,10 +1,8 @@
-import {blur, focus} from '#src/utils'
+import {blur} from '#src/utils'
 import {setup} from '#testHelpers'
 
 test('blur a button', async () => {
-  const {element, getEventSnapshot, clearEventCalls} = setup(`<button />`)
-  focus(element)
-  clearEventCalls()
+  const {element, getEventSnapshot} = setup(`<button />`)
   blur(element)
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: button
@@ -16,9 +14,7 @@ test('blur a button', async () => {
 })
 
 test('no events fired on an unblurable input', async () => {
-  const {element, getEventSnapshot, clearEventCalls} = setup(`<div />`)
-  focus(element)
-  clearEventCalls()
+  const {element, getEventSnapshot} = setup(`<div />`)
   blur(element)
   expect(getEventSnapshot()).toMatchInlineSnapshot(
     `No events were fired on: div`,
@@ -27,10 +23,7 @@ test('no events fired on an unblurable input', async () => {
 })
 
 test('blur with tabindex', async () => {
-  const {element, getEventSnapshot, clearEventCalls} =
-    setup(`<div tabindex="0" />`)
-  focus(element)
-  clearEventCalls()
+  const {element, getEventSnapshot} = setup(`<div tabindex="0" />`)
   blur(element)
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: div
@@ -42,10 +35,7 @@ test('blur with tabindex', async () => {
 })
 
 test('no events fired on a disabled blurable input', async () => {
-  const {element, getEventSnapshot, clearEventCalls} =
-    setup(`<button disabled />`)
-  focus(element)
-  clearEventCalls()
+  const {element, getEventSnapshot} = setup(`<button disabled />`)
   blur(element)
   expect(getEventSnapshot()).toMatchInlineSnapshot(
     `No events were fired on: button`,
@@ -54,7 +44,7 @@ test('no events fired on a disabled blurable input', async () => {
 })
 
 test('no events fired if the element is not focused', async () => {
-  const {element, getEventSnapshot} = setup(`<button />`)
+  const {element, getEventSnapshot} = setup(`<button />`, {focus: false})
   blur(element)
   expect(getEventSnapshot()).toMatchInlineSnapshot(
     `No events were fired on: button`,

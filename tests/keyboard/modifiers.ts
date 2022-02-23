@@ -6,8 +6,7 @@ test.each([
   ['Alt', 'altKey'],
   ['Meta', 'metaKey'],
 ])('Trigger modifier: %s', async (key, modifier) => {
-  const {element, getEvents, user} = setup(`<div tabIndex="-1"></div>`)
-  element.focus()
+  const {getEvents, user} = setup(`<div tabIndex="-1"></div>`)
 
   await user.keyboard(`{${key}>}`)
   const modifierDown = getEvents('keydown')[0]
@@ -27,8 +26,7 @@ test.each([
 test.each([['AltGraph'], ['Fn'], ['Symbol']])(
   'Trigger modifier: %s',
   async key => {
-    const {element, getEvents, user} = setup(`<div tabIndex="-1"></div>`)
-    element.focus()
+    const {getEvents, user} = setup(`<div tabIndex="-1"></div>`)
 
     await user.keyboard(`{${key}>}`)
     const modifierDown = getEvents('keydown')[key === 'AltGraph' ? 1 : 0]
@@ -53,8 +51,7 @@ test.each([
   ['ScrollLock'],
   ['SymbolLock'],
 ])('Switch lock modifier: %s', async key => {
-  const {element, getEvents, user} = setup(`<div tabIndex="-1"></div>`)
-  element.focus()
+  const {getEvents, user} = setup(`<div tabIndex="-1"></div>`)
 
   await user.keyboard(`{${key}}`)
   const modifierOn = getEvents('keydown')[0]

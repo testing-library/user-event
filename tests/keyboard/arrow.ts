@@ -1,11 +1,10 @@
-import {setSelection} from '#src/utils'
 import {setup} from '#testHelpers'
 
 describe('in text input', () => {
   test('collapse selection to the left', async () => {
-    const {element, user} = setup<HTMLInputElement>(`<input value="foobar"/>`)
-    element.focus()
-    element.setSelectionRange(2, 4)
+    const {element, user} = setup<HTMLInputElement>(`<input value="foobar"/>`, {
+      selection: {anchorOffset: 2, focusOffset: 4},
+    })
 
     await user.keyboard('[ArrowLeft]')
 
@@ -14,9 +13,9 @@ describe('in text input', () => {
   })
 
   test('collapse selection to the right', async () => {
-    const {element, user} = setup<HTMLInputElement>(`<input value="foobar"/>`)
-    element.focus()
-    element.setSelectionRange(2, 4)
+    const {element, user} = setup<HTMLInputElement>(`<input value="foobar"/>`, {
+      selection: {anchorOffset: 2, focusOffset: 4},
+    })
 
     await user.keyboard('[ArrowRight]')
 
@@ -25,9 +24,9 @@ describe('in text input', () => {
   })
 
   test('move cursor left', async () => {
-    const {element, user} = setup<HTMLInputElement>(`<input value="foobar"/>`)
-    element.focus()
-    element.setSelectionRange(2, 2)
+    const {element, user} = setup<HTMLInputElement>(`<input value="foobar"/>`, {
+      selection: {focusOffset: 2},
+    })
 
     await user.keyboard('[ArrowLeft]')
 
@@ -36,9 +35,9 @@ describe('in text input', () => {
   })
 
   test('move cursor right', async () => {
-    const {element, user} = setup<HTMLInputElement>(`<input value="foobar"/>`)
-    element.focus()
-    element.setSelectionRange(2, 2)
+    const {element, user} = setup<HTMLInputElement>(`<input value="foobar"/>`, {
+      selection: {focusOffset: 2},
+    })
 
     await user.keyboard('[ArrowRight]')
 
@@ -49,106 +48,102 @@ describe('in text input', () => {
 
 describe('in contenteditable', () => {
   test('collapse selection to the left', async () => {
-    const {element, user} = setup(
+    const {user, xpathNode} = setup(
       `<div contenteditable><span>foo</span><span>bar</span></div>`,
+      {
+        selection: {
+          anchorNode: 'div/span[1]/text()',
+          anchorOffset: 2,
+          focusNode: 'div/span[2]/text()',
+          focusOffset: 1,
+        },
+      },
     )
-    setSelection({
-      anchorNode: element.firstChild?.firstChild as Text,
-      anchorOffset: 2,
-      focusNode: element.lastChild?.firstChild as Text,
-      focusOffset: 1,
-    })
 
     await user.keyboard('[ArrowLeft]')
 
-    expect(element.ownerDocument.getSelection()).toHaveProperty(
+    expect(document.getSelection()).toHaveProperty(
       'focusNode',
-      element.firstChild?.firstChild,
+      xpathNode('div/span[1]/text()'),
     )
-    expect(element.ownerDocument.getSelection()).toHaveProperty(
-      'focusOffset',
-      2,
-    )
+    expect(document.getSelection()).toHaveProperty('focusOffset', 2)
   })
 
   test('collapse selection to the right', async () => {
-    const {element, user} = setup(
+    const {user, xpathNode} = setup(
       `<div contenteditable><span>foo</span><span>bar</span></div>`,
+      {
+        selection: {
+          anchorNode: 'div/span[1]/text()',
+          anchorOffset: 2,
+          focusNode: 'div/span[2]/text()',
+          focusOffset: 1,
+        },
+      },
     )
-    setSelection({
-      anchorNode: element.firstChild?.firstChild as Text,
-      anchorOffset: 2,
-      focusNode: element.lastChild?.firstChild as Text,
-      focusOffset: 1,
-    })
 
     await user.keyboard('[ArrowRight]')
 
-    expect(element.ownerDocument.getSelection()).toHaveProperty(
+    expect(document.getSelection()).toHaveProperty(
       'focusNode',
-      element.lastChild?.firstChild,
+      xpathNode('div/span[2]/text()'),
     )
-    expect(element.ownerDocument.getSelection()).toHaveProperty(
-      'focusOffset',
-      1,
-    )
+    expect(document.getSelection()).toHaveProperty('focusOffset', 1)
   })
 
   test('move cursor to the left', async () => {
-    const {
-      elements: [, div],
-      user,
-    } = setup(
+    const {user, xpathNode} = setup(
       `<span>abc</span><div contenteditable><span>foo</span><span>bar</span></div><span>def</span>`,
+      {
+        selection: {
+          focusNode: 'div/span[2]/text()',
+          focusOffset: 1,
+        },
+      },
     )
-    setSelection({
-      focusNode: div.lastChild?.firstChild as Text,
-      focusOffset: 1,
-    })
 
     await user.keyboard('[ArrowLeft][ArrowLeft]')
 
-    expect(div.ownerDocument.getSelection()).toHaveProperty(
+    expect(document.getSelection()).toHaveProperty(
       'focusNode',
-      div.firstChild?.firstChild,
+      xpathNode('div/span[1]/text()'),
     )
-    expect(div.ownerDocument.getSelection()).toHaveProperty('focusOffset', 2)
+    expect(document.getSelection()).toHaveProperty('focusOffset', 2)
 
     await user.keyboard('[ArrowLeft][ArrowLeft][ArrowLeft][ArrowLeft]')
 
-    expect(div.ownerDocument.getSelection()).toHaveProperty(
+    expect(document.getSelection()).toHaveProperty(
       'focusNode',
-      div.firstChild?.firstChild,
+      xpathNode('div/span[1]/text()'),
     )
-    expect(div.ownerDocument.getSelection()).toHaveProperty('focusOffset', 0)
+    expect(document.getSelection()).toHaveProperty('focusOffset', 0)
   })
 
   test('move cursor to the right', async () => {
-    const {
-      elements: [, div],
-      user,
-    } = setup(
+    const {user, xpathNode} = setup(
       `<span>abc</span><div contenteditable><span>foo</span><span>bar</span></div><span>def</span>`,
+      {
+        selection: {
+          focusNode: 'div/span[1]/text()',
+          focusOffset: 2,
+        },
+      },
     )
-    setSelection({
-      focusNode: div.firstChild?.firstChild as Text,
-      focusOffset: 2,
-    })
 
     await user.keyboard('[ArrowRight][ArrowRight]')
 
-    expect(div.ownerDocument.getSelection()).toHaveProperty(
+    expect(document.getSelection()).toHaveProperty(
       'focusNode',
-      div.lastChild?.firstChild,
+      xpathNode('div/span[2]/text()'),
     )
-    expect(div.ownerDocument.getSelection()).toHaveProperty('focusOffset', 1)
+    expect(document.getSelection()).toHaveProperty('focusOffset', 1)
 
     await user.keyboard('[ArrowRight][ArrowRight][ArrowRight][ArrowRight]')
 
-    expect(div.ownerDocument.getSelection()).toHaveProperty(
+    expect(document.getSelection()).toHaveProperty(
       'focusNode',
-      div.lastChild?.firstChild,
+      xpathNode('div/span[2]/text()'),
     )
-    expect(div.ownerDocument.getSelection()).toHaveProperty('focusOffset', 3)
+    expect(document.getSelection()).toHaveProperty('focusOffset', 3)
   })
 })

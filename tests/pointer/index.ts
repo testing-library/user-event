@@ -39,7 +39,6 @@ test('unknown pointer results in error', async () => {
 test('apply modifiers from keyboardstate', async () => {
   const {element, getEvents, user} = setup(`<input/>`)
 
-  element.focus()
   await user.keyboard('[ShiftLeft>]')
   await user.pointer({keys: '[MouseLeft]', target: element})
   await user.keyboard('[/ShiftLeft][ControlRight>]')

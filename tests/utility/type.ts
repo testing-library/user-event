@@ -1,7 +1,9 @@
 import {setup} from '#testHelpers'
 
 test('type into input', async () => {
-  const {element, getEventSnapshot, user} = setup('<input value="foo"/>')
+  const {element, getEventSnapshot, user} = setup('<input value="foo"/>', {
+    focus: false,
+  })
 
   await user.type(element, 'bar')
 
@@ -42,11 +44,7 @@ test('type into input', async () => {
 })
 
 test('can skip the initial click', async () => {
-  const {element, getEvents, clearEventCalls, user} = setup(
-    '<input value="foo"/>',
-  )
-  element.focus() // users MUST focus themselves if they wish to skip the click
-  clearEventCalls()
+  const {element, getEvents, user} = setup('<input value="foo"/>')
 
   await user.type(element, 'bar', {skipClick: true})
 

@@ -2,11 +2,12 @@ import userEvent from '#src'
 import {render, setup} from '#testHelpers'
 
 test('cut selected value', async () => {
-  const {element, getEvents, user} = setup<HTMLInputElement>(
+  const {getEvents, user} = setup<HTMLInputElement>(
     `<input value="foo bar baz"/>`,
+    {
+      selection: {anchorOffset: 4, focusOffset: 7},
+    },
   )
-  element.focus()
-  element.setSelectionRange(4, 7)
 
   const dt = await user.cut()
 
@@ -18,18 +19,9 @@ test('cut selected value', async () => {
 })
 
 test('cut selected text outside of editable', async () => {
-  const {element, getEvents, user} = setup(
-    `<div tabindex="-1">foo bar baz</div>`,
-  )
-  element.focus()
-  document
-    .getSelection()
-    ?.setBaseAndExtent(
-      element.firstChild as Text,
-      1,
-      element.firstChild as Text,
-      5,
-    )
+  const {getEvents, user} = setup(`<div tabindex="-1">foo bar baz</div>`, {
+    selection: {focusNode: '//text()', anchorOffset: 1, focusOffset: 5},
+  })
 
   const dt = await user.cut()
 
@@ -43,16 +35,10 @@ test('cut selected text outside of editable', async () => {
 test('cut selected text in contenteditable', async () => {
   const {element, getEvents, user} = setup(
     `<div contenteditable>foo bar baz</div>`,
+    {
+      selection: {focusNode: '//text()', anchorOffset: 1, focusOffset: 5},
+    },
   )
-  element.focus()
-  document
-    .getSelection()
-    ?.setBaseAndExtent(
-      element.firstChild as Text,
-      1,
-      element.firstChild as Text,
-      5,
-    )
 
   const dt = await user.cut()
 
@@ -65,10 +51,8 @@ test('cut selected text in contenteditable', async () => {
 })
 
 test('cut on empty selection does nothing', async () => {
-  const {element, getEvents, clearEventCalls, user} = setup(`<input/>`)
-  element.focus()
+  const {getEvents, user} = setup(`<input/>`)
   await window.navigator.clipboard.writeText('foo')
-  clearEventCalls()
 
   await user.cut()
 
@@ -85,9 +69,9 @@ describe('without Clipboard API', () => {
   })
 
   test('reject if trying to use missing API', async () => {
-    const {element} = render<HTMLInputElement>(`<input value="foo bar baz"/>`)
-    element.focus()
-    element.setSelectionRange(4, 7)
+    render<HTMLInputElement>(`<input value="foo bar baz"/>`, {
+      selection: {anchorOffset: 4, focusOffset: 7},
+    })
 
     await expect(
       userEvent.cut({writeToClipboard: true}),
@@ -97,9 +81,9 @@ describe('without Clipboard API', () => {
   })
 
   test('skip using missing API', async () => {
-    const {element} = render<HTMLInputElement>(`<input value="foo bar baz"/>`)
-    element.focus()
-    element.setSelectionRange(4, 7)
+    render<HTMLInputElement>(`<input value="foo bar baz"/>`, {
+      selection: {anchorOffset: 4, focusOffset: 7},
+    })
 
     const dt = await userEvent.cut()
     expect(dt?.getData('text/plain')).toBe('bar')

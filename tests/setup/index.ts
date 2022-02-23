@@ -84,7 +84,6 @@ test.each(apiDeclarationsEntries)(
   'call `%s` api on instance',
   async (name, {args = [], elementArg, elementHtml = `<input/>`}) => {
     const {element} = render<HTMLInputElement>(elementHtml)
-    element.focus()
 
     if (elementArg !== undefined) {
       args[elementArg] = element
@@ -131,7 +130,6 @@ test.each(apiDeclarationsEntries)(
     {args = [], elementArg, elementHtml = `<input/>`, optionsArg},
   ) => {
     const {element} = render<HTMLInputElement>(elementHtml)
-    element.focus()
 
     if (elementArg !== undefined) {
       args[elementArg] = element

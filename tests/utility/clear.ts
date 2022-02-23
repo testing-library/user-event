@@ -2,7 +2,9 @@ import {setup} from '#testHelpers'
 
 describe('clear elements', () => {
   test('clear text input', async () => {
-    const {element, getEventSnapshot, user} = setup('<input value="hello" />')
+    const {element, getEventSnapshot, user} = setup('<input value="hello" />', {
+      focus: false,
+    })
     await user.clear(element)
     expect(element).toHaveValue('')
     expect(getEventSnapshot()).toMatchInlineSnapshot(`
@@ -19,6 +21,7 @@ describe('clear elements', () => {
   test('clear textarea', async () => {
     const {element, getEventSnapshot, user} = setup(
       '<textarea>hello</textarea>',
+      {focus: false},
     )
     await user.clear(element)
     expect(element).toHaveValue('')
@@ -36,6 +39,7 @@ describe('clear elements', () => {
   test('clear contenteditable', async () => {
     const {element, getEventSnapshot, user} = setup(
       '<div contenteditable>hello</div>',
+      {focus: false},
     )
     await user.clear(element)
     expect(element).toBeEmptyDOMElement()
@@ -96,7 +100,7 @@ describe('throw error when clear is impossible', () => {
   })
 
   test('abort if event handler prevents element being focused', async () => {
-    const {element, user} = setup(`<input value="hello"/>`)
+    const {element, user} = setup(`<input value="hello"/>`, {focus: false})
     element.addEventListener('focus', async () => element.blur())
 
     await expect(

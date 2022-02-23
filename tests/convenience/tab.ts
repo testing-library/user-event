@@ -4,8 +4,9 @@ test('tab', async () => {
   const {
     elements: [elA, elB, elC],
     user,
-  } = setup(`<input id="a"/><input id="b"/><input id="c"/>`)
-  elB.focus()
+  } = setup(`<input id="a"/><input id="b"/><input id="c"/>`, {
+    focus: '//input[@id="b"]',
+  })
 
   await user.tab()
   expect(elC).toHaveFocus()

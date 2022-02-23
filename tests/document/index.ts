@@ -16,8 +16,6 @@ function prepare(element: Element) {
 
 test('keep track of value in UI', async () => {
   const {element} = render<HTMLInputElement>(`<input type="number"/>`)
-  // The element has to either receive focus or be already focused when preparing.
-  element.focus()
 
   prepare(element)
 
@@ -35,6 +33,7 @@ test('keep track of value in UI', async () => {
 test('trigger `change` event if value changed since focus/set', async () => {
   const {element, getEvents} = render<HTMLInputElement>(
     `<input type="number"/>`,
+    {focus: false},
   )
 
   prepare(element)
@@ -63,12 +62,15 @@ test('trigger `change` event if value changed since focus/set', async () => {
 })
 
 test('maintain selection range like UI', async () => {
-  const {element} = render<HTMLInputElement>(`<input type="text" value="abc"/>`)
+  const {element} = render<HTMLInputElement>(
+    `<input type="text" value="abc"/>`,
+    {
+      selection: {focusOffset: 1},
+    },
+  )
 
   prepare(element)
 
-  element.setSelectionRange(1, 1)
-  element.focus()
   setUIValue(element, 'adbc')
   setUISelection(element, {focusOffset: 2})
 
@@ -82,7 +84,6 @@ test('maintain selection range on elements without support for selection range',
 
   prepare(element)
 
-  element.focus()
   setUIValue(element, '2e-')
   setUISelection(element, {focusOffset: 2})
 
@@ -96,7 +97,6 @@ test('clear UI selection if selection is programmatically set', async () => {
 
   prepare(element)
 
-  element.focus()
   setUIValue(element, 'abc')
   setUISelection(element, {anchorOffset: 1, focusOffset: 2})
   expect(element.selectionStart).toBe(1)

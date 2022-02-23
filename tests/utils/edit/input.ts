@@ -45,16 +45,13 @@ cases(
 cases(
   'on text node',
   ({range, data = '', inputType, textContent}) => {
-    const {element} = setup(`<div contenteditable="true">abcd</div>`)
-    element.focus()
-    document
-      .getSelection()
-      ?.setBaseAndExtent(
-        element.firstChild as ChildNode,
-        range[0],
-        element.firstChild as ChildNode,
-        range[1],
-      )
+    const {element} = setup(`<div contenteditable="true">abcd</div>`, {
+      selection: {
+        focusNode: '//text()',
+        anchorOffset: range[0],
+        focusOffset: range[1],
+      },
+    })
 
     input(createConfig(), element, data, inputType)
 
@@ -104,16 +101,10 @@ cases(
   ({range, data = '', inputType, html}) => {
     const {element} = setup(
       `<div contenteditable="true"><button>a</button><button>b</button><button>c</button><button>d</button></div>`,
+      {
+        selection: {anchorOffset: range[0], focusOffset: range[1]},
+      },
     )
-    element.focus()
-    document
-      .getSelection()
-      ?.setBaseAndExtent(
-        element as ChildNode,
-        range[0],
-        element as ChildNode,
-        range[1],
-      )
 
     input(createConfig(), element, data, inputType)
 

@@ -3,10 +3,9 @@ import {getUIValue} from '#src/document/value'
 import {setup} from '#testHelpers'
 
 test('type character into input', async () => {
-  const {element, user} = setup<HTMLInputElement>(`<input value="aXd"/>`)
-  element.focus()
-  element.selectionStart = 1
-  element.selectionEnd = 2
+  const {element, user} = setup<HTMLInputElement>(`<input value="aXd"/>`, {
+    selection: {anchorOffset: 1, focusOffset: 2},
+  })
 
   await user.keyboard('bc')
 
@@ -14,9 +13,9 @@ test('type character into input', async () => {
 })
 
 test('overwrite input with same value', async () => {
-  const {element, user} = setup<HTMLInputElement>(`<input value="1"/>`)
-  element.select()
-  element.focus()
+  const {element, user} = setup<HTMLInputElement>(`<input value="1"/>`, {
+    selection: {anchorOffset: 0, focusOffset: 1},
+  })
 
   await user.keyboard('11123')
 
@@ -25,7 +24,6 @@ test('overwrite input with same value', async () => {
 
 test('edit `<input type="date"/>`', async () => {
   const {element, user} = setup('<input type="date" />')
-  element.focus()
 
   await user.keyboard('2020-06-29')
 
@@ -36,7 +34,6 @@ cases(
   'edit `<input type="time"/>`',
   async ({input, value}) => {
     const {element, user} = setup('<input type="time" />')
-    element.focus()
 
     await user.keyboard(input)
 
@@ -53,10 +50,9 @@ cases(
 )
 
 test('type character into textarea', async () => {
-  const {element, user} = setup<HTMLInputElement>(`<textarea>aXd</textarea>`)
-  element.focus()
-  element.selectionStart = 1
-  element.selectionEnd = 2
+  const {element, user} = setup<HTMLInputElement>(`<textarea>aXd</textarea>`, {
+    selection: {anchorOffset: 1, focusOffset: 2},
+  })
 
   await user.keyboard('bc')
 
@@ -64,16 +60,9 @@ test('type character into textarea', async () => {
 })
 
 test('type characters into contenteditable', async () => {
-  const {element, user} = setup('<div contenteditable=true>aXd</div>')
-  element.focus()
-  element.ownerDocument
-    .getSelection()
-    ?.setBaseAndExtent(
-      element.firstChild as ChildNode,
-      1,
-      element.firstChild as ChildNode,
-      2,
-    )
+  const {element, user} = setup('<div contenteditable=true>aXd</div>', {
+    selection: {focusNode: '//text()', anchorOffset: 1, focusOffset: 2},
+  })
 
   await user.keyboard('bc')
 
@@ -93,7 +82,6 @@ test.each([
   [`<div tabIndex="-1" contenteditable="false"/>`],
 ])('do not change non-editable element: %s', async html => {
   const {element, getEvents, user} = setup(html)
-  element.focus()
 
   const value = (element as HTMLInputElement).value
 
@@ -104,9 +92,11 @@ test.each([
 })
 
 test('type [Enter] in textarea', async () => {
-  const {element, getEvents, user} = setup(`<textarea>f</textarea>`)
+  const {element, getEvents, user} = setup(`<textarea>f</textarea>`, {
+    selection: {focusOffset: 1},
+  })
 
-  await user.type(element, 'oo[Enter]bar[ShiftLeft>][Enter]baz')
+  await user.keyboard('oo[Enter]bar[ShiftLeft>][Enter]baz')
 
   expect(element).toHaveValue('foo\nbar\nbaz')
   expect(getEvents('input')[2]).toHaveProperty('inputType', 'insertLineBreak')
@@ -116,9 +106,12 @@ test('type [Enter] in textarea', async () => {
 test('type [Enter] in contenteditable', async () => {
   const {element, getEvents, user} = setup(
     `<div contenteditable="true">f</div>`,
+    {
+      selection: {focusNode: '//text()', focusOffset: 1},
+    },
   )
 
-  await user.type(element, 'oo[Enter]bar[ShiftLeft>][Enter]baz')
+  await user.keyboard('oo[Enter]bar[ShiftLeft>][Enter]baz')
 
   expect(element).toHaveTextContent('foo bar baz')
   expect(element.firstChild).toHaveProperty('nodeValue', 'foo\nbar\nbaz')
@@ -140,7 +133,6 @@ test.each([
     const {element, getEvents, user} = setup<HTMLInputElement>(
       `<input type="number"/>`,
     )
-    element.focus()
 
     await user.keyboard(text)
 

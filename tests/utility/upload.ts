@@ -4,6 +4,7 @@ test('change file input', async () => {
   const file = new File(['hello'], 'hello.png', {type: 'image/png'})
   const {element, getEventSnapshot, user} = setup<HTMLInputElement>(
     '<input type="file" />',
+    {focus: false},
   )
 
   await user.upload(element, file)
@@ -44,10 +45,13 @@ test('relay click/upload on label to file input', async () => {
     elements: [label],
     getEventSnapshot,
     user,
-  } = setup<[HTMLLabelElement]>(`
+  } = setup<[HTMLLabelElement]>(
+    `
     <label for="element">Element</label>
     <input type="file" id="element" />
-  `)
+  `,
+    {focus: false},
+  )
 
   await user.upload(label, file)
 

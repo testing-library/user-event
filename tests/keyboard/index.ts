@@ -2,7 +2,7 @@ import userEvent from '#src'
 import {addListeners, render, setup} from '#testHelpers'
 
 it('type without focus', async () => {
-  const {element, user} = setup('<input/>')
+  const {element, user} = setup('<input/>', {focus: false})
   const {getEventSnapshot} = addListeners(document.body)
 
   await user.keyboard('foo')
@@ -24,17 +24,14 @@ it('type without focus', async () => {
 })
 
 it('type with focus', async () => {
-  const {element, user} = setup('<input/>')
-  const {getEventSnapshot} = addListeners(document.body)
-  element.focus()
+  const {element, user, getEventSnapshot} = setup('<input/>')
 
   await user.keyboard('foo')
 
   expect(element).toHaveValue('foo')
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
-    Events fired on: body
+    Events fired on: input[value="foo"]
 
-    input[value=""] - focusin
     input[value=""] - keydown: f
     input[value=""] - keypress: f
     input[value=""] - beforeinput
@@ -54,17 +51,14 @@ it('type with focus', async () => {
 })
 
 it('type asynchronous', async () => {
-  const {element, user} = setup('<input/>', {delay: 1})
-  const {getEventSnapshot} = addListeners(document.body)
-  element.focus()
+  const {element, user, getEventSnapshot} = setup('<input/>', {delay: 1})
 
   await user.keyboard('foo')
 
   expect(element).toHaveValue('foo')
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
-    Events fired on: body
+    Events fired on: input[value="foo"]
 
-    input[value=""] - focusin
     input[value=""] - keydown: f
     input[value=""] - keypress: f
     input[value=""] - beforeinput
@@ -91,9 +85,7 @@ it('error in async', async () => {
 })
 
 it('continue typing with state', async () => {
-  const {element, getEventSnapshot, clearEventCalls} = render('<input/>')
-  element.focus()
-  clearEventCalls()
+  const {getEventSnapshot, clearEventCalls} = render('<input/>')
 
   const state = await userEvent.keyboard('[ShiftRight>]')
 
@@ -151,7 +143,6 @@ test('disabling activeElement moves action to HTMLBodyElement', async () => {
       element.disabled = true
     }
   })
-  element.focus()
 
   const {getEventSnapshot} = addListeners(document.body)
   await user.keyboard('abc')

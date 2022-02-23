@@ -6,8 +6,7 @@ describe('release [Space]', () => {
     [`<button></button>`, true],
     [`<input/>`, false],
   ])('dispatch `click` on `%s`: %s', async (html, click) => {
-    const {element, clearEventCalls, eventWasFired, user} = setup(html)
-    element.focus()
+    const {clearEventCalls, eventWasFired, user} = setup(html)
     await user.keyboard('[Space>]')
     clearEventCalls()
 

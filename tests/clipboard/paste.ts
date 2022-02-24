@@ -65,6 +65,18 @@ test('does not paste when disabled', async () => {
   )
 })
 
+test('does not paste when preventDefault is called', async () => {
+  const {element, getEventSnapshot, user} = setup(`<input />`)
+  element.addEventListener('paste', e => e.preventDefault())
+
+  await user.paste('hi')
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
+    Events fired on: input[value=""]
+
+    input[value=""] - paste
+  `)
+})
+
 test.each(['input', 'textarea'])(
   'should paste text in <%s> up to maxLength if provided',
   async type => {

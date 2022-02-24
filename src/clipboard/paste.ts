@@ -1,10 +1,5 @@
 import {Config, Instance} from '../setup'
-import {
-  createDataTransfer,
-  isEditable,
-  readDataTransferFromClipboard,
-  input,
-} from '../utils'
+import {createDataTransfer, readDataTransferFromClipboard} from '../utils'
 
 export async function paste(
   this: Instance,
@@ -26,10 +21,6 @@ export async function paste(
   this.dispatchUIEvent(target, 'paste', {
     clipboardData: dataTransfer,
   })
-
-  if (isEditable(target)) {
-    input(this[Config], target, dataTransfer.getData('text'), 'insertFromPaste')
-  }
 }
 
 function getClipboardDataFromString(text: string) {

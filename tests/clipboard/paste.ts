@@ -77,7 +77,7 @@ test('does not paste when disabled', async () => {
   )
 })
 
-test('does not paste when preventDefault is called', async () => {
+test('prevent input per paste event handler', async () => {
   const {element, getEventSnapshot, user} = setup(`<input />`)
   element.addEventListener('paste', e => e.preventDefault())
 

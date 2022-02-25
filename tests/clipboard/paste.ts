@@ -12,7 +12,7 @@ test('paste with empty clipboard', async () => {
   expect(getEvents('input')).toHaveLength(0)
 })
 
-test('paste with file data', async () => {
+test('do not trigger input for paste with file data', async () => {
   const {getEvents, user} = setup(`<input/>`)
 
   const f0 = new File(['bar'], 'bar0.txt', {type: 'text/plain'})

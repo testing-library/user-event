@@ -1,5 +1,33 @@
+import cases from 'jest-in-case'
 import userEvent from '#src'
 import {render, setup} from '#testHelpers'
+
+// Maybe this should not trigger keypress event on HTMLAnchorElement
+// see https://github.com/testing-library/user-event/issues/589
+cases(
+  'trigger `keypress` event',
+  async ({code, hasKeyPress}) => {
+    const {eventWasFired, user} = setup(`<input/>`)
+
+    await user.keyboard(`[${code}]`)
+
+    expect(eventWasFired('keypress')).toBe(hasKeyPress)
+  },
+  {
+    characters: {
+      code: 'KeyX',
+      hasKeyPress: true,
+    },
+    '[Enter]': {
+      code: 'Enter',
+      hasKeyPress: true,
+    },
+    'skip for other keys': {
+      code: 'Escape',
+      hasKeyPress: false,
+    },
+  },
+)
 
 test('no character input if `altKey` or `ctrlKey` is pressed', async () => {
   const {eventWasFired} = render(`<input/>`)

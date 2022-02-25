@@ -78,15 +78,12 @@ test('does not paste when disabled', async () => {
 })
 
 test('prevent input per paste event handler', async () => {
-  const {element, getEventSnapshot, user} = setup(`<input />`)
+  const {element, eventWasFired, user} = setup(`<input />`)
   element.addEventListener('paste', e => e.preventDefault())
 
   await user.paste('hi')
-  expect(getEventSnapshot()).toMatchInlineSnapshot(`
-    Events fired on: input[value=""]
-
-    input[value=""] - paste
-  `)
+  expect(eventWasFired('paste')).toBe(true)
+  expect(eventWasFired('input')).toBe(false)
 })
 
 test.each(['input', 'textarea'])(

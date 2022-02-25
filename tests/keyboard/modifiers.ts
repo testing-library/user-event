@@ -64,3 +64,18 @@ test.each([
   const modifierOff = getEvents('keyup')[2]
   expect(modifierOff.getModifierState(key)).toBe(false)
 })
+
+test('produce extra events for the Control key when AltGraph is pressed', async () => {
+  const {getEventSnapshot, user} = setup(`<input/>`)
+
+  await user.keyboard('{AltGraph}')
+
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
+    Events fired on: input[value=""]
+
+    input[value=""] - keydown: Control
+    input[value=""] - keydown: AltGraph
+    input[value=""] - keyup: AltGraph
+    input[value=""] - keyup: Control
+  `)
+})

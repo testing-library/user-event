@@ -86,3 +86,97 @@ test('trigger input event for [Enter] on textarea', () => {
   expect(getEvents('input')[0]).toHaveProperty('inputType', 'insertText')
   expect(element).toHaveValue('x')
 })
+
+cases(
+  'trigger click for [Enter]',
+  ({html, hasClick = true}) => {
+    const {element, eventWasFired, getEvents} = render(html)
+
+    dispatchUIEvent(createConfig(), element, 'keypress', {key: 'Enter'})
+
+    expect(eventWasFired('click')).toBe(hasClick)
+    if (hasClick) {
+      expect(getEvents('click')[0]).toHaveProperty('detail', 0)
+    }
+  },
+  {
+    'on link': {
+      html: `<a href="example.com" target="__blank"/>`,
+    },
+    'on button': {
+      html: `<button/>`,
+    },
+    'on color input': {
+      html: `<input type="color" />`,
+    },
+    'omit on radio button': {
+      html: `<input type="radio"/>`,
+      hasClick: false,
+    },
+    'omit on checkbox': {
+      html: `<input type="checkbox"/>`,
+      hasClick: false,
+    },
+  },
+)
+
+cases(
+  'submit form on [Enter]',
+  async ({html, click, submit}) => {
+    const {eventWasFired, xpathNode} = render(html, {focus: 'form/*[2]'})
+
+    dispatchUIEvent(createConfig(), xpathNode('form/*[2]'), 'keypress', {
+      key: 'Enter',
+    })
+
+    expect(eventWasFired('click')).toBe(click)
+    expect(eventWasFired('submit')).toBe(submit)
+  },
+  {
+    'with `<input type="submit"/>`': {
+      html: `<form><input/><input/><input type="submit"/></form>`,
+      click: true,
+      submit: true,
+    },
+    'with `<button/>`': {
+      html: `<form><input/><input/><button/></form>`,
+      click: true,
+      submit: true,
+    },
+    'with `<button type="submit"/>`': {
+      html: `<form><input/><input/><button type="submit"/></form>`,
+      click: true,
+      submit: true,
+    },
+    'with `<button type="button"/>`': {
+      html: `<form><input/><input/><button type="button"/></form>`,
+      click: false,
+      submit: false,
+    },
+    'on checkbox': {
+      html: `<form><input/><input type="checkbox"/><button type="submit"/></form>`,
+      click: true,
+      submit: true,
+    },
+    'on radio': {
+      html: `<form><input/><input type="radio"/><button type="submit"/></form>`,
+      click: true,
+      submit: true,
+    },
+    'with single input': {
+      html: `<form><div></div><input/></form>`,
+      click: false,
+      submit: true,
+    },
+    'without submit button': {
+      html: `<form><input/><input/></form>`,
+      click: false,
+      submit: false,
+    },
+    'on radio/checkbox without submit button': {
+      html: `<form><input/><input type="radio"/></form>`,
+      click: false,
+      submit: false,
+    },
+  },
+)

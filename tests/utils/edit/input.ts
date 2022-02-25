@@ -3,22 +3,33 @@ import {input} from '#src/utils'
 import {render, setup} from '#testHelpers'
 import {createConfig} from '#src/setup/setup'
 import {getUIValue} from '#src/document'
-
 ;[`<input value="abcd"/>`, `<textarea>abcd</textarea>`].forEach(html => {
   cases(
     `input on ${html}`,
-    ({range, data = '', inputType = 'insertText', value}) => {
-      const {element, getEvents} = render<HTMLInputElement>(html, {
-        selection: {anchorOffset: range[0], focusOffset: range[1]},
-      })
+    ({
+      range,
+      data = '',
+      inputType = 'insertText',
+      value,
+      expectInput = true,
+    }) => {
+      const {element, getEvents, eventWasFired} = render<HTMLInputElement>(
+        html,
+        {
+          selection: {anchorOffset: range[0], focusOffset: range[1]},
+        },
+      )
 
       input(createConfig(), element, data, inputType)
 
       expect(element).toHaveValue(value)
       expect(getEvents('beforeinput')[0]).toHaveProperty('data', data)
       expect(getEvents('beforeinput')[0]).toHaveProperty('inputType', inputType)
-      expect(getEvents('input')[0]).toHaveProperty('data', data)
-      expect(getEvents('input')[0]).toHaveProperty('inputType', inputType)
+      expect(eventWasFired('input')).toBe(expectInput)
+      if (expectInput) {
+        expect(getEvents('input')[0]).toHaveProperty('data', data)
+        expect(getEvents('input')[0]).toHaveProperty('inputType', inputType)
+      }
     },
     {
       insertText: {
@@ -41,6 +52,12 @@ import {getUIValue} from '#src/document'
         inputType: 'deleteContentBackward',
         value: 'acd',
       },
+      'deleteContentBackward at start': {
+        range: [0, 0],
+        inputType: 'deleteContentBackward',
+        value: 'abcd',
+        expectInput: false,
+      },
       'deleteContentForward extended': {
         range: [1, 3],
         inputType: 'deleteContentForward',
@@ -50,6 +67,12 @@ import {getUIValue} from '#src/document'
         range: [2, 2],
         inputType: 'deleteContentForward',
         value: 'abd',
+      },
+      'deleteContentForward at end': {
+        range: [4, 4],
+        inputType: 'deleteContentForward',
+        value: 'abcd',
+        expectInput: false,
       },
     },
   )

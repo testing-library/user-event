@@ -1133,6 +1133,16 @@
       "contributions": [
         "bug"
       ]
+    },
+    {
+      "login": "Gudahtt",
+      "name": "Mark Stacey",
+      "avatar_url": "https://avatars.githubusercontent.com/u/2459287?v=4",
+      "profile": "https://github.com/Gudahtt",
+      "contributions": [
+        "bug",
+        "code"
+      ]
     }
   ],
   "commitConvention": "none",

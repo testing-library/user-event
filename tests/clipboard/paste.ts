@@ -1,11 +1,23 @@
 import userEvent from '#src'
 import {render, setup} from '#testHelpers'
+import {createDataTransfer} from '#src/utils'
 
 test('paste with empty clipboard', async () => {
   const {element, getEvents, user} = setup(`<input/>`)
   await element.ownerDocument.defaultView?.navigator.clipboard.write([])
 
   await user.paste()
+
+  expect(getEvents('paste')).toHaveLength(1)
+  expect(getEvents('input')).toHaveLength(0)
+})
+
+test('do not trigger input for paste with file data', async () => {
+  const {getEvents, user} = setup(`<input/>`)
+
+  const f0 = new File(['bar'], 'bar0.txt', {type: 'text/plain'})
+  const dt = createDataTransfer([f0])
+  await user.paste(dt)
 
   expect(getEvents('paste')).toHaveLength(1)
   expect(getEvents('input')).toHaveLength(0)
@@ -63,6 +75,15 @@ test('does not paste when disabled', async () => {
   expect(getEventSnapshot()).toMatchInlineSnapshot(
     `No events were fired on: input[value=""]`,
   )
+})
+
+test('prevent input per paste event handler', async () => {
+  const {element, eventWasFired, user} = setup(`<input />`)
+  element.addEventListener('paste', e => e.preventDefault())
+
+  await user.paste('hi')
+  expect(eventWasFired('paste')).toBe(true)
+  expect(eventWasFired('input')).toBe(false)
 })
 
 test.each(['input', 'textarea'])(

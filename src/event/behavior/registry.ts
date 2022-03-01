@@ -7,7 +7,7 @@ export interface BehaviorPlugin<Type extends EventType> {
     target: Element,
     config: Config,
   ): // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
-  void | (() => void) | (() => Promise<void>)
+  void | (() => void)
 }
 
 export const behavior: {

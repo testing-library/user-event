@@ -44,7 +44,8 @@ cases(
     expect(getEvents('input')[0]).toHaveProperty('inputType', inputType)
     if (expectedValue !== undefined) {
       expect(element).toHaveValue(expectedValue)
-    } else if (expectedHtml !== undefined) {
+    }
+    if (expectedHtml !== undefined) {
       expect(element).toHaveProperty('innerHTML', expectedHtml)
     }
   },

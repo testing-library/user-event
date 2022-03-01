@@ -11,11 +11,12 @@ export async function copy(this: Instance) {
     return
   }
 
-  this.dispatchUIEvent(target, 'copy', {
-    clipboardData,
-  })
-
-  if (this[Config].writeToClipboard) {
+  if (
+    this.dispatchUIEvent(target, 'copy', {
+      clipboardData,
+    }) &&
+    this[Config].writeToClipboard
+  ) {
     await writeDataTransferToClipboard(doc, clipboardData)
   }
 

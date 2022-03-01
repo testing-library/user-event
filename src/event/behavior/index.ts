@@ -1,4 +1,5 @@
 import './click'
+import './cut'
 import './keydown'
 import './keypress'
 import './keyup'

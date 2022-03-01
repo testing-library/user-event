@@ -93,7 +93,7 @@ export function addListeners(
     eventHandlerCalls = []
   }
 
-  function eventWasFired(eventType: keyof GlobalEventHandlersEventMap) {
+  function eventWasFired(eventType: keyof DocumentEventMap) {
     return getEvents(eventType).length > 0
   }
 

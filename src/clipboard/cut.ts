@@ -1,10 +1,5 @@
 import {Config, Instance} from '../setup'
-import {
-  copySelection,
-  input,
-  isEditable,
-  writeDataTransferToClipboard,
-} from '../utils'
+import {copySelection, writeDataTransferToClipboard} from '../utils'
 
 export async function cut(this: Instance) {
   const doc = this[Config].document
@@ -16,16 +11,13 @@ export async function cut(this: Instance) {
     return
   }
 
-  this.dispatchUIEvent(target, 'cut', {
-    clipboardData,
-  })
-
-  if (isEditable(target)) {
-    input(this[Config], target, '', 'deleteByCut')
-  }
-
-  if (this[Config].writeToClipboard) {
-    await writeDataTransferToClipboard(doc, clipboardData)
+  if (
+    this.dispatchUIEvent(target, 'cut', {
+      clipboardData,
+    }) &&
+    this[Config].writeToClipboard
+  ) {
+    await writeDataTransferToClipboard(target.ownerDocument, clipboardData)
   }
 
   return clipboardData

@@ -53,6 +53,22 @@ test('copy on empty selection does nothing', async () => {
   expect(getEvents()).toHaveLength(0)
 })
 
+test('prevent default behavior per event handler', async () => {
+  const {element, eventWasFired, getEvents, user} = setup(
+    `<input value="bar"/>`,
+    {
+      selection: {anchorOffset: 0, focusOffset: 3},
+    },
+  )
+  element.addEventListener('copy', e => e.preventDefault())
+  await window.navigator.clipboard.writeText('foo')
+
+  await user.copy()
+  expect(eventWasFired('copy')).toBe(true)
+  expect(getEvents('copy')[0].clipboardData?.getData('text')).toBe('bar')
+  await expect(window.navigator.clipboard.readText()).resolves.toBe('foo')
+})
+
 describe('without Clipboard API', () => {
   beforeEach(() => {
     Object.defineProperty(window.navigator, 'clipboard', {

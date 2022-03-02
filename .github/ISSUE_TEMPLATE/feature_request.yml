@@ -35,7 +35,7 @@ body:
       description: |
         Please describe what you want to happen.
 
-        If you happen to have an idea, how this could be implemented, please include this information here.
+        If you happen to have an idea of how this could be implemented, please include this information here.
 
         If aspects of the missing feature are described e.g. at MDN, please include links as reference.
     validations:

@@ -1,0 +1,104 @@
+name: 🐛 Bug report
+description: Create a report to help us improve
+labels:
+  - needs assessment
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: >
+        Thanks for taking the time to fill out this form. ❤
+
+        Bug reports are an important contribution to the library!
+
+
+        A clear and concise description of the bug helps to identify problems in
+        the implementation and validate proposed solutions.
+  - type: input
+    attributes:
+      label: Reproduction example
+      description: |
+        Please set up an online code example at https://codesandbox.io.
+
+        You can use the following template as a starting point:
+        https://codesandbox.io/s/vbcvs?file=/src/App.js
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Prerequisites
+      description: |
+        The minimal requirements to reproduce the described behavior.
+      placeholder: |
+        1. Render `<input type="text" value="abc"/>` element.
+        2. Select the `b` per mouse.
+        3. Press `x` on the keyboard.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Expected behavior
+      description: |
+        A clear and concise description of what you expected to happen.
+
+        Try to include a test asserting this behavior in the codesandbox example above.
+
+        If the expected behavior is described e.g. at MDN, please include a link as reference.
+      placeholder: |
+        Input element value changes to `axc` and the cursor is at position 2.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Actual behavior
+      description: |
+        A clear and concise description of what did happen.
+      placeholder: |
+        Input element value changes to `Well, that was unexpected.`.
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: User-event version
+      description: |
+        Please make sure that you are using at least the latest stable version.
+        See https://github.com/testing-library/user-event/releases?q=prerelease%3Afalse
+      placeholder: 14.0.0
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Environment
+      description: >
+        If the bug is not reproducible per Codesandbox, please include at least
+        the following information about the environment.
+
+        If any other third-party libraries are necessary for reproducing the
+        bug, please consider filing an issue with that library and/or open a
+        [Discussion](https://github.com/testing-library/user-event/discussions/new?category=q-a).
+      value: |
+        Testing Library framework: <!-- `@testing-library/react@12.1.3` -->
+        <!--
+          This can also be @testing-library/dom, if you don't use any framework wrapper.
+        -->
+
+        JS framework: <!-- `react@17.0.2` -->
+
+        Test environment: <!-- `jest@27.5.1` -->
+        <!--
+          Are you using Jest, Mocha, Puppeteer, Ava, Vitest, or something else?
+          Which version are we dealing with?
+        -->
+
+        DOM implementation: <!-- `jsdom@19.0.0` -->
+        <!--
+          Are you using Jsdom, a browser, or something else?
+
+          Some test environments have a default DOM implementation, e.g. Jest ships with Jsdom.
+          Please check your configuration.
+        -->
+  - type: textarea
+    attributes:
+      label: Additional context
+      description: |
+        Any additional information on the topic you'd like to include.

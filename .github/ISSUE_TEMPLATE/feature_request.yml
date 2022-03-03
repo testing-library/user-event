@@ -1,0 +1,47 @@
+name: 🤔 Feature request
+description: Suggest an idea for this project
+labels:
+  - needs assessment
+  - enhancement
+body:
+  - type: markdown
+    attributes:
+      value: >
+        Thanks for taking the time to fill out this form. ❤
+
+        A clear and concise description is a huge part of making a new feature
+        happen.
+  - type: textarea
+    attributes:
+      label: Problem description
+      description: |
+        The problem you are trying to solve.
+        What is it you are trying to achieve?
+
+        Detail the minimal requirements to reproduce the problem.
+
+        If you want to test e.g. certain features of your software, include a minimal component that implements the feature.
+        Please set up an online code example at https://codesandbox.io.
+        You can use the following template as a starting point:
+        https://codesandbox.io/s/vbcvs?file=/src/App.js
+
+        If the problem is specific to some environment and/or is not reproducible per Codesandbox,
+        please provide the information necessary to reproduce it.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Suggested solution
+      description: |
+        Please describe what you want to happen.
+
+        If you happen to have an idea of how this could be implemented, please include this information here.
+
+        If aspects of the missing feature are described e.g. at MDN, please include links as reference.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Additional context
+      description: |
+        Any additional information on the topic.

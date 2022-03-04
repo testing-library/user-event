@@ -157,6 +157,7 @@ Thanks goes to these wonderful people ([emoji key][emojis]):
     <td align="center"><a href="https://twitter.com/piecu"><img src="https://avatars.githubusercontent.com/u/82964?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Damian Pieczynski</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3Apiecyk" title="Bug reports">🐛</a></td>
     <td align="center"><a href="https://github.com/Gudahtt"><img src="https://avatars.githubusercontent.com/u/2459287?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Mark Stacey</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3AGudahtt" title="Bug reports">🐛</a> <a href="https://github.com/testing-library/user-event/commits?author=Gudahtt" title="Code">💻</a></td>
     <td align="center"><a href="https://lifeiscontent.net/"><img src="https://avatars.githubusercontent.com/u/180963?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Aaron Reisman</b></sub></a><br /><a href="#ideas-lifeiscontent" title="Ideas, Planning, & Feedback">🤔</a></td>
+    <td align="center"><a href="https://github.com/markwoon"><img src="https://avatars.githubusercontent.com/u/215141?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Mark Woon</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3Amarkwoon" title="Bug reports">🐛</a></td>
   </tr>
 </table>
 

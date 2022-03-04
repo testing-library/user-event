@@ -47,6 +47,9 @@ cases(
     'control in other legend of disabled fieldset': {
       html: `<fieldset disabled><legend></legend><legend><input/></legend></fieldset>`,
     },
+    'control in nested legend of disabled fieldset': {
+      html: `<fieldset disabled><div>><legend><input/></legend></div></fieldset>`,
+    },
     'element without support for disabled': {
       html: `<div disabled></div>`,
       node: '*',

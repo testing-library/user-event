@@ -19,7 +19,7 @@ export function isDisabled(element: Element | null): boolean {
     } else if (isElementType(el, 'fieldset')) {
       if (
         el.hasAttribute('disabled') &&
-        !el.querySelector('legend')?.contains(element)
+        !el.querySelector(':scope > legend')?.contains(element)
       ) {
         return true
       }

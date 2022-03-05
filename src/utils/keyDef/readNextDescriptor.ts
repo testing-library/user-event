@@ -133,6 +133,6 @@ function getErrorMessage(
   text: string,
 ) {
   return `Expected ${expected} but found "${found ?? ''}" in "${text}"
-    See https://github.com/testing-library/user-event/blob/main/README.md#keyboardtext-options
+    See https://testing-library.com/docs/user-event/keyboard/
     for more information about how userEvent parses your input.`
 }

@@ -110,32 +110,3 @@ cases(
     },
   },
 )
-
-cases(
-  'errors',
-  ({text, expectedError}) => {
-    expect(() => parseKeyDef(defaultKeyMap, `${text}`)).toThrow(expectedError)
-  },
-  {
-    'missing descriptor': {
-      text: '',
-      expectedError: 'but found "" in ""',
-    },
-    'missing closing bracket': {
-      text: '{a)',
-      expectedError: 'but found ")" in "{a)"',
-    },
-    'invalid repeat modifier': {
-      text: '{a>e}',
-      expectedError: 'but found "e" in "{a>e}"',
-    },
-    'missing bracket after repeat modifier': {
-      text: '{a>3)',
-      expectedError: 'but found ")" in "{a>3)"',
-    },
-    'unescaped modifier': {
-      text: '{/>5}',
-      expectedError: 'but found ">" in "{/>5}"',
-    },
-  },
-)

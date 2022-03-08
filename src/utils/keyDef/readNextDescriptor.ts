@@ -81,18 +81,17 @@ function readTag(
   const endBracket = text[pos] === expectedEndBracket ? expectedEndBracket : ''
 
   if (!endBracket) {
-    throw new Error(
-      getErrorMessage(
-        [
-          !repeatModifier && 'repeat modifier',
-          !releaseSelfModifier && 'release modifier',
-          `"${expectedEndBracket}"`,
-        ]
-          .filter(Boolean)
-          .join(' or '),
-        text[pos],
-        text,
-      ),
+    throw applyErrorMessage(
+      new Error(),
+      [
+        !repeatModifier && 'repeat modifier',
+        !releaseSelfModifier && 'release modifier',
+        `"${expectedEndBracket}"`,
+      ]
+        .filter(Boolean)
+        .join(' or '),
+      text[pos],
+      text,
     )
   }
 
@@ -113,7 +112,7 @@ function assertDescriptor(
   pos: number,
 ): asserts descriptor is string {
   if (!descriptor) {
-    throw new Error(getErrorMessage('key descriptor', text[pos], text))
+    throw applyErrorMessage(new Error(), 'key descriptor', text[pos], text)
   }
 }
 
@@ -127,12 +126,19 @@ function hasReleaseSelf(releaseSelfModifier: string, repeatModifier: string) {
   }
 }
 
-function getErrorMessage(
+function applyErrorMessage(
+  error: Error,
   expected: string,
   found: string | undefined,
   text: string,
 ) {
-  return `Expected ${expected} but found "${found ?? ''}" in "${text}"
-    See https://github.com/testing-library/user-event/blob/main/README.md#keyboardtext-options
+  error.message = `Expected ${expected} but found "${found ?? ''}" in "${text}"
+    See ${
+      error.stack?.match(/pointer|keyboard/)?.[0] === 'pointer'
+        ? `https://testing-library.com/docs/user-event/pointer#pressing-a-button-or-touching-the-screen`
+        : `https://testing-library.com/docs/user-event/keyboard`
+    }
     for more information about how userEvent parses your input.`
+
+  return error
 }

@@ -104,7 +104,7 @@ possible][contributors]. Contributions of any kind are welcome! 💚
 [prs-badge]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square
 [prs]: http://makeapullrequest.com
 [coc-badge]: https://img.shields.io/badge/code%20of-conduct-ff69b4.svg?style=flat-square
-[coc]: https://github.com/testing-library/user-event/blob/main/other/CODE_OF_CONDUCT.md
+[coc]: https://github.com/testing-library/.github/blob/main/CODE_OF_CONDUCT.md
 [github-watch-badge]: https://img.shields.io/github/watchers/testing-library/user-event.svg?style=social
 [github-watch]: https://github.com/testing-library/user-event/watchers
 [github-star-badge]: https://img.shields.io/github/stars/testing-library/user-event.svg?style=social

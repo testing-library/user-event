@@ -237,7 +237,7 @@ function commitInput(
   // and if they change state of a controlled value, nothing happens.
   // But when we trigger the event handlers in test environment,
   // the changes are rolled back by React before the state update is applied.
-  // Then the updated state is applied which results in a resetted cursor.
+  // Then the updated state is applied which results in a reset cursor.
   // There is probably a better way to work around  if we figure out
   // why the batched update is executed differently in our test environment.
   startTrackValue(element)

@@ -13,7 +13,7 @@ test.each([0, 1])('maintain cursor position on controlled input', async () => {
 
   render(<Input initialValue="acd" />)
   screen.getByRole('textbox').focus()
-  ;(screen.getByRole('textbox') as HTMLInputElement).setSelectionRange(1, 1)
+  screen.getByRole<HTMLInputElement>('textbox').setSelectionRange(1, 1)
   await userEvent.keyboard('b')
 
   expect(screen.getByRole('textbox')).toHaveValue('abcd')

@@ -14,7 +14,7 @@ export function parseKeyDef(pointerMap: pointerKey[], keys: string) {
       consumedLength,
       releasePrevious,
       releaseSelf = true,
-    } = readNextDescriptor(keys)
+    } = readNextDescriptor(keys, 'pointer')
     const keyDef = pointerMap.find(p => p.name === descriptor)
 
     if (keyDef) {

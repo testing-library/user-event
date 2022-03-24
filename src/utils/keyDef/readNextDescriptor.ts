@@ -3,6 +3,8 @@ enum bracketDict {
   '[' = ']',
 }
 
+type Context = 'pointer' | 'keyboard'
+
 /**
  * Read the next key definition from user input
  *
@@ -14,7 +16,7 @@ enum bracketDict {
  * When keeping the key pressed you can choose how long the key is pressed `{descriptor>3}`.
  * You can then release the key per `{descriptor>3/}` or keep it pressed and continue with the next key.
  */
-export function readNextDescriptor(text: string) {
+export function readNextDescriptor(text: string, context: Context) {
   let pos = 0
   const startBracket =
     text[pos] in bracketDict ? (text[pos] as keyof typeof bracketDict) : ''
@@ -27,14 +29,16 @@ export function readNextDescriptor(text: string) {
 
   return {
     type,
-    ...(type === '' ? readPrintableChar(text, pos) : readTag(text, pos, type)),
+    ...(type === ''
+      ? readPrintableChar(text, pos, context)
+      : readTag(text, pos, type, context)),
   }
 }
 
-function readPrintableChar(text: string, pos: number) {
+function readPrintableChar(text: string, pos: number, context: Context) {
   const descriptor = text[pos]
 
-  assertDescriptor(descriptor, text, pos)
+  assertDescriptor(descriptor, text, pos, context)
 
   pos += descriptor.length
 
@@ -51,6 +55,7 @@ function readTag(
   text: string,
   pos: number,
   startBracket: keyof typeof bracketDict,
+  context: Context,
 ) {
   const releasePreviousModifier = text[pos] === '/' ? '/' : ''
 
@@ -64,7 +69,7 @@ function readTag(
     ? text[pos]
     : text.slice(pos).match(startBracket === '{' ? /^\w+|^[^}>/]/ : /^\w+/)?.[0]
 
-  assertDescriptor(descriptor, text, pos)
+  assertDescriptor(descriptor, text, pos, context)
 
   pos += descriptor.length
 
@@ -81,17 +86,19 @@ function readTag(
   const endBracket = text[pos] === expectedEndBracket ? expectedEndBracket : ''
 
   if (!endBracket) {
-    throw applyErrorMessage(
-      new Error(),
-      [
-        !repeatModifier && 'repeat modifier',
-        !releaseSelfModifier && 'release modifier',
-        `"${expectedEndBracket}"`,
-      ]
-        .filter(Boolean)
-        .join(' or '),
-      text[pos],
-      text,
+    throw new Error(
+      getErrorMessage(
+        [
+          !repeatModifier && 'repeat modifier',
+          !releaseSelfModifier && 'release modifier',
+          `"${expectedEndBracket}"`,
+        ]
+          .filter(Boolean)
+          .join(' or '),
+        text[pos],
+        text,
+        context,
+      ),
     )
   }
 
@@ -110,9 +117,10 @@ function assertDescriptor(
   descriptor: string | undefined,
   text: string,
   pos: number,
+  context: Context,
 ): asserts descriptor is string {
   if (!descriptor) {
-    throw applyErrorMessage(new Error(), 'key descriptor', text[pos], text)
+    throw new Error(getErrorMessage('key descriptor', text[pos], text, context))
   }
 }
 
@@ -126,19 +134,17 @@ function hasReleaseSelf(releaseSelfModifier: string, repeatModifier: string) {
   }
 }
 
-function applyErrorMessage(
-  error: Error,
+function getErrorMessage(
   expected: string,
   found: string | undefined,
   text: string,
+  context: Context,
 ) {
-  error.message = `Expected ${expected} but found "${found ?? ''}" in "${text}"
+  return `Expected ${expected} but found "${found ?? ''}" in "${text}"
     See ${
-      error.stack?.match(/pointer|keyboard/)?.[0] === 'pointer'
+      context === 'pointer'
         ? `https://testing-library.com/docs/user-event/pointer#pressing-a-button-or-touching-the-screen`
         : `https://testing-library.com/docs/user-event/keyboard`
     }
     for more information about how userEvent parses your input.`
-
-  return error
 }

@@ -5,7 +5,9 @@ import userEvent from '#src'
 cases(
   'errors',
   ({text, expectedError}) => {
-    expect(() => readNextDescriptor(`${text}`)).toThrow(expectedError)
+    expect(() => readNextDescriptor(`${text}`, 'keyboard')).toThrow(
+      expectedError,
+    )
   },
   {
     'missing descriptor': {

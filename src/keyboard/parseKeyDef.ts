@@ -27,7 +27,7 @@ export function parseKeyDef(keyboardMap: keyboardKey[], text: string) {
       releasePrevious,
       releaseSelf = true,
       repeat,
-    } = readNextDescriptor(text)
+    } = readNextDescriptor(text, 'keyboard')
 
     const keyDef = keyboardMap.find(def => {
       if (type === '[') {

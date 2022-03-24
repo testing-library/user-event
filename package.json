@@ -44,9 +44,7 @@
     "validate": "kcd-scripts validate",
     "typecheck": "kcd-scripts typecheck"
   },
-  "dependencies": {
-    "@babel/runtime": "^7.12.5"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@testing-library/dom": "^7.28.1",
     "@testing-library/jest-dom": "^5.11.6",

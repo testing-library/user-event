@@ -120,5 +120,5 @@ possible][contributors]. Contributions of any kind are welcome! 💚
 [discord-badge]: https://img.shields.io/discord/723559267868737556.svg?color=7389D8&labelColor=6A7EC2&logo=discord&logoColor=ffffff&style=flat-square
 [discord]: https://discord.gg/testing-library
 [stackoverflow]: https://stackoverflow.com/questions/tagged/user-event
-[contributors]: https://github.com/testing-library/user-event/blob/beta/CONTRIBUTORS.md
+[contributors]: https://github.com/testing-library/user-event/blob/main/CONTRIBUTORS.md
 <!-- prettier-ignore-end -->

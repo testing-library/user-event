@@ -21,9 +21,12 @@ body:
         Detail the minimal requirements to reproduce the problem.
 
         If you want to test e.g. certain features of your software, include a minimal component that implements the feature.
+
         Please set up an online code example at https://codesandbox.io.
-        You can use the following template as a starting point:
-        https://codesandbox.io/s/vbcvs?file=/src/App.js
+
+        You can use one of the following templates as a starting point:
+        Native DOM: https://codesandbox.io/s/djcc7b?file=/src/App.js
+        React: https://codesandbox.io/s/vbcvs?file=/src/App.js
 
         If the problem is specific to some environment and/or is not reproducible per Codesandbox,
         please provide the information necessary to reproduce it.

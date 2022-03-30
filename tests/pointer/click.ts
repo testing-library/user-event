@@ -210,6 +210,14 @@ describe('label', () => {
 
     expect(getEvents('click')).toHaveLength(2)
   })
+
+  test('click nested select per label', async () => {
+    const {element, getEvents, user} = setup(`<label><select/></label>`)
+
+    await user.pointer({keys: '[MouseLeft]', target: element})
+
+    expect(getEvents('click')).toHaveLength(2)
+  })
 })
 
 describe('check/uncheck control per click', () => {

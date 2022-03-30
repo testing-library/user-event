@@ -3,7 +3,7 @@ import {dispatchEvent} from '../dispatchEvent'
 import {behavior} from './registry'
 
 behavior.click = (event, target, config) => {
-  const context = target.closest('button,input,label,textarea')
+  const context = target.closest('button,input,label,select,textarea')
   const control = context && isElementType(context, 'label') && context.control
   if (control) {
     return () => {

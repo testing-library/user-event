@@ -266,13 +266,6 @@ function mousedownDefaultBehavior({
   node?: Node
   offset?: number
 }) {
-  // The closest focusable element is focused when a `mousedown` would have been fired.
-  // Even if there was no `mousedown` because the element was disabled.
-  // A `mousedown` that preventsDefault cancels this though.
-  focus(target)
-
-  // TODO: What happens if a focus event handler interfers?
-
   // An unprevented mousedown moves the cursor to the closest character.
   // We try to approximate the behavior for a no-layout environment.
   if (!targetIsDisabled) {
@@ -326,6 +319,11 @@ function mousedownDefaultBehavior({
       selection.addRange(range.cloneRange())
     }
   }
+
+  // The closest focusable element is focused when a `mousedown` would have been fired.
+  // Even if there was no `mousedown` because the element was disabled.
+  // A `mousedown` that preventsDefault cancels this though.
+  focus(target)
 }
 
 function getTextRange(

@@ -18,10 +18,11 @@ describe('read from and write to clipboard', () => {
 
   test('read and write item', async () => {
     const items = [
-      createClipboardItem(new Blob(['foo'], {type: 'text/plain'})),
-      createClipboardItem(new Blob(['bar'], {type: 'text/html'})),
-      createClipboardItem(new Blob(['PNG'], {type: 'image/png'})),
+      createClipboardItem(window, new Blob(['foo'], {type: 'text/plain'})),
+      createClipboardItem(window, new Blob(['bar'], {type: 'text/html'})),
+      createClipboardItem(window, new Blob(['PNG'], {type: 'image/png'})),
       createClipboardItem(
+        window,
         new Blob(['baz1'], {type: 'text/plain'}),
         new Blob(['baz2'], {type: 'text/html'}),
       ),
@@ -30,7 +31,7 @@ describe('read from and write to clipboard', () => {
     expect(items[3]).toHaveProperty('types', ['text/plain', 'text/html'])
     await expect(items[3].getType('text/html')).resolves.toBeInstanceOf(Blob)
     await expect(
-      readBlobText(await items[3].getType('text/html')),
+      readBlobText(await items[3].getType('text/html'), FileReader),
     ).resolves.toBe('baz2')
     await expect(items[3].getType('image/png')).rejects.toThrowError()
 

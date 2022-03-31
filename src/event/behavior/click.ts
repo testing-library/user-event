@@ -1,4 +1,11 @@
-import {blur, cloneEvent, focus, isElementType, isFocusable} from '../../utils'
+import {
+  blur,
+  cloneEvent,
+  focus,
+  getWindow,
+  isElementType,
+  isFocusable,
+} from '../../utils'
 import {dispatchEvent} from '../dispatchEvent'
 import {behavior} from './registry'
 
@@ -17,7 +24,7 @@ behavior.click = (event, target, config) => {
       // blur fires when the file selector pops up
       blur(target)
 
-      target.dispatchEvent(new Event('fileDialog'))
+      target.dispatchEvent(new (getWindow(target).Event)('fileDialog'))
 
       // focus fires after the file selector has been closed
       focus(target)

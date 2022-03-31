@@ -1,8 +1,11 @@
 // Clipboard is not available in jsdom
 
 import {createDataTransfer, getBlobFromDataTransferItem, readBlobText} from '..'
+import {getWindow} from '../misc/getWindow'
 
 // Clipboard API is only fully available in secure context or for browser extensions.
+
+const Window = Symbol('Window reference')
 
 type ItemData = Record<string, Blob | string | Promise<Blob | string>>
 
@@ -25,13 +28,17 @@ class ClipboardItemStub implements ClipboardItem {
       )
     }
 
-    return data instanceof Blob ? data : new Blob([data], {type})
+    return data instanceof this[Window].Blob
+      ? data
+      : new this[Window].Blob([data], {type})
   }
+
+  [Window] = window
 }
 
 const ClipboardStubControl = Symbol('Manage ClipboardSub')
 
-class ClipboardStub extends EventTarget implements Clipboard {
+class ClipboardStub extends window.EventTarget implements Clipboard {
   private items: ClipboardItem[] = []
 
   async read() {
@@ -45,7 +52,9 @@ class ClipboardStub extends EventTarget implements Clipboard {
         ? 'text/plain'
         : item.types.find(t => t.startsWith('text/'))
       if (type) {
-        text += await item.getType(type).then(b => readBlobText(b))
+        text += await item
+          .getType(type)
+          .then(b => readBlobText(b, this[Window].FileReader))
       }
     }
     return text
@@ -56,9 +65,10 @@ class ClipboardStub extends EventTarget implements Clipboard {
   }
 
   async writeText(text: string) {
-    this.items = [createClipboardItem(text)]
+    this.items = [createClipboardItem(this[Window], text)]
   }
 
+  [Window] = window;
   [ClipboardStubControl]: {
     resetClipboardStub: () => void
     detachClipboardStub: () => void
@@ -69,22 +79,25 @@ class ClipboardStub extends EventTarget implements Clipboard {
 // lib.dom.d.ts lists only Promise<Blob|string>
 // https://developer.mozilla.org/en-US/docs/Web/API/ClipboardItem/ClipboardItem#syntax
 export function createClipboardItem(
+  window: Window & typeof globalThis,
   ...blobs: Array<Blob | string>
 ): ClipboardItem {
-  // use real ClipboardItem if available
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  const constructor =
-    typeof ClipboardItem === 'undefined'
-      ? ClipboardItemStub
-      : /* istanbul ignore next */ ClipboardItem
-  return new constructor(
-    Object.fromEntries(
-      blobs.map(b => [
-        typeof b === 'string' ? 'text/plain' : b.type,
-        Promise.resolve(b),
-      ]),
-    ),
+  const data = Object.fromEntries(
+    blobs.map(b => [
+      typeof b === 'string' ? 'text/plain' : b.type,
+      Promise.resolve(b),
+    ]),
   )
+
+  // use real ClipboardItem if available
+  /* istanbul ignore else */
+  if (typeof window.ClipboardItem === 'undefined') {
+    const item = new ClipboardItemStub(data)
+    item[Window] = window
+    return item
+  } else {
+    return new window.ClipboardItem(data)
+  }
 }
 
 export function attachClipboardStubToView(window: Window & typeof globalThis) {
@@ -98,9 +111,11 @@ export function attachClipboardStubToView(window: Window & typeof globalThis) {
   )
 
   let stub = new ClipboardStub()
+  stub[Window] = window
   const control = {
     resetClipboardStub: () => {
       stub = new ClipboardStub()
+      stub[Window] = window
       stub[ClipboardStubControl] = control
     },
     detachClipboardStub: () => {
@@ -140,17 +155,21 @@ export function detachClipboardStubFromView(
 }
 
 export async function readDataTransferFromClipboard(document: Document) {
-  const clipboard = document.defaultView?.navigator.clipboard
+  const window = document.defaultView
+  const clipboard = window?.navigator.clipboard
   const items = clipboard && (await clipboard.read())
 
   if (!items) {
     throw new Error('The Clipboard API is unavailable.')
   }
 
-  const dt = createDataTransfer()
+  const dt = createDataTransfer(window)
   for (const item of items) {
     for (const type of item.types) {
-      dt.setData(type, await item.getType(type).then(b => readBlobText(b)))
+      dt.setData(
+        type,
+        await item.getType(type).then(b => readBlobText(b, window.FileReader)),
+      )
     }
   }
   return dt
@@ -160,13 +179,14 @@ export async function writeDataTransferToClipboard(
   document: Document,
   clipboardData: DataTransfer,
 ) {
-  const clipboard = document.defaultView?.navigator.clipboard
+  const window = getWindow(document)
+  const clipboard = window.navigator.clipboard as Clipboard | undefined
 
   const items = []
   for (let i = 0; i < clipboardData.items.length; i++) {
     const dtItem = clipboardData.items[i]
-    const blob = getBlobFromDataTransferItem(dtItem)
-    items.push(createClipboardItem(blob))
+    const blob = getBlobFromDataTransferItem(window, dtItem)
+    items.push(createClipboardItem(window, blob))
   }
 
   const written =

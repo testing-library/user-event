@@ -1,7 +1,7 @@
-import {getWindowFromNode} from '@testing-library/dom/dist/helpers.js'
+import {getWindow} from './getWindow'
 
 export function isVisible(element: Element): boolean {
-  const window = getWindowFromNode(element)
+  const window = getWindow(element)
 
   for (
     let el: Element | null = element;

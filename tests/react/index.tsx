@@ -1,7 +1,92 @@
 import React, {useState} from 'react'
 import {render, screen} from '@testing-library/react'
 import userEvent from '#src'
+import {getUIValue} from '#src/document'
 import {addListeners} from '#testHelpers'
+
+// Run twice to verify we handle this correctly no matter
+// if React applies its magic before or after our document preparation.
+test.each([0, 1])('maintain cursor position on controlled input', async () => {
+  function Input({initialValue}: {initialValue: string}) {
+    const [val, setVal] = useState(initialValue)
+
+    return <input value={val} onChange={e => setVal(e.target.value)} />
+  }
+
+  render(<Input initialValue="acd" />)
+  screen.getByRole('textbox').focus()
+  screen.getByRole<HTMLInputElement>('textbox').setSelectionRange(1, 1)
+  await userEvent.keyboard('b')
+
+  expect(screen.getByRole('textbox')).toHaveValue('abcd')
+  expect(screen.getByRole('textbox')).toHaveProperty('selectionStart', 2)
+  expect(screen.getByRole('textbox')).toHaveProperty('selectionEnd', 2)
+})
+
+test('trigger Synthetic `keypress` event for printable characters', async () => {
+  const onKeyPress = jest.fn<unknown, [React.KeyboardEvent]>()
+  render(<input onKeyPress={onKeyPress} />)
+  const user = userEvent.setup()
+  screen.getByRole('textbox').focus()
+
+  await user.keyboard('a')
+  expect(onKeyPress).toHaveBeenCalledTimes(1)
+  expect(onKeyPress.mock.calls[0][0]).toHaveProperty('charCode', 97)
+
+  await user.keyboard('[Enter]')
+  expect(onKeyPress).toHaveBeenCalledTimes(2)
+  expect(onKeyPress.mock.calls[1][0]).toHaveProperty('charCode', 13)
+})
+
+test.each(['1.5', '1e5'])(
+  'insert number with invalid intermediate values into controlled `<input type="number"/>`: %s',
+  async input => {
+    function Input() {
+      const [val, setVal] = useState('')
+
+      return (
+        <input
+          type="number"
+          value={val}
+          onChange={e => setVal(e.target.value)}
+        />
+      )
+    }
+    render(<Input />)
+    const user = userEvent.setup()
+    screen.getByRole('spinbutton').focus()
+
+    await user.keyboard(input)
+    expect(getUIValue(screen.getByRole('spinbutton'))).toBe(input)
+    expect(screen.getByRole('spinbutton')).toHaveValue(Number(input))
+  },
+)
+
+test('detect value change in event handler', async () => {
+  function Input() {
+    const [val, setVal] = useState('')
+
+    return (
+      <input
+        type="number"
+        value={val}
+        onChange={e => {
+          if (Number(e.target.value) == 12) {
+            e.target.value = '34'
+          }
+          setVal(e.target.value)
+        }}
+      />
+    )
+  }
+  render(<Input />)
+  const user = userEvent.setup()
+  screen.getByRole('spinbutton').focus()
+
+  await user.keyboard('125')
+  expect(getUIValue(screen.getByRole('spinbutton'))).toBe('345')
+  expect(screen.getByRole('spinbutton')).toHaveValue(345)
+})
 
 test('trigger onChange SyntheticEvent on input', async () => {
   const inputHandler = jest.fn()
@@ -16,7 +101,7 @@ test('trigger onChange SyntheticEvent on input', async () => {
   expect(changeHandler).toHaveBeenCalledTimes(6)
 })
 
-describe('typing in a controlled input', () => {
+describe('typing in a formatted input', () => {
   function DollarInput({initialValue = ''}) {
     const [val, setVal] = useState(initialValue)
     return (
@@ -45,7 +130,7 @@ describe('typing in a controlled input', () => {
     }
   }
 
-  test('typing in empty controlled input', async () => {
+  test('typing in empty formatted input', async () => {
     const {element, getEventSnapshot, user} = setupDollarInput()
 
     await user.type(element, '23')
@@ -81,7 +166,7 @@ describe('typing in a controlled input', () => {
     `)
   })
 
-  test('typing in the middle of a controlled input', async () => {
+  test('typing in the middle of a formatted input', async () => {
     const {element, getEventSnapshot, user} = setupDollarInput({
       initialValue: '$23',
     })
@@ -120,7 +205,7 @@ describe('typing in a controlled input', () => {
     `)
   })
 
-  test('ignored {backspace} in controlled input', async () => {
+  test('ignored {backspace} in formatted input', async () => {
     const {element, getEventSnapshot, user} = setupDollarInput({
       initialValue: '$23',
     })

@@ -167,11 +167,11 @@ function editInputElement(
 
   if (isDateOrTime(element)) {
     if (isValidDateOrTimeValue(element, newValue)) {
-      commitInput(config, element, oldValue, newValue, newOffset, {})
+      commitInput(config, element, newOffset, {})
       dispatchUIEvent(config, element, 'change')
     }
   } else {
-    commitInput(config, element, oldValue, newValue, newOffset, {
+    commitInput(config, element, newOffset, {
       data,
       inputType,
     })
@@ -228,8 +228,6 @@ function calculateNewValue(
 function commitInput(
   config: Config,
   element: EditableInputOrTextarea,
-  oldValue: string,
-  newValue: string,
   newOffset: number,
   inputInit: InputEventInit,
 ) {
@@ -244,12 +242,7 @@ function commitInput(
 
   dispatchUIEvent(config, element, 'input', inputInit)
 
-  const tracked = endTrackValue(element as HTMLInputElement)
-  if (
-    tracked?.length === 2 &&
-    tracked[0] === oldValue &&
-    tracked[1] === newValue
-  ) {
+  if (endTrackValue(element as HTMLInputElement)) {
     setSelection({
       focusNode: element,
       anchorOffset: newOffset,

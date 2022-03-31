@@ -1,5 +1,6 @@
+import {isElementType} from '../utils'
 import {prepareInterceptor} from './interceptor'
-import {clearUISelection} from './selection'
+import {setUISelection} from './selection'
 
 const UIValue = Symbol('Displayed value in UI')
 const InitialValue = Symbol('Initial value to compare on blur')
@@ -14,7 +15,11 @@ declare global {
   interface Element {
     [UIValue]?: string
     [InitialValue]?: string
-    [TrackChanges]?: string[]
+    [TrackChanges]?: {
+      previousValue?: string
+      tracked?: string[]
+      nextValue?: string
+    }
   }
 }
 
@@ -24,21 +29,33 @@ function valueInterceptor(
 ) {
   const isUI = typeof v === 'object' && v[UIValue]
 
-  this[UIValue] = isUI ? String(v) : undefined
-  if (!isUI) {
-    trackValue(this, String(v))
-
-    this[InitialValue] = String(v)
-
-    // Programmatically setting the value property
-    // moves the cursor to the end of the input.
-    clearUISelection(this)
+  if (isUI) {
+    this[UIValue] = String(v)
+    setPreviousValue(this, String(this.value))
+  } else {
+    trackOrSetValue(this, String(v))
   }
 
   return {
     applyNative: !!isUI,
-    realArgs: String(v),
+    realArgs: sanitizeValue(this, v),
   }
+}
+
+function sanitizeValue(
+  element: HTMLInputElement | HTMLTextAreaElement,
+  v: Value | string,
+) {
+  // Workaround for JSDOM
+  if (
+    isElementType(element, 'input', {type: 'number'}) &&
+    String(v) !== '' &&
+    !Number.isNaN(Number(v))
+  ) {
+    // Setting value to "1." results in `null` in JSDOM
+    return String(Number(v))
+  }
+  return String(v)
 }
 
 export function prepareValueInterceptor(element: HTMLInputElement) {
@@ -73,23 +90,62 @@ export function getInitialValue(
   return element[InitialValue]
 }
 
-export function startTrackValue(
-  element: HTMLInputElement | HTMLTextAreaElement,
-) {
-  element[TrackChanges] = []
-}
-
-function trackValue(
+function setPreviousValue(
   element: HTMLInputElement | HTMLTextAreaElement,
   v: string,
 ) {
-  element[TrackChanges]?.push(v)
+  element[TrackChanges] = {...element[TrackChanges], previousValue: v}
 }
 
+export function startTrackValue(
+  element: HTMLInputElement | HTMLTextAreaElement,
+) {
+  element[TrackChanges] = {
+    ...element[TrackChanges],
+    nextValue: String(element.value),
+    tracked: [],
+  }
+}
+
+function trackOrSetValue(
+  element: HTMLInputElement | HTMLTextAreaElement,
+  v: string,
+) {
+  element[TrackChanges]?.tracked?.push(v)
+
+  if (!element[TrackChanges]?.tracked) {
+    setCleanValue(element, v)
+  }
+}
+
+function setCleanValue(
+  element: HTMLInputElement | HTMLTextAreaElement,
+  v: string,
+) {
+  element[UIValue] = undefined
+  element[InitialValue] = v
+
+  // Programmatically setting the value property
+  // moves the cursor to the end of the input.
+  setUISelection(element, {focusOffset: v.length})
+}
+
+/**
+ * @returns `true` if we recognize a React state reset and update
+ */
 export function endTrackValue(element: HTMLInputElement | HTMLTextAreaElement) {
-  const tracked = element[TrackChanges]
+  const changes = element[TrackChanges]
 
   element[TrackChanges] = undefined
 
-  return tracked
+  const isJustReactStateUpdate =
+    changes?.tracked?.length === 2 &&
+    changes.tracked[0] === changes.previousValue &&
+    changes.tracked[1] === changes.nextValue
+
+  if (changes?.tracked?.length && !isJustReactStateUpdate) {
+    setCleanValue(element, changes.tracked[changes.tracked.length - 1])
+  }
+
+  return isJustReactStateUpdate
 }

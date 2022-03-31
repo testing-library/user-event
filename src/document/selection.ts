@@ -131,9 +131,3 @@ export function getUISelection(
     endOffset: Math.max(sel.anchorOffset, sel.focusOffset),
   }
 }
-
-export function clearUISelection(
-  element: HTMLInputElement | HTMLTextAreaElement,
-) {
-  element[UISelection] = undefined
-}

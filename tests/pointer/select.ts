@@ -368,3 +368,17 @@ describe('focus control when clicking label', () => {
     expect(input).not.toHaveFocus()
   })
 })
+
+test('focus event handler can override selection', async () => {
+  const {element, user} = setup(`<input value="hello"/>`, {
+    focus: false,
+  })
+  element.addEventListener('focus', e =>
+    (e.target as HTMLInputElement).select(),
+  )
+
+  await user.click(element)
+
+  expect(element).toHaveProperty('selectionStart', 0)
+  expect(element).toHaveProperty('selectionEnd', 5)
+})

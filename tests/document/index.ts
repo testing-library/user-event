@@ -15,19 +15,39 @@ function prepare(element: Element) {
 }
 
 test('keep track of value in UI', async () => {
+  // JSDOM implements the `value` property differently than the browser.
+  // In the browser it is always a `string`.
+  // In JSDOM it is `null` or `number` for `<input type="number"/>`
   const {element} = render<HTMLInputElement>(`<input type="number"/>`)
 
   prepare(element)
 
-  setUIValue(element, '2e-')
+  setUIValue(element, '2')
+  expect(element).toHaveValue(2)
 
+  setUIValue(element, '2e')
+  expect(element).toHaveValue(null)
+  expect(getUIValue(element)).toBe('2e')
+
+  setUIValue(element, '2e-')
   expect(element).toHaveValue(null)
   expect(getUIValue(element)).toBe('2e-')
 
-  element.value = '3'
+  setUIValue(element, '2e-5')
+  expect(element).toHaveValue(2e-5)
+  expect(getUIValue(element)).toBe('2e-5')
 
+  element.value = '3'
   expect(element).toHaveValue(3)
   expect(getUIValue(element)).toBe('3')
+
+  setUIValue(element, '3.')
+  expect(element).toHaveValue(3)
+  expect(getUIValue(element)).toBe('3.')
+
+  setUIValue(element, '3.5')
+  expect(element).toHaveValue(3.5)
+  expect(getUIValue(element)).toBe('3.5')
 })
 
 test('trigger `change` event if value changed since focus/set', async () => {

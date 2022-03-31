@@ -16,7 +16,7 @@ test('do not trigger input for paste with file data', async () => {
   const {getEvents, user} = setup(`<input/>`)
 
   const f0 = new File(['bar'], 'bar0.txt', {type: 'text/plain'})
-  const dt = createDataTransfer([f0])
+  const dt = createDataTransfer(window, [f0])
   await user.paste(dt)
 
   expect(getEvents('paste')).toHaveLength(1)

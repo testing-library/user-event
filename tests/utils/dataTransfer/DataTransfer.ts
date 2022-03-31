@@ -2,7 +2,7 @@ import {createDataTransfer, getBlobFromDataTransferItem} from '#src/utils'
 
 describe('create DataTransfer', () => {
   test('plain string', async () => {
-    const dt = createDataTransfer()
+    const dt = createDataTransfer(window)
     dt.setData('text/plain', 'foo')
 
     expect(dt.getData('text/plain')).toBe('foo')
@@ -13,7 +13,7 @@ describe('create DataTransfer', () => {
   })
 
   test('multi format', async () => {
-    const dt = createDataTransfer()
+    const dt = createDataTransfer(window)
     dt.setData('text/plain', 'foo')
     dt.setData('text/html', 'bar')
 
@@ -31,7 +31,7 @@ describe('create DataTransfer', () => {
   })
 
   test('overwrite item', async () => {
-    const dt = createDataTransfer()
+    const dt = createDataTransfer(window)
     dt.setData('text/plain', 'foo')
     dt.setData('text/plain', 'bar')
 
@@ -42,7 +42,7 @@ describe('create DataTransfer', () => {
   test('files operation', async () => {
     const f0 = new File(['bar'], 'bar0.txt', {type: 'text/plain'})
     const f1 = new File(['bar'], 'bar1.txt', {type: 'text/plain'})
-    const dt = createDataTransfer([f0, f1])
+    const dt = createDataTransfer(window, [f0, f1])
     dt.setData('text/html', 'foo')
 
     expect(dt.types).toEqual(['Files', 'text/html'])
@@ -51,7 +51,7 @@ describe('create DataTransfer', () => {
 
   test('files item', async () => {
     const f0 = new File(['bar'], 'bar0.txt', {type: 'text/plain'})
-    const dt = createDataTransfer()
+    const dt = createDataTransfer(window)
     dt.setData('text/html', 'foo')
     dt.items.add(f0)
 
@@ -67,7 +67,7 @@ describe('create DataTransfer', () => {
 
   test('clear data', async () => {
     const f0 = new File(['bar'], 'bar0.txt', {type: 'text/plain'})
-    const dt = createDataTransfer()
+    const dt = createDataTransfer(window)
     dt.setData('text/html', 'foo')
     dt.items.add(f0)
 
@@ -86,18 +86,20 @@ describe('create DataTransfer', () => {
 })
 
 test('get Blob from DataTransfer', async () => {
-  const dt = createDataTransfer()
+  const dt = createDataTransfer(window)
   dt.items.add('foo', 'text/plain')
   dt.items.add(new File(['bar'], 'bar.txt', {type: 'text/plain'}))
 
-  expect(getBlobFromDataTransferItem(dt.items[0])).toHaveProperty(
+  expect(getBlobFromDataTransferItem(window, dt.items[0])).toHaveProperty(
     'type',
     'text/plain',
   )
-  expect(getBlobFromDataTransferItem(dt.items[0])).not.toBeInstanceOf(File)
-  expect(getBlobFromDataTransferItem(dt.items[1])).toHaveProperty(
+  expect(getBlobFromDataTransferItem(window, dt.items[0])).not.toBeInstanceOf(
+    File,
+  )
+  expect(getBlobFromDataTransferItem(window, dt.items[1])).toHaveProperty(
     'type',
     'text/plain',
   )
-  expect(getBlobFromDataTransferItem(dt.items[1])).toBeInstanceOf(File)
+  expect(getBlobFromDataTransferItem(window, dt.items[1])).toBeInstanceOf(File)
 })

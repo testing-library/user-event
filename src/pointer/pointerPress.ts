@@ -315,7 +315,7 @@ function mousedownDefaultBehavior({
         offset: end,
       })
 
-      const range = new Range()
+      const range = target.ownerDocument.createRange()
       range.setStart(startNode, startOffset)
       range.setEnd(endNode, endOffset)
 

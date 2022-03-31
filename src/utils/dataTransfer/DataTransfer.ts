@@ -133,20 +133,25 @@ class DataTransferStub implements DataTransfer {
   setDragImage() {}
 }
 
-export function createDataTransfer(files: File[] = []): DataTransfer {
+export function createDataTransfer(
+  window: Window & typeof globalThis,
+  files: File[] = [],
+): DataTransfer {
   // Use real DataTransfer if available
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   const dt =
-    typeof DataTransfer === 'undefined'
+    typeof window.DataTransfer === 'undefined'
       ? (new DataTransferStub() as DataTransfer)
-      : /* istanbul ignore next */ new DataTransfer()
+      : /* istanbul ignore next */ new window.DataTransfer()
 
   Object.defineProperty(dt, 'files', {get: () => createFileList(files)})
 
   return dt
 }
 
-export function getBlobFromDataTransferItem(item: DataTransferItem) {
+export function getBlobFromDataTransferItem(
+  window: Window & typeof globalThis,
+  item: DataTransferItem,
+) {
   if (item.kind === 'file') {
     return item.getAsFile() as File
   }
@@ -154,5 +159,5 @@ export function getBlobFromDataTransferItem(item: DataTransferItem) {
   item.getAsString(s => {
     data = s
   })
-  return new Blob([data], {type: item.type})
+  return new window.Blob([data], {type: item.type})
 }

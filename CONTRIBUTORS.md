@@ -161,6 +161,7 @@ Thanks goes to these wonderful people ([emoji key][emojis]):
   </tr>
   <tr>
     <td align="center"><a href="https://github.com/joshunger"><img src="https://avatars.githubusercontent.com/u/2301847?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Josh Unger</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3Ajoshunger" title="Bug reports">🐛</a></td>
+    <td align="center"><a href="https://github.com/robcaldecott"><img src="https://avatars.githubusercontent.com/u/796702?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Rob Caldecott</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3Arobcaldecott" title="Bug reports">🐛</a> <a href="https://github.com/testing-library/user-event/commits?author=robcaldecott" title="Code">💻</a></td>
   </tr>
 </table>
 

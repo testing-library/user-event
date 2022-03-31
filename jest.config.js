@@ -10,7 +10,10 @@ config.moduleNameMapper = {
 
 config.testEnvironment = 'jsdom'
 
-config.setupFilesAfterEnv = ['<rootDir>/tests/_setup-env.js']
+config.setupFilesAfterEnv = [
+  '<rootDir>/tests/_setup-env.js',
+  '<rootDir>/tests/react/_env/setup-env.js',
+]
 
 config.testMatch.push('<rootDir>/tests/**/*.+(js|jsx|ts|tsx)')
 

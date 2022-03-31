@@ -1180,6 +1180,15 @@
         "bug",
         "code"
       ]
+    },
+    {
+      "login": "tbertrand7",
+      "name": "Tom Bertrand",
+      "avatar_url": "https://avatars.githubusercontent.com/u/14081248?v=4",
+      "profile": "https://github.com/tbertrand7",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "commitConvention": "none",

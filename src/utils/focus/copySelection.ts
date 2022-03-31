@@ -1,6 +1,7 @@
 import {getUISelection, getUIValue} from '../../document'
 import {createDataTransfer} from '../dataTransfer/DataTransfer'
 import {EditableInputType} from '../edit/isEditable'
+import {getWindow} from '../misc/getWindow'
 import {hasOwnSelection} from './selection'
 
 export function copySelection(target: Element) {
@@ -9,7 +10,7 @@ export function copySelection(target: Element) {
     : // TODO: We could implement text/html copying of DOM nodes here
       {'text/plain': String(target.ownerDocument.getSelection())}
 
-  const dt = createDataTransfer()
+  const dt = createDataTransfer(getWindow(target))
   for (const type in data) {
     if (data[type]) {
       dt.setData(type, data[type])

@@ -1,10 +1,10 @@
-import {getWindowFromNode} from '@testing-library/dom/dist/helpers.js'
 import {PointerEventsCheckLevel} from '../../options'
 import {Config} from '../../setup'
 import {ApiLevel, getLevelRef} from '..'
+import {getWindow} from '../misc/getWindow'
 
 export function hasPointerEvents(element: Element): boolean {
-  const window = getWindowFromNode(element)
+  const window = getWindow(element)
 
   for (
     let el: Element | null = element;

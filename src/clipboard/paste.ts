@@ -1,5 +1,9 @@
 import {Config, Instance} from '../setup'
-import {createDataTransfer, readDataTransferFromClipboard} from '../utils'
+import {
+  createDataTransfer,
+  getWindow,
+  readDataTransferFromClipboard,
+} from '../utils'
 
 export async function paste(
   this: Instance,
@@ -10,7 +14,7 @@ export async function paste(
 
   const dataTransfer: DataTransfer =
     (typeof clipboardData === 'string'
-      ? getClipboardDataFromString(clipboardData)
+      ? getClipboardDataFromString(doc, clipboardData)
       : clipboardData) ??
     (await readDataTransferFromClipboard(doc).catch(() => {
       throw new Error(
@@ -23,8 +27,8 @@ export async function paste(
   })
 }
 
-function getClipboardDataFromString(text: string) {
-  const dt = createDataTransfer()
+function getClipboardDataFromString(doc: Document, text: string) {
+  const dt = createDataTransfer(getWindow(doc))
   dt.setData('text', text)
   return dt
 }

@@ -69,6 +69,19 @@ export function prepareSelectionInterceptor(
       return {realArgs: v}
     },
   )
+
+  prepareInterceptor(
+    element,
+    'select',
+    function interceptorImpl(this: HTMLInputElement | HTMLTextAreaElement) {
+      this[UISelection] = {
+        anchorOffset: 0,
+        focusOffset: getUIValue(element).length,
+      }
+
+      return {realArgs: [] as []}
+    },
+  )
 }
 
 export function setUISelection(

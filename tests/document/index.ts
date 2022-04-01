@@ -140,4 +140,23 @@ test('clear UI selection if selection is programmatically set', async () => {
   element.selectionStart = 2
   expect(getUISelection(element)).toHaveProperty('startOffset', 2)
   expect(getUISelection(element)).toHaveProperty('endOffset', 2)
+
+  setUISelection(element, {anchorOffset: 1, focusOffset: 2})
+  element.select()
+  expect(getUISelection(element)).toHaveProperty('startOffset', 0)
+  expect(getUISelection(element)).toHaveProperty('endOffset', 3)
+})
+
+test('select input without selectionRange support', () => {
+  const {element} = render<HTMLInputElement>(
+    `<input type="number" value="123"/>`,
+  )
+
+  prepare(element)
+
+  setUISelection(element, {focusOffset: 1})
+  element.select()
+
+  expect(getUISelection(element)).toHaveProperty('startOffset', 0)
+  expect(getUISelection(element)).toHaveProperty('endOffset', 3)
 })

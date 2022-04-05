@@ -1,11 +1,12 @@
-import type {Options} from '../../options'
+import {Config} from '../../setup'
 
-export function wait(
-  time: number,
-  advanceTimers: Exclude<Options['advanceTimers'], undefined>,
-) {
+export function wait(config: Config) {
+  const delay = config.delay
+  if (typeof delay !== 'number') {
+    return
+  }
   return new Promise<void>(resolve => {
-    setTimeout(() => resolve(), time)
-    advanceTimers(time)
+    setTimeout(() => resolve(), delay)
+    config.advanceTimers(delay)
   })
 }

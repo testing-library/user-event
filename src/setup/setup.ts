@@ -2,7 +2,7 @@ import {prepareDocument} from '../document'
 import {bindDispatchUIEvent} from '../event'
 import {createKeyboardState} from '../keyboard'
 import {createPointerState} from '../pointer'
-import {defaultOptionsDirect, defaultOptionsSetup, Options} from '../options'
+import {getDefaultOptions, Options} from '../options'
 import {
   ApiLevel,
   attachClipboardStubToView,
@@ -16,7 +16,7 @@ import {wrapAsync} from './wrapAsync'
 
 export function createConfig(
   options: Partial<Config> = {},
-  defaults: Required<Options> = defaultOptionsSetup,
+  defaults: Required<Options> = getDefaultOptions('setup'),
   node?: Node,
 ): Config {
   const document = getDocument(options, node)
@@ -53,7 +53,7 @@ export function setupMain(options: Options = {}) {
  * Setup in direct call per `userEvent.anyApi()`
  */
 export function setupDirect(options: Partial<Config> = {}, node?: Node) {
-  const config = createConfig(options, defaultOptionsDirect, node)
+  const config = createConfig(options, getDefaultOptions('direct'), node)
   prepareDocument(config.document)
 
   return {

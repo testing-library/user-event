@@ -37,7 +37,7 @@
   "scripts": {
     "build": "node build.js",
     "lint": "kcd-scripts lint",
-    "setup": "npm install && npm run validate -s",
+    "setup": "npm install --legacy-peer-deps && npm run validate -s",
     "test": "kcd-scripts test",
     "test:debug": "kcd-scripts --inspect-brk test --runInBand",
     "test:update": "npm test -- --updateSnapshot --coverage",

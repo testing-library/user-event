@@ -125,7 +125,7 @@ export interface Options {
 /**
  * Default options applied when API is called per `userEvent.anyApi()`
  */
-export const defaultOptionsDirect: Required<Options> = {
+let defaultOptionsDirect: Required<Options> = {
   applyAccept: true,
   autoModify: true,
   delay: 0,
@@ -142,7 +142,27 @@ export const defaultOptionsDirect: Required<Options> = {
 /**
  * Default options applied when API is called per `userEvent().anyApi()`
  */
-export const defaultOptionsSetup: Required<Options> = {
+let defaultOptionsSetup: Required<Options> = {
   ...defaultOptionsDirect,
   writeToClipboard: true,
+}
+
+export function getDefaultOptions(type: 'direct' | 'setup') {
+  if (type === 'direct') {
+    return defaultOptionsDirect
+  }
+  return defaultOptionsSetup
+}
+
+export function configureDefaults(options: Partial<Options>) {
+  defaultOptionsDirect = {
+    ...defaultOptionsDirect,
+    ...options,
+  }
+
+  defaultOptionsSetup = {
+    ...defaultOptionsSetup,
+    ...options,
+    writeToClipboard: true,
+  }
 }

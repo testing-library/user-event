@@ -23,7 +23,7 @@ export async function keyboardAction(
     await keyboardKeyAction(config, actions[i])
 
     if (typeof config.delay === 'number' && i < actions.length - 1) {
-      await wait(config.delay)
+      await wait(config.delay, config.advanceTimers)
     }
   }
 }
@@ -32,7 +32,7 @@ async function keyboardKeyAction(
   config: Config,
   {keyDef, releasePrevious, releaseSelf, repeat}: KeyboardAction,
 ) {
-  const {document, keyboardState, delay} = config
+  const {document, keyboardState, delay, advanceTimers} = config
   const getCurrentElement = () => getActive(document)
 
   // Release the key automatically if it was pressed before.
@@ -51,7 +51,7 @@ async function keyboardKeyAction(
       }
 
       if (typeof delay === 'number' && i < repeat) {
-        await wait(delay)
+        await wait(delay, advanceTimers)
       }
     }
 

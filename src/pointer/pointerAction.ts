@@ -39,7 +39,7 @@ export async function pointerAction(config: Config, actions: PointerAction[]) {
 
     if (typeof config.delay === 'number') {
       if (i < actions.length - 1) {
-        await wait(config.delay)
+        await wait(config.delay, config.advanceTimers)
       }
     }
   }

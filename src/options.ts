@@ -120,6 +120,13 @@ export interface Options {
    * Defaults to `true` when calling the APIs per `setup`.
    */
   writeToClipboard?: boolean
+
+  /**
+   * A function to be called internally to advance your fake timers (if applicable)
+   *
+   * @example jest.advanceTimersByTime
+   */
+  advanceTimers?: (delay: number) => void
 }
 
 /**
@@ -137,6 +144,7 @@ export const defaultOptionsDirect: Required<Options> = {
   skipClick: false,
   skipHover: false,
   writeToClipboard: false,
+  advanceTimers: () => void 0,
 }
 
 /**

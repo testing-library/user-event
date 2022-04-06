@@ -235,10 +235,10 @@ test('prevent input on `beforeinput` event', () => {
 
 cases(
   'maxlength',
-  ({html, data, expectedValue}) => {
+  ({html, data, inputType, expectedValue}) => {
     const {element, eventWasFired} = render(html)
 
-    input(createConfig(), element, data)
+    input(createConfig(), element, data, inputType)
 
     expect(element).toHaveValue(expectedValue)
     expect(eventWasFired('beforeinput')).toBe(true)
@@ -269,6 +269,12 @@ cases(
       html: `<input maxlength="0"/>`,
       data: '',
       expectedValue: '',
+    },
+    'delete data when maxlength is reached': {
+      html: `<input maxlength="3" value="foo"/>`,
+      data: '',
+      inputType: 'deleteContentForward',
+      expectedValue: 'oo',
     },
   },
 )

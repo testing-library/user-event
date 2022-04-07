@@ -126,7 +126,7 @@ export interface Options {
    *
    * @example jest.advanceTimersByTime
    */
-  advanceTimers?: (delay: number) => void
+  advanceTimers?: ((delay: number) => Promise<void>) | ((delay: number) => void)
 }
 
 /**
@@ -144,7 +144,7 @@ export const defaultOptionsDirect: Required<Options> = {
   skipClick: false,
   skipHover: false,
   writeToClipboard: false,
-  advanceTimers: () => void 0,
+  advanceTimers: () => Promise.resolve(),
 }
 
 /**

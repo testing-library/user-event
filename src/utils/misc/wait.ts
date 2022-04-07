@@ -5,8 +5,8 @@ export function wait(config: Config) {
   if (typeof delay !== 'number') {
     return
   }
-  return new Promise<void>(resolve => {
-    setTimeout(() => resolve(), delay)
-    config.advanceTimers(delay)
-  })
+  return Promise.all([
+    new Promise<void>(resolve => setTimeout(() => resolve(), delay)),
+    config.advanceTimers(delay),
+  ])
 }

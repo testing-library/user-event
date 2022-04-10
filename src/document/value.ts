@@ -66,6 +66,10 @@ export function setUIValue(
   element: HTMLInputElement | HTMLTextAreaElement,
   value: string,
 ) {
+  if (element[InitialValue] === undefined) {
+    element[InitialValue] = element.value
+  }
+
   element.value = {
     [UIValue]: UIValue,
     toString: () => value,
@@ -78,10 +82,10 @@ export function getUIValue(element: HTMLInputElement | HTMLTextAreaElement) {
     : String(element[UIValue])
 }
 
-export function setInitialValue(
+export function clearInitialValue(
   element: HTMLInputElement | HTMLTextAreaElement,
 ) {
-  element[InitialValue] = element.value
+  element[InitialValue] = undefined
 }
 
 export function getInitialValue(
@@ -123,7 +127,6 @@ function setCleanValue(
   v: string,
 ) {
   element[UIValue] = undefined
-  element[InitialValue] = v
 
   // Programmatically setting the value property
   // moves the cursor to the end of the input.

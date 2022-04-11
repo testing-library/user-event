@@ -1235,6 +1235,15 @@
         "bug",
         "doc"
       ]
+    },
+    {
+      "login": "SchmitzChristian",
+      "name": "SchmitzChristian",
+      "avatar_url": "https://avatars.githubusercontent.com/u/65352721?v=4",
+      "profile": "https://github.com/SchmitzChristian",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "commitConvention": "none",

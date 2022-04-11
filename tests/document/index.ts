@@ -50,7 +50,7 @@ test('keep track of value in UI', async () => {
   expect(getUIValue(element)).toBe('3.5')
 })
 
-test('trigger `change` event if value changed since focus/set', async () => {
+test('trigger `change` event if value changed per user input', async () => {
   const {element, getEvents} = render<HTMLInputElement>(
     `<input type="number"/>`,
     {focus: false},
@@ -66,16 +66,25 @@ test('trigger `change` event if value changed since focus/set', async () => {
   expect(getEvents('change')).toHaveLength(0)
 
   element.focus()
-  // Programmatically changing value sets initial value
+  // Programmatically changing value is ignored
   element.value = '3'
+  // Value doesn't change
   setUIValue(element, '3')
   element.blur()
 
   expect(getEvents('change')).toHaveLength(0)
 
   element.focus()
+  setUIValue(element, '2')
+  // value is reset so there is no change in the end
+  element.value = '3'
+  element.blur()
+
+  expect(getEvents('change')).toHaveLength(0)
+
+  element.focus()
+  setUIValue(element, '2')
   element.value = '2'
-  setUIValue(element, '3')
   element.blur()
 
   expect(getEvents('change')).toHaveLength(1)

@@ -1,4 +1,5 @@
 import {
+  clearInitialValue,
   endTrackValue,
   getUIValue,
   setUIValue,
@@ -169,6 +170,7 @@ function editInputElement(
     if (isValidDateOrTimeValue(element, newValue)) {
       commitInput(config, element, newOffset, {})
       dispatchUIEvent(config, element, 'change')
+      clearInitialValue(element)
     }
   } else {
     commitInput(config, element, newOffset, {

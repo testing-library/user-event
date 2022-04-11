@@ -1207,6 +1207,34 @@
       "contributions": [
         "ideas"
       ]
+    },
+    {
+      "login": "CreativeTechGuy",
+      "name": "Jason O'Neill",
+      "avatar_url": "https://avatars.githubusercontent.com/u/12002072?v=4",
+      "profile": "https://creativetechguy.com",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "xDisfigure",
+      "name": "Thomas ROCHA",
+      "avatar_url": "https://avatars.githubusercontent.com/u/7613287?v=4",
+      "profile": "https://github.com/xDisfigure",
+      "contributions": [
+        "bug"
+      ]
+    },
+    {
+      "login": "karolis-cekaitis",
+      "name": "Karolis Čekaitis",
+      "avatar_url": "https://avatars.githubusercontent.com/u/89905443?v=4",
+      "profile": "https://github.com/karolis-cekaitis",
+      "contributions": [
+        "bug",
+        "doc"
+      ]
     }
   ],
   "commitConvention": "none",

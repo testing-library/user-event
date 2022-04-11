@@ -32,13 +32,12 @@ function valueInterceptor(
   if (isUI) {
     this[UIValue] = String(v)
     setPreviousValue(this, String(this.value))
-  } else {
-    trackOrSetValue(this, String(v))
   }
 
   return {
     applyNative: !!isUI,
     realArgs: sanitizeValue(this, v),
+    then: isUI ? undefined : () => trackOrSetValue(this, String(v)),
   }
 }
 

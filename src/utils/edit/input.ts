@@ -129,7 +129,7 @@ function editInputElement(
 ) {
   let dataToInsert = data
   const spaceUntilMaxLength = getSpaceUntilMaxLength(element)
-  if (spaceUntilMaxLength !== undefined) {
+  if (spaceUntilMaxLength !== undefined && data.length > 0) {
     if (spaceUntilMaxLength > 0) {
       dataToInsert = data.substring(0, spaceUntilMaxLength)
     } else {

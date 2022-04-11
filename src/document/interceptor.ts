@@ -28,6 +28,7 @@ export function prepareInterceptor<
      */
     applyNative?: boolean
     realArgs?: ImplReturn<ElementType[PropName]>
+    then?: () => void
   },
 ) {
   const prototypeDescriptor = Object.getOwnPropertyDescriptor(
@@ -49,7 +50,11 @@ export function prepareInterceptor<
     this: ElementType,
     ...args: Params<ElementType[PropName]>
   ) {
-    const {applyNative = true, realArgs} = interceptorImpl.call(this, ...args)
+    const {
+      applyNative = true,
+      realArgs,
+      then,
+    } = interceptorImpl.call(this, ...args)
 
     const realFunc = ((!applyNative && objectDescriptor) ||
       (prototypeDescriptor as PropertyDescriptor))[target] as (
@@ -62,6 +67,8 @@ export function prepareInterceptor<
     } else {
       realFunc.call(this, ...realArgs)
     }
+
+    then?.()
   }
   ;(intercept as Interceptable)[Interceptor] = Interceptor
 

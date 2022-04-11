@@ -112,6 +112,20 @@ test('maintain selection range on elements without support for selection range',
   expect(element.selectionStart).toBe(null)
 })
 
+test('reset UI selection if value is programmatically set', async () => {
+  const {element} = render<HTMLInputElement>(`<input/>`)
+
+  prepare(element)
+
+  setUIValue(element, 'abc')
+  setUISelection(element, {anchorOffset: 1, focusOffset: 2})
+
+  element.value = 'abcdef'
+  expect(element.selectionStart).toBe(6)
+  expect(getUISelection(element)).toHaveProperty('focusOffset', 6)
+  expect(getUISelection(element)).toHaveProperty('startOffset', 6)
+})
+
 test('clear UI selection if selection is programmatically set', async () => {
   const {element} = render<HTMLInputElement>(`<input/>`)
 

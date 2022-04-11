@@ -37,10 +37,8 @@ export async function pointerAction(config: Config, actions: PointerAction[]) {
       ? pointerPress(config, {...action, target, coords})
       : pointerMove(config, {...action, target, coords}))
 
-    if (typeof config.delay === 'number') {
-      if (i < actions.length - 1) {
-        await wait(config.delay)
-      }
+    if (i < actions.length - 1) {
+      await wait(config)
     }
   }
 

@@ -2,9 +2,9 @@ import {dispatchUIEvent} from '../event'
 import {Config} from '../setup'
 import {prepareSelectionInterceptor} from './selection'
 import {
+  clearInitialValue,
   getInitialValue,
   prepareValueInterceptor,
-  setInitialValue,
 } from './value'
 
 const isPrepared = Symbol('Node prepared with document state workarounds')
@@ -45,8 +45,11 @@ export function prepareDocument(document: Document) {
     e => {
       const el = e.target as HTMLInputElement
       const initialValue = getInitialValue(el)
-      if (typeof initialValue === 'string' && el.value !== initialValue) {
-        dispatchUIEvent({} as Config, el, 'change')
+      if (initialValue !== undefined) {
+        if (el.value !== initialValue) {
+          dispatchUIEvent({} as Config, el, 'change')
+        }
+        clearInitialValue(el)
       }
     },
     {
@@ -59,10 +62,6 @@ export function prepareDocument(document: Document) {
 }
 
 function prepareElement(el: Node | HTMLInputElement) {
-  if ('value' in el) {
-    setInitialValue(el)
-  }
-
   if (el[isPrepared]) {
     return
   }
@@ -75,6 +74,12 @@ function prepareElement(el: Node | HTMLInputElement) {
   el[isPrepared] = isPrepared
 }
 
-export {getUIValue, setUIValue, startTrackValue, endTrackValue} from './value'
+export {
+  getUIValue,
+  setUIValue,
+  startTrackValue,
+  endTrackValue,
+  clearInitialValue,
+} from './value'
 export {getUISelection, setUISelection} from './selection'
 export type {UISelectionRange} from './selection'

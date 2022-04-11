@@ -1,4 +1,5 @@
 import {
+  clearInitialValue,
   endTrackValue,
   getUIValue,
   setUIValue,
@@ -128,7 +129,7 @@ function editInputElement(
 ) {
   let dataToInsert = data
   const spaceUntilMaxLength = getSpaceUntilMaxLength(element)
-  if (spaceUntilMaxLength !== undefined) {
+  if (spaceUntilMaxLength !== undefined && data.length > 0) {
     if (spaceUntilMaxLength > 0) {
       dataToInsert = data.substring(0, spaceUntilMaxLength)
     } else {
@@ -169,6 +170,7 @@ function editInputElement(
     if (isValidDateOrTimeValue(element, newValue)) {
       commitInput(config, element, newOffset, {})
       dispatchUIEvent(config, element, 'change')
+      clearInitialValue(element)
     }
   } else {
     commitInput(config, element, newOffset, {

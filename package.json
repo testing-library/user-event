@@ -25,12 +25,12 @@
   "files": [
     "dist"
   ],
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.mjs",
+  "main": "./dist/index.js",
+  "module": "./dist/esm/index.js",
   "exports": {
     ".": {
-      "require": "./dist/index.cjs",
-      "default": "./dist/index.mjs"
+      "require": "./dist/index.js",
+      "default": "./dist/esm/index.js"
     }
   },
   "types": "./dist/types/index.d.ts",

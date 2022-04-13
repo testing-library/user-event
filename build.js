@@ -1,9 +1,9 @@
 ;(async () => {
   const child = require('child_process')
-  const {build} = require('esbuild')
+  const { build } = require('esbuild')
 
   await build({
-    outfile: 'dist/index.mjs',
+    outfile: 'dist/esm/index.js',
     format: 'esm',
     target: 'es6',
     bundle: true,
@@ -12,7 +12,7 @@
   })
 
   await build({
-    outfile: 'dist/index.cjs',
+    outfile: 'dist/index.js',
     format: 'cjs',
     target: 'node12',
     bundle: true,

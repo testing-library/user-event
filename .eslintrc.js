@@ -15,4 +15,12 @@ module.exports = {
     // ES2022 will be released in June 2022
     'prefer-object-has-own': 0,
   },
+  overrides: [
+    {
+      files: ['src/**'],
+      rules: {
+        'explicit-globals': 'error',
+      },
+    },
+  ],
 }

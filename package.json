@@ -36,7 +36,7 @@
   "types": "./dist/types/index.d.ts",
   "scripts": {
     "build": "node build.js",
-    "lint": "kcd-scripts lint",
+    "lint": "kcd-scripts lint --rulesdir=eslint",
     "setup": "npm install && npm run validate -s",
     "test": "kcd-scripts test",
     "test:debug": "kcd-scripts --inspect-brk test --runInBand",

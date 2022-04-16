@@ -55,7 +55,7 @@ export interface Options {
    * This defaults to the owner document of an element if an API is called directly with an element and without setup.
    * Otherwise it falls back to the global document.
    *
-   * @default element.ownerDocument??global.document
+   * @default element.ownerDocument??globalThis.document
    */
   document?: Document
 
@@ -136,7 +136,7 @@ export const defaultOptionsDirect: Required<Options> = {
   applyAccept: true,
   autoModify: true,
   delay: 0,
-  document: global.document,
+  document: globalThis.document,
   keyboardMap: defaultKeyboardMap,
   pointerMap: defaultPointerMap,
   pointerEventsCheck: PointerEventsCheckLevel.EachApiCall,

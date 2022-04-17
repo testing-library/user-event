@@ -36,7 +36,7 @@
   "types": "./dist/types/index.d.ts",
   "scripts": {
     "build": "node build.js",
-    "lint": "kcd-scripts lint --rulesdir=eslint",
+    "lint": "kcd-scripts lint",
     "setup": "npm install && npm run validate -s",
     "test": "kcd-scripts test",
     "test:debug": "kcd-scripts --inspect-brk test --runInBand",
@@ -52,6 +52,7 @@
     "@types/react": "^17.0.42",
     "esbuild": "^0.14.27",
     "eslint-import-resolver-typescript": "^2.7.0",
+    "eslint-plugin-local-rules": "^1.1.0",
     "is-ci": "^3.0.1",
     "jest-in-case": "^1.0.2",
     "jest-serializer-ansi": "^1.0.3",

@@ -1244,6 +1244,15 @@
       "contributions": [
         "bug"
       ]
+    },
+    {
+      "login": "yannbf",
+      "name": "Yann Braga",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1671563?v=4",
+      "profile": "https://github.com/yannbf",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "commitConvention": "none",

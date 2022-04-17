@@ -19,7 +19,7 @@ export function createConfig(
   defaults: Required<Options> = defaultOptionsSetup,
   node?: Node,
 ): Config {
-  const document = getDocument(options, node)
+  const document = getDocument(options, node, defaults)
 
   const {
     keyboardState = createKeyboardState(),
@@ -43,7 +43,8 @@ export function setupMain(options: Options = {}) {
   const config = createConfig(options)
   prepareDocument(config.document)
 
-  const view = config.document.defaultView ?? /* istanbul ignore next */ window
+  const view =
+    config.document.defaultView ?? /* istanbul ignore next */ globalThis.window
   attachClipboardStubToView(view)
 
   return doSetup(config)
@@ -103,6 +104,12 @@ function doSetup(config: Config): UserEvent {
   }
 }
 
-function getDocument(options: Partial<Config>, node?: Node) {
-  return options.document ?? (node && getDocumentFromNode(node)) ?? document
+function getDocument(
+  options: Partial<Config>,
+  node: Node | undefined,
+  defaults: Required<Options>,
+) {
+  return (
+    options.document ?? (node && getDocumentFromNode(node)) ?? defaults.document
+  )
 }

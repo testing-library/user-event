@@ -8,6 +8,7 @@ module.exports = {
       typescript: {},
     },
   },
+  plugins: ['eslint-plugin-local-rules'],
   rules: {
     'no-await-in-loop': 0,
     'testing-library/no-dom-import': 0,
@@ -19,7 +20,7 @@ module.exports = {
     {
       files: ['src/**'],
       rules: {
-        'explicit-globals': 'error',
+        'local-rules/explicit-globals': 'error',
       },
     },
   ],

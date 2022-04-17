@@ -171,6 +171,7 @@ Thanks goes to these wonderful people ([emoji key][emojis]):
   <tr>
     <td align="center"><a href="https://github.com/karolis-cekaitis"><img src="https://avatars.githubusercontent.com/u/89905443?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Karolis Čekaitis</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3Akarolis-cekaitis" title="Bug reports">🐛</a> <a href="https://github.com/testing-library/user-event/commits?author=karolis-cekaitis" title="Documentation">📖</a></td>
     <td align="center"><a href="https://github.com/SchmitzChristian"><img src="https://avatars.githubusercontent.com/u/65352721?v=4?s=100" width="100px;" alt=""/><br /><sub><b>SchmitzChristian</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3ASchmitzChristian" title="Bug reports">🐛</a></td>
+    <td align="center"><a href="https://github.com/yannbf"><img src="https://avatars.githubusercontent.com/u/1671563?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Yann Braga</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=yannbf" title="Code">💻</a></td>
   </tr>
 </table>
 

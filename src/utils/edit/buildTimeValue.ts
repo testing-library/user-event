@@ -1,3 +1,5 @@
+const parseInt = globalThis.parseInt
+
 export function buildTimeValue(value: string): string {
   const onlyDigitsValue = value.replace(/\D/g, '')
   if (onlyDigitsValue.length < 2) {
@@ -26,7 +28,7 @@ function build(onlyDigitsValue: string, index: number): string {
   const minuteCharacters = onlyDigitsValue.slice(index)
   const parsedMinutes = parseInt(minuteCharacters, 10)
   const validMinutes = Math.min(parsedMinutes, 59)
-  return `${validHours
+  return `${validHours.toString().padStart(2, '0')}:${validMinutes
     .toString()
-    .padStart(2, '0')}:${validMinutes.toString().padStart(2, '0')}`
+    .padStart(2, '0')}`
 }

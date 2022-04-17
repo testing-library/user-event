@@ -5,75 +5,7 @@ import {getWindow} from '../misc/getWindow'
 
 // Clipboard API is only fully available in secure context or for browser extensions.
 
-const Window = Symbol('Window reference')
-
 type ItemData = Record<string, Blob | string | Promise<Blob | string>>
-
-class ClipboardItemStub implements ClipboardItem {
-  private data: ItemData
-  constructor(data: ItemData) {
-    this.data = data
-  }
-
-  get types() {
-    return Array.from(Object.keys(this.data))
-  }
-
-  async getType(type: string) {
-    const data = await this.data[type]
-
-    if (!data) {
-      throw new Error(
-        `${type} is not one of the available MIME types on this item.`,
-      )
-    }
-
-    return data instanceof this[Window].Blob
-      ? data
-      : new this[Window].Blob([data], {type})
-  }
-
-  [Window] = window
-}
-
-const ClipboardStubControl = Symbol('Manage ClipboardSub')
-
-class ClipboardStub extends window.EventTarget implements Clipboard {
-  private items: ClipboardItem[] = []
-
-  async read() {
-    return Array.from(this.items)
-  }
-
-  async readText() {
-    let text = ''
-    for (const item of this.items) {
-      const type = item.types.includes('text/plain')
-        ? 'text/plain'
-        : item.types.find(t => t.startsWith('text/'))
-      if (type) {
-        text += await item
-          .getType(type)
-          .then(b => readBlobText(b, this[Window].FileReader))
-      }
-    }
-    return text
-  }
-
-  async write(data: ClipboardItem[]) {
-    this.items = data
-  }
-
-  async writeText(text: string) {
-    this.items = [createClipboardItem(this[Window], text)]
-  }
-
-  [Window] = window;
-  [ClipboardStubControl]: {
-    resetClipboardStub: () => void
-    detachClipboardStub: () => void
-  }
-}
 
 // MDN lists string|Blob|Promise<Blob|string> as possible types in ClipboardItemData
 // lib.dom.d.ts lists only Promise<Blob|string>
@@ -81,8 +13,8 @@ class ClipboardStub extends window.EventTarget implements Clipboard {
 export function createClipboardItem(
   window: Window & typeof globalThis,
   ...blobs: Array<Blob | string>
-): ClipboardItem {
-  const data = Object.fromEntries(
+) {
+  const dataMap = Object.fromEntries(
     blobs.map(b => [
       typeof b === 'string' ? 'text/plain' : b.type,
       Promise.resolve(b),
@@ -90,18 +22,88 @@ export function createClipboardItem(
   )
 
   // use real ClipboardItem if available
-  /* istanbul ignore else */
-  if (typeof window.ClipboardItem === 'undefined') {
-    const item = new ClipboardItemStub(data)
-    item[Window] = window
-    return item
-  } else {
-    return new window.ClipboardItem(data)
+  /* istanbul ignore if */
+  if (typeof window.ClipboardItem !== 'undefined') {
+    return new window.ClipboardItem(dataMap)
   }
+
+  return new (class ClipboardItem implements ClipboardItem {
+    private data: ItemData
+    constructor(d: ItemData) {
+      this.data = d
+    }
+
+    get types() {
+      return Array.from(Object.keys(this.data))
+    }
+
+    async getType(type: string) {
+      const value = await this.data[type]
+
+      if (!value) {
+        throw new Error(
+          `${type} is not one of the available MIME types on this item.`,
+        )
+      }
+
+      return value instanceof window.Blob
+        ? value
+        : new window.Blob([value], {type})
+    }
+  })(dataMap)
+}
+
+const ClipboardStubControl = Symbol('Manage ClipboardSub')
+
+function createClipboardStub(window: Window & typeof globalThis) {
+  return new (class Clipboard extends window.EventTarget {
+    private items: ClipboardItem[] = []
+
+    async read() {
+      return Array.from(this.items)
+    }
+
+    async readText() {
+      let text = ''
+      for (const item of this.items) {
+        const type = item.types.includes('text/plain')
+          ? 'text/plain'
+          : item.types.find(t => t.startsWith('text/'))
+        if (type) {
+          text += await item
+            .getType(type)
+            .then(b => readBlobText(b, window.FileReader))
+        }
+      }
+      return text
+    }
+
+    async write(data: ClipboardItem[]) {
+      this.items = data
+    }
+
+    async writeText(text: string) {
+      this.items = [createClipboardItem(window, text)]
+    }
+
+    [ClipboardStubControl]: {
+      resetClipboardStub: () => void
+      detachClipboardStub: () => void
+    }
+  })()
+}
+type ClipboardStub = ReturnType<typeof createClipboardStub>
+
+function isClipboardStub(
+  clipboard: Clipboard | ClipboardStub | undefined,
+): clipboard is ClipboardStub {
+  return !!(clipboard as {[ClipboardStubControl]?: object} | undefined)?.[
+    ClipboardStubControl
+  ]
 }
 
 export function attachClipboardStubToView(window: Window & typeof globalThis) {
-  if (window.navigator.clipboard instanceof ClipboardStub) {
+  if (isClipboardStub(window.navigator.clipboard)) {
     return window.navigator.clipboard[ClipboardStubControl]
   }
 
@@ -110,12 +112,10 @@ export function attachClipboardStubToView(window: Window & typeof globalThis) {
     'clipboard',
   )
 
-  let stub = new ClipboardStub()
-  stub[Window] = window
+  let stub = createClipboardStub(window)
   const control = {
     resetClipboardStub: () => {
-      stub = new ClipboardStub()
-      stub[Window] = window
+      stub = createClipboardStub(window)
       stub[ClipboardStubControl] = control
     },
     detachClipboardStub: () => {
@@ -141,7 +141,7 @@ export function attachClipboardStubToView(window: Window & typeof globalThis) {
 }
 
 export function resetClipboardStubOnView(window: Window & typeof globalThis) {
-  if (window.navigator.clipboard instanceof ClipboardStub) {
+  if (isClipboardStub(window.navigator.clipboard)) {
     window.navigator.clipboard[ClipboardStubControl].resetClipboardStub()
   }
 }
@@ -149,7 +149,7 @@ export function resetClipboardStubOnView(window: Window & typeof globalThis) {
 export function detachClipboardStubFromView(
   window: Window & typeof globalThis,
 ) {
-  if (window.navigator.clipboard instanceof ClipboardStub) {
+  if (isClipboardStub(window.navigator.clipboard)) {
     window.navigator.clipboard[ClipboardStubControl].detachClipboardStub()
   }
 }
@@ -204,11 +204,11 @@ export async function writeDataTransferToClipboard(
 }
 
 /* istanbul ignore else */
-if (typeof afterEach === 'function') {
-  afterEach(() => resetClipboardStubOnView(window))
+if (typeof globalThis.afterEach === 'function') {
+  globalThis.afterEach(() => resetClipboardStubOnView(globalThis.window))
 }
 
 /* istanbul ignore else */
-if (typeof afterAll === 'function') {
-  afterAll(() => detachClipboardStubFromView(window))
+if (typeof globalThis.afterAll === 'function') {
+  globalThis.afterAll(() => detachClipboardStubFromView(globalThis.window))
 }

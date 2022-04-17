@@ -6,7 +6,7 @@ export function wait(config: Config) {
     return
   }
   return Promise.all([
-    new Promise<void>(resolve => setTimeout(() => resolve(), delay)),
+    new Promise<void>(resolve => globalThis.setTimeout(() => resolve(), delay)),
     config.advanceTimers(delay),
   ])
 }

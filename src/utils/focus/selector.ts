@@ -7,4 +7,5 @@ export const FOCUSABLE_SELECTOR = [
   '[contenteditable="true"]',
   'a[href]',
   '[tabindex]:not([disabled])',
+  'details',
 ].join(', ')

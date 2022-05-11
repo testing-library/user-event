@@ -33,7 +33,7 @@ describe.each([
     clearEventCalls()
 
     await expect(user[method](element)).rejects.toThrowError(
-      /has or inherits pointer-events/i,
+      /has `pointer-events: none`/i,
     )
   })
 

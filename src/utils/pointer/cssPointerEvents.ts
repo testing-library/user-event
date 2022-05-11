@@ -4,20 +4,30 @@ import {ApiLevel, getLevelRef} from '..'
 import {getWindow} from '../misc/getWindow'
 
 export function hasPointerEvents(element: Element): boolean {
+  return closestPointerEventsDeclaration(element)?.pointerEvents !== 'none'
+}
+
+function closestPointerEventsDeclaration(element: Element):
+  | {
+      pointerEvents: string
+      tree: Element[]
+    }
+  | undefined {
   const window = getWindow(element)
 
   for (
-    let el: Element | null = element;
+    let el: Element | null = element, tree: Element[] = [];
     el?.ownerDocument;
     el = el.parentElement
   ) {
+    tree.push(el)
     const pointerEvents = window.getComputedStyle(el).pointerEvents
     if (pointerEvents && !['inherit', 'unset'].includes(pointerEvents)) {
-      return pointerEvents !== 'none'
+      return {pointerEvents, tree}
     }
   }
 
-  return true
+  return undefined
 }
 
 const PointerEventsCheck = Symbol('Last check for pointer-events')
@@ -52,19 +62,56 @@ export function assertPointerEvents(config: Config, element: Element) {
     return
   }
 
-  const result = hasPointerEvents(element)
+  const declaration = closestPointerEventsDeclaration(element)
 
   element[PointerEventsCheck] = {
     [ApiLevel.Call]: getLevelRef(config, ApiLevel.Call),
     [ApiLevel.Trigger]: getLevelRef(config, ApiLevel.Trigger),
-    result,
+    result: declaration?.pointerEvents !== 'none',
   }
 
-  if (!result) {
+  if (declaration?.pointerEvents === 'none') {
     throw new Error(
-      'Unable to perform pointer interaction as the element has or inherits pointer-events set to "none".',
+      [
+        `Unable to perform pointer interaction as the element ${
+          declaration.tree.length > 1 ? 'inherits' : 'has'
+        } \`pointer-events: none\`:`,
+        '',
+        printTree(declaration.tree),
+      ].join('\n'),
     )
   }
+}
+
+function printTree(tree: Element[]) {
+  return tree
+    .reverse()
+    .map((el, i) =>
+      [
+        ''.padEnd(i),
+        el.tagName,
+        el.id && `#${el.id}`,
+        el.hasAttribute('data-testid') &&
+          `(testId=${el.getAttribute('data-testid')})`,
+        el.hasAttribute('aria-label') &&
+          `(label=${el.getAttribute('aria-label')})`,
+        el.hasAttribute('aria-labelledby') &&
+          `(label=${
+            el.ownerDocument.getElementById(
+              el.getAttribute('aria-labelledby') ?? '',
+            )?.textContent
+          })`,
+        tree.length > 1 &&
+          i === 0 &&
+          '  <-- This element declared `pointer-events: none`',
+        tree.length > 1 &&
+          i === tree.length - 1 &&
+          '  <-- Asserted pointer events here',
+      ]
+        .filter(Boolean)
+        .join(''),
+    )
+    .join('\n')
 }
 
 // With the eslint rule and prettier the bitwise operation isn't nice to read

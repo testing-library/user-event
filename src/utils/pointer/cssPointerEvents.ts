@@ -2,6 +2,7 @@ import {PointerEventsCheckLevel} from '../../options'
 import {Config} from '../../setup'
 import {ApiLevel, getLevelRef} from '..'
 import {getWindow} from '../misc/getWindow'
+import {isElementType} from '../misc/isElementType'
 
 export function hasPointerEvents(element: Element): boolean {
   return closestPointerEventsDeclaration(element)?.pointerEvents !== 'none'
@@ -93,14 +94,7 @@ function printTree(tree: Element[]) {
         el.id && `#${el.id}`,
         el.hasAttribute('data-testid') &&
           `(testId=${el.getAttribute('data-testid')})`,
-        el.hasAttribute('aria-label') &&
-          `(label=${el.getAttribute('aria-label')})`,
-        el.hasAttribute('aria-labelledby') &&
-          `(label=${
-            el.ownerDocument.getElementById(
-              el.getAttribute('aria-labelledby') as string,
-            )?.textContent
-          })`,
+        getLabelDescr(el),
         tree.length > 1 &&
           i === 0 &&
           '  <-- This element declared `pointer-events: none`',
@@ -112,6 +106,39 @@ function printTree(tree: Element[]) {
         .join(''),
     )
     .join('\n')
+}
+
+function getLabelDescr(element: Element) {
+  let label: string | undefined | null
+  if (element.hasAttribute('aria-label')) {
+    label = element.getAttribute('aria-label') as string
+  } else if (element.hasAttribute('aria-labelledby')) {
+    label = element.ownerDocument
+      .getElementById(element.getAttribute('aria-labelledby') as string)
+      ?.textContent?.trim()
+  } else if (
+    isElementType(element, [
+      'button',
+      'input',
+      'meter',
+      'output',
+      'progress',
+      'select',
+      'textarea',
+    ]) &&
+    element.labels?.length
+  ) {
+    label = Array.from(element.labels)
+      .map(el => el.textContent?.trim())
+      .join('|')
+  } else if (isElementType(element, 'button')) {
+    label = element.textContent?.trim()
+  }
+  label = label?.replace(/\n/g, '  ')
+  if (Number(label?.length) > 30) {
+    label = `${label?.substring(0, 29)}…`
+  }
+  return label ? `(label=${label})` : ''
 }
 
 // With the eslint rule and prettier the bitwise operation isn't nice to read

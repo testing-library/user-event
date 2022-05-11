@@ -24,6 +24,11 @@ test('report element that declared pointer-events', async () => {
       <ul aria-labelledby="listlabel">
         <li aria-label="List entry">
           <span data-testid="target"></span>
+          <button>foo</button>
+          <label>
+            An input element with a really long label text
+            <input/>
+          </label>
         </li>
       </ul>
     </div>
@@ -48,5 +53,34 @@ test('report element that declared pointer-events', async () => {
      UL(label=Some list)
       LI(label=List entry)
        SPAN(testId=target)  <-- Asserted pointer events here
+  `)
+
+  expect(() =>
+    assertPointerEvents(
+      createConfig(),
+      element.querySelector('button') as Element,
+    ),
+  ).toThrowErrorMatchingInlineSnapshot(`
+    Unable to perform pointer interaction as the element inherits \`pointer-events: none\`:
+
+    DIV#foo  <-- This element declared \`pointer-events: none\`
+     UL(label=Some list)
+      LI(label=List entry)
+       BUTTON(label=foo)  <-- Asserted pointer events here
+  `)
+
+  expect(() =>
+    assertPointerEvents(
+      createConfig(),
+      element.querySelector('input') as Element,
+    ),
+  ).toThrowErrorMatchingInlineSnapshot(`
+    Unable to perform pointer interaction as the element inherits \`pointer-events: none\`:
+
+    DIV#foo  <-- This element declared \`pointer-events: none\`
+     UL(label=Some list)
+      LI(label=List entry)
+       LABEL
+        INPUT(label=An input element with a reall…)  <-- Asserted pointer events here
   `)
 })

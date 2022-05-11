@@ -98,7 +98,7 @@ function printTree(tree: Element[]) {
         el.hasAttribute('aria-labelledby') &&
           `(label=${
             el.ownerDocument.getElementById(
-              el.getAttribute('aria-labelledby') ?? '',
+              el.getAttribute('aria-labelledby') as string,
             )?.textContent
           })`,
         tree.length > 1 &&

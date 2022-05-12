@@ -1253,6 +1253,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "Thanga-Ganapathy",
+      "name": "Thanga Ganapathy",
+      "avatar_url": "https://avatars.githubusercontent.com/u/22178434?v=4",
+      "profile": "https://github.com/Thanga-Ganapathy",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "commitConvention": "none",

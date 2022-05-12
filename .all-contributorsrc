@@ -1262,6 +1262,15 @@
       "contributions": [
         "bug"
       ]
+    },
+    {
+      "login": "mattcarlotta",
+      "name": "Matt Carlotta",
+      "avatar_url": "https://avatars.githubusercontent.com/u/22607722?v=4",
+      "profile": "http://mattcarlotta.dev",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "commitConvention": "none",

@@ -6,13 +6,12 @@ import {Instance, UserEventApi} from '#src/setup'
 // `const` are not initialized when mocking is executed, but `function` are when prefixed with `mock`
 function mockApis() {}
 // access the `function` as object
-type mockApisRefHack = (() => void) &
-  {
-    [name in keyof UserEventApi]: {
-      mock: APIMock
-      real: UserEventApi[name]
-    }
+type mockApisRefHack = (() => void) & {
+  [name in keyof UserEventApi]: {
+    mock: APIMock
+    real: UserEventApi[name]
   }
+}
 
 // make the tests more readable by applying the typecast here
 export function getSpy(k: keyof UserEventApi) {
@@ -34,6 +33,10 @@ interface APIMock
     this: Instance,
     ...args: Parameters<UserEventApi[keyof UserEventApi]>
   ): ReturnType<UserEventApi[keyof UserEventApi]>
+  originalMockImplementation: (
+    this: Instance,
+    ...args: Parameters<UserEventApi[keyof UserEventApi]>
+  ) => ReturnType<UserEventApi[keyof UserEventApi]>
 }
 
 jest.mock('#src/setup/api', () => {
@@ -44,15 +47,14 @@ jest.mock('#src/setup/api', () => {
   }
 
   ;(Object.keys(real) as Array<keyof UserEventApi>).forEach(key => {
-    const mock = jest.fn<unknown, unknown[]>(function mockImpl(
-      this: Instance,
-      ...args: unknown[]
-    ) {
+    const mock = jest.fn<unknown, unknown[]>(mockImpl) as unknown as APIMock
+    function mockImpl(this: Instance, ...args: unknown[]) {
       Object.defineProperty(mock.mock.lastCall, 'this', {
         get: () => this,
       })
       return (real[key] as Function).apply(this, args)
-    }) as unknown as APIMock
+    }
+    mock.originalMockImplementation = mockImpl
 
     Object.defineProperty(mock, 'name', {
       get: () => `mock-${key}`,

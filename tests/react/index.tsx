@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import {render, screen} from '@testing-library/react'
+import {render, screen, waitFor} from '@testing-library/react'
 import userEvent from '#src'
 import {getUIValue} from '#src/document'
 import {addListeners} from '#testHelpers'
@@ -171,5 +171,38 @@ describe('typing in a formatted input', () => {
     await user.type(element, '4')
 
     expect(element).toHaveValue('$234')
+  })
+})
+
+test('change select with delayed state update', async () => {
+  function Select() {
+    const [selected, setSelected] = useState<string[]>([])
+
+    return (
+      <select
+        multiple
+        value={selected}
+        onChange={e => {
+          const values = Array.from(e.target.selectedOptions).map(o => o.value)
+          setTimeout(() => setSelected(values))
+        }}
+      >
+        <option>Chrome</option>
+        <option>Firefox</option>
+        <option>Opera</option>
+      </select>
+    )
+  }
+
+  render(<Select />)
+
+  await userEvent.selectOptions(
+    screen.getByRole('listbox'),
+    ['Chrome', 'Firefox'],
+    {delay: 10},
+  )
+
+  await waitFor(() => {
+    expect(screen.getByRole('listbox')).toHaveValue(['Chrome', 'Firefox'])
   })
 })

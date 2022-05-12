@@ -1253,6 +1253,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "mikaelrss",
+      "name": "Mikael Solstad",
+      "avatar_url": "https://avatars.githubusercontent.com/u/26043795?v=4",
+      "profile": "https://github.com/mikaelrss",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "commitConvention": "none",

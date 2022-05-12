@@ -21,7 +21,7 @@ describe.each([
     const {element, user} = setup(`<div style="pointer-events: none"></div>`)
 
     await expect(user[method](element)).rejects.toThrowError(
-      /has or inherits pointer-events/i,
+      /has `pointer-events: none`/i,
     )
   })
 

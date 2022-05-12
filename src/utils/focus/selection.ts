@@ -217,14 +217,13 @@ export function moveSelection(node: Element, direction: -1 | 1) {
   } else {
     const selection = node.ownerDocument.getSelection()
 
-    /* istanbul ignore if */
-    if (!selection) {
+    if (!selection?.focusNode) {
       return
     }
 
     if (selection.isCollapsed) {
       const nextPosition = getNextCursorPosition(
-        selection.focusNode as Node,
+        selection.focusNode,
         selection.focusOffset,
         direction,
       )

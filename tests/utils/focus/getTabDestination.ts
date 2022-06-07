@@ -46,12 +46,13 @@ test('get next focusable element in tab order', () => {
   const {
     elements: [elA, elB, elC, elD, elE, elF],
   } = setup(`
-        <input id="a" tabIndex="2"/>
+        <input id="a" tabIndex="2">
         <input id="b" tabIndex="0">
-        <input id="c" tabIndex="-1"/>
+        <input id="c" tabIndex="-1">
         <input id="d" tabIndex="0">
         <input id="e" tabIndex="1">
-        <input id="f" />
+        <input id="f">
+        <input id="g" tabIndex="-999">
     `)
 
   assertTabOrder([elE, elA, elB, elD, elF])
@@ -72,6 +73,7 @@ test('exclude hidden elements', () => {
   } = setup(`
         <input/>
         <input type="hidden"/>
+        <input hidden />
         <input style="visibility: hidden"/>
         <input style="display: none"/>
     `)

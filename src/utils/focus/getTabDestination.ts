@@ -3,18 +3,55 @@ import {isElementType} from '../misc/isElementType'
 import {isVisible} from '../misc/isVisible'
 import {FOCUSABLE_SELECTOR} from './selector'
 
+/**
+ * Checks if an element can be focused based on its state. Assumes that the element being
+ * passed in is already focusable (input, button, etc.).
+ * @param element The element to check for focusability.
+ * @param activeElement The currently active element in the document.
+ * @returns
+ */
+function hasFocusableState(
+  element: Element,
+  activeElement: Element,
+  {
+    ignoreVisibility = false,
+  }: {
+    /**
+     * Whether or not to ignore the visibility of the element in calculating
+     * if the element can be focused. If the visibility is known or can be
+     * ignored, then this may improve performance by bypassing computing styles.
+     */
+    ignoreVisibility?: boolean
+  } = {},
+): boolean {
+  if (element === activeElement) return true
+  if (element.getAttribute('tabindex') === '-1') return false
+  if (isDisabled(element)) return false
+  if (!ignoreVisibility && !isVisible(element)) return false
+  return true
+}
+
 export function getTabDestination(activeElement: Element, shift: boolean) {
   const document = activeElement.ownerDocument
   const focusableElements = document.querySelectorAll(FOCUSABLE_SELECTOR)
 
-  const enabledElements = Array.from(focusableElements).filter(
-    el =>
-      el === activeElement ||
-      (el.getAttribute('tabindex') !== '-1' &&
+  let enabledElements
+  const useNewImpl = 1 + 1 === 2
+  if (useNewImpl) {
+    enabledElements = Array.from(focusableElements).filter(el =>
+      hasFocusableState(el, activeElement, {ignoreVisibility: true}),
+    )
+  } else {
+    enabledElements = Array.from(focusableElements).filter(el => {
+      const isActiveElement = el === activeElement
+      const focusable =
+        el.getAttribute('tabindex') !== '-1' &&
         !isDisabled(el) &&
         // Hidden elements are not tabable
-        isVisible(el)),
-  )
+        isVisible(el)
+      return isActiveElement || focusable
+    })
+  }
 
   if (activeElement.getAttribute('tabindex') !== '-1') {
     // tabindex has no effect if the active element has tabindex="-1"
@@ -73,9 +110,41 @@ export function getTabDestination(activeElement: Element, shift: boolean) {
     prunedElements.push(el)
   })
 
-  const currentIndex = prunedElements.findIndex(el => el === activeElement)
+  if (useNewImpl) {
+    const currentIndex = prunedElements.findIndex(el => el === activeElement)
+    const defaultIndex = shift ? prunedElements.length - 1 : 0
 
-  const nextIndex = shift ? currentIndex - 1 : currentIndex + 1
-  const defaultIndex = shift ? prunedElements.length - 1 : 0
-  return prunedElements[nextIndex] || prunedElements[defaultIndex]
+    let foundNextFocus = false
+    let nextIndex = currentIndex
+    while (!foundNextFocus) {
+      if (!shift && nextIndex === prunedElements.length - 1) {
+        // Loop back to the beginning of tab order
+        nextIndex = 0
+      } else if (shift && nextIndex === 0) {
+        // Loop back to the end of tab order
+        nextIndex = prunedElements.length - 1
+      } else {
+        nextIndex = shift ? nextIndex - 1 : nextIndex + 1
+      }
+
+      // Do a just-in-time focusable check
+      if (nextIndex === currentIndex) {
+        // We've looped back to the current element, so we're done
+        break
+      } else if (
+        prunedElements[nextIndex] &&
+        hasFocusableState(prunedElements[nextIndex], activeElement)
+      ) {
+        foundNextFocus = true
+      }
+    }
+
+    return prunedElements[nextIndex] ?? prunedElements[defaultIndex]
+  } else {
+    const currentIndex = prunedElements.findIndex(el => el === activeElement)
+
+    const nextIndex = shift ? currentIndex - 1 : currentIndex + 1
+    const defaultIndex = shift ? prunedElements.length - 1 : 0
+    return prunedElements[nextIndex] || prunedElements[defaultIndex]
+  }
 }

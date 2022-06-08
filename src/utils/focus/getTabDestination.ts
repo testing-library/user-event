@@ -3,40 +3,14 @@ import {isElementType} from '../misc/isElementType'
 import {isVisible} from '../misc/isVisible'
 import {FOCUSABLE_SELECTOR} from './selector'
 
-/**
- * Checks if an element can be focused based on its state. Assumes that the element being
- * passed in is already focusable (input, button, etc.).
- * @param element The element to check for focusability.
- * @param activeElement The currently active element in the document.
- * @returns
- */
-function hasFocusableState(
-  element: Element,
-  activeElement: Element,
-  {
-    ignoreVisibility = false,
-  }: {
-    /**
-     * Whether or not to ignore the visibility of the element in calculating
-     * if the element can be focused. If the visibility is known or can be
-     * ignored, then this may improve performance by bypassing computing styles.
-     */
-    ignoreVisibility?: boolean
-  } = {},
-): boolean {
-  if (element === activeElement) return true
-  if (Number(element.getAttribute('tabindex')) < 0) return false
-  if (isDisabled(element)) return false
-  if (!ignoreVisibility && !isVisible(element)) return false
-  return true
-}
-
 export function getTabDestination(activeElement: Element, shift: boolean) {
   const document = activeElement.ownerDocument
   const focusableElements = document.querySelectorAll(FOCUSABLE_SELECTOR)
 
-  const enabledElements = Array.from(focusableElements).filter(el =>
-    hasFocusableState(el, activeElement, {ignoreVisibility: true}),
+  const enabledElements = Array.from(focusableElements).filter(
+    el =>
+      el === activeElement ||
+      !(Number(el.getAttribute('tabindex')) < 0 || isDisabled(el)),
   )
 
   // tabindex has no effect if the active element has negative tabindex
@@ -118,7 +92,7 @@ export function getTabDestination(activeElement: Element, shift: boolean) {
       break
     } else if (
       prunedElements[nextIndex] &&
-      hasFocusableState(prunedElements[nextIndex], activeElement)
+      isVisible(prunedElements[nextIndex])
     ) {
       foundNextFocus = true
     }

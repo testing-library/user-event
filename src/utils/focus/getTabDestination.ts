@@ -70,33 +70,22 @@ export function getTabDestination(activeElement: Element, shift: boolean) {
     prunedElements.push(el)
   })
 
-  const currentIndex = prunedElements.findIndex(el => el === activeElement)
-  const defaultIndex = shift ? prunedElements.length - 1 : 0
+  for (let index = prunedElements.findIndex(el => el === activeElement); ; ) {
+    index += shift ? -1 : 1
 
-  let foundNextFocus = false
-  let nextIndex = currentIndex
-  while (!foundNextFocus) {
-    if (!shift && nextIndex === prunedElements.length - 1) {
-      // Loop back to the beginning of tab order
-      nextIndex = 0
-    } else if (shift && nextIndex === 0) {
-      // Loop back to the end of tab order
-      nextIndex = prunedElements.length - 1
-    } else {
-      nextIndex = shift ? nextIndex - 1 : nextIndex + 1
+    // loop at overflow
+    if (index === prunedElements.length) {
+      index = 0
+    } else if (index === -1) {
+      index = prunedElements.length - 1
     }
 
-    // Do a just-in-time focusable check
-    if (nextIndex === currentIndex) {
-      // We've looped back to the current element, so we're done
-      break
-    } else if (
-      prunedElements[nextIndex] &&
-      isVisible(prunedElements[nextIndex])
+    if (
+      prunedElements[index] === activeElement ||
+      prunedElements[index] === document.body ||
+      isVisible(prunedElements[index])
     ) {
-      foundNextFocus = true
+      return prunedElements[index]
     }
   }
-
-  return prunedElements[nextIndex] ?? prunedElements[defaultIndex]
 }

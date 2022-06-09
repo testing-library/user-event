@@ -101,7 +101,7 @@ export function setUISelection(
   const anchorOffset =
     mode === 'replace' || element[UISelection] === undefined
       ? sanitizeOffset(anchorOffsetParam)
-      : (element[UISelection] as UISelection).anchorOffset
+      : element[UISelection].anchorOffset
   const focusOffset = sanitizeOffset(focusOffsetParam)
 
   const startOffset = Math.min(anchorOffset, focusOffset)

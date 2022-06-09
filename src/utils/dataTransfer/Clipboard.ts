@@ -54,43 +54,50 @@ export function createClipboardItem(
 }
 
 const ClipboardStubControl = Symbol('Manage ClipboardSub')
+type ClipboardStubControlInstance = {
+  resetClipboardStub: () => void
+  detachClipboardStub: () => void
+}
 
-function createClipboardStub(window: Window & typeof globalThis) {
-  return new (class Clipboard extends window.EventTarget {
-    private items: ClipboardItem[] = []
+function createClipboardStub(
+  window: Window & typeof globalThis,
+  control: ClipboardStubControlInstance,
+) {
+  return Object.assign(
+    new (class Clipboard extends window.EventTarget {
+      private items: ClipboardItem[] = []
 
-    async read() {
-      return Array.from(this.items)
-    }
-
-    async readText() {
-      let text = ''
-      for (const item of this.items) {
-        const type = item.types.includes('text/plain')
-          ? 'text/plain'
-          : item.types.find(t => t.startsWith('text/'))
-        if (type) {
-          text += await item
-            .getType(type)
-            .then(b => readBlobText(b, window.FileReader))
-        }
+      async read() {
+        return Array.from(this.items)
       }
-      return text
-    }
 
-    async write(data: ClipboardItem[]) {
-      this.items = data
-    }
+      async readText() {
+        let text = ''
+        for (const item of this.items) {
+          const type = item.types.includes('text/plain')
+            ? 'text/plain'
+            : item.types.find(t => t.startsWith('text/'))
+          if (type) {
+            text += await item
+              .getType(type)
+              .then(b => readBlobText(b, window.FileReader))
+          }
+        }
+        return text
+      }
 
-    async writeText(text: string) {
-      this.items = [createClipboardItem(window, text)]
-    }
+      async write(data: ClipboardItem[]) {
+        this.items = data
+      }
 
-    [ClipboardStubControl]: {
-      resetClipboardStub: () => void
-      detachClipboardStub: () => void
-    }
-  })()
+      async writeText(text: string) {
+        this.items = [createClipboardItem(window, text)]
+      }
+    })(),
+    {
+      [ClipboardStubControl]: control,
+    },
+  )
 }
 type ClipboardStub = ReturnType<typeof createClipboardStub>
 
@@ -112,11 +119,10 @@ export function attachClipboardStubToView(window: Window & typeof globalThis) {
     'clipboard',
   )
 
-  let stub = createClipboardStub(window)
-  const control = {
+  let stub: ClipboardStub
+  const control: ClipboardStubControlInstance = {
     resetClipboardStub: () => {
-      stub = createClipboardStub(window)
-      stub[ClipboardStubControl] = control
+      stub = createClipboardStub(window, control)
     },
     detachClipboardStub: () => {
       /* istanbul ignore if */
@@ -130,7 +136,7 @@ export function attachClipboardStubToView(window: Window & typeof globalThis) {
       }
     },
   }
-  stub[ClipboardStubControl] = control
+  stub = createClipboardStub(window, control)
 
   Object.defineProperty(window.navigator, 'clipboard', {
     get: () => stub,

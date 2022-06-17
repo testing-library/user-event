@@ -175,6 +175,7 @@ Thanks goes to these wonderful people ([emoji key][emojis]):
     <td align="center"><a href="https://github.com/Thanga-Ganapathy"><img src="https://avatars.githubusercontent.com/u/22178434?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Thanga Ganapathy</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3AThanga-Ganapathy" title="Bug reports">🐛</a></td>
     <td align="center"><a href="https://github.com/mikaelrss"><img src="https://avatars.githubusercontent.com/u/26043795?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Mikael Solstad</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3Amikaelrss" title="Bug reports">🐛</a></td>
     <td align="center"><a href="http://mattcarlotta.dev"><img src="https://avatars.githubusercontent.com/u/22607722?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Matt Carlotta</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3Amattcarlotta" title="Bug reports">🐛</a></td>
+    <td align="center"><a href="http://camchenry.com"><img src="https://avatars.githubusercontent.com/u/1514176?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Cameron McHenry</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=camchenry" title="Code">💻</a></td>
   </tr>
 </table>
 

@@ -184,7 +184,9 @@ test('do not call setTimeout with delay `null`', async () => {
   const {user} = setup(`<div></div>`)
   const spy = jest.spyOn(global, 'setTimeout')
   await user.keyboard('ab')
-  expect(spy).toBeCalledTimes(1)
+  expect(spy.mock.calls.length).toBeGreaterThanOrEqual(1)
+
+  spy.mockClear()
   await user.setup({delay: null}).keyboard('cd')
-  expect(spy).toBeCalledTimes(1)
+  expect(spy).not.toBeCalled()
 })

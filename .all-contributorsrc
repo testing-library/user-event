@@ -1253,6 +1253,60 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "Thanga-Ganapathy",
+      "name": "Thanga Ganapathy",
+      "avatar_url": "https://avatars.githubusercontent.com/u/22178434?v=4",
+      "profile": "https://github.com/Thanga-Ganapathy",
+      "contributions": [
+        "bug"
+      ]
+    },
+    {
+      "login": "mikaelrss",
+      "name": "Mikael Solstad",
+      "avatar_url": "https://avatars.githubusercontent.com/u/26043795?v=4",
+      "profile": "https://github.com/mikaelrss",
+      "contributions": [
+        "bug"
+      ]
+    },
+    {
+      "login": "mattcarlotta",
+      "name": "Matt Carlotta",
+      "avatar_url": "https://avatars.githubusercontent.com/u/22607722?v=4",
+      "profile": "http://mattcarlotta.dev",
+      "contributions": [
+        "bug"
+      ]
+    },
+    {
+      "login": "camchenry",
+      "name": "Cameron McHenry",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1514176?v=4",
+      "profile": "http://camchenry.com",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "dzonatan",
+      "name": "Rokas Brazdžionis",
+      "avatar_url": "https://avatars.githubusercontent.com/u/5166666?v=4",
+      "profile": "https://github.com/dzonatan",
+      "contributions": [
+        "bug"
+      ]
+    },
+    {
+      "login": "dnt1996",
+      "name": "Jianxun Cheng",
+      "avatar_url": "https://avatars.githubusercontent.com/u/31310280?v=4",
+      "profile": "https://github.com/dnt1996",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "commitConvention": "none",

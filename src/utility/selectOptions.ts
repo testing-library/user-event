@@ -1,5 +1,11 @@
 import {getConfig} from '@testing-library/dom'
-import {focus, hasPointerEvents, isDisabled, isElementType} from '../utils'
+import {
+  focus,
+  hasPointerEvents,
+  isDisabled,
+  isElementType,
+  wait,
+} from '../utils'
 import {Config, Instance} from '../setup'
 
 export async function selectOptions(
@@ -100,6 +106,8 @@ async function selectOptionsBase(
         if (withPointerEvents) {
           this.dispatchUIEvent(option, 'click')
         }
+
+        await wait(this[Config])
       }
     } else if (selectedOptions.length === 1) {
       const withPointerEvents =
@@ -124,6 +132,8 @@ async function selectOptionsBase(
         this.dispatchUIEvent(select, 'mouseup')
         this.dispatchUIEvent(select, 'click')
       }
+
+      await wait(this[Config])
     } else {
       throw getConfig().getElementError(
         `Cannot select multiple options on a non-multiple select`,

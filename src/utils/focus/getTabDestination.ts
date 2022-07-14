@@ -10,14 +10,11 @@ export function getTabDestination(activeElement: Element, shift: boolean) {
   const enabledElements = Array.from(focusableElements).filter(
     el =>
       el === activeElement ||
-      (el.getAttribute('tabindex') !== '-1' &&
-        !isDisabled(el) &&
-        // Hidden elements are not tabable
-        isVisible(el)),
+      !(Number(el.getAttribute('tabindex')) < 0 || isDisabled(el)),
   )
 
-  if (activeElement.getAttribute('tabindex') !== '-1') {
-    // tabindex has no effect if the active element has tabindex="-1"
+  // tabindex has no effect if the active element has negative tabindex
+  if (Number(activeElement.getAttribute('tabindex')) >= 0) {
     enabledElements.sort((a, b) => {
       const i = Number(a.getAttribute('tabindex'))
       const j = Number(b.getAttribute('tabindex'))
@@ -73,9 +70,22 @@ export function getTabDestination(activeElement: Element, shift: boolean) {
     prunedElements.push(el)
   })
 
-  const currentIndex = prunedElements.findIndex(el => el === activeElement)
+  for (let index = prunedElements.findIndex(el => el === activeElement); ; ) {
+    index += shift ? -1 : 1
 
-  const nextIndex = shift ? currentIndex - 1 : currentIndex + 1
-  const defaultIndex = shift ? prunedElements.length - 1 : 0
-  return prunedElements[nextIndex] || prunedElements[defaultIndex]
+    // loop at overflow
+    if (index === prunedElements.length) {
+      index = 0
+    } else if (index === -1) {
+      index = prunedElements.length - 1
+    }
+
+    if (
+      prunedElements[index] === activeElement ||
+      prunedElements[index] === document.body ||
+      isVisible(prunedElements[index])
+    ) {
+      return prunedElements[index]
+    }
+  }
 }

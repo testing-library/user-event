@@ -1,6 +1,7 @@
+import {getConfig} from '@testing-library/dom'
 import {getSpy} from './_mockApis'
 import userEvent from '#src'
-import {Config, UserEventApi} from '#src/setup'
+import {Config, Instance, UserEventApi} from '#src/setup'
 import {render} from '#testHelpers'
 
 type ApiDeclarations = {
@@ -80,6 +81,13 @@ declare module '#src/options' {
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/unbound-method
+const realAsyncWrapper = getConfig().asyncWrapper
+afterEach(() => {
+  getConfig().asyncWrapper = realAsyncWrapper
+  jest.restoreAllMocks()
+})
+
 test.each(apiDeclarationsEntries)(
   'call `%s` api on instance',
   async (name, {args = [], elementArg, elementHtml = `<input/>`}) => {
@@ -95,10 +103,33 @@ test.each(apiDeclarationsEntries)(
 
     expect(apis[name]).toHaveProperty('name', `mock-${name}`)
 
+    // Replace the asyncWrapper to make sure that a delayed state update happens inside of it
+    const stateUpdate = jest.fn()
+    spy.mockImplementation(async function impl(
+      this: Instance,
+      ...a: Parameters<typeof spy>
+    ) {
+      const ret = spy.originalMockImplementation.apply(this, a)
+      void ret.then(() => setTimeout(stateUpdate))
+      return ret
+    } as typeof spy['originalMockImplementation'])
+    const asyncWrapper = jest.fn(async (cb: () => Promise<unknown>) => {
+      stateUpdate.mockClear()
+      const ret = cb()
+      expect(stateUpdate).not.toBeCalled()
+      await ret
+      expect(stateUpdate).toBeCalled()
+      return ret
+    })
+    getConfig().asyncWrapper = asyncWrapper
+
     await (apis[name] as Function)(...args)
 
     expect(spy).toBeCalledTimes(1)
     expect(spy.mock.lastCall?.this?.[Config][opt]).toBe(true)
+
+    // Make sure the asyncWrapper mock has been used in the API call
+    expect(asyncWrapper).toBeCalled()
 
     const subApis = apis.setup({})
 

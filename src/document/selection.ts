@@ -32,8 +32,7 @@ export function prepareSelectionInterceptor(
     function interceptorImpl(
       this: HTMLInputElement | HTMLTextAreaElement,
       start: number | Value | null,
-      end: number | null,
-      direction: 'forward' | 'backward' | 'none' = 'none',
+      ...others
     ) {
       const isUI = start && typeof start === 'object' && start[UISelection]
 
@@ -42,10 +41,11 @@ export function prepareSelectionInterceptor(
       }
 
       return {
-        realArgs: [Number(start), end, direction] as [
+        applyNative: !!isUI,
+        realArgs: [Number(start), ...others] as [
           number,
           number,
-          typeof direction,
+          'forward' | 'backward' | 'none' | undefined,
         ],
       }
     },
@@ -101,7 +101,7 @@ export function setUISelection(
   const anchorOffset =
     mode === 'replace' || element[UISelection] === undefined
       ? sanitizeOffset(anchorOffsetParam)
-      : (element[UISelection] as UISelection).anchorOffset
+      : element[UISelection].anchorOffset
   const focusOffset = sanitizeOffset(focusOffsetParam)
 
   const startOffset = Math.min(anchorOffset, focusOffset)
@@ -143,4 +143,11 @@ export function getUISelection(
     startOffset: Math.min(sel.anchorOffset, sel.focusOffset),
     endOffset: Math.max(sel.anchorOffset, sel.focusOffset),
   }
+}
+
+/** Flag the IDL selection as clean. This does not change the selection. */
+export function setUISelectionClean(
+  element: HTMLInputElement | HTMLTextAreaElement,
+) {
+  element[UISelection] = undefined
 }

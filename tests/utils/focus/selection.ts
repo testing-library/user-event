@@ -4,6 +4,7 @@ import {
   setSelection,
   setSelectionRange,
   modifySelection,
+  moveSelection,
 } from '#src/utils'
 import {setup} from '#testHelpers'
 
@@ -181,5 +182,80 @@ describe('update selection when moving focus into element with own selection imp
     expect(document.getSelection()).toHaveProperty('anchorOffset', 0)
     expect(document.getSelection()).toHaveProperty('focusNode', element)
     expect(document.getSelection()).toHaveProperty('focusOffset', 0)
+  })
+})
+
+describe('move selection', () => {
+  test('do nothing without a selection range', () => {
+    const {element} = setup(`<div tabindex="0"></div>`)
+    document.getSelection()?.removeAllRanges()
+
+    moveSelection(element, 1)
+
+    expect(document.getSelection()).toHaveProperty('rangeCount', 0)
+  })
+
+  test('move to next cursor position', () => {
+    const {element} = setup(`<div tabindex="0">foo</div>`, {
+      selection: {focusNode: 'div/text()', focusOffset: 1},
+    })
+
+    moveSelection(element, 1)
+
+    expect(document.getSelection()).toHaveProperty(
+      'focusNode',
+      element.firstChild,
+    )
+    expect(document.getSelection()).toHaveProperty('focusOffset', 2)
+  })
+
+  test('move to next cursor position', () => {
+    const {element} = setup(`<div tabindex="0">foo</div>`, {
+      selection: {focusNode: 'div/text()', focusOffset: 1},
+    })
+
+    moveSelection(element, 1)
+
+    expect(document.getSelection()).toHaveProperty(
+      'focusNode',
+      element.firstChild,
+    )
+    expect(document.getSelection()).toHaveProperty('focusOffset', 2)
+    expect(document.getSelection()).toHaveProperty('isCollapsed', true)
+  })
+
+  test('collapse range', () => {
+    const {element} = setup(`<div tabindex="0">foo</div>`, {
+      selection: {focusNode: 'div/text()', anchorOffset: 1, focusOffset: 2},
+    })
+
+    moveSelection(element, 1)
+
+    expect(document.getSelection()).toHaveProperty(
+      'focusNode',
+      element.firstChild,
+    )
+    expect(document.getSelection()).toHaveProperty('focusOffset', 2)
+    expect(document.getSelection()).toHaveProperty('isCollapsed', true)
+  })
+
+  test('move cursor in input', () => {
+    const {element} = setup(`<input value="foo"/>`)
+
+    moveSelection(element, 1)
+
+    expect(element).toHaveProperty('selectionStart', 1)
+    expect(element).toHaveProperty('selectionEnd', 1)
+  })
+
+  test('collapse range in input', () => {
+    const {element} = setup(`<input value="foo"/>`, {
+      selection: {anchorOffset: 1, focusOffset: 2},
+    })
+
+    moveSelection(element, 1)
+
+    expect(element).toHaveProperty('selectionStart', 2)
+    expect(element).toHaveProperty('selectionEnd', 2)
   })
 })

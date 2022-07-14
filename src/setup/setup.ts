@@ -8,6 +8,7 @@ import {
   attachClipboardStubToView,
   getDocumentFromNode,
   setLevelRef,
+  wait,
 } from '../utils'
 import type {Instance, UserEvent, UserEventApi} from './index'
 import {Config} from './config'
@@ -80,7 +81,12 @@ function wrapAndBindImpl<
   function method(...args: Args) {
     setLevelRef(instance[Config], ApiLevel.Call)
 
-    return wrapAsync(() => impl.apply(instance, args))
+    return wrapAsync(() =>
+      impl.apply(instance, args).then(async ret => {
+        await wait(instance[Config])
+        return ret
+      }),
+    )
   }
   Object.defineProperty(method, 'name', {get: () => impl.name})
 

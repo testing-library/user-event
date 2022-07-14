@@ -32,8 +32,7 @@ export function prepareSelectionInterceptor(
     function interceptorImpl(
       this: HTMLInputElement | HTMLTextAreaElement,
       start: number | Value | null,
-      end: number | null,
-      direction: 'forward' | 'backward' | 'none' = 'none',
+      ...others
     ) {
       const isUI = start && typeof start === 'object' && start[UISelection]
 
@@ -42,10 +41,11 @@ export function prepareSelectionInterceptor(
       }
 
       return {
-        realArgs: [Number(start), end, direction] as [
+        applyNative: !!isUI,
+        realArgs: [Number(start), ...others] as [
           number,
           number,
-          typeof direction,
+          'forward' | 'backward' | 'none' | undefined,
         ],
       }
     },

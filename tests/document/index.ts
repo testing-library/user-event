@@ -202,3 +202,45 @@ test('track changes to value and selection per setRangeText', () => {
   expect(getUIValue(element)).toBe('aYcd')
   expect(getUISelection(element)).toHaveProperty('focusOffset', 1)
 })
+
+test('circumvent setters/methods for UI changes', () => {
+  const {element} = render<HTMLInputElement>(`<input/>`, {focus: false})
+
+  const prototypeDescr = Object.getOwnPropertyDescriptors<HTMLInputElement>(
+    Object.getPrototypeOf(element) as HTMLInputElement,
+  )
+  const valueSpy = jest.fn(prototypeDescr.value.set)
+  const setSelectionRangeSpy = jest.fn(prototypeDescr.setSelectionRange.value)
+
+  Object.defineProperties(element, {
+    value: {
+      get: () => {
+        throw new Error()
+      },
+      ...prototypeDescr.value,
+      set: valueSpy,
+    },
+    setSelectionRange: {
+      ...prototypeDescr.setSelectionRange,
+      value: setSelectionRangeSpy,
+    },
+  })
+
+  prepare(element)
+  element.focus()
+
+  setUIValue(element, 'abcd')
+  setUISelection(element, {focusOffset: 3})
+
+  expect(element).toHaveValue('abcd')
+  expect(element).toHaveProperty('selectionStart', 3)
+  expect(valueSpy).not.toBeCalled()
+  expect(setSelectionRangeSpy).not.toBeCalled()
+
+  element.value = 'efgh'
+  element.setSelectionRange(1, 2)
+  expect(element).toHaveValue('efgh')
+  expect(element).toHaveProperty('selectionStart', 1)
+  expect(valueSpy).toBeCalledWith('efgh')
+  expect(setSelectionRangeSpy).toBeCalledWith(1, 2)
+})

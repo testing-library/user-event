@@ -51,7 +51,7 @@ export function prepareInterceptor<
     ...args: Params<ElementType[PropName]>
   ) {
     const {
-      applyNative = true,
+      applyNative = false,
       realArgs,
       then,
     } = interceptorImpl.call(this, ...args)

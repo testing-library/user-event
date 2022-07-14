@@ -1298,6 +1298,15 @@
       "contributions": [
         "bug"
       ]
+    },
+    {
+      "login": "dnt1996",
+      "name": "Jianxun Cheng",
+      "avatar_url": "https://avatars.githubusercontent.com/u/31310280?v=4",
+      "profile": "https://github.com/dnt1996",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "commitConvention": "none",

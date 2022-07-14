@@ -177,6 +177,9 @@ Thanks goes to these wonderful people ([emoji key][emojis]):
     <td align="center"><a href="http://mattcarlotta.dev"><img src="https://avatars.githubusercontent.com/u/22607722?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Matt Carlotta</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3Amattcarlotta" title="Bug reports">🐛</a></td>
     <td align="center"><a href="http://camchenry.com"><img src="https://avatars.githubusercontent.com/u/1514176?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Cameron McHenry</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=camchenry" title="Code">💻</a></td>
   </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/dzonatan"><img src="https://avatars.githubusercontent.com/u/5166666?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Rokas Brazdžionis</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3Adzonatan" title="Bug reports">🐛</a></td>
+  </tr>
 </table>
 
 <!-- markdownlint-restore -->

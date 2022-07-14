@@ -1,6 +1,7 @@
 import {dispatchUIEvent} from '../event'
 import {Config} from '../setup'
 import {prepareSelectionInterceptor} from './selection'
+import {prepareRangeTextInterceptor} from './setRangeText'
 import {
   clearInitialValue,
   getInitialValue,
@@ -69,6 +70,7 @@ function prepareElement(el: Node | HTMLInputElement) {
   if ('value' in el) {
     prepareValueInterceptor(el)
     prepareSelectionInterceptor(el)
+    prepareRangeTextInterceptor(el)
   }
 
   el[isPrepared] = isPrepared

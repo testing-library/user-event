@@ -183,3 +183,22 @@ test('select input without selectionRange support', () => {
   expect(getUISelection(element)).toHaveProperty('startOffset', 0)
   expect(getUISelection(element)).toHaveProperty('endOffset', 3)
 })
+
+test('track changes to value and selection per setRangeText', () => {
+  const {element} = render<HTMLInputElement>(`<input/>`)
+  prepare(element)
+  setUIValue(element, 'abcd')
+  setUISelection(element, {focusOffset: 3})
+
+  element.setRangeText('X', 1, 2)
+  expect(element).toHaveValue('aXcd')
+  expect(element).toHaveProperty('selectionStart', 3)
+  expect(getUIValue(element)).toBe('aXcd')
+  expect(getUISelection(element)).toHaveProperty('focusOffset', 3)
+
+  element.setRangeText('Y', 1, 2, 'start')
+  expect(element).toHaveValue('aYcd')
+  expect(element).toHaveProperty('selectionEnd', 1)
+  expect(getUIValue(element)).toBe('aYcd')
+  expect(getUISelection(element)).toHaveProperty('focusOffset', 1)
+})

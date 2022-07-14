@@ -81,6 +81,13 @@ export function getUIValue(element: HTMLInputElement | HTMLTextAreaElement) {
     : String(element[UIValue])
 }
 
+/** Flag the IDL value as clean. This does not change the value.*/
+export function setUIValueClean(
+  element: HTMLInputElement | HTMLTextAreaElement,
+) {
+  element[UIValue] = undefined
+}
+
 export function clearInitialValue(
   element: HTMLInputElement | HTMLTextAreaElement,
 ) {

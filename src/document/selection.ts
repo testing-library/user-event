@@ -144,3 +144,10 @@ export function getUISelection(
     endOffset: Math.max(sel.anchorOffset, sel.focusOffset),
   }
 }
+
+/** Flag the IDL selection as clean. This does not change the selection. */
+export function setUISelectionClean(
+  element: HTMLInputElement | HTMLTextAreaElement,
+) {
+  element[UISelection] = undefined
+}

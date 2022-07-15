@@ -1,6 +1,9 @@
 // FileList can not be created per constructor.
 
-export function createFileList(files: File[]): FileList {
+export function createFileList(
+  window: Window & typeof globalThis,
+  files: File[],
+): FileList {
   const list: FileList & Iterable<File> = {
     ...files,
     length: files.length,
@@ -11,8 +14,8 @@ export function createFileList(files: File[]): FileList {
       }
     },
   }
-  list.constructor = FileList
-  Object.setPrototypeOf(list, FileList.prototype)
+  list.constructor = window.FileList
+  Object.setPrototypeOf(list, window.FileList.prototype)
   Object.freeze(list)
 
   return list

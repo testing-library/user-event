@@ -6,7 +6,7 @@ test('set files', () => {
     `<input type="file"/>`,
   )
 
-  const list = createFileList([new File(['foo'], 'foo.txt')])
+  const list = createFileList(window, [new File(['foo'], 'foo.txt')])
   setFiles(element, list)
 
   expect(element).toHaveProperty('files', list)
@@ -20,7 +20,7 @@ test('switching type resets value', () => {
 
   expect(element).toHaveValue('')
 
-  const list = createFileList([new File(['foo'], 'foo.txt')])
+  const list = createFileList(window, [new File(['foo'], 'foo.txt')])
   setFiles(element as HTMLInputElement & {type: 'file'}, list)
 
   element.type = 'file'
@@ -38,7 +38,7 @@ test('setting value resets `files`', () => {
     `<input type="file"/>`,
   )
 
-  const list = createFileList([new File(['foo'], 'foo.txt')])
+  const list = createFileList(window, [new File(['foo'], 'foo.txt')])
   setFiles(element, list)
 
   // Everything but an empty string throws an error in the browser
@@ -58,7 +58,7 @@ test('is save to call multiple times', () => {
     `<input type="file"/>`,
   )
 
-  const list = createFileList([new File(['foo'], 'foo.txt')])
+  const list = createFileList(window, [new File(['foo'], 'foo.txt')])
   setFiles(element, list)
   setFiles(element, list)
 

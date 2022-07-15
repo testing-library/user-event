@@ -1,3 +1,53 @@
+// ignore standard built-in objects
+const whitelist = [
+  'Infinity',
+  'NaN',
+  'undefined',
+  'Object',
+  'Function',
+  'Boolean',
+  'Symbol',
+  'Error',
+  'EvalError',
+  'InternalError',
+  'RangeError',
+  'ReferenceError',
+  'SyntaxError',
+  'TypeError',
+  'URIError',
+  'Number',
+  'Math',
+  'Date',
+  'String',
+  'RegExp',
+  'Array',
+  'Int8Array',
+  'Uint8Array',
+  'Uint8ClampedArray',
+  'Int16Array',
+  'Uint16Array',
+  'Int32Array',
+  'Uint32Array',
+  'Float32Array',
+  'Float64Array',
+  'Map',
+  'Set',
+  'WeakMap',
+  'WeakSet',
+  'ArrayBuffer',
+  'DataView',
+  'JSON',
+  'Promise',
+  'Generator',
+  'GeneratorFunction',
+  'Reflect',
+  'Proxy',
+  'Intl',
+  'Intl.Collator',
+  'Intl.DateTimeFormat',
+  'Intl.NumberFormat',
+]
+
 module.exports = {
   meta: {
     type: 'suggestion',
@@ -13,13 +63,12 @@ module.exports = {
 
         // `scope` is `GlobalScope` and `scope.variables` are the global variables
         scope.variables.forEach(variable => {
-          // ignore `undefined`
-          if (variable.name === 'undefined') {
+          if (whitelist.includes(variable.name)) {
             return
           }
+
           variable.references.forEach(ref => {
-            // Ignore types and global standard variables like `Object`
-            if (ref.resolved.constructor.name === 'ImplicitLibVariable') {
+            if (ref.identifier.parent.type.startsWith('TS')) {
               return
             }
 

@@ -57,7 +57,9 @@ function sanitizeValue(
   return String(v)
 }
 
-export function prepareValueInterceptor(element: HTMLInputElement) {
+export function prepareValueInterceptor(
+  element: HTMLInputElement | HTMLTextAreaElement,
+) {
   prepareInterceptor(element, 'value', valueInterceptor)
 }
 

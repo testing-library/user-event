@@ -1,5 +1,6 @@
 import {dispatchUIEvent} from '../event'
 import {Config} from '../setup'
+import {isElementType} from '../utils'
 import {prepareSelectionInterceptor} from './selection'
 import {prepareRangeTextInterceptor} from './setRangeText'
 import {
@@ -24,7 +25,7 @@ export function prepareDocument(document: Document) {
   document.addEventListener(
     'focus',
     e => {
-      const el = e.target as Node
+      const el = e.target as Element
 
       prepareElement(el)
     },
@@ -62,12 +63,12 @@ export function prepareDocument(document: Document) {
   document[isPrepared] = isPrepared
 }
 
-function prepareElement(el: Node | HTMLInputElement) {
+function prepareElement(el: Element) {
   if (el[isPrepared]) {
     return
   }
 
-  if ('value' in el) {
+  if (isElementType(el, ['input', 'textarea'])) {
     prepareValueInterceptor(el)
     prepareSelectionInterceptor(el)
     prepareRangeTextInterceptor(el)

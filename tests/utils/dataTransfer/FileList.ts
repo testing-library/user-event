@@ -2,7 +2,7 @@ import {createFileList} from '#src/utils'
 
 test('implement FileList', () => {
   const file = new File(['hello'], 'hello.png', {type: 'image/png'})
-  const list = createFileList([file])
+  const list = createFileList(window, [file])
 
   expect(list).toBeInstanceOf(FileList)
   expect(list).toHaveLength(1)

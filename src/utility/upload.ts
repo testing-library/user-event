@@ -1,4 +1,10 @@
-import {createFileList, isDisabled, isElementType, setFiles} from '../utils'
+import {
+  createFileList,
+  getWindow,
+  isDisabled,
+  isElementType,
+  setFiles,
+} from '../utils'
 import {Config, Instance} from '../setup'
 
 export interface uploadInit {
@@ -36,7 +42,7 @@ export async function upload(
       return
     }
 
-    setFiles(input, createFileList(files))
+    setFiles(input, createFileList(getWindow(element), files))
     this.dispatchUIEvent(input, 'input')
     this.dispatchUIEvent(input, 'change')
   }

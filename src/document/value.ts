@@ -1,6 +1,6 @@
-import {isElementType} from '../utils'
+import {getWindow, isElementType} from '../utils'
 import {prepareInterceptor} from './interceptor'
-import {setUISelection} from './selection'
+import {hasUISelection, setUISelection} from './selection'
 
 const UIValue = Symbol('Displayed value in UI')
 const InitialValue = Symbol('Initial value to compare on blur')
@@ -12,6 +12,9 @@ type Value = {
 }
 
 declare global {
+  interface Window {
+    REACT_VERSION?: number
+  }
   interface Element {
     [UIValue]?: string
     [InitialValue]?: string
@@ -31,7 +34,7 @@ function valueInterceptor(
 
   if (isUI) {
     this[UIValue] = String(v)
-    setPreviousValue(this, String(this.value))
+    startTrackValue(this)
   }
 
   return {
@@ -102,19 +105,28 @@ export function getInitialValue(
   return element[InitialValue]
 }
 
-function setPreviousValue(
-  element: HTMLInputElement | HTMLTextAreaElement,
-  v: string,
-) {
-  element[TrackChanges] = {...element[TrackChanges], previousValue: v}
+// When the input event happens in the browser, React executes all event handlers
+// and if they change state of a controlled value, nothing happens.
+// But when we trigger the event handlers in test environment with React@17,
+// the changes are rolled back before the state update is applied.
+// This results in a reset cursor.
+// There might be a better way to work around if we figure out
+// why the batched update is executed differently in our test environment.
+
+function isReact17Element(element: Element) {
+  return (
+    Object.getOwnPropertyNames(element).some(k => k.startsWith('__react')) &&
+    getWindow(element).REACT_VERSION === 17
+  )
 }
 
-export function startTrackValue(
-  element: HTMLInputElement | HTMLTextAreaElement,
-) {
+function startTrackValue(element: HTMLInputElement | HTMLTextAreaElement) {
+  if (!isReact17Element(element)) {
+    return
+  }
+
   element[TrackChanges] = {
-    ...element[TrackChanges],
-    nextValue: String(element.value),
+    previousValue: String(element.value),
     tracked: [],
   }
 }
@@ -125,26 +137,16 @@ function trackOrSetValue(
 ) {
   element[TrackChanges]?.tracked?.push(v)
 
-  if (!element[TrackChanges]?.tracked) {
-    setCleanValue(element, v)
+  if (!element[TrackChanges]) {
+    setUIValueClean(element)
+    setUISelection(element, {focusOffset: v.length})
   }
 }
 
-function setCleanValue(
+export function commitValueAfterInput(
   element: HTMLInputElement | HTMLTextAreaElement,
-  v: string,
+  cursorOffset: number,
 ) {
-  element[UIValue] = undefined
-
-  // Programmatically setting the value property
-  // moves the cursor to the end of the input.
-  setUISelection(element, {focusOffset: v.length})
-}
-
-/**
- * @returns `true` if we recognize a React state reset and update
- */
-export function endTrackValue(element: HTMLInputElement | HTMLTextAreaElement) {
   const changes = element[TrackChanges]
 
   element[TrackChanges] = undefined
@@ -152,11 +154,16 @@ export function endTrackValue(element: HTMLInputElement | HTMLTextAreaElement) {
   const isJustReactStateUpdate =
     changes?.tracked?.length === 2 &&
     changes.tracked[0] === changes.previousValue &&
-    changes.tracked[1] === changes.nextValue
+    changes.tracked[1] === element.value
 
-  if (changes?.tracked?.length && !isJustReactStateUpdate) {
-    setCleanValue(element, changes.tracked[changes.tracked.length - 1])
+  if (isJustReactStateUpdate) {
+    if (hasUISelection(element)) {
+      setUISelection(element, {focusOffset: cursorOffset})
+    }
+  } else if (changes?.tracked?.length) {
+    setUIValueClean(element)
+    if (hasUISelection(element)) {
+      setUISelection(element, {focusOffset: element.value.length})
+    }
   }
-
-  return isJustReactStateUpdate
 }

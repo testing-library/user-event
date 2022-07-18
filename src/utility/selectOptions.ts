@@ -80,7 +80,7 @@ async function selectOptionsBase(
         const withPointerEvents =
           this[Config].pointerEventsCheck === 0
             ? true
-            : hasPointerEvents(option)
+            : hasPointerEvents(this[Config], option)
 
         // events fired for multiple select are weird. Can't use hover...
         if (withPointerEvents) {
@@ -111,7 +111,9 @@ async function selectOptionsBase(
       }
     } else if (selectedOptions.length === 1) {
       const withPointerEvents =
-        this[Config].pointerEventsCheck === 0 ? true : hasPointerEvents(select)
+        this[Config].pointerEventsCheck === 0
+          ? true
+          : hasPointerEvents(this[Config], select)
       // the click to open the select options
       if (withPointerEvents) {
         await this.click(select)

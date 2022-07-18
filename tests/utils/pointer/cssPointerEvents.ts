@@ -11,10 +11,10 @@ test('get pointer-events from element or ancestor', async () => {
         </div>
     `)
 
-  expect(hasPointerEvents(element)).toBe(false)
-  expect(hasPointerEvents(element.children[0])).toBe(true)
-  expect(hasPointerEvents(element.children[1])).toBe(false)
-  expect(hasPointerEvents(element.children[2])).toBe(false)
+  expect(hasPointerEvents(createConfig(), element)).toBe(false)
+  expect(hasPointerEvents(createConfig(), element.children[0])).toBe(true)
+  expect(hasPointerEvents(createConfig(), element.children[1])).toBe(false)
+  expect(hasPointerEvents(createConfig(), element.children[2])).toBe(false)
 })
 
 test('report element that declared pointer-events', async () => {

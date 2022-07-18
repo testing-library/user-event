@@ -7,6 +7,7 @@ import {
   assertPointerEvents,
   setLevelRef,
   ApiLevel,
+  hasPointerEvents,
 } from '../utils'
 import {firePointerEvent} from './firePointerEvents'
 import {resolveSelectionTarget} from './resolveSelectionTarget'
@@ -37,13 +38,13 @@ export async function pointerMove(
 
   if (prevTarget && prevTarget !== target) {
     setLevelRef(config, ApiLevel.Trigger)
-    assertPointerEvents(config, prevTarget)
+    if (hasPointerEvents(config, prevTarget)) {
+      // Here we could probably calculate a few coords to a fake boundary(?)
+      fireMove(prevTarget, prevCoords)
 
-    // Here we could probably calculate a few coords to a fake boundary(?)
-    fireMove(prevTarget, prevCoords)
-
-    if (!isDescendantOrSelf(target, prevTarget)) {
-      fireLeave(prevTarget, prevCoords)
+      if (!isDescendantOrSelf(target, prevTarget)) {
+        fireLeave(prevTarget, prevCoords)
+      }
     }
   }
 

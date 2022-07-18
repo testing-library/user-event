@@ -151,19 +151,22 @@ export function commitValueAfterInput(
 
   element[TrackChanges] = undefined
 
+  if (!changes?.tracked?.length) {
+    return
+  }
+
   const isJustReactStateUpdate =
-    changes?.tracked?.length === 2 &&
+    changes.tracked.length === 2 &&
     changes.tracked[0] === changes.previousValue &&
     changes.tracked[1] === element.value
 
-  if (isJustReactStateUpdate) {
-    if (hasUISelection(element)) {
-      setUISelection(element, {focusOffset: cursorOffset})
-    }
-  } else if (changes?.tracked?.length) {
+  if (!isJustReactStateUpdate) {
     setUIValueClean(element)
-    if (hasUISelection(element)) {
-      setUISelection(element, {focusOffset: element.value.length})
-    }
+  }
+
+  if (hasUISelection(element)) {
+    setUISelection(element, {
+      focusOffset: isJustReactStateUpdate ? cursorOffset : element.value.length,
+    })
   }
 }

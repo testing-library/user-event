@@ -145,6 +145,12 @@ export function getUISelection(
   }
 }
 
+export function hasUISelection(
+  element: HTMLInputElement | HTMLTextAreaElement,
+) {
+  return !!element[UISelection]
+}
+
 /** Flag the IDL selection as clean. This does not change the selection. */
 export function setUISelectionClean(
   element: HTMLInputElement | HTMLTextAreaElement,

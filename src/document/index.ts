@@ -80,8 +80,7 @@ function prepareElement(el: Element) {
 export {
   getUIValue,
   setUIValue,
-  startTrackValue,
-  endTrackValue,
+  commitValueAfterInput,
   clearInitialValue,
 } from './value'
 export {getUISelection, setUISelection} from './selection'

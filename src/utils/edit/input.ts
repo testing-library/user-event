@@ -1,9 +1,8 @@
 import {
   clearInitialValue,
-  endTrackValue,
+  commitValueAfterInput,
   getUIValue,
   setUIValue,
-  startTrackValue,
   UISelectionRange,
 } from '../../document'
 import {dispatchUIEvent} from '../../event'
@@ -233,24 +232,9 @@ function commitInput(
   newOffset: number,
   inputInit: InputEventInit,
 ) {
-  // When the input event happens in the browser, React executes all event handlers
-  // and if they change state of a controlled value, nothing happens.
-  // But when we trigger the event handlers in test environment,
-  // the changes are rolled back by React before the state update is applied.
-  // Then the updated state is applied which results in a reset cursor.
-  // There is probably a better way to work around  if we figure out
-  // why the batched update is executed differently in our test environment.
-  startTrackValue(element)
-
   dispatchUIEvent(config, element, 'input', inputInit)
 
-  if (endTrackValue(element as HTMLInputElement)) {
-    setSelection({
-      focusNode: element,
-      anchorOffset: newOffset,
-      focusOffset: newOffset,
-    })
-  }
+  commitValueAfterInput(element, newOffset)
 }
 
 function isValidNumberInput(value: string) {

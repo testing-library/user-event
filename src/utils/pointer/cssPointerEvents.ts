@@ -4,8 +4,8 @@ import {ApiLevel, getLevelRef} from '..'
 import {getWindow} from '../misc/getWindow'
 import {isElementType} from '../misc/isElementType'
 
-export function hasPointerEvents(element: Element): boolean {
-  return closestPointerEventsDeclaration(element)?.pointerEvents !== 'none'
+export function hasPointerEvents(config: Config, element: Element): boolean {
+  return checkPointerEvents(config, element)?.pointerEvents !== 'none'
 }
 
 function closestPointerEventsDeclaration(element: Element):
@@ -37,12 +37,12 @@ declare global {
     [PointerEventsCheck]?: {
       [k in ApiLevel]?: object
     } & {
-      result: boolean
+      result: ReturnType<typeof closestPointerEventsDeclaration>
     }
   }
 }
 
-export function assertPointerEvents(config: Config, element: Element) {
+function checkPointerEvents(config: Config, element: Element) {
   const lastCheck = element[PointerEventsCheck]
 
   const needsCheck =
@@ -60,7 +60,7 @@ export function assertPointerEvents(config: Config, element: Element) {
         lastCheck[ApiLevel.Trigger] !== getLevelRef(config, ApiLevel.Trigger)))
 
   if (!needsCheck) {
-    return
+    return lastCheck?.result
   }
 
   const declaration = closestPointerEventsDeclaration(element)
@@ -68,8 +68,14 @@ export function assertPointerEvents(config: Config, element: Element) {
   element[PointerEventsCheck] = {
     [ApiLevel.Call]: getLevelRef(config, ApiLevel.Call),
     [ApiLevel.Trigger]: getLevelRef(config, ApiLevel.Trigger),
-    result: declaration?.pointerEvents !== 'none',
+    result: declaration,
   }
+
+  return declaration
+}
+
+export function assertPointerEvents(config: Config, element: Element) {
+  const declaration = checkPointerEvents(config, element)
 
   if (declaration?.pointerEvents === 'none') {
     throw new Error(

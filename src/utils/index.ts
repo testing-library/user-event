@@ -10,6 +10,7 @@ export * from './edit/input'
 export * from './edit/isContentEditable'
 export * from './edit/isEditable'
 export * from './edit/setFiles'
+export * from './edit/walkRadio'
 
 export * from './focus/blur'
 export * from './focus/copySelection'

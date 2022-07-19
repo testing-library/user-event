@@ -13,6 +13,7 @@ import {
   moveSelection,
   selectAll,
   setSelectionRange,
+  walkRadio,
 } from '../../utils'
 import {BehaviorPlugin} from '.'
 import {behavior} from './registry'
@@ -27,8 +28,30 @@ behavior.keydown = (event, target, config) => {
 const keydownBehavior: {
   [key: string]: BehaviorPlugin<'keydown'> | undefined
 } = {
-  ArrowLeft: (event, target) => () => moveSelection(target, -1),
-  ArrowRight: (event, target) => () => moveSelection(target, 1),
+  ArrowDown: (event, target, config) => {
+    /* istanbul ignore else */
+    if (isElementType(target, 'input', {type: 'radio'} as const)) {
+      return () => walkRadio(config, target, -1)
+    }
+  },
+  ArrowLeft: (event, target, config) => {
+    if (isElementType(target, 'input', {type: 'radio'} as const)) {
+      return () => walkRadio(config, target, -1)
+    }
+    return () => moveSelection(target, -1)
+  },
+  ArrowRight: (event, target, config) => {
+    if (isElementType(target, 'input', {type: 'radio'} as const)) {
+      return () => walkRadio(config, target, 1)
+    }
+    return () => moveSelection(target, 1)
+  },
+  ArrowUp: (event, target, config) => {
+    /* istanbul ignore else */
+    if (isElementType(target, 'input', {type: 'radio'} as const)) {
+      return () => walkRadio(config, target, 1)
+    }
+  },
   Backspace: (event, target, config) => {
     if (isEditable(target)) {
       return () => {

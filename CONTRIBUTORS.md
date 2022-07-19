@@ -180,6 +180,7 @@ Thanks goes to these wonderful people ([emoji key][emojis]):
   <tr>
     <td align="center"><a href="https://github.com/dzonatan"><img src="https://avatars.githubusercontent.com/u/5166666?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Rokas Brazdžionis</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3Adzonatan" title="Bug reports">🐛</a></td>
     <td align="center"><a href="https://github.com/dnt1996"><img src="https://avatars.githubusercontent.com/u/31310280?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Jianxun Cheng</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3Adnt1996" title="Bug reports">🐛</a></td>
+    <td align="center"><a href="https://github.com/jessharrell"><img src="https://avatars.githubusercontent.com/u/2468638?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Jess Harrell</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3Ajessharrell" title="Bug reports">🐛</a></td>
   </tr>
 </table>
 

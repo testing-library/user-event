@@ -1,7 +1,7 @@
 import cases from 'jest-in-case'
 import {parseKeyDef} from '#src/keyboard/parseKeyDef'
 import {defaultKeyMap} from '#src/keyboard/keyMap'
-import {keyboardKey} from '#src/keyboard/types'
+import {keyboardKey} from '#src'
 
 cases(
   'reference key per',

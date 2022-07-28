@@ -102,9 +102,12 @@ const keydownBehavior: {
       }
     }
   },
-  Tab: (event, target, {keyboardState}) => {
+  Tab: (event, target, config) => {
     return () => {
-      const dest = getTabDestination(target, keyboardState.modifiers.Shift)
+      const dest = getTabDestination(
+        target,
+        config.system.keyboard.modifiers.Shift,
+      )
       focus(dest)
       if (hasOwnSelection(dest)) {
         setUISelection(dest, {
@@ -121,7 +124,7 @@ const combinationBehavior: BehaviorPlugin<'keydown'> = (
   target,
   config,
 ) => {
-  if (event.code === 'KeyA' && config.keyboardState.modifiers.Control) {
+  if (event.code === 'KeyA' && config.system.keyboard.modifiers.Control) {
     return () => selectAll(target)
   }
 }

@@ -1,7 +1,7 @@
-import type {keyboardKey} from './keyboard/types'
-import type {pointerKey} from './pointer/types'
 import {defaultKeyMap as defaultKeyboardMap} from './keyboard/keyMap'
 import {defaultKeyMap as defaultPointerMap} from './pointer/keyMap'
+import type {keyboardKey} from './system/keyboard'
+import type {pointerKey} from './system/pointer'
 
 export enum PointerEventsCheckLevel {
   /**

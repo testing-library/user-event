@@ -1,19 +1,37 @@
+import {PointerCoords} from '../event'
 import {Config, Instance} from '../setup'
+import {pointerKey, PointerPosition} from '../system/pointer'
+import {ApiLevel, setLevelRef, wait} from '../utils'
 import {parseKeyDef} from './parseKeyDef'
-import {
-  pointerAction,
-  PointerAction,
-  PointerActionTarget,
-} from './pointerAction'
-import type {pointerState, pointerKey} from './types'
-
-export type {pointerState, pointerKey}
 
 type PointerActionInput =
   | string
-  | ({keys: string} & PointerActionTarget)
+  | ({keys: string} & PointerActionPosition)
   | PointerAction
 export type PointerInput = PointerActionInput | Array<PointerActionInput>
+
+type PointerAction = PointerPressAction | PointerMoveAction
+
+type PointerActionPosition = {
+  target?: Element
+  coords?: PointerCoords
+  node?: Node
+  /**
+   * If `node` is set, this is the DOM offset.
+   * Otherwise this is the `textContent`/`value` offset on the `target`.
+   */
+  offset?: number
+}
+
+interface PointerPressAction extends PointerActionPosition {
+  keyDef: pointerKey
+  releasePrevious: boolean
+  releaseSelf: boolean
+}
+
+interface PointerMoveAction extends PointerActionPosition {
+  pointerName?: string
+}
 
 export async function pointer(
   this: Instance,
@@ -37,29 +55,71 @@ export async function pointer(
     }
   })
 
-  return pointerAction(this[Config], actions).then(() => undefined)
+  for (let i = 0; i < actions.length; i++) {
+    await wait(this[Config])
+
+    await pointerAction(this[Config], actions[i])
+  }
+
+  this[Config].system.pointer.resetClickCount()
 }
 
-export function createPointerState(document: Document): pointerState {
-  return {
-    pointerId: 1,
-    position: {
-      mouse: {
-        pointerType: 'mouse',
-        pointerId: 1,
-        target: document.body,
-        coords: {
-          clientX: 0,
-          clientY: 0,
-          offsetX: 0,
-          offsetY: 0,
-          pageX: 0,
-          pageY: 0,
-          x: 0,
-          y: 0,
-        },
-      },
+async function pointerAction(config: Config, action: PointerAction) {
+  const pointerName =
+    'pointerName' in action && action.pointerName
+      ? action.pointerName
+      : 'keyDef' in action
+      ? config.system.pointer.getPointerName(action.keyDef)
+      : 'mouse'
+
+  const previousPosition =
+    config.system.pointer.getPreviousPosition(pointerName)
+  const position: PointerPosition = {
+    target: action.target ?? getPrevTarget(config, previousPosition),
+    coords: action.coords ?? previousPosition?.coords,
+    caret: {
+      node:
+        action.node ??
+        (hasCaretPosition(action) ? undefined : previousPosition?.caret?.node),
+      offset:
+        action.offset ??
+        (hasCaretPosition(action)
+          ? undefined
+          : previousPosition?.caret?.offset),
     },
-    pressed: [],
   }
+
+  if ('keyDef' in action) {
+    if (config.system.pointer.isKeyPressed(action.keyDef)) {
+      setLevelRef(config, ApiLevel.Trigger)
+      await config.system.pointer.release(config, action.keyDef, position)
+    }
+
+    if (!action.releasePrevious) {
+      setLevelRef(config, ApiLevel.Trigger)
+      await config.system.pointer.press(config, action.keyDef, position)
+
+      if (action.releaseSelf) {
+        setLevelRef(config, ApiLevel.Trigger)
+        await config.system.pointer.release(config, action.keyDef, position)
+      }
+    }
+  } else {
+    setLevelRef(config, ApiLevel.Trigger)
+    await config.system.pointer.move(config, pointerName, position)
+  }
+}
+
+function hasCaretPosition(action: PointerAction) {
+  return !!(action.target ?? action.node ?? action.offset !== undefined)
+}
+
+function getPrevTarget(config: Config, position?: PointerPosition) {
+  if (!position) {
+    throw new Error(
+      'This pointer has no previous position. Provide a target property!',
+    )
+  }
+
+  return position.target ?? config.document.body
 }

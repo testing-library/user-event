@@ -214,7 +214,7 @@ test('select input per `Control+A`', async () => {
   })
 
   const config = createConfig()
-  config.keyboardState.modifiers.Control = true
+  config.system.keyboard.modifiers.Control = true
 
   dispatchUIEvent(config, element, 'keydown', {code: 'KeyA'})
 
@@ -259,7 +259,7 @@ cases(
     )
 
     const config = createConfig()
-    config.keyboardState.modifiers.Shift = shiftKey
+    config.system.keyboard.modifiers.Shift = shiftKey
 
     dispatchUIEvent(config, document.activeElement as Element, 'keydown', {
       key: 'Tab',

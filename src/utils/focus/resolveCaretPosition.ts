@@ -1,13 +1,16 @@
-import {getUIValue} from '../document'
-import {isElementType} from '../utils'
-import {PointerTarget, SelectionTarget} from './types'
+import {getUIValue} from '../../document'
+import {hasOwnSelection} from '..'
 
-export function resolveSelectionTarget({
+export function resolveCaretPosition({
   target,
   node,
   offset,
-}: PointerTarget & SelectionTarget) {
-  if (isElementType(target, ['input', 'textarea'])) {
+}: {
+  target: Element
+  node?: Node
+  offset?: number
+}) {
+  if (hasOwnSelection(target)) {
     return {
       node: target,
       offset: offset ?? getUIValue(target).length,
@@ -49,6 +52,9 @@ function findNodeAtTextOffset(
       ? i >= (isRoot ? Math.max(node.childNodes.length - 1, 0) : 0)
       : i <= node.childNodes.length
   ) {
+    if (offset && i === node.childNodes.length) {
+      throw new Error('The given offset is out of bounds.')
+    }
     const c = node.childNodes.item(i)
 
     const text = String(c.textContent)

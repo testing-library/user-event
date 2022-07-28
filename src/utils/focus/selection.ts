@@ -1,8 +1,15 @@
 import {isElementType} from '../misc/isElementType'
-import {getUISelection, setUISelection, UISelectionRange} from '../../document'
-import {editableInputTypes} from '../edit/isEditable'
+import {
+  getUISelection,
+  getUIValue,
+  setUISelection,
+  UISelectionRange,
+} from '../../document'
+import {isClickableInput} from '../click/isClickableInput'
+import {EditableInputType, editableInputTypes} from '../edit/isEditable'
 import {isContentEditable, getContentEditable} from '../edit/isContentEditable'
 import {getNextCursorPosition} from './cursor'
+import {resolveCaretPosition} from './resolveCaretPosition'
 
 /**
  * Backward-compatible selection.
@@ -51,6 +58,10 @@ export function hasOwnSelection(
     (isElementType(node, 'textarea') ||
       (isElementType(node, 'input') && node.type in editableInputTypes))
   )
+}
+
+export function hasNoSelection(node: Node) {
+  return isElement(node) && isClickableInput(node)
 }
 
 function isElement(node: Node): node is Element {
@@ -236,5 +247,169 @@ export function moveSelection(node: Element, direction: -1 | 1) {
     } else {
       selection[direction < 0 ? 'collapseToStart' : 'collapseToEnd']()
     }
+  }
+}
+
+export type SelectionRange = {
+  node: (HTMLInputElement & {type: EditableInputType}) | HTMLTextAreaElement
+  start: number
+  end: number
+}
+
+export function setSelectionPerMouseDown({
+  document,
+  target,
+  clickCount,
+  node,
+  offset,
+}: {
+  document: Document
+  target: Element
+  clickCount: number
+  node?: Node
+  offset?: number
+}) {
+  if (hasNoSelection(target)) {
+    return
+  }
+  const targetHasOwnSelection = hasOwnSelection(target)
+
+  // On non-input elements the text selection per multiple click
+  // can extend beyond the target boundaries.
+  // The exact mechanism what is considered in the same line is unclear.
+  // Looks it might be every inline element.
+  // TODO: Check what might be considered part of the same line of text.
+  const text = String(
+    targetHasOwnSelection ? getUIValue(target) : target.textContent,
+  )
+
+  const [start, end] = node
+    ? // As offset is describing a DOMOffset it is non-trivial to determine
+      // which elements might be considered in the same line of text.
+      // TODO: support expanding initial range on multiple clicks if node is given
+      [offset, offset]
+    : getTextRange(text, offset, clickCount)
+
+  // TODO: implement modifying selection per shift/ctrl+mouse
+  if (targetHasOwnSelection) {
+    setUISelection(target, {
+      anchorOffset: start ?? text.length,
+      focusOffset: end ?? text.length,
+    })
+    return {
+      node: target,
+      start: start ?? 0,
+      end: end ?? text.length,
+    }
+  } else {
+    const {node: startNode, offset: startOffset} = resolveCaretPosition({
+      target,
+      node,
+      offset: start,
+    })
+    const {node: endNode, offset: endOffset} = resolveCaretPosition({
+      target,
+      node,
+      offset: end,
+    })
+
+    const range = target.ownerDocument.createRange()
+    try {
+      range.setStart(startNode, startOffset)
+      range.setEnd(endNode, endOffset)
+    } catch (e: unknown) {
+      throw new Error('The given offset is out of bounds.')
+    }
+
+    const selection = document.getSelection()
+    selection?.removeAllRanges()
+    selection?.addRange(range.cloneRange())
+
+    return range
+  }
+}
+
+function getTextRange(
+  text: string,
+  pos: number | undefined,
+  clickCount: number,
+) {
+  if (clickCount % 3 === 1 || text.length === 0) {
+    return [pos, pos]
+  }
+
+  const textPos = pos ?? text.length
+  if (clickCount % 3 === 2) {
+    return [
+      textPos -
+        (text.substr(0, pos).match(/(\w+|\s+|\W)?$/) as RegExpMatchArray)[0]
+          .length,
+      pos === undefined
+        ? pos
+        : pos +
+          (text.substr(pos).match(/^(\w+|\s+|\W)?/) as RegExpMatchArray)[0]
+            .length,
+    ]
+  }
+
+  // triple click
+  return [
+    textPos -
+      (text.substr(0, pos).match(/[^\r\n]*$/) as RegExpMatchArray)[0].length,
+    pos === undefined
+      ? pos
+      : pos +
+        (text.substr(pos).match(/^[^\r\n]*/) as RegExpMatchArray)[0].length,
+  ]
+}
+
+export function modifySelectionPerMouseMove(
+  selectionRange: Range | SelectionRange,
+  {
+    document,
+    target,
+    node,
+    offset,
+  }: {
+    document: Document
+    target: Element
+    node?: Node
+    offset?: number
+  },
+) {
+  const selectionFocus = resolveCaretPosition({target, node, offset})
+
+  if ('node' in selectionRange) {
+    // When the mouse is dragged outside of an input/textarea,
+    // the selection is extended to the beginning or end of the input
+    // depending on pointer position.
+    // TODO: extend selection according to pointer position
+    /* istanbul ignore else */
+    if (selectionFocus.node === selectionRange.node) {
+      const anchorOffset =
+        selectionFocus.offset < selectionRange.start
+          ? selectionRange.end
+          : selectionRange.start
+      const focusOffset =
+        selectionFocus.offset > selectionRange.end ||
+        selectionFocus.offset < selectionRange.start
+          ? selectionFocus.offset
+          : selectionRange.end
+
+      setUISelection(selectionRange.node, {anchorOffset, focusOffset})
+    }
+  } else {
+    const range = selectionRange.cloneRange()
+
+    const cmp = range.comparePoint(selectionFocus.node, selectionFocus.offset)
+    if (cmp < 0) {
+      range.setStart(selectionFocus.node, selectionFocus.offset)
+    } else if (cmp > 0) {
+      range.setEnd(selectionFocus.node, selectionFocus.offset)
+    }
+
+    const selection = document.getSelection()
+    selection?.removeAllRanges()
+    selection?.addRange(range.cloneRange())
   }
 }

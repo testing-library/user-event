@@ -12,7 +12,7 @@ test('drag sequence', async () => {
   expect(getClickEventsSnapshot()).toMatchInlineSnapshot(`
     pointerdown - pointerId=1; pointerType=mouse; isPrimary=true
     mousedown - button=0; buttons=1; detail=1
-    pointermove - pointerId=1; pointerType=mouse; isPrimary=undefined
+    pointermove - pointerId=1; pointerType=mouse; isPrimary=true
     mousemove - button=0; buttons=1; detail=0
     pointerup - pointerId=1; pointerType=mouse; isPrimary=true
     mouseup - button=0; buttons=0; detail=1
@@ -30,17 +30,17 @@ test('drag touch', async () => {
   ])
 
   expect(getClickEventsSnapshot()).toMatchInlineSnapshot(`
-    pointerover - pointerId=2; pointerType=touch; isPrimary=undefined
-    pointerenter - pointerId=2; pointerType=touch; isPrimary=undefined
+    pointerover - pointerId=2; pointerType=touch; isPrimary=true
+    pointerenter - pointerId=2; pointerType=touch; isPrimary=true
     pointerdown - pointerId=2; pointerType=touch; isPrimary=true
-    pointermove - pointerId=2; pointerType=touch; isPrimary=undefined
+    pointermove - pointerId=2; pointerType=touch; isPrimary=true
     pointerup - pointerId=2; pointerType=touch; isPrimary=true
-    pointerout - pointerId=2; pointerType=touch; isPrimary=undefined
-    pointerleave - pointerId=2; pointerType=touch; isPrimary=undefined
+    pointerout - pointerId=2; pointerType=touch; isPrimary=true
+    pointerleave - pointerId=2; pointerType=touch; isPrimary=true
     mouseover - button=0; buttons=0; detail=0
     mouseenter - button=0; buttons=0; detail=0
     mousemove - button=0; buttons=0; detail=0
-    mousedown - button=0; buttons=0; detail=1
+    mousedown - button=0; buttons=1; detail=1
     mouseup - button=0; buttons=0; detail=1
     click - button=0; buttons=0; detail=1
   `)

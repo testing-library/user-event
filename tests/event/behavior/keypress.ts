@@ -32,7 +32,7 @@ cases(
 
     const config = createConfig()
     if (shiftKey) {
-      config.keyboardState.modifiers.Shift = true
+      config.system.keyboard.modifiers.Shift = true
     }
 
     dispatchUIEvent(config, element, 'keypress', {

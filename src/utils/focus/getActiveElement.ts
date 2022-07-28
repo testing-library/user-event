@@ -19,3 +19,7 @@ export function getActiveElement(
     return activeElement
   }
 }
+
+export function getActiveElementOrBody(document: Document): Element {
+  return getActiveElement(document) ?? /* istanbul ignore next */ document.body
+}

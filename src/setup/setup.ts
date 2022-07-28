@@ -1,7 +1,5 @@
 import {prepareDocument} from '../document'
 import {bindDispatchUIEvent} from '../event'
-import {createKeyboardState} from '../keyboard'
-import {createPointerState} from '../pointer'
 import {defaultOptionsDirect, defaultOptionsSetup, Options} from '../options'
 import {
   ApiLevel,
@@ -10,10 +8,12 @@ import {
   setLevelRef,
   wait,
 } from '../utils'
+import {System} from '../system'
 import type {Instance, UserEvent, UserEventApi} from './index'
 import {Config} from './config'
 import * as userEventApi from './api'
 import {wrapAsync} from './wrapAsync'
+import {DirectOptions} from './directApi'
 
 export function createConfig(
   options: Partial<Config> = {},
@@ -22,17 +22,11 @@ export function createConfig(
 ): Config {
   const document = getDocument(options, node, defaults)
 
-  const {
-    keyboardState = createKeyboardState(),
-    pointerState = createPointerState(document),
-  } = options
-
   return {
     ...defaults,
     ...options,
     document,
-    keyboardState,
-    pointerState,
+    system: options.system ?? new System(),
   }
 }
 
@@ -54,8 +48,23 @@ export function setupMain(options: Options = {}) {
 /**
  * Setup in direct call per `userEvent.anyApi()`
  */
-export function setupDirect(options: Partial<Config> = {}, node?: Node) {
-  const config = createConfig(options, defaultOptionsDirect, node)
+export function setupDirect(
+  {
+    keyboardState,
+    pointerState,
+    ...options
+  }: DirectOptions & // backward-compatibility
+  {keyboardState?: System; pointerState?: System} = {},
+  node?: Node,
+) {
+  const config = createConfig(
+    {
+      ...options,
+      system: pointerState ?? keyboardState,
+    },
+    defaultOptionsDirect,
+    node,
+  )
   prepareDocument(config.document)
 
   return {

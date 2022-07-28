@@ -1,6 +1,7 @@
 import {TestData, TestDataProps} from './trackProps'
 import {eventMapKeys} from '#src/event/eventMap'
-import {isElementType, MouseButton} from '#src/utils'
+import {isElementType} from '#src/utils'
+import {MouseButton, MouseButtonFlip} from '#src/system/pointer/buttons'
 
 let eventListeners: Array<{
   el: EventTarget
@@ -250,6 +251,9 @@ function getEventModifiers(event: Event) {
 }
 
 function getMouseButtonName(button: number) {
+  if (button in MouseButtonFlip) {
+    button = MouseButtonFlip[button as keyof typeof MouseButtonFlip]
+  }
   return Object.keys(MouseButton).find(
     k => MouseButton[k as keyof typeof MouseButton] === button,
   )

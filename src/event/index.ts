@@ -1,7 +1,7 @@
 import {Config} from '../setup'
 import {createEvent, EventTypeInit} from './createEvent'
 import {dispatchEvent} from './dispatchEvent'
-import {isKeyboardEvent, isMouseEvent} from './eventTypes'
+import {isKeyboardEvent, isMouseEvent} from './eventMap'
 import {EventType, PointerCoords} from './types'
 
 export type {EventType, PointerCoords}

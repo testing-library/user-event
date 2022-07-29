@@ -1,6 +1,5 @@
 import {createEvent as createEventBase} from '@testing-library/dom'
-import {eventMap, eventMapKeys} from './eventMap'
-import {isMouseEvent} from './eventTypes'
+import {eventMap, eventMapKeys, isMouseEvent} from './eventMap'
 import {EventType, PointerCoords} from './types'
 
 export type EventTypeInit<K extends EventType> = SpecificEventInit<

@@ -1,4 +1,4 @@
-import {eventMap} from '@testing-library/dom/dist/event-map.js'
+import {eventMap} from './eventMap'
 
 const eventKeys = Object.fromEntries(
   Object.keys(eventMap).map(k => [k.toLowerCase(), k]),

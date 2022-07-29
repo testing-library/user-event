@@ -103,6 +103,7 @@ test('other keys reset click counter', async () => {
     mousedown - button=2; buttons=3; detail=1
     contextmenu - button=2; buttons=3; detail=0
     mouseup - button=2; buttons=1; detail=1
+    auxclick - button=2; buttons=1; detail=1
     pointerup - pointerId=1; pointerType=mouse; isPrimary=true
     mouseup - button=0; buttons=0; detail=0
     pointerdown - pointerId=1; pointerType=mouse; isPrimary=true
@@ -286,18 +287,36 @@ describe('submit form per click', () => {
   })
 })
 
-test('secondary mouse button fires `contextmenu` instead of `click`', async () => {
-  const {element, getEvents, clearEventCalls, user} = setup(`<button/>`)
+test('secondary mouse button fires `contextmenu`', async () => {
+  const {element, eventWasFired, clearEventCalls, user} = setup(`<button/>`)
 
   await user.pointer({keys: '[MouseLeft]', target: element})
-  expect(getEvents('click')).toHaveLength(1)
-  expect(getEvents('contextmenu')).toHaveLength(0)
+  expect(eventWasFired('contextmenu')).toBe(false)
 
   clearEventCalls()
+  await user.pointer({keys: '[MouseRight>]', target: element})
+  expect(eventWasFired('contextmenu')).toBe(true)
+})
 
+test('non-primary mouse buttons fire `auxclick`', async () => {
+  const {element, eventWasFired, getEvents, clearEventCalls, user} =
+    setup(`<button/>`)
+
+  await user.pointer({keys: '[MouseLeft]', target: element})
+  expect(eventWasFired('click')).toBe(true)
+  expect(eventWasFired('auxclick')).toBe(false)
+
+  clearEventCalls()
   await user.pointer({keys: '[MouseRight]', target: element})
-  expect(getEvents('contextmenu')).toHaveLength(1)
-  expect(getEvents('click')).toHaveLength(0)
+  expect(eventWasFired('click')).toBe(false)
+  expect(eventWasFired('auxclick')).toBe(true)
+  expect(getEvents('auxclick')[0]).toHaveProperty('button', 2)
+
+  clearEventCalls()
+  await user.pointer({keys: '[MouseMiddle]', target: element})
+  expect(eventWasFired('click')).toBe(false)
+  expect(eventWasFired('auxclick')).toBe(true)
+  expect(getEvents('auxclick')[0]).toHaveProperty('button', 1)
 })
 
 test('click closest common ancestor of pointerdown/pointerup', async () => {

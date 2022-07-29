@@ -230,6 +230,7 @@ function getEventLabel(event: Event) {
     isMouseEvent(event) &&
     [
       'click',
+      'auxclick',
       'dblclick',
       'mousedown',
       'mouseup',

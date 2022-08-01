@@ -15,7 +15,13 @@ export function createFileList(
     },
   }
   list.constructor = window.FileList
-  Object.setPrototypeOf(list, window.FileList.prototype)
+
+  // guard for environments without FileList
+  /* istanbul ignore else */
+  if (window.FileList as Function | undefined) {
+    Object.setPrototypeOf(list, window.FileList.prototype)
+  }
+
   Object.freeze(list)
 
   return list

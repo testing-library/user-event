@@ -12,57 +12,55 @@ declare global {
   }
 }
 
+function restoreProperty<T extends object>(
+  obj: T,
+  prop: keyof T,
+  descriptor?: PropertyDescriptor,
+) {
+  if (descriptor) {
+    Object.defineProperty(obj, prop, descriptor)
+  } else {
+    // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+    delete obj[prop]
+  }
+}
+
 export function setFiles(
   el: HTMLInputElement & {type: 'file'},
   files: FileList,
 ) {
   el[fakeFiles]?.restore()
 
-  const objectDescriptors = Object.getOwnPropertyDescriptors(el)
-  const prototypeDescriptors = Object.getOwnPropertyDescriptors(
-    Object.getPrototypeOf(el),
-  )
+  const typeDescr = Object.getOwnPropertyDescriptor(el, 'type')
+  const valueDescr = Object.getOwnPropertyDescriptor(el, 'value')
+  const filesDescr = Object.getOwnPropertyDescriptor(el, 'files')
 
   function restore() {
-    Object.defineProperties(el, {
-      files: {
-        ...prototypeDescriptors.files,
-        ...objectDescriptors.files,
-      },
-      value: {
-        ...prototypeDescriptors.value,
-        ...objectDescriptors.value,
-      },
-      type: {
-        ...prototypeDescriptors.type,
-        ...objectDescriptors.type,
-      },
-    })
+    restoreProperty(el, 'type', typeDescr)
+    restoreProperty(el, 'value', valueDescr)
+    restoreProperty(el, 'files', filesDescr)
   }
   el[fakeFiles] = {restore}
 
   Object.defineProperties(el, {
     files: {
-      ...prototypeDescriptors.files,
-      ...objectDescriptors.files,
+      configurable: true,
       get: () => files,
     },
     value: {
-      ...prototypeDescriptors.value,
-      ...objectDescriptors.value,
+      configurable: true,
       get: () => (files.length ? `C:\\fakepath\\${files[0].name}` : ''),
       set(v: string) {
         if (v === '') {
           restore()
         } else {
-          objectDescriptors.value.set?.call(el, v)
+          valueDescr?.set?.call(el, v)
         }
       },
     },
-    // eslint-disable-next-line accessor-pairs
     type: {
-      ...prototypeDescriptors.type,
-      ...objectDescriptors.type,
+      configurable: true,
+      get: () => 'file',
       set(v: string) {
         if (v !== 'file') {
           restore()

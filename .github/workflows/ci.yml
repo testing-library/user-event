@@ -1,4 +1,4 @@
-name: validate
+name: CI
 on:
   push:
     branches:
@@ -14,7 +14,7 @@ on:
   pull_request:
     branches-ignore: ['all-contributors/**']
 jobs:
-  main:
+  validate:
     strategy:
       matrix:
         node: [12, 14, 16]
@@ -47,7 +47,7 @@ jobs:
         uses: codecov/codecov-action@v1
 
   release:
-    needs: main
+    needs: validate
     runs-on: ubuntu-latest
     if:
       ${{ github.repository == 'testing-library/user-event' &&

@@ -183,6 +183,7 @@ Thanks goes to these wonderful people ([emoji key][emojis]):
     <td align="center"><a href="https://github.com/jessharrell"><img src="https://avatars.githubusercontent.com/u/2468638?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Jess Harrell</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3Ajessharrell" title="Bug reports">🐛</a></td>
     <td align="center"><a href="https://github.com/MattyBalaam"><img src="https://avatars.githubusercontent.com/u/1246923?v=4?s=100" width="100px;" alt=""/><br /><sub><b>MattyBalaam</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3AMattyBalaam" title="Bug reports">🐛</a></td>
     <td align="center"><a href="https://github.com/mwojslaw"><img src="https://avatars.githubusercontent.com/u/10730579?v=4?s=100" width="100px;" alt=""/><br /><sub><b>mwojslaw</b></sub></a><br /><a href="#ideas-mwojslaw" title="Ideas, Planning, & Feedback">🤔</a></td>
+    <td align="center"><a href="https://github.com/marilari88"><img src="https://avatars.githubusercontent.com/u/32909388?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Marco Ilari</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=marilari88" title="Documentation">📖</a></td>
   </tr>
 </table>
 

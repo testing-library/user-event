@@ -1,7 +1,7 @@
-import React, {useState} from 'react'
+import React, {useLayoutEffect, useRef, useState} from 'react'
 import {render, screen, waitFor} from '@testing-library/react'
 import userEvent from '#src'
-import {getUIValue} from '#src/document'
+import {getUISelection, getUIValue} from '#src/document'
 import {addListeners} from '#testHelpers'
 
 // Run twice to verify we handle this correctly no matter
@@ -62,17 +62,24 @@ test.each(['1.5', '1e5'])(
   },
 )
 
-test('detect value change in event handler', async () => {
+test('detect value and selection change', async () => {
   function Input() {
+    const el = useRef<HTMLInputElement>(null)
     const [val, setVal] = useState('')
+
+    useLayoutEffect(() => {
+      if (val === 'ab') {
+        el.current?.setSelectionRange(1, 1)
+      }
+    })
 
     return (
       <input
-        type="number"
+        ref={el}
         value={val}
         onChange={e => {
-          if (Number(e.target.value) == 12) {
-            e.target.value = '34'
+          if (e.target.value === 'acb') {
+            e.target.value = 'def'
           }
           setVal(e.target.value)
         }}
@@ -81,11 +88,21 @@ test('detect value change in event handler', async () => {
   }
   render(<Input />)
   const user = userEvent.setup()
-  screen.getByRole('spinbutton').focus()
+  const element = screen.getByRole<HTMLInputElement>('textbox')
+  element.focus()
 
-  await user.keyboard('125')
-  expect(getUIValue(screen.getByRole('spinbutton'))).toBe('345')
-  expect(screen.getByRole('spinbutton')).toHaveValue(345)
+  await user.keyboard('ab')
+  expect(getUIValue(element)).toBe('ab')
+  expect(element).toHaveValue('ab')
+  expect(getUISelection(element)).toHaveProperty('focusOffset', 1)
+
+  await user.keyboard('c')
+  expect(getUIValue(element)).toBe('def')
+  expect(element).toHaveValue('def')
+
+  await user.keyboard('g')
+  expect(getUIValue(element)).toBe('defg')
+  expect(element).toHaveValue('defg')
 })
 
 test('trigger onChange SyntheticEvent on input', async () => {

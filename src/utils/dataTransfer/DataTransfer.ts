@@ -74,63 +74,65 @@ function getTypeMatcher(type: string, exact: boolean) {
   }
 }
 
-class DataTransferStub implements DataTransfer {
-  getData(format: string) {
-    const match =
-      this.items.find(getTypeMatcher(format, true)) ??
-      this.items.find(getTypeMatcher(format, false))
+function createDataTransferStub(window: Window & typeof globalThis) {
+  return new (class DataTransferStub implements DataTransfer {
+    getData(format: string) {
+      const match =
+        this.items.find(getTypeMatcher(format, true)) ??
+        this.items.find(getTypeMatcher(format, false))
 
-    let text = ''
-    match?.getAsString(t => {
-      text = t
-    })
+      let text = ''
+      match?.getAsString(t => {
+        text = t
+      })
 
-    return text
-  }
-
-  setData(format: string, data: string) {
-    const matchIndex = this.items.findIndex(getTypeMatcher(format, true))
-
-    const item = new DataTransferItemStub(data, format) as DataTransferItem
-    if (matchIndex >= 0) {
-      this.items.splice(matchIndex, 1, item)
-    } else {
-      this.items.push(item)
+      return text
     }
-  }
 
-  clearData(format?: string) {
-    if (format) {
+    setData(format: string, data: string) {
       const matchIndex = this.items.findIndex(getTypeMatcher(format, true))
 
+      const item = new DataTransferItemStub(data, format) as DataTransferItem
       if (matchIndex >= 0) {
-        this.items.remove(matchIndex)
+        this.items.splice(matchIndex, 1, item)
+      } else {
+        this.items.push(item)
       }
-    } else {
-      this.items.clear()
     }
-  }
 
-  dropEffect: DataTransfer['dropEffect'] = 'none'
-  effectAllowed: DataTransfer['effectAllowed'] = 'uninitialized'
+    clearData(format?: string) {
+      if (format) {
+        const matchIndex = this.items.findIndex(getTypeMatcher(format, true))
 
-  readonly items = new DataTransferItemListStub()
-  readonly files = createFileList([])
-
-  get types() {
-    const t = []
-    if (this.files.length) {
-      t.push('Files')
+        if (matchIndex >= 0) {
+          this.items.remove(matchIndex)
+        }
+      } else {
+        this.items.clear()
+      }
     }
-    this.items.forEach(i => t.push(i.type))
 
-    Object.freeze(t)
+    dropEffect: DataTransfer['dropEffect'] = 'none'
+    effectAllowed: DataTransfer['effectAllowed'] = 'uninitialized'
 
-    return t
-  }
+    readonly items = new DataTransferItemListStub()
+    readonly files = createFileList(window, [])
 
-  /* istanbul ignore next */
-  setDragImage() {}
+    get types() {
+      const t = []
+      if (this.files.length) {
+        t.push('Files')
+      }
+      this.items.forEach(i => t.push(i.type))
+
+      Object.freeze(t)
+
+      return t
+    }
+
+    /* istanbul ignore next */
+    setDragImage() {}
+  })()
 }
 
 export function createDataTransfer(
@@ -140,10 +142,10 @@ export function createDataTransfer(
   // Use real DataTransfer if available
   const dt =
     typeof window.DataTransfer === 'undefined'
-      ? (new DataTransferStub() as DataTransfer)
+      ? createDataTransferStub(window)
       : /* istanbul ignore next */ new window.DataTransfer()
 
-  Object.defineProperty(dt, 'files', {get: () => createFileList(files)})
+  Object.defineProperty(dt, 'files', {get: () => createFileList(window, files)})
 
   return dt
 }

@@ -10,7 +10,7 @@ type Params<Prop> = Prop extends anyFunc ? Parameters<Prop> : [Prop]
 type ImplReturn<Prop> = Prop extends anyFunc ? Parameters<Prop> : Prop
 
 export function prepareInterceptor<
-  ElementType extends Node,
+  ElementType extends Element,
   PropName extends keyof ElementType,
 >(
   element: ElementType,
@@ -39,11 +39,14 @@ export function prepareInterceptor<
 
   const target = prototypeDescriptor?.set ? 'set' : 'value'
 
+  /* istanbul ignore if */
   if (
     typeof prototypeDescriptor?.[target] !== 'function' ||
     (prototypeDescriptor[target] as Interceptable)[Interceptor]
   ) {
-    return
+    throw new Error(
+      `Element ${element.tagName} does not implement "${String(propName)}".`,
+    )
   }
 
   function intercept(

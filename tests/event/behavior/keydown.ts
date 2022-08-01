@@ -299,3 +299,81 @@ cases(
     },
   },
 )
+
+cases(
+  'walk through radio group per arrow keys',
+  ({focus, key, expectedTarget}) => {
+    const {getEvents, eventWasFired, xpathNode} = render(
+      `
+      <input type="radio" name="group" value="a"/>
+      <fieldset disabled>
+        <input type="radio" name="group" value="b"/>
+      </fieldset>
+      <input type="radio" name="solo"/>
+      <input type="radio" value="nameless1"/>
+      <input type="radio" name="" value="nameless2"/>
+      <input type="radio" name="group" value="c" disabled/>
+      <input type="radio" name="group" value="d"/>
+      <input type="radio" name="foo"/>
+      <input type="text" name="group"/>
+    `,
+      {focus},
+    )
+
+    const active = document.activeElement as Element
+    dispatchUIEvent(createConfig(), active, 'keydown', {key})
+
+    if (expectedTarget) {
+      const target = xpathNode(expectedTarget)
+      expect(getEvents('click')[0]).toHaveProperty('target', target)
+      expect(getEvents('input')[0]).toHaveProperty('target', target)
+      expect(target).toHaveFocus()
+      expect(target).toBeChecked()
+    } else {
+      expect(eventWasFired('click')).toBe(false)
+      expect(eventWasFired('input')).toBe(false)
+      expect(active).toHaveFocus()
+    }
+  },
+  {
+    'per ArrowDown': {
+      focus: '//input[@value="a"]',
+      key: 'ArrowDown',
+      expectedTarget: '//input[@value="d"]',
+    },
+    'per ArrowLeft': {
+      focus: '//input[@value="d"]',
+      key: 'ArrowLeft',
+      expectedTarget: '//input[@value="a"]',
+    },
+    'per ArrowRight': {
+      focus: '//input[@value="a"]',
+      key: 'ArrowRight',
+      expectedTarget: '//input[@value="d"]',
+    },
+    'per ArrowUp': {
+      focus: '//input[@value="d"]',
+      key: 'ArrowUp',
+      expectedTarget: '//input[@value="a"]',
+    },
+    'forward around the corner': {
+      focus: '//input[@value="d"]',
+      key: 'ArrowRight',
+      expectedTarget: '//input[@value="a"]',
+    },
+    'backward around the corner': {
+      focus: '//input[@value="a"]',
+      key: 'ArrowUp',
+      expectedTarget: '//input[@value="d"]',
+    },
+    'do nothing on single radio': {
+      focus: '//input[@name="solo"]',
+      key: 'ArrowRight',
+    },
+    'on radios without name': {
+      focus: '//input[@value="nameless1"]',
+      key: 'ArrowRight',
+      expectedTarget: '//input[@value="nameless2"]',
+    },
+  },
+)

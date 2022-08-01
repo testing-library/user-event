@@ -1307,6 +1307,33 @@
       "contributions": [
         "bug"
       ]
+    },
+    {
+      "login": "jessharrell",
+      "name": "Jess Harrell",
+      "avatar_url": "https://avatars.githubusercontent.com/u/2468638?v=4",
+      "profile": "https://github.com/jessharrell",
+      "contributions": [
+        "bug"
+      ]
+    },
+    {
+      "login": "MattyBalaam",
+      "name": "MattyBalaam",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1246923?v=4",
+      "profile": "https://github.com/MattyBalaam",
+      "contributions": [
+        "bug"
+      ]
+    },
+    {
+      "login": "mwojslaw",
+      "name": "mwojslaw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/10730579?v=4",
+      "profile": "https://github.com/mwojslaw",
+      "contributions": [
+        "ideas"
+      ]
     }
   ],
   "commitConvention": "none",

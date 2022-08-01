@@ -122,20 +122,29 @@ test('only pointer events on disabled elements', async () => {
 })
 
 describe('check for pointer-events', () => {
-  const getComputedStyle = jest
-    .spyOn(window, 'getComputedStyle')
-    .mockImplementation(
-      () =>
-        ({
-          pointerEvents: 'foo',
-        } as CSSStyleDeclaration),
-    )
+  let getComputedStyle: jest.SpyInstance<
+    ReturnType<Window['getComputedStyle']>,
+    Parameters<Window['getComputedStyle']>
+  >
+  beforeAll(() => {
+    getComputedStyle = jest
+      .spyOn(window, 'getComputedStyle')
+      .mockImplementation(
+        () =>
+          ({
+            pointerEvents: 'foo',
+          } as CSSStyleDeclaration),
+      )
+  })
   beforeEach(() => {
     getComputedStyle.mockClear()
     document.body.parentElement?.replaceChild(
       document.createElement('body'),
       document.body,
     )
+  })
+  afterAll(() => {
+    jest.restoreAllMocks()
   })
 
   test('skip check', async () => {
@@ -215,4 +224,27 @@ describe('check for pointer-events', () => {
     expect(getComputedStyle).toHaveBeenNthCalledWith(5, element) // leave
     expect(getComputedStyle).toHaveBeenNthCalledWith(6, document.body) // enter
   })
+})
+
+test('reject if target has `pointer-events: none`', async () => {
+  const {element, user} = setup(`<input style="pointer-events: none"/>`)
+
+  await expect(user.pointer({target: element})).rejects.toThrowError(
+    'pointer-events',
+  )
+  await expect(
+    user.pointer({target: element, keys: '[MouseLeft]'}),
+  ).rejects.toThrowError('pointer-events')
+})
+
+test('omit pointer events on previous target if it has `pointer-events: none`', async () => {
+  const {element, user} = setup(`<input/>`)
+  const onPointerLeave = jest.fn()
+  element.addEventListener('pointerleave', onPointerLeave)
+
+  await user.pointer({target: element})
+  element.style.pointerEvents = 'none'
+  await user.pointer({target: document.body})
+
+  expect(onPointerLeave).not.toBeCalled()
 })

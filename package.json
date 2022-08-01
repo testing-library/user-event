@@ -32,8 +32,7 @@
     "test": "kcd-scripts test",
     "test:debug": "kcd-scripts --inspect-brk test --runInBand",
     "test:update": "npm test -- --updateSnapshot --coverage",
-    "validate": "kcd-scripts validate",
-    "typecheck": "kcd-scripts typecheck"
+    "validate": "kcd-scripts typecheck"
   },
   "devDependencies": {
     "@ph.fritsche/scripts-config": "^2.2.4",

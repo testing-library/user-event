@@ -36,8 +36,12 @@ jobs:
         env:
           HUSKY_SKIP_INSTALL: true
 
-      - name: ▶️ Run validate script
-        run: npm run validate
+      - name: ✍ Lint
+        run: npm run lint
+      - name: 🧪 Test
+        run: npm run test
+      - name: 🏗 Build
+        run: npm run build
 
       - name: ⬆️ Upload coverage report
         uses: codecov/codecov-action@v1

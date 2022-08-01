@@ -1334,6 +1334,15 @@
       "contributions": [
         "ideas"
       ]
+    },
+    {
+      "login": "marilari88",
+      "name": "Marco Ilari",
+      "avatar_url": "https://avatars.githubusercontent.com/u/32909388?v=4",
+      "profile": "https://github.com/marilari88",
+      "contributions": [
+        "doc"
+      ]
     }
   ],
   "commitConvention": "none",

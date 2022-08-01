@@ -95,7 +95,7 @@ export interface Options {
   skipAutoClose?: boolean
 
   /**
-   * `userEvent.type` implys a click at the end of the element content/value.
+   * `userEvent.type` implies a click at the end of the element content/value.
    * This option allows to opt out of this feature.
    *
    * @default false
@@ -103,7 +103,7 @@ export interface Options {
   skipClick?: boolean
 
   /**
-   * `userEvent.click` implys moving the cursor to the target element first.
+   * `userEvent.click` implies moving the cursor to the target element first.
    * This options allows to opt out of this feature.
    *
    * @default false

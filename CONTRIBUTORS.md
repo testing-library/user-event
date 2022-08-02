@@ -186,6 +186,9 @@ Thanks goes to these wonderful people ([emoji key][emojis]):
     <td align="center"><a href="https://github.com/marilari88"><img src="https://avatars.githubusercontent.com/u/32909388?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Marco Ilari</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=marilari88" title="Documentation">📖</a></td>
     <td align="center"><a href="https://parnswir.de"><img src="https://avatars.githubusercontent.com/u/5978382?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Maximilian Grundke</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3AParnswir" title="Bug reports">🐛</a></td>
   </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/alkstal"><img src="https://avatars.githubusercontent.com/u/70524463?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Johan Alkstål</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3Aalkstal" title="Bug reports">🐛</a></td>
+  </tr>
 </table>
 
 <!-- markdownlint-restore -->

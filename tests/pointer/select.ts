@@ -26,6 +26,7 @@ test('move focus to closest focusable element', async () => {
 
   await user.pointer({keys: '[MouseLeft>]', target: element.children[1]})
   expect(element.children[1]).toHaveFocus()
+  await user.pointer({keys: '[/MouseLeft]'})
 
   await user.pointer({keys: '[TouchA]', target: element.children[0]})
   expect(element).toHaveFocus()
@@ -163,7 +164,7 @@ test('mousemove with pressed button extends selection', async () => {
   expect(element).toHaveProperty('selectionStart', 4)
   expect(element).toHaveProperty('selectionEnd', 10)
 
-  await user.pointer({})
+  await user.pointer({target: element})
 
   expect(element).toHaveProperty('selectionStart', 4)
   expect(element).toHaveProperty('selectionEnd', 11)
@@ -235,7 +236,7 @@ test('selection is moved on non-input elements', async () => {
   )
   expect(document.getSelection()?.getRangeAt(0)).toHaveProperty('endOffset', 2)
 
-  await user.pointer({})
+  await user.pointer({target: element})
 
   expect(document.getSelection()?.toString()).toBe('bar baz')
   expect(document.getSelection()?.getRangeAt(0)).toHaveProperty(
@@ -306,7 +307,7 @@ test('`node` overrides the text offset approximation', async () => {
   await user.pointer({
     keys: '[MouseLeft]',
     target: element,
-    node: span[0] as Node,
+    node: span[0],
   })
   expect(document.getSelection()?.toString()).toBe('')
   expect(document.getSelection()?.getRangeAt(0)).toHaveProperty(
@@ -322,6 +323,20 @@ test('`node` overrides the text offset approximation', async () => {
     span[0],
   )
   expect(document.getSelection()?.getRangeAt(0)).toHaveProperty('endOffset', 1)
+
+  await expect(() =>
+    user.pointer({
+      keys: '[MouseLeft]',
+      offset: 20,
+    }),
+  ).rejects.toThrowError('out of bound')
+  await expect(() =>
+    user.pointer({
+      keys: '[MouseLeft]',
+      node: span[0],
+      offset: 20,
+    }),
+  ).rejects.toThrowError('out of bound')
 })
 
 describe('focus control when clicking label', () => {

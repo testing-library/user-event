@@ -1,11 +1,7 @@
-import type {keyboardState} from '../keyboard/types'
-import type {pointerState} from '../pointer/types'
 import type {Options} from '../options'
+import {System} from '../system'
 
-export interface inputDeviceState {
-  pointerState: pointerState
-  keyboardState: keyboardState
+export interface Config extends Required<Options> {
+  system: System
 }
-
-export interface Config extends Required<Options>, inputDeviceState {}
 export const Config = Symbol('Config')

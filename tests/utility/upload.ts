@@ -59,7 +59,9 @@ test('relay click/upload on label to file input', async () => {
     Events fired on: div
 
     label[for="element"] - pointerover
+    div - pointerenter
     label[for="element"] - mouseover
+    div - mouseenter
     label[for="element"] - pointermove
     label[for="element"] - mousemove
     label[for="element"] - pointerdown

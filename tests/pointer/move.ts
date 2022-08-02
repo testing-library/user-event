@@ -12,9 +12,9 @@ test('hover to other element', async () => {
     Events fired on: div
 
     div - pointerover
+    div - pointerenter
     div - mouseover
-    div - pointermove
-    div - mousemove
+    div - mouseenter
     div - pointermove
     div - mousemove
     div - pointerout
@@ -45,12 +45,10 @@ test('hover inside element', async () => {
     div - mouseenter
     div - pointermove
     div - mousemove
-    div - pointermove
-    div - mousemove
+    div - pointerout
+    div - mouseout
     a - pointerover
     a - mouseover
-    a - pointermove
-    a - mousemove
     a - pointermove
     a - mousemove
     a - pointerout
@@ -59,10 +57,10 @@ test('hover inside element', async () => {
     p - mouseover
     p - pointermove
     p - mousemove
-    p - pointermove
-    p - mousemove
     p - pointerout
     p - mouseout
+    div - pointerover
+    div - mouseover
     div - pointermove
     div - mousemove
   `)
@@ -85,15 +83,14 @@ test('move touch over elements', async () => {
     div - pointerover
     div - pointerenter
     div - pointerdown
-    div - pointermove
+    div - pointerout
     a - pointerover
-    a - pointermove
     a - pointermove
     a - pointerout
     p - pointerover
     p - pointermove
-    p - pointermove
     p - pointerout
+    div - pointerover
     div - pointermove
     div - pointerup
     div - pointerout

@@ -2,8 +2,8 @@ import {PointerEventsCheckLevel} from '#src'
 import {setup} from '#testHelpers'
 
 describe.each([
-  ['hover', {events: ['over', 'enter', 'move']}],
-  ['unhover', {events: ['move', 'leave', 'out']}],
+  ['hover', {events: ['over', 'enter']}],
+  ['unhover', {events: ['leave', 'out']}],
 ] as const)('%s', (method, {events}) => {
   test(`${method} element`, async () => {
     const {element, getEvents, clearEventCalls, user} = setup('<div></div>')
@@ -16,9 +16,6 @@ describe.each([
       expect(getEvents(`pointer${type}`)).toHaveLength(1)
       expect(getEvents(`mouse${type}`)).toHaveLength(1)
     }
-
-    expect(getEvents('pointermove')).toHaveLength(1)
-    expect(getEvents('mousemove')).toHaveLength(1)
   })
 
   test('throw on pointer-events set to none', async () => {
@@ -49,6 +46,6 @@ describe.each([
 
     await user[method](element)
 
-    expect(getEvents('mousemove')).toHaveLength(1)
+    events.forEach(t => expect(getEvents(`mouse${t}`)).toHaveLength(1))
   })
 })

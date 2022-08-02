@@ -1,5 +1,5 @@
+import {pointerKey} from '../system/pointer'
 import {readNextDescriptor} from '../utils'
-import {pointerKey} from './types'
 
 export function parseKeyDef(pointerMap: pointerKey[], keys: string) {
   const defs: Array<{

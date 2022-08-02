@@ -1,8 +1,7 @@
 import {Config} from '../setup'
-import {getUIEventModifiers} from '../utils'
 import {createEvent, EventTypeInit} from './createEvent'
 import {dispatchEvent} from './dispatchEvent'
-import {isKeyboardEvent, isMouseEvent} from './eventTypes'
+import {isKeyboardEvent, isMouseEvent} from './eventMap'
 import {EventType, PointerCoords} from './types'
 
 export type {EventType, PointerCoords}
@@ -17,7 +16,7 @@ export function dispatchUIEvent<K extends EventType>(
   if (isMouseEvent(type) || isKeyboardEvent(type)) {
     init = {
       ...init,
-      ...getUIEventModifiers(config.keyboardState),
+      ...config.system.getUIEventModifiers(),
     } as EventTypeInit<K>
   }
 

@@ -12,6 +12,8 @@ test.each([
   const modifierDown = getEvents('keydown')[0]
   expect(modifierDown).toHaveProperty('key', key)
   expect(modifierDown).toHaveProperty(modifier, true)
+  // This should be true, but this is a bug in JSDOM
+  // expect(modifierDown.getModifierState(key)).toBe(true)
 
   await user.keyboard('a')
   expect(getEvents('keydown')[1]).toHaveProperty(modifier, true)
@@ -21,6 +23,7 @@ test.each([
   const modifierUp = getEvents('keyup')[1]
   expect(modifierUp).toHaveProperty('key', key)
   expect(modifierUp).toHaveProperty(modifier, false)
+  expect(modifierUp.getModifierState(key)).toBe(false)
 })
 
 test.each([['AltGraph'], ['Fn'], ['Symbol']])(
@@ -29,14 +32,12 @@ test.each([['AltGraph'], ['Fn'], ['Symbol']])(
     const {getEvents, user} = setup(`<div tabIndex="-1"></div>`)
 
     await user.keyboard(`{${key}>}`)
-    const modifierDown = getEvents('keydown')[key === 'AltGraph' ? 1 : 0]
+    const modifierDown = getEvents('keydown')[0]
     expect(modifierDown).toHaveProperty('key', key)
     expect(modifierDown.getModifierState(key)).toBe(true)
 
     await user.keyboard('a')
-    expect(
-      getEvents('keydown')[key === 'AltGraph' ? 2 : 1].getModifierState(key),
-    ).toBe(true)
+    expect(getEvents('keydown')[1].getModifierState(key)).toBe(true)
 
     await user.keyboard(`{/${key}}`)
     const modifierUp = getEvents('keyup')[1]
@@ -55,27 +56,15 @@ test.each([
 
   await user.keyboard(`{${key}}`)
   const modifierOn = getEvents('keydown')[0]
-  expect(modifierOn.getModifierState(key)).toBe(true)
+  expect(modifierOn.getModifierState(key)).toBe(false)
 
   await user.keyboard(`a`)
   expect(getEvents('keydown')[1].getModifierState(key)).toBe(true)
 
   await user.keyboard(`{${key}}`)
   const modifierOff = getEvents('keyup')[2]
-  expect(modifierOff.getModifierState(key)).toBe(false)
-})
+  expect(modifierOff.getModifierState(key)).toBe(true)
 
-test('produce extra events for the Control key when AltGraph is pressed', async () => {
-  const {getEventSnapshot, user} = setup(`<input/>`)
-
-  await user.keyboard('{AltGraph}')
-
-  expect(getEventSnapshot()).toMatchInlineSnapshot(`
-    Events fired on: input[value=""]
-
-    input[value=""] - keydown: Control
-    input[value=""] - keydown: AltGraph
-    input[value=""] - keyup: AltGraph
-    input[value=""] - keyup: Control
-  `)
+  await user.keyboard(`a`)
+  expect(getEvents('keydown')[3].getModifierState(key)).toBe(false)
 })

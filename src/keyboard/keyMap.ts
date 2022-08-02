@@ -1,4 +1,4 @@
-import {DOM_KEY_LOCATION, keyboardKey} from './types'
+import {DOM_KEY_LOCATION, keyboardKey} from '../system/keyboard'
 
 /**
  * Mapping for a default US-104-QWERTY keyboard

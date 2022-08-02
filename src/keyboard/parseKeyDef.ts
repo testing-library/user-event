@@ -1,5 +1,5 @@
+import {keyboardKey} from '../system/keyboard'
 import {readNextDescriptor} from '../utils'
-import {keyboardKey} from './types'
 
 /**
  * Parse key defintions per `keyboardMap`

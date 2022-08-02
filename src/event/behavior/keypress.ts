@@ -37,7 +37,7 @@ behavior.keypress = (event, target, config) => {
   if (isEditable(target)) {
     const inputType =
       event.key === 'Enter'
-        ? isContentEditable(target) && !config.keyboardState.modifiers.Shift
+        ? isContentEditable(target) && !config.system.keyboard.modifiers.Shift
           ? 'insertParagraph'
           : 'insertLineBreak'
         : 'insertText'

@@ -1,4 +1,4 @@
-import {pointerKey} from './types'
+import {pointerKey} from '../system/pointer'
 
 export const defaultKeyMap: pointerKey[] = [
   {name: 'MouseLeft', pointerType: 'mouse', button: 'primary'},

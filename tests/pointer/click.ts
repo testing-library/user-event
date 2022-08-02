@@ -21,7 +21,7 @@ test('secondary button triggers contextmenu', async () => {
   expect(getClickEventsSnapshot()).toMatchInlineSnapshot(`
     pointerdown - pointerId=1; pointerType=mouse; isPrimary=true
     mousedown - button=2; buttons=2; detail=1
-    contextmenu - button=2; buttons=2; detail=1
+    contextmenu - button=2; buttons=2; detail=0
   `)
   expect(getEvents('contextmenu')).toHaveLength(1)
 })
@@ -83,7 +83,7 @@ test('two clicks', async () => {
   expect(getEvents('mousedown')[1]).toHaveProperty('detail', 1)
 })
 
-test('other keys reset click counter, but keyup/click still uses the old count', async () => {
+test('other keys reset click counter', async () => {
   const {element, getClickEventsSnapshot, getEvents, user} =
     setup(`<div></div>`)
 
@@ -101,12 +101,11 @@ test('other keys reset click counter, but keyup/click still uses the old count',
     pointerdown - pointerId=1; pointerType=mouse; isPrimary=true
     mousedown - button=0; buttons=1; detail=2
     mousedown - button=2; buttons=3; detail=1
-    contextmenu - button=2; buttons=3; detail=1
+    contextmenu - button=2; buttons=3; detail=0
     mouseup - button=2; buttons=1; detail=1
+    auxclick - button=2; buttons=1; detail=1
     pointerup - pointerId=1; pointerType=mouse; isPrimary=true
-    mouseup - button=0; buttons=0; detail=2
-    click - button=0; buttons=0; detail=2
-    dblclick - button=0; buttons=0; detail=2
+    mouseup - button=0; buttons=0; detail=0
     pointerdown - pointerId=1; pointerType=mouse; isPrimary=true
     mousedown - button=0; buttons=1; detail=1
     pointerup - pointerId=1; pointerType=mouse; isPrimary=true
@@ -114,7 +113,7 @@ test('other keys reset click counter, but keyup/click still uses the old count',
     click - button=0; buttons=0; detail=1
   `)
 
-  expect(getEvents('mouseup')[2]).toHaveProperty('detail', 2)
+  expect(getEvents('mouseup')[2]).toHaveProperty('detail', 0)
   expect(getEvents('mousedown')[3]).toHaveProperty('detail', 1)
 })
 
@@ -125,16 +124,16 @@ test('click per touch device', async () => {
   await user.pointer({keys: '[TouchA]', target: element})
 
   expect(getClickEventsSnapshot()).toMatchInlineSnapshot(`
-    pointerover - pointerId=2; pointerType=touch; isPrimary=undefined
-    pointerenter - pointerId=2; pointerType=touch; isPrimary=undefined
+    pointerover - pointerId=2; pointerType=touch; isPrimary=true
+    pointerenter - pointerId=2; pointerType=touch; isPrimary=true
     pointerdown - pointerId=2; pointerType=touch; isPrimary=true
     pointerup - pointerId=2; pointerType=touch; isPrimary=true
-    pointerout - pointerId=2; pointerType=touch; isPrimary=undefined
-    pointerleave - pointerId=2; pointerType=touch; isPrimary=undefined
+    pointerout - pointerId=2; pointerType=touch; isPrimary=true
+    pointerleave - pointerId=2; pointerType=touch; isPrimary=true
     mouseover - button=0; buttons=0; detail=0
     mouseenter - button=0; buttons=0; detail=0
     mousemove - button=0; buttons=0; detail=0
-    mousedown - button=0; buttons=0; detail=1
+    mousedown - button=0; buttons=1; detail=1
     mouseup - button=0; buttons=0; detail=1
     click - button=0; buttons=0; detail=1
   `)
@@ -151,26 +150,25 @@ test('double click per touch device', async () => {
   await user.pointer({keys: '[TouchA][TouchA]', target: element})
 
   expect(getClickEventsSnapshot()).toMatchInlineSnapshot(`
-    pointerover - pointerId=2; pointerType=touch; isPrimary=undefined
-    pointerenter - pointerId=2; pointerType=touch; isPrimary=undefined
+    pointerover - pointerId=2; pointerType=touch; isPrimary=true
+    pointerenter - pointerId=2; pointerType=touch; isPrimary=true
     pointerdown - pointerId=2; pointerType=touch; isPrimary=true
     pointerup - pointerId=2; pointerType=touch; isPrimary=true
-    pointerout - pointerId=2; pointerType=touch; isPrimary=undefined
-    pointerleave - pointerId=2; pointerType=touch; isPrimary=undefined
+    pointerout - pointerId=2; pointerType=touch; isPrimary=true
+    pointerleave - pointerId=2; pointerType=touch; isPrimary=true
     mouseover - button=0; buttons=0; detail=0
     mouseenter - button=0; buttons=0; detail=0
     mousemove - button=0; buttons=0; detail=0
-    mousedown - button=0; buttons=0; detail=1
+    mousedown - button=0; buttons=1; detail=1
     mouseup - button=0; buttons=0; detail=1
     click - button=0; buttons=0; detail=1
-    pointerover - pointerId=3; pointerType=touch; isPrimary=undefined
-    pointerenter - pointerId=3; pointerType=touch; isPrimary=undefined
+    pointerover - pointerId=3; pointerType=touch; isPrimary=true
+    pointerenter - pointerId=3; pointerType=touch; isPrimary=true
     pointerdown - pointerId=3; pointerType=touch; isPrimary=true
     pointerup - pointerId=3; pointerType=touch; isPrimary=true
-    pointerout - pointerId=3; pointerType=touch; isPrimary=undefined
-    pointerleave - pointerId=3; pointerType=touch; isPrimary=undefined
-    mousemove - button=0; buttons=0; detail=0
-    mousedown - button=0; buttons=0; detail=2
+    pointerout - pointerId=3; pointerType=touch; isPrimary=true
+    pointerleave - pointerId=3; pointerType=touch; isPrimary=true
+    mousedown - button=0; buttons=1; detail=2
     mouseup - button=0; buttons=0; detail=2
     click - button=0; buttons=0; detail=2
     dblclick - button=0; buttons=0; detail=2
@@ -289,16 +287,56 @@ describe('submit form per click', () => {
   })
 })
 
-test('secondary mouse button fires `contextmenu` instead of `click`', async () => {
-  const {element, getEvents, clearEventCalls, user} = setup(`<button/>`)
+test('secondary mouse button fires `contextmenu`', async () => {
+  const {element, eventWasFired, clearEventCalls, user} = setup(`<button/>`)
 
   await user.pointer({keys: '[MouseLeft]', target: element})
-  expect(getEvents('click')).toHaveLength(1)
-  expect(getEvents('contextmenu')).toHaveLength(0)
+  expect(eventWasFired('contextmenu')).toBe(false)
 
   clearEventCalls()
+  await user.pointer({keys: '[MouseRight>]', target: element})
+  expect(eventWasFired('contextmenu')).toBe(true)
+})
 
+test('non-primary mouse buttons fire `auxclick`', async () => {
+  const {element, eventWasFired, getEvents, clearEventCalls, user} =
+    setup(`<button/>`)
+
+  await user.pointer({keys: '[MouseLeft]', target: element})
+  expect(eventWasFired('click')).toBe(true)
+  expect(eventWasFired('auxclick')).toBe(false)
+
+  clearEventCalls()
   await user.pointer({keys: '[MouseRight]', target: element})
-  expect(getEvents('contextmenu')).toHaveLength(1)
+  expect(eventWasFired('click')).toBe(false)
+  expect(eventWasFired('auxclick')).toBe(true)
+  expect(getEvents('auxclick')[0]).toHaveProperty('button', 2)
+
+  clearEventCalls()
+  await user.pointer({keys: '[MouseMiddle]', target: element})
+  expect(eventWasFired('click')).toBe(false)
+  expect(eventWasFired('auxclick')).toBe(true)
+  expect(getEvents('auxclick')[0]).toHaveProperty('button', 1)
+})
+
+test('click closest common ancestor of pointerdown/pointerup', async () => {
+  const {element, getEvents, user, xpathNode, clearEventCalls} = setup(
+    `<div><span>foo</span><span>bar</span></div>`,
+  )
+
+  await user.pointer([
+    {keys: '[MouseLeft>]', target: xpathNode<HTMLSpanElement>('//span[1]')},
+    {keys: '[/MouseLeft]', target: xpathNode<HTMLSpanElement>('//span[2]')},
+  ])
+
+  expect(getEvents('click')).toHaveLength(1)
+  expect(getEvents('click')[0]).toHaveProperty('target', element)
+
+  clearEventCalls()
+  await user.pointer([
+    {keys: '[MouseLeft>]', target: document.createElement('div')},
+    {keys: '[/MouseLeft]', target: xpathNode<HTMLSpanElement>('//span[2]')},
+  ])
+  expect(getEvents('mouseup')).toHaveLength(1)
   expect(getEvents('click')).toHaveLength(0)
 })

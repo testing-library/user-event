@@ -85,7 +85,7 @@ describe('delay', () => {
   })
 })
 
-test('only pointer events on disabled elements', async () => {
+test('no mousedown/mouseup on disabled elements', async () => {
   const {element, getEventSnapshot, eventWasFired, user} = setup(
     '<button disabled />',
   )
@@ -101,7 +101,10 @@ test('only pointer events on disabled elements', async () => {
 
     button - pointerover
     button - pointerenter
+    button - mouseover
+    button - mouseenter
     button - pointermove
+    button - mousemove
     button - pointerdown
     button - pointerup
     button - pointerover
@@ -112,10 +115,8 @@ test('only pointer events on disabled elements', async () => {
     button - pointerleave
   `)
 
-  expect(eventWasFired('pointerover')).toBe(true)
   expect(eventWasFired('pointerdown')).toBe(true)
   expect(eventWasFired('pointerup')).toBe(true)
-  expect(eventWasFired('mouseover')).toBe(false)
   expect(eventWasFired('mousedown')).toBe(false)
   expect(eventWasFired('mouseup')).toBe(false)
   expect(eventWasFired('click')).toBe(false)
@@ -247,4 +248,22 @@ test('omit pointer events on previous target if it has `pointer-events: none`', 
   await user.pointer({target: document.body})
 
   expect(onPointerLeave).not.toBeCalled()
+})
+
+test('suppress mouse events per preventDefault on pointerdown', async () => {
+  const {element, user, clearEventCalls, eventWasFired} =
+    setup(`<div>Drag here</div>`)
+  await user.pointer({target: element, offset: 2})
+  clearEventCalls()
+  element.addEventListener('pointerdown', e => e.preventDefault())
+
+  await user.pointer([
+    {keys: '[MouseLeft>]'},
+    {offset: 5},
+    {keys: '[/MouseLeft]'},
+  ])
+
+  expect(eventWasFired('mousedown')).toBe(false)
+  expect(eventWasFired('mousemove')).toBe(false)
+  expect(eventWasFired('mouseup')).toBe(false)
 })

@@ -23,7 +23,7 @@ test.each([
   const modifierUp = getEvents('keyup')[1]
   expect(modifierUp).toHaveProperty('key', key)
   expect(modifierUp).toHaveProperty(modifier, false)
-  expect(modifierDown.getModifierState(key)).toBe(false)
+  expect(modifierUp.getModifierState(key)).toBe(false)
 })
 
 test.each([['AltGraph'], ['Fn'], ['Symbol']])(

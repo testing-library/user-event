@@ -12,8 +12,7 @@ test.each([
   const modifierDown = getEvents('keydown')[0]
   expect(modifierDown).toHaveProperty('key', key)
   expect(modifierDown).toHaveProperty(modifier, true)
-  // This should be true, but this is a bug in JSDOM
-  // expect(modifierDown.getModifierState(key)).toBe(true)
+  expect(modifierDown.getModifierState(key)).toBe(true)
 
   await user.keyboard('a')
   expect(getEvents('keydown')[1]).toHaveProperty(modifier, true)

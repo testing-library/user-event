@@ -1,98 +1,234 @@
-import {createEvent as createEventBase} from '@testing-library/dom'
-import {eventMap, eventMapKeys, isMouseEvent} from './eventMap'
-import {EventType, PointerCoords} from './types'
+import {getWindow} from '../utils'
+import {eventMap, eventMapKeys} from './eventMap'
+import type {EventType, EventTypeInit, FixedDocumentEventMap} from './types'
 
-export type EventTypeInit<K extends EventType> = SpecificEventInit<
-  FixedDocumentEventMap[K]
->
-
-interface FixedDocumentEventMap extends DocumentEventMap {
-  input: InputEvent
-}
-
-type SpecificEventInit<E extends Event> = E extends InputEvent
-  ? InputEventInit
-  : E extends ClipboardEvent
-  ? ClipboardEventInit
-  : E extends KeyboardEvent
-  ? KeyboardEventInit
-  : E extends PointerEvent
-  ? PointerEventInit
-  : E extends MouseEvent
-  ? MouseEventInit
-  : E extends UIEvent
-  ? UIEventInit
-  : EventInit
+const eventInitializer = {
+  ClipboardEvent: [initClipboardEvent],
+  InputEvent: [initUIEvent, initInputEvent],
+  MouseEvent: [initUIEvent, initUIEventModififiers, initMouseEvent],
+  PointerEvent: [
+    initUIEvent,
+    initUIEventModififiers,
+    initMouseEvent,
+    initPointerEvent,
+  ],
+  KeyboardEvent: [initUIEvent, initUIEventModififiers, initKeyboardEvent],
+} as Record<EventInterface, undefined | Array<(e: Event, i: EventInit) => void>>
 
 export function createEvent<K extends EventType>(
   type: K,
   target: Element,
   init?: EventTypeInit<K>,
 ) {
-  const event = createEventBase(
-    type,
-    target,
-    init,
-    eventMap[eventMapKeys[type] as keyof typeof eventMap],
-  ) as DocumentEventMap[K]
+  const window = getWindow(target)
+  const {EventType, defaultInit} =
+    eventMap[eventMapKeys[type] as keyof typeof eventMap]
+  const event = new (getEventConstructors(window)[EventType])(type, defaultInit)
+  eventInitializer[EventType]?.forEach(f => f(event, init ?? {}))
 
-  // Can not use instanceof, as MouseEvent might be polyfilled.
-  if (isMouseEvent(type) && init) {
-    // see https://github.com/testing-library/react-testing-library/issues/268
-    assignPositionInit(event as MouseEvent, init)
-    assignPointerInit(event as PointerEvent, init)
-  }
-
-  return event
+  return event as FixedDocumentEventMap[K]
 }
 
-function assignProps(
-  obj: MouseEvent | PointerEvent,
-  props: MouseEventInit & PointerEventInit & PointerCoords,
-) {
+/* istanbul ignore next */
+function getEventConstructors(window: Window & typeof globalThis) {
+  /* eslint-disable @typescript-eslint/no-unnecessary-condition, @typescript-eslint/no-extraneous-class */
+  const Event = window.Event ?? class Event {}
+  const AnimationEvent =
+    window.AnimationEvent ?? class AnimationEvent extends Event {}
+  const ClipboardEvent =
+    window.ClipboardEvent ?? class ClipboardEvent extends Event {}
+  const PopStateEvent =
+    window.PopStateEvent ?? class PopStateEvent extends Event {}
+  const ProgressEvent =
+    window.ProgressEvent ?? class ProgressEvent extends Event {}
+  const TransitionEvent =
+    window.TransitionEvent ?? class TransitionEvent extends Event {}
+  const UIEvent = window.UIEvent ?? class UIEvent extends Event {}
+  const CompositionEvent =
+    window.CompositionEvent ?? class CompositionEvent extends UIEvent {}
+  const FocusEvent = window.FocusEvent ?? class FocusEvent extends UIEvent {}
+  const InputEvent = window.InputEvent ?? class InputEvent extends UIEvent {}
+  const KeyboardEvent =
+    window.KeyboardEvent ?? class KeyboardEvent extends UIEvent {}
+  const MouseEvent = window.MouseEvent ?? class MouseEvent extends UIEvent {}
+  const DragEvent = window.DragEvent ?? class DragEvent extends MouseEvent {}
+  const PointerEvent =
+    window.PointerEvent ?? class PointerEvent extends MouseEvent {}
+  const TouchEvent = window.TouchEvent ?? class TouchEvent extends UIEvent {}
+  /* eslint-enable @typescript-eslint/no-unnecessary-condition, @typescript-eslint/no-extraneous-class */
+
+  return {
+    Event,
+    AnimationEvent,
+    ClipboardEvent,
+    PopStateEvent,
+    ProgressEvent,
+    TransitionEvent,
+    UIEvent,
+    CompositionEvent,
+    FocusEvent,
+    InputEvent,
+    KeyboardEvent,
+    MouseEvent,
+    DragEvent,
+    PointerEvent,
+    TouchEvent,
+  }
+}
+
+function assignProps<T extends object>(obj: T, props: {[k in keyof T]?: T[k]}) {
   for (const [key, value] of Object.entries(props)) {
-    Object.defineProperty(obj, key, {get: () => value})
+    Object.defineProperty(obj, key, {get: () => value ?? null})
   }
 }
 
-function assignPositionInit(
-  obj: MouseEvent | PointerEvent,
-  {
-    x,
-    y,
-    clientX,
-    clientY,
-    offsetX,
-    offsetY,
-    pageX,
-    pageY,
-    screenX,
-    screenY,
-  }: PointerCoords & MouseEventInit,
+function sanitizeNumber(n: number | undefined) {
+  return Number(n ?? 0)
+}
+
+function initClipboardEvent(
+  event: ClipboardEvent,
+  {clipboardData}: ClipboardEventInit,
 ) {
-  assignProps(obj, {
-    /* istanbul ignore start */
-    x: x ?? clientX ?? 0,
-    y: y ?? clientY ?? 0,
-    clientX: x ?? clientX ?? 0,
-    clientY: y ?? clientY ?? 0,
-    offsetX: offsetX ?? 0,
-    offsetY: offsetY ?? 0,
-    pageX: pageX ?? 0,
-    pageY: pageY ?? 0,
-    screenX: screenX ?? 0,
-    screenY: screenY ?? 0,
-    /* istanbul ignore end */
+  assignProps(event, {
+    clipboardData,
   })
 }
 
-function assignPointerInit(
-  obj: MouseEvent | PointerEvent,
-  {isPrimary, pointerId, pointerType}: PointerEventInit,
+function initInputEvent(
+  event: InputEvent,
+  {data, inputType, isComposing}: InputEventInit,
 ) {
-  assignProps(obj, {
-    isPrimary,
+  assignProps(event, {
+    data,
+    isComposing: Boolean(isComposing),
+    inputType: String(inputType),
+  })
+}
+
+function initUIEvent(event: UIEvent, {view, detail}: UIEventInit) {
+  assignProps(event, {
+    view,
+    detail: sanitizeNumber(detail ?? 0),
+  })
+}
+
+function initUIEventModififiers(
+  event: KeyboardEvent | MouseEvent,
+  {
+    altKey,
+    ctrlKey,
+    metaKey,
+    shiftKey,
+    modifierAltGraph,
+    modifierCapsLock,
+    modifierFn,
+    modifierFnLock,
+    modifierNumLock,
+    modifierScrollLock,
+    modifierSymbol,
+    modifierSymbolLock,
+  }: EventModifierInit,
+) {
+  assignProps(event, {
+    altKey: Boolean(altKey),
+    ctrlKey: Boolean(ctrlKey),
+    metaKey: Boolean(metaKey),
+    shiftKey: Boolean(shiftKey),
+    getModifierState(k: string) {
+      return Boolean(
+        {
+          Alt: altKey,
+          AltGraph: modifierAltGraph,
+          CapsLock: modifierCapsLock,
+          Control: ctrlKey,
+          Fn: modifierFn,
+          FnLock: modifierFnLock,
+          Meta: metaKey,
+          NumLock: modifierNumLock,
+          ScrollLock: modifierScrollLock,
+          Shift: shiftKey,
+          Symbol: modifierSymbol,
+          SymbolLock: modifierSymbolLock,
+        }[k],
+      )
+    },
+  })
+}
+
+function initKeyboardEvent(
+  event: KeyboardEvent,
+  {
+    key,
+    code,
+    location,
+    repeat,
+    isComposing,
+    charCode, // `charCode` is necessary for React17 `keypress`
+  }: KeyboardEventInit,
+) {
+  assignProps(event, {
+    key: String(key),
+    code: String(code),
+    location: sanitizeNumber(location),
+    repeat: Boolean(repeat),
+    isComposing: Boolean(isComposing),
+    charCode,
+  })
+}
+
+function initMouseEvent(
+  event: MouseEvent,
+  {
+    x,
+    y,
+    screenX,
+    screenY,
+    clientX = x,
+    clientY = y,
+    button,
+    buttons,
+    relatedTarget,
+  }: MouseEventInit & {x?: number; y?: number},
+) {
+  assignProps(event, {
+    screenX: sanitizeNumber(screenX),
+    screenY: sanitizeNumber(screenY),
+    clientX: sanitizeNumber(clientX),
+    x: sanitizeNumber(clientX),
+    clientY: sanitizeNumber(clientY),
+    y: sanitizeNumber(clientY),
+    button: sanitizeNumber(button),
+    buttons: sanitizeNumber(buttons),
+    relatedTarget,
+  })
+}
+
+function initPointerEvent(
+  event: PointerEvent,
+  {
     pointerId,
+    width,
+    height,
+    pressure,
+    tangentialPressure,
+    tiltX,
+    tiltY,
+    twist,
     pointerType,
+    isPrimary,
+  }: PointerEventInit,
+) {
+  assignProps(event, {
+    pointerId: sanitizeNumber(pointerId),
+    width: sanitizeNumber(width),
+    height: sanitizeNumber(height),
+    pressure: sanitizeNumber(pressure),
+    tangentialPressure: sanitizeNumber(tangentialPressure),
+    tiltX: sanitizeNumber(tiltX),
+    tiltY: sanitizeNumber(tiltY),
+    twist: sanitizeNumber(twist),
+    pointerType: String(pointerType),
+    isPrimary: Boolean(isPrimary),
   })
 }

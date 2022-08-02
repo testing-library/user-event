@@ -14,5 +14,5 @@ test('advances timers when set', async () => {
 
   expect(performance.now() - beforeFake).toBe(1000)
   jest.useRealTimers()
-  expect(performance.now() - beforeReal).toBeLessThan(10)
+  expect(performance.now() - beforeReal).toBeLessThan(1000)
 }, 10)

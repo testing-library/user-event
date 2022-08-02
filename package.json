@@ -26,7 +26,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "scripts ts-build2 --cjs",
+    "build": "scripts ts-build2 --cjs --target es2019",
     "lint": "kcd-scripts lint",
     "setup": "npm install && npm run validate -s",
     "test": "kcd-scripts test",
@@ -35,7 +35,7 @@
     "validate": "kcd-scripts typecheck"
   },
   "devDependencies": {
-    "@ph.fritsche/scripts-config": "^2.2.4",
+    "@ph.fritsche/scripts-config": "^2.3.0",
     "@testing-library/dom": "^8.11.4",
     "@testing-library/jest-dom": "^5.16.3",
     "@testing-library/react": "^13.0.0",

@@ -5,7 +5,8 @@ export const eventMap = {
   ...baseEventMap,
 
   auxclick: {
-    // like other events this should be PointerEvent, but there this doesn't work in Jsdom
+    // like other events this should be PointerEvent, but this is missing in Jsdom
+    // see https://github.com/jsdom/jsdom/issues/2527
     EventType: 'MouseEvent',
     defaultInit: {bubbles: true, cancelable: true, composed: true},
   },

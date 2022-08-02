@@ -188,6 +188,7 @@ Thanks goes to these wonderful people ([emoji key][emojis]):
   </tr>
   <tr>
     <td align="center"><a href="https://github.com/alkstal"><img src="https://avatars.githubusercontent.com/u/70524463?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Johan Alkstål</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3Aalkstal" title="Bug reports">🐛</a></td>
+    <td align="center"><a href="https://github.com/DGollings"><img src="https://avatars.githubusercontent.com/u/2032823?v=4?s=100" width="100px;" alt=""/><br /><sub><b>DGollings</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3ADGollings" title="Bug reports">🐛</a></td>
   </tr>
 </table>
 

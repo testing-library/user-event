@@ -4,17 +4,23 @@ import {EventType} from './types'
 export const eventMap = {
   ...baseEventMap,
 
+  click: {
+    EventType: 'PointerEvent',
+    defaultInit: {bubbles: true, cancelable: true, composed: true},
+  },
   auxclick: {
-    // like other events this should be PointerEvent, but this is missing in Jsdom
-    // see https://github.com/jsdom/jsdom/issues/2527
-    EventType: 'MouseEvent',
+    EventType: 'PointerEvent',
+    defaultInit: {bubbles: true, cancelable: true, composed: true},
+  },
+  contextmenu: {
+    EventType: 'PointerEvent',
     defaultInit: {bubbles: true, cancelable: true, composed: true},
   },
   beforeInput: {
     EventType: 'InputEvent',
     defaultInit: {bubbles: true, cancelable: true, composed: true},
   },
-}
+} as const
 
 export const eventMapKeys: {
   [k in keyof DocumentEventMap]?: keyof typeof eventMap

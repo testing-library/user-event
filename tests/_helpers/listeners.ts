@@ -164,6 +164,8 @@ function isMouseEvent(event: Event): event is MouseEvent {
   return (
     event.constructor.name === 'MouseEvent' ||
     event.type === 'click' ||
+    event.type === 'auxclick' ||
+    event.type === 'contextmenu' ||
     event.type.startsWith('mouse')
   )
 }

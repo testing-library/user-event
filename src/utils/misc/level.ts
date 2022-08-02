@@ -16,7 +16,7 @@ declare module '../../setup' {
 }
 
 export function setLevelRef(config: Config, level: ApiLevel) {
-  config[Level] ??= {}
+  config[Level] = config[Level] ?? {}
   config[Level][level] = {}
 }
 

@@ -41,7 +41,7 @@ export class PointerHost {
     private registry = {} as Record<string, Device>
 
     get(k: string) {
-      this.registry[k] ??= new Device()
+      this.registry[k] = this.registry[k] ?? new Device()
       return this.registry[k]
     }
   })()

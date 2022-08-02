@@ -98,7 +98,7 @@ export class KeyboardHost {
     const target = getActiveElementOrBody(config.document)
     this.setKeydownTarget(target)
 
-    this.pressed[code] ??= {
+    this.pressed[code] = this.pressed[code] ?? {
       keyDef,
       unpreventedDefault: false,
     }

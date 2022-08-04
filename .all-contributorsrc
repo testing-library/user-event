@@ -1388,6 +1388,15 @@
       "contributions": [
         "doc"
       ]
+    },
+    {
+      "login": "HillLiu",
+      "name": "Hill Liu",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1877738?v=4",
+      "profile": "https://github.com/pmvc/pmvc",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "commitConvention": "none",

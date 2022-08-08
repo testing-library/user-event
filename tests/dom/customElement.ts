@@ -1,5 +1,6 @@
 import userEvent from '#src'
-import {addListeners} from '#testHelpers'
+import {addListeners, setup} from '#testHelpers'
+import {setUISelection} from '#src/document'
 
 // It is unclear which part of our implementation is targeted with this test.
 // Can this be removed? Is it sufficient?
@@ -84,4 +85,95 @@ test('types text inside custom element', async () => {
     input[value="Sup"] - input
     input[value="Sup"] - keyup: p
   `)
+})
+
+const template = document.createElement('template')
+template.innerHTML = `
+  <input>
+`
+
+class ShadowInput extends HTMLElement {
+  constructor() {
+    super()
+
+    this.attachShadow({mode: 'open', delegatesFocus: true})
+    if (this.shadowRoot) {
+      this.shadowRoot.appendChild(template.content.cloneNode(true))
+    }
+  }
+
+  public get value(): string {
+    return this.shadowRoot?.querySelector('input')?.value ?? ''
+  }
+}
+window.customElements.define('shadow-input', ShadowInput)
+
+test('Render open shadow DOM element - type', async () => {
+  const {element, user} = setup('<shadow-input></shadow-input>', {
+    focus: false,
+  })
+
+  const inputElement = element.shadowRoot?.querySelector('input')
+  if (inputElement) {
+    await user.click(inputElement)
+  }
+  await user.keyboard('test')
+
+  expect((element as ShadowInput).value).toEqual('test')
+})
+
+test('Render open shadow DOM element - copy', async () => {
+  const {element, user} = setup('<shadow-input></shadow-input>', {
+    focus: false,
+  })
+
+  const inputElement = element.shadowRoot?.querySelector('input')
+  if (inputElement) {
+    await user.click(inputElement)
+  }
+  await user.keyboard('test')
+
+  if (inputElement) {
+    setUISelection(inputElement, {anchorOffset: 0, focusOffset: 4})
+  }
+
+  const data = await user.copy()
+
+  expect(data?.getData('text')).toEqual('test')
+})
+
+test('Render open shadow DOM element - paste', async () => {
+  const {element, user} = setup('<shadow-input></shadow-input>', {
+    focus: false,
+  })
+
+  const inputElement = element.shadowRoot?.querySelector('input')
+  if (inputElement) {
+    await user.click(inputElement)
+  }
+
+  await user.paste('test')
+
+  expect((element as ShadowInput).value).toEqual('test')
+})
+
+test('Render open shadow DOM element - cut', async () => {
+  const {element, user} = setup('<shadow-input></shadow-input>', {
+    focus: false,
+  })
+
+  const inputElement = element.shadowRoot?.querySelector('input')
+  if (inputElement) {
+    await user.click(inputElement)
+  }
+  await user.keyboard('test')
+
+  if (inputElement) {
+    setUISelection(inputElement, {anchorOffset: 0, focusOffset: 4})
+  }
+
+  const data = await user.cut()
+
+  expect(data?.getData('text')).toEqual('test')
+  expect((element as ShadowInput).value.length).toEqual(0)
 })

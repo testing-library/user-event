@@ -1,12 +1,13 @@
-import {input, isEditable} from '../../utils'
+import {isEditable} from '../../utils'
+import {input} from '../input'
 import {behavior} from './registry'
 
-behavior.paste = (event, target, config) => {
+behavior.paste = (event, target, instance) => {
   if (isEditable(target)) {
     return () => {
       const insertData = event.clipboardData?.getData('text')
       if (insertData) {
-        input(config, target, insertData, 'insertFromPaste')
+        input(instance, target, insertData, 'insertFromPaste')
       }
     }
   }

@@ -1,10 +1,11 @@
-import {input, isEditable} from '../../utils'
+import {isEditable} from '../../utils'
+import {input} from '../input'
 import {behavior} from './registry'
 
-behavior.cut = (event, target, config) => {
+behavior.cut = (event, target, instance) => {
   return () => {
     if (isEditable(target)) {
-      input(config, target, '', 'deleteByCut')
+      input(instance, target, '', 'deleteByCut')
     }
   }
 }

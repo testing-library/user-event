@@ -1,4 +1,4 @@
-import {focus} from '#src/utils'
+import {focusElement, blurElement} from '#src/event'
 import {addListeners, setup} from '#testHelpers'
 
 test('move focus', async () => {
@@ -7,12 +7,12 @@ test('move focus', async () => {
   )
   const [elA, elB] = elements
 
-  focus(elA)
+  focusElement(elA)
   expect(elA).toHaveFocus()
 
   clearEventCalls()
 
-  focus(elB)
+  focusElement(elB)
   expect(elB).toHaveFocus()
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
@@ -27,7 +27,7 @@ test('move focus', async () => {
 
 test('no events fired on an unfocusable input', async () => {
   const {element, getEventSnapshot} = setup(`<div />`)
-  focus(element)
+  focusElement(element)
   expect(getEventSnapshot()).toMatchInlineSnapshot(
     `No events were fired on: div`,
   )
@@ -38,7 +38,7 @@ test('focus with tabindex', async () => {
   const {element, getEventSnapshot} = setup(`<div tabindex="0" />`, {
     focus: false,
   })
-  focus(element)
+  focusElement(element)
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: div
 
@@ -50,7 +50,7 @@ test('focus with tabindex', async () => {
 
 test('no events fired on a disabled focusable input', async () => {
   const {element, getEventSnapshot} = setup(`<button disabled />`)
-  focus(element)
+  focusElement(element)
   expect(getEventSnapshot()).toMatchInlineSnapshot(
     `No events were fired on: button`,
   )
@@ -59,7 +59,7 @@ test('no events fired on a disabled focusable input', async () => {
 
 test('no events fired on a hidden input', async () => {
   const {element, getEventSnapshot} = setup(`<input type="hidden" />`)
-  focus(element)
+  focusElement(element)
   expect(getEventSnapshot()).toMatchInlineSnapshot(
     `No events were fired on: input[value=""]`,
   )
@@ -68,11 +68,11 @@ test('no events fired on a hidden input', async () => {
 
 test('no events fired if the element is already focused', async () => {
   const {element, getEventSnapshot, clearEventCalls} = setup(`<button />`)
-  focus(element)
+  focusElement(element)
 
   clearEventCalls()
 
-  focus(element)
+  focusElement(element)
   expect(getEventSnapshot()).toMatchInlineSnapshot(
     `No events were fired on: button`,
   )
@@ -88,7 +88,7 @@ test('calls FocusEvents with relatedTarget', async () => {
   const events1 = addListeners(element1)
 
   expect(element0).toHaveFocus()
-  focus(element1)
+  focusElement(element1)
 
   expect(
     events0.getEvents().find((e): e is FocusEvent => e.type === 'blur')
@@ -98,4 +98,55 @@ test('calls FocusEvents with relatedTarget', async () => {
     events1.getEvents().find((e): e is FocusEvent => e.type === 'focus')
       ?.relatedTarget,
   ).toBe(element0)
+})
+
+test('blur a button', async () => {
+  const {element, getEventSnapshot} = setup(`<button />`)
+  blurElement(element)
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
+    Events fired on: button
+
+    button - blur
+    button - focusout
+  `)
+  expect(element).not.toHaveFocus()
+})
+
+test('no events fired on an unblurable input', async () => {
+  const {element, getEventSnapshot} = setup(`<div />`)
+  blurElement(element)
+  expect(getEventSnapshot()).toMatchInlineSnapshot(
+    `No events were fired on: div`,
+  )
+  expect(element).not.toHaveFocus()
+})
+
+test('blur with tabindex', async () => {
+  const {element, getEventSnapshot} = setup(`<div tabindex="0" />`)
+  blurElement(element)
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
+    Events fired on: div
+
+    div - blur
+    div - focusout
+  `)
+  expect(element).not.toHaveFocus()
+})
+
+test('no events fired on a disabled blurable input', async () => {
+  const {element, getEventSnapshot} = setup(`<button disabled />`)
+  blurElement(element)
+  expect(getEventSnapshot()).toMatchInlineSnapshot(
+    `No events were fired on: button`,
+  )
+  expect(element).not.toHaveFocus()
+})
+
+test('no events fired if the element is not focused', async () => {
+  const {element, getEventSnapshot} = setup(`<button />`, {focus: false})
+  blurElement(element)
+  expect(getEventSnapshot()).toMatchInlineSnapshot(
+    `No events were fired on: button`,
+  )
+  expect(element).not.toHaveFocus()
 })

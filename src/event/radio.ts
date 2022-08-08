@@ -1,11 +1,9 @@
-import {dispatchUIEvent} from '../../event'
-import {Config} from '../../setup'
-import {focus} from '../focus/focus'
-import {getWindow} from '../misc/getWindow'
-import {isDisabled} from '../misc/isDisabled'
+import type {Instance} from '../setup'
+import {getWindow, isDisabled} from '../utils'
+import {focusElement} from './focus'
 
 export function walkRadio(
-  config: Config,
+  instance: Instance,
   el: HTMLInputElement & {type: 'radio'},
   direction: -1 | 1,
 ) {
@@ -28,7 +26,7 @@ export function walkRadio(
       continue
     }
 
-    focus(group[i])
-    dispatchUIEvent(config, group[i], 'click')
+    focusElement(group[i])
+    instance.dispatchUIEvent(group[i], 'click')
   }
 }

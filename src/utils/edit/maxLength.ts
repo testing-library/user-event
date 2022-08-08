@@ -1,5 +1,4 @@
 import {isElementType} from '../misc/isElementType'
-import {getValue} from './getValue'
 
 enum maxLengthSupportedTypes {
   'email' = 'email',
@@ -10,43 +9,23 @@ enum maxLengthSupportedTypes {
   'url' = 'url',
 }
 
-export function getSpaceUntilMaxLength(element: Element) {
-  const value = getValue(element)
-
-  /* istanbul ignore if */
-  if (value === null) {
-    return undefined
-  }
-
-  const maxLength = getSanitizedMaxLength(element)
-
-  return maxLength ? maxLength - value.length : undefined
-}
+type ElementWithMaxLengthSupport =
+  | HTMLTextAreaElement
+  | (HTMLInputElement & {type: maxLengthSupportedTypes})
 
 // can't use .maxLength property because of a jsdom bug:
 // https://github.com/jsdom/jsdom/issues/2927
-function getSanitizedMaxLength(element: Element) {
-  if (!supportsMaxLength(element)) {
-    return undefined
-  }
-
+export function getMaxLength(element: ElementWithMaxLengthSupport) {
   const attr = element.getAttribute('maxlength') ?? ''
 
   return /^\d+$/.test(attr) && Number(attr) >= 0 ? Number(attr) : undefined
 }
 
-function supportsMaxLength(
+export function supportsMaxLength(
   element: Element,
-): element is
-  | HTMLTextAreaElement
-  | (HTMLInputElement & {type: maxLengthSupportedTypes}) {
+): element is ElementWithMaxLengthSupport {
   return (
     isElementType(element, 'textarea') ||
-    (isElementType(element, 'input') &&
-      Boolean(
-        maxLengthSupportedTypes[
-          element.type as keyof typeof maxLengthSupportedTypes
-        ],
-      ))
+    (isElementType(element, 'input') && element.type in maxLengthSupportedTypes)
   )
 }

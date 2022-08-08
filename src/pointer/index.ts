@@ -1,6 +1,6 @@
-import {PointerCoords} from '../event'
-import {Config, Instance} from '../setup'
-import {pointerKey, PointerPosition} from '../system/pointer'
+import type {PointerCoords} from '../event'
+import type {Instance} from '../setup'
+import type {pointerKey, PointerPosition} from '../system/pointer'
 import {ApiLevel, setLevelRef, wait} from '../utils'
 import {parseKeyDef} from './parseKeyDef'
 
@@ -37,7 +37,7 @@ export async function pointer(
   this: Instance,
   input: PointerInput,
 ): Promise<void> {
-  const {pointerMap} = this[Config]
+  const {pointerMap} = this.config
 
   const actions: PointerAction[] = []
   ;(Array.isArray(input) ? input : [input]).forEach(actionInput => {
@@ -56,26 +56,26 @@ export async function pointer(
   })
 
   for (let i = 0; i < actions.length; i++) {
-    await wait(this[Config])
+    await wait(this.config)
 
-    await pointerAction(this[Config], actions[i])
+    await pointerAction(this, actions[i])
   }
 
-  this[Config].system.pointer.resetClickCount()
+  this.system.pointer.resetClickCount()
 }
 
-async function pointerAction(config: Config, action: PointerAction) {
+async function pointerAction(instance: Instance, action: PointerAction) {
   const pointerName =
     'pointerName' in action && action.pointerName
       ? action.pointerName
       : 'keyDef' in action
-      ? config.system.pointer.getPointerName(action.keyDef)
+      ? instance.system.pointer.getPointerName(action.keyDef)
       : 'mouse'
 
   const previousPosition =
-    config.system.pointer.getPreviousPosition(pointerName)
+    instance.system.pointer.getPreviousPosition(pointerName)
   const position: PointerPosition = {
-    target: action.target ?? getPrevTarget(config, previousPosition),
+    target: action.target ?? getPrevTarget(instance, previousPosition),
     coords: action.coords ?? previousPosition?.coords,
     caret: {
       node:
@@ -90,23 +90,23 @@ async function pointerAction(config: Config, action: PointerAction) {
   }
 
   if ('keyDef' in action) {
-    if (config.system.pointer.isKeyPressed(action.keyDef)) {
-      setLevelRef(config, ApiLevel.Trigger)
-      await config.system.pointer.release(config, action.keyDef, position)
+    if (instance.system.pointer.isKeyPressed(action.keyDef)) {
+      setLevelRef(instance, ApiLevel.Trigger)
+      await instance.system.pointer.release(instance, action.keyDef, position)
     }
 
     if (!action.releasePrevious) {
-      setLevelRef(config, ApiLevel.Trigger)
-      await config.system.pointer.press(config, action.keyDef, position)
+      setLevelRef(instance, ApiLevel.Trigger)
+      await instance.system.pointer.press(instance, action.keyDef, position)
 
       if (action.releaseSelf) {
-        setLevelRef(config, ApiLevel.Trigger)
-        await config.system.pointer.release(config, action.keyDef, position)
+        setLevelRef(instance, ApiLevel.Trigger)
+        await instance.system.pointer.release(instance, action.keyDef, position)
       }
     }
   } else {
-    setLevelRef(config, ApiLevel.Trigger)
-    await config.system.pointer.move(config, pointerName, position)
+    setLevelRef(instance, ApiLevel.Trigger)
+    await instance.system.pointer.move(instance, pointerName, position)
   }
 }
 
@@ -114,12 +114,12 @@ function hasCaretPosition(action: PointerAction) {
   return !!(action.target ?? action.node ?? action.offset !== undefined)
 }
 
-function getPrevTarget(config: Config, position?: PointerPosition) {
+function getPrevTarget(instance: Instance, position?: PointerPosition) {
   if (!position) {
     throw new Error(
       'This pointer has no previous position. Provide a target property!',
     )
   }
 
-  return position.target ?? config.document.body
+  return position.target ?? instance.config.document.body
 }

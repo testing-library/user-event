@@ -1,7 +1,7 @@
 import type {Options} from '../options'
 import type {PointerInput} from '../pointer'
 import type {System} from '../system'
-import type {UserEventApi} from '.'
+import type {UserEventApi} from './setup'
 import {setupDirect} from './setup'
 
 export type DirectOptions = Options & {
@@ -42,18 +42,18 @@ export function hover(element: Element, options: DirectOptions = {}) {
 }
 
 export async function keyboard(text: string, options: DirectOptions = {}) {
-  const {config, api} = setupDirect(options)
+  const {api, system} = setupDirect(options)
 
-  return api.keyboard(text).then(() => config.system)
+  return api.keyboard(text).then(() => system)
 }
 
 export async function pointer(
   input: PointerInput,
   options: DirectOptions = {},
 ) {
-  const {config, api} = setupDirect(options)
+  const {api, system} = setupDirect(options)
 
-  return api.pointer(input).then(() => config.system)
+  return api.pointer(input).then(() => system)
 }
 
 export function paste(
@@ -84,8 +84,8 @@ export function type(
 }
 
 export function unhover(element: Element, options: DirectOptions = {}) {
-  const {config, api} = setupDirect(options)
-  config.system.pointer.setMousePosition({target: element})
+  const {api, system} = setupDirect(options)
+  system.pointer.setMousePosition({target: element})
 
   return api.unhover(element)
 }

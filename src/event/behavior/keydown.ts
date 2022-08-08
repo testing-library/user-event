@@ -1,68 +1,65 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 
-import {setUISelection} from '../../document'
+import {getUIValue, setUISelection, getValueOrTextContent} from '../../document'
 import {
-  focus,
   getTabDestination,
-  getValue,
   hasOwnSelection,
-  input,
   isContentEditable,
   isEditable,
   isElementType,
-  moveSelection,
-  selectAll,
-  setSelectionRange,
-  walkRadio,
 } from '../../utils'
+import {focusElement} from '../focus'
+import {input} from '../input'
+import {moveSelection, selectAll, setSelectionRange} from '../selection'
+import {walkRadio} from '../radio'
 import {BehaviorPlugin} from '.'
 import {behavior} from './registry'
 
-behavior.keydown = (event, target, config) => {
+behavior.keydown = (event, target, instance) => {
   return (
-    keydownBehavior[event.key]?.(event, target, config) ??
-    combinationBehavior(event, target, config)
+    keydownBehavior[event.key]?.(event, target, instance) ??
+    combinationBehavior(event, target, instance)
   )
 }
 
 const keydownBehavior: {
   [key: string]: BehaviorPlugin<'keydown'> | undefined
 } = {
-  ArrowDown: (event, target, config) => {
+  ArrowDown: (event, target, instance) => {
     /* istanbul ignore else */
     if (isElementType(target, 'input', {type: 'radio'} as const)) {
-      return () => walkRadio(config, target, -1)
+      return () => walkRadio(instance, target, -1)
     }
   },
-  ArrowLeft: (event, target, config) => {
+  ArrowLeft: (event, target, instance) => {
     if (isElementType(target, 'input', {type: 'radio'} as const)) {
-      return () => walkRadio(config, target, -1)
+      return () => walkRadio(instance, target, -1)
     }
     return () => moveSelection(target, -1)
   },
-  ArrowRight: (event, target, config) => {
+  ArrowRight: (event, target, instance) => {
     if (isElementType(target, 'input', {type: 'radio'} as const)) {
-      return () => walkRadio(config, target, 1)
+      return () => walkRadio(instance, target, 1)
     }
     return () => moveSelection(target, 1)
   },
-  ArrowUp: (event, target, config) => {
+  ArrowUp: (event, target, instance) => {
     /* istanbul ignore else */
     if (isElementType(target, 'input', {type: 'radio'} as const)) {
-      return () => walkRadio(config, target, 1)
+      return () => walkRadio(instance, target, 1)
     }
   },
-  Backspace: (event, target, config) => {
+  Backspace: (event, target, instance) => {
     if (isEditable(target)) {
       return () => {
-        input(config, target, '', 'deleteContentBackward')
+        input(instance, target, '', 'deleteContentBackward')
       }
     }
   },
-  Delete: (event, target, config) => {
+  Delete: (event, target, instance) => {
     if (isEditable(target)) {
       return () => {
-        input(config, target, '', 'deleteContentForward')
+        input(instance, target, '', 'deleteContentForward')
       }
     }
   },
@@ -72,7 +69,8 @@ const keydownBehavior: {
       isContentEditable(target)
     ) {
       return () => {
-        const newPos = getValue(target)?.length ?? /* istanbul ignore next */ 0
+        const newPos =
+          getValueOrTextContent(target)?.length ?? /* istanbul ignore next */ 0
         setSelectionRange(target, newPos, newPos)
       }
     }
@@ -90,7 +88,7 @@ const keydownBehavior: {
   PageDown: (event, target) => {
     if (isElementType(target, ['input'])) {
       return () => {
-        const newPos = getValue(target).length
+        const newPos = getUIValue(target).length
         setSelectionRange(target, newPos, newPos)
       }
     }
@@ -102,13 +100,13 @@ const keydownBehavior: {
       }
     }
   },
-  Tab: (event, target, config) => {
+  Tab: (event, target, instance) => {
     return () => {
       const dest = getTabDestination(
         target,
-        config.system.keyboard.modifiers.Shift,
+        instance.system.keyboard.modifiers.Shift,
       )
-      focus(dest)
+      focusElement(dest)
       if (hasOwnSelection(dest)) {
         setUISelection(dest, {
           anchorOffset: 0,
@@ -122,9 +120,9 @@ const keydownBehavior: {
 const combinationBehavior: BehaviorPlugin<'keydown'> = (
   event,
   target,
-  config,
+  instance,
 ) => {
-  if (event.code === 'KeyA' && config.system.keyboard.modifiers.Control) {
+  if (event.code === 'KeyA' && instance.system.keyboard.modifiers.Control) {
     return () => selectAll(target)
   }
 }

@@ -32,3 +32,12 @@ function build(onlyDigitsValue: string, index: number): string {
     .toString()
     .padStart(2, '0')}`
 }
+
+export function isValidDateOrTimeValue(
+  element: HTMLInputElement & {type: 'date' | 'time'},
+  value: string,
+) {
+  const clone = element.cloneNode() as HTMLInputElement
+  clone.value = value
+  return clone.value === value
+}

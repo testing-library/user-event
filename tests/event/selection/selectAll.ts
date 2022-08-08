@@ -1,6 +1,6 @@
 import {setup} from '#testHelpers'
-import {isAllSelected, selectAll} from '#src/utils/focus/selectAll'
 import {getUISelection} from '#src/document'
+import {isAllSelected, selectAll} from '#src/event/selection'
 
 test('select all in input', async () => {
   const {element} = setup<HTMLInputElement>(`<input value="foo bar baz"/>`)

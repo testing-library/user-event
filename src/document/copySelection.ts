@@ -1,8 +1,10 @@
-import {getUISelection, getUIValue} from '../../document'
-import {createDataTransfer} from '../dataTransfer/DataTransfer'
-import {EditableInputType} from '../edit/isEditable'
-import {getWindow} from '../misc/getWindow'
-import {hasOwnSelection} from './selection'
+import {
+  createDataTransfer,
+  EditableInputOrTextarea,
+  getWindow,
+  hasOwnSelection,
+} from '../utils'
+import {getUISelection, getUIValue} from './UI'
 
 export function copySelection(target: Element) {
   const data: Record<string, string> = hasOwnSelection(target)
@@ -20,9 +22,7 @@ export function copySelection(target: Element) {
   return dt
 }
 
-function readSelectedValueFromInput(
-  target: (HTMLInputElement & {type: EditableInputType}) | HTMLTextAreaElement,
-) {
+function readSelectedValueFromInput(target: EditableInputOrTextarea) {
   const sel = getUISelection(target)
   const val = getUIValue(target)
 

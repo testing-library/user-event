@@ -1,5 +1,5 @@
-import {Config, Instance} from '../setup'
-import {keyboardKey} from '../system/keyboard'
+import type {Instance} from '../setup'
+import type {keyboardKey} from '../system/keyboard'
 import {wait} from '../utils'
 import {parseKeyDef} from './parseKeyDef'
 
@@ -11,44 +11,44 @@ interface KeyboardAction {
 }
 
 export async function keyboard(this: Instance, text: string): Promise<void> {
-  const actions: KeyboardAction[] = parseKeyDef(this[Config].keyboardMap, text)
+  const actions: KeyboardAction[] = parseKeyDef(this.config.keyboardMap, text)
 
   for (let i = 0; i < actions.length; i++) {
-    await wait(this[Config])
+    await wait(this.config)
 
-    await keyboardAction(this[Config], actions[i])
+    await keyboardAction(this, actions[i])
   }
 }
 
 async function keyboardAction(
-  config: Config,
+  instance: Instance,
   {keyDef, releasePrevious, releaseSelf, repeat}: KeyboardAction,
 ) {
-  const {system} = config
+  const {system} = instance
 
   // Release the key automatically if it was pressed before.
   if (system.keyboard.isKeyPressed(keyDef)) {
-    await system.keyboard.keyup(config, keyDef)
+    await system.keyboard.keyup(instance, keyDef)
   }
 
   if (!releasePrevious) {
     for (let i = 1; i <= repeat; i++) {
-      await system.keyboard.keydown(config, keyDef)
+      await system.keyboard.keydown(instance, keyDef)
 
       if (i < repeat) {
-        await wait(config)
+        await wait(instance.config)
       }
     }
 
     // Release the key only on the last iteration on `state.repeatKey`.
     if (releaseSelf) {
-      await system.keyboard.keyup(config, keyDef)
+      await system.keyboard.keyup(instance, keyDef)
     }
   }
 }
 
-export async function releaseAllKeys(config: Config) {
-  for (const k of config.system.keyboard.getPressedKeys()) {
-    await config.system.keyboard.keyup(config, k)
+export async function releaseAllKeys(instance: Instance) {
+  for (const k of instance.system.keyboard.getPressedKeys()) {
+    await instance.system.keyboard.keyup(instance, k)
   }
 }

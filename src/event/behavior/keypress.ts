@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 
-import {dispatchUIEvent} from '..'
-import {input, isContentEditable, isEditable, isElementType} from '../../utils'
+import {isContentEditable, isEditable, isElementType} from '../../utils'
+import {input} from '../input'
 import {behavior} from './registry'
 
-behavior.keypress = (event, target, config) => {
+behavior.keypress = (event, target, instance) => {
   if (event.key === 'Enter') {
     if (
       isElementType(target, 'button') ||
@@ -13,7 +13,7 @@ behavior.keypress = (event, target, config) => {
       (isElementType(target, 'a') && Boolean(target.href))
     ) {
       return () => {
-        dispatchUIEvent(config, target, 'click')
+        instance.dispatchUIEvent(target, 'click')
       }
     } else if (isElementType(target, 'input')) {
       const form = target.form
@@ -21,13 +21,13 @@ behavior.keypress = (event, target, config) => {
         'input[type="submit"], button:not([type]), button[type="submit"]',
       )
       if (submit) {
-        return () => dispatchUIEvent(config, submit, 'click')
+        return () => instance.dispatchUIEvent(submit, 'click')
       } else if (
         form &&
         SubmitSingleInputOnEnter.includes(target.type) &&
         form.querySelectorAll('input').length === 1
       ) {
-        return () => dispatchUIEvent(config, form, 'submit')
+        return () => instance.dispatchUIEvent(form, 'submit')
       } else {
         return
       }
@@ -37,13 +37,13 @@ behavior.keypress = (event, target, config) => {
   if (isEditable(target)) {
     const inputType =
       event.key === 'Enter'
-        ? isContentEditable(target) && !config.system.keyboard.modifiers.Shift
+        ? isContentEditable(target) && !instance.system.keyboard.modifiers.Shift
           ? 'insertParagraph'
           : 'insertLineBreak'
         : 'insertText'
     const inputData = event.key === 'Enter' ? '\n' : event.key
 
-    return () => input(config, target, inputData, inputType)
+    return () => input(instance, target, inputData, inputType)
   }
 }
 

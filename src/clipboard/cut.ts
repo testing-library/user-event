@@ -1,9 +1,13 @@
 import {Config, Instance} from '../setup'
-import {copySelection, writeDataTransferToClipboard} from '../utils'
+import {
+  copySelection,
+  getActiveElement,
+  writeDataTransferToClipboard,
+} from '../utils'
 
 export async function cut(this: Instance) {
   const doc = this[Config].document
-  const target = doc.activeElement ?? /* istanbul ignore next */ doc.body
+  const target = getActiveElement(doc) ?? doc.activeElement ?? doc.body
 
   const clipboardData = copySelection(target)
 

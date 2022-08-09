@@ -30,13 +30,6 @@ export function isUISelectionStart(
   return !!start && typeof start === 'object' && UISelection in start
 }
 
-export function setUIValueRaw(
-  element: HTMLInputElement | HTMLTextAreaElement,
-  value: string,
-) {
-  element[UIValue] = value
-}
-
 export function setUIValue(
   element: HTMLInputElement | HTMLTextAreaElement,
   value: string,

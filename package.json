@@ -35,7 +35,7 @@
     "validate": "kcd-scripts typecheck"
   },
   "devDependencies": {
-    "@ph.fritsche/scripts-config": "^2.3.1",
+    "@ph.fritsche/scripts-config": "^2.4.0",
     "@testing-library/dom": "^8.11.4",
     "@testing-library/jest-dom": "^5.16.3",
     "@testing-library/react": "^13.0.0",

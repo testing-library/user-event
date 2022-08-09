@@ -1,5 +1,3 @@
-import {defaultKeyMap as defaultKeyboardMap} from './keyboard/keyMap'
-import {defaultKeyMap as defaultPointerMap} from './pointer/keyMap'
 import type {keyboardKey} from './system/keyboard'
 import type {pointerKey} from './system/pointer'
 
@@ -127,30 +125,4 @@ export interface Options {
    * @example jest.advanceTimersByTime
    */
   advanceTimers?: ((delay: number) => Promise<void>) | ((delay: number) => void)
-}
-
-/**
- * Default options applied when API is called per `userEvent.anyApi()`
- */
-export const defaultOptionsDirect: Required<Options> = {
-  applyAccept: true,
-  autoModify: true,
-  delay: 0,
-  document: globalThis.document,
-  keyboardMap: defaultKeyboardMap,
-  pointerMap: defaultPointerMap,
-  pointerEventsCheck: PointerEventsCheckLevel.EachApiCall,
-  skipAutoClose: false,
-  skipClick: false,
-  skipHover: false,
-  writeToClipboard: false,
-  advanceTimers: () => Promise.resolve(),
-}
-
-/**
- * Default options applied when API is called per `userEvent().anyApi()`
- */
-export const defaultOptionsSetup: Required<Options> = {
-  ...defaultOptionsDirect,
-  writeToClipboard: true,
 }

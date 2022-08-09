@@ -1,11 +1,11 @@
 import {render} from '#testHelpers'
 import {
-  prepareDocument,
   getUIValue,
   setUIValue,
   getUISelection,
   setUISelection,
 } from '#src/document'
+import {prepareDocument} from '#src/document/prepareDocument'
 
 function prepare(element: Element) {
   prepareDocument(element.ownerDocument)

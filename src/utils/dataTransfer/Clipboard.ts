@@ -1,7 +1,8 @@
 // Clipboard is not available in jsdom
 
-import {createDataTransfer, getBlobFromDataTransferItem, readBlobText} from '..'
 import {getWindow} from '../misc/getWindow'
+import {readBlobText} from './Blob'
+import {createDataTransfer, getBlobFromDataTransferItem} from './DataTransfer'
 
 // Clipboard API is only fully available in secure context or for browser extensions.
 

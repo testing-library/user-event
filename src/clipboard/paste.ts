@@ -1,4 +1,4 @@
-import {Config, Instance} from '../setup'
+import type {Instance} from '../setup'
 import {
   createDataTransfer,
   getWindow,
@@ -9,7 +9,7 @@ export async function paste(
   this: Instance,
   clipboardData?: DataTransfer | string,
 ) {
-  const doc = this[Config].document
+  const doc = this.config.document
   const target = doc.activeElement ?? /* istanbul ignore next */ doc.body
 
   const dataTransfer: DataTransfer =

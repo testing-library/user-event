@@ -1,12 +1,7 @@
 import {getConfig} from '@testing-library/dom'
-import {
-  focus,
-  hasPointerEvents,
-  isDisabled,
-  isElementType,
-  wait,
-} from '../utils'
-import {Config, Instance} from '../setup'
+import {hasPointerEvents, isDisabled, isElementType, wait} from '../utils'
+import type {Instance} from '../setup'
+import {focusElement} from '../event'
 
 export async function selectOptions(
   this: Instance,
@@ -78,9 +73,9 @@ async function selectOptionsBase(
     if (select.multiple) {
       for (const option of selectedOptions) {
         const withPointerEvents =
-          this[Config].pointerEventsCheck === 0
+          this.config.pointerEventsCheck === 0
             ? true
-            : hasPointerEvents(this[Config], option)
+            : hasPointerEvents(this, option)
 
         // events fired for multiple select are weird. Can't use hover...
         if (withPointerEvents) {
@@ -94,7 +89,7 @@ async function selectOptionsBase(
           this.dispatchUIEvent(option, 'mousedown')
         }
 
-        focus(select)
+        focusElement(select)
 
         if (withPointerEvents) {
           this.dispatchUIEvent(option, 'pointerup')
@@ -107,18 +102,18 @@ async function selectOptionsBase(
           this.dispatchUIEvent(option, 'click')
         }
 
-        await wait(this[Config])
+        await wait(this.config)
       }
     } else if (selectedOptions.length === 1) {
       const withPointerEvents =
-        this[Config].pointerEventsCheck === 0
+        this.config.pointerEventsCheck === 0
           ? true
-          : hasPointerEvents(this[Config], select)
+          : hasPointerEvents(this, select)
       // the click to open the select options
       if (withPointerEvents) {
         await this.click(select)
       } else {
-        focus(select)
+        focusElement(select)
       }
 
       selectOption(selectedOptions[0] as HTMLOptionElement)
@@ -135,7 +130,7 @@ async function selectOptionsBase(
         this.dispatchUIEvent(select, 'click')
       }
 
-      await wait(this[Config])
+      await wait(this.config)
     } else {
       throw getConfig().getElementError(
         `Cannot select multiple options on a non-multiple select`,

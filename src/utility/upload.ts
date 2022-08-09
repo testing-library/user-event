@@ -5,7 +5,7 @@ import {
   isElementType,
   setFiles,
 } from '../utils'
-import {Config, Instance} from '../setup'
+import type {Instance} from '../setup'
 
 export interface uploadInit {
   changeInit?: EventInit
@@ -29,7 +29,7 @@ export async function upload(
 
   const files = (Array.isArray(fileOrFiles) ? fileOrFiles : [fileOrFiles])
     .filter(
-      file => !this[Config].applyAccept || isAcceptableFile(file, input.accept),
+      file => !this.config.applyAccept || isAcceptableFile(file, input.accept),
     )
     .slice(0, input.multiple ? undefined : 1)
 

@@ -1,25 +1,7 @@
-import type {bindDispatchUIEvent} from '../event'
-import type * as userEventApi from './api'
-import {setupMain, setupSub} from './setup'
-import {Config} from './config'
+import {setupMain} from './setup'
 import * as directApi from './directApi'
 
-export {Config}
-
-export type UserEventApi = typeof userEventApi
-
-export type Instance = UserEventApi & {
-  [Config]: Config
-  dispatchUIEvent: ReturnType<typeof bindDispatchUIEvent>
-}
-
-export type UserEvent = {
-  readonly setup: (...args: Parameters<typeof setupSub>) => UserEvent
-} & {
-  readonly [k in keyof UserEventApi]: (
-    ...args: Parameters<UserEventApi[k]>
-  ) => ReturnType<UserEventApi[k]>
-}
+export type {Instance} from './setup'
 
 export const userEvent = {
   ...directApi,

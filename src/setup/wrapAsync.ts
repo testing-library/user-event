@@ -1,4 +1,4 @@
-import {getConfig as getDOMTestingLibraryConfig} from '@testing-library/dom'
+import {getConfig} from '@testing-library/dom'
 
 /**
  * Wrap an internal Promise
@@ -6,5 +6,5 @@ import {getConfig as getDOMTestingLibraryConfig} from '@testing-library/dom'
 export function wrapAsync<R, P extends (() => Promise<R>) | (() => R)>(
   implementation: P,
 ): Promise<R> {
-  return getDOMTestingLibraryConfig().asyncWrapper(implementation)
+  return getConfig().asyncWrapper(implementation)
 }

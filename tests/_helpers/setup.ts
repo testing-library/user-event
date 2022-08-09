@@ -1,7 +1,8 @@
 import {addListeners, EventHandlers} from './listeners'
 import userEvent from '#src'
 import {Options} from '#src/options'
-import {FOCUSABLE_SELECTOR, setSelection} from '#src/utils'
+import {FOCUSABLE_SELECTOR} from '#src/utils'
+import {setSelection} from '#src/event/selection'
 
 export function render<Elements extends Element | Element[] = HTMLElement>(
   ui: string,

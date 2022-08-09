@@ -1,7 +1,6 @@
-import {dispatchUIEvent} from '../../event'
-import {Config} from '../../setup'
+import type {Instance} from '../../setup'
 import {assertPointerEvents, getTreeDiff, hasPointerEvents} from '../../utils'
-import {isDifferentPointerPosition, pointerKey, PointerPosition} from '.'
+import {isDifferentPointerPosition, pointerKey, PointerPosition} from './shared'
 
 type PointerInit = {
   pointerId: number
@@ -27,24 +26,24 @@ export class Pointer {
 
   position: PointerPosition = {}
 
-  init(config: Config, position: PointerPosition) {
+  init(instance: Instance, position: PointerPosition) {
     this.position = position
 
-    const target = this.getTarget(config)
+    const target = this.getTarget(instance)
     const [, enter] = getTreeDiff(null, target)
     const init = this.getEventInit()
 
-    assertPointerEvents(config, target)
+    assertPointerEvents(instance, target)
 
-    dispatchUIEvent(config, target, 'pointerover', init)
-    enter.forEach(el => dispatchUIEvent(config, el, 'pointerenter', init))
+    instance.dispatchUIEvent(target, 'pointerover', init)
+    enter.forEach(el => instance.dispatchUIEvent(el, 'pointerenter', init))
 
     return this
   }
 
-  move(config: Config, position: PointerPosition) {
+  move(instance: Instance, position: PointerPosition) {
     const prevPosition = this.position
-    const prevTarget = this.getTarget(config)
+    const prevTarget = this.getTarget(instance)
 
     this.position = position
 
@@ -52,7 +51,7 @@ export class Pointer {
       return
     }
 
-    const nextTarget = this.getTarget(config)
+    const nextTarget = this.getTarget(instance)
 
     const init = this.getEventInit()
 
@@ -60,76 +59,77 @@ export class Pointer {
 
     return {
       leave: () => {
-        if (hasPointerEvents(config, prevTarget)) {
+        if (hasPointerEvents(instance, prevTarget)) {
           if (prevTarget !== nextTarget) {
-            dispatchUIEvent(config, prevTarget, 'pointerout', init)
+            instance.dispatchUIEvent(prevTarget, 'pointerout', init)
             leave.forEach(el =>
-              dispatchUIEvent(config, el, 'pointerleave', init),
+              instance.dispatchUIEvent(el, 'pointerleave', init),
             )
           }
         }
       },
       enter: () => {
-        assertPointerEvents(config, nextTarget)
+        assertPointerEvents(instance, nextTarget)
 
         if (prevTarget !== nextTarget) {
-          dispatchUIEvent(config, nextTarget, 'pointerover', init)
-          enter.forEach(el => dispatchUIEvent(config, el, 'pointerenter', init))
+          instance.dispatchUIEvent(nextTarget, 'pointerover', init)
+          enter.forEach(el =>
+            instance.dispatchUIEvent(el, 'pointerenter', init),
+          )
         }
       },
       move: () => {
-        dispatchUIEvent(config, nextTarget, 'pointermove', init)
+        instance.dispatchUIEvent(nextTarget, 'pointermove', init)
       },
     }
   }
 
-  down(config: Config, _keyDef: pointerKey) {
+  down(instance: Instance, _keyDef: pointerKey) {
     if (this.isDown) {
       return
     }
-    const target = this.getTarget(config)
+    const target = this.getTarget(instance)
 
-    assertPointerEvents(config, target)
+    assertPointerEvents(instance, target)
 
     this.isDown = true
-    this.isPrevented = !dispatchUIEvent(
-      config,
+    this.isPrevented = !instance.dispatchUIEvent(
       target,
       'pointerdown',
       this.getEventInit(),
     )
   }
 
-  up(config: Config, _keyDef: pointerKey) {
+  up(instance: Instance, _keyDef: pointerKey) {
     if (!this.isDown) {
       return
     }
-    const target = this.getTarget(config)
+    const target = this.getTarget(instance)
 
-    assertPointerEvents(config, target)
+    assertPointerEvents(instance, target)
 
     this.isDown = false
-    dispatchUIEvent(config, target, 'pointerup', this.getEventInit())
+    instance.dispatchUIEvent(target, 'pointerup', this.getEventInit())
   }
 
-  release(config: Config) {
-    const target = this.getTarget(config)
+  release(instance: Instance) {
+    const target = this.getTarget(instance)
     const [leave] = getTreeDiff(target, null)
     const init = this.getEventInit()
 
     // Currently there is no PointerEventsCheckLevel that would
     // make this check not use the *asserted* cached value from `up`.
     /* istanbul ignore else */
-    if (hasPointerEvents(config, target)) {
-      dispatchUIEvent(config, target, 'pointerout', init)
-      leave.forEach(el => dispatchUIEvent(config, el, 'pointerleave', init))
+    if (hasPointerEvents(instance, target)) {
+      instance.dispatchUIEvent(target, 'pointerout', init)
+      leave.forEach(el => instance.dispatchUIEvent(el, 'pointerleave', init))
     }
 
     this.isCancelled = true
   }
 
-  private getTarget(config: Config) {
-    return this.position.target ?? config.document.body
+  private getTarget(instance: Instance) {
+    return this.position.target ?? instance.config.document.body
   }
 
   private getEventInit(): PointerEventInit {

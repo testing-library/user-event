@@ -1,10 +1,12 @@
-import {getUIValue} from '../../document'
-import {isContentEditable} from './isContentEditable'
+import {isContentEditable} from '../utils'
+import {getUIValue} from './UI'
 
-export function getValue<T extends Element | null>(
+export function getValueOrTextContent<T extends Element | null>(
   element: T,
 ): T extends HTMLInputElement | HTMLTextAreaElement ? string : string | null
-export function getValue(element: Element | null): string | null | undefined {
+export function getValueOrTextContent(
+  element: Element | null,
+): string | null | undefined {
   // istanbul ignore if
   if (!element) {
     return null

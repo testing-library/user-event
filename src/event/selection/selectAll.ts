@@ -1,17 +1,13 @@
 import {getUISelection, getUIValue} from '../../document'
-import {getContentEditable} from '../edit/isContentEditable'
-import {editableInputTypes} from '../edit/isEditable'
-import {isElementType} from '../misc/isElementType'
-import {setSelection} from './selection'
+import {hasOwnSelection} from '../../utils'
+import {getContentEditable} from '../../utils/edit/isContentEditable'
+import {setSelection} from './setSelection'
 
 /**
  * Expand a selection like the browser does when pressing Ctrl+A.
  */
 export function selectAll(target: Element): void {
-  if (
-    isElementType(target, 'textarea') ||
-    (isElementType(target, 'input') && target.type in editableInputTypes)
-  ) {
+  if (hasOwnSelection(target)) {
     return setSelection({
       focusNode: target,
       anchorOffset: 0,
@@ -28,10 +24,7 @@ export function selectAll(target: Element): void {
 }
 
 export function isAllSelected(target: Element): boolean {
-  if (
-    isElementType(target, 'textarea') ||
-    (isElementType(target, 'input') && target.type in editableInputTypes)
-  ) {
+  if (hasOwnSelection(target)) {
     return (
       getUISelection(target).startOffset === 0 &&
       getUISelection(target).endOffset === getUIValue(target).length

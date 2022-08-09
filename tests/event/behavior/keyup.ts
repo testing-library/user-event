@@ -1,14 +1,17 @@
 import cases from 'jest-in-case'
-import {dispatchUIEvent} from '#src/event'
-import {createConfig} from '#src/setup/setup'
+import {createConfig, createInstance} from '#src/setup/setup'
 import {render} from '#testHelpers'
+
+function setupInstance() {
+  return createInstance(createConfig()).instance
+}
 
 cases(
   'trigger click for [Space]',
   ({html, hasClick = true, hasChange = false}) => {
     const {element, eventWasFired, getEvents} = render(html)
 
-    dispatchUIEvent(createConfig(), element, 'keyup', {key: ' '})
+    setupInstance().dispatchUIEvent(element, 'keyup', {key: ' '})
 
     expect(eventWasFired('click')).toBe(hasClick)
     if (hasClick) {

@@ -1,16 +1,15 @@
-import {dispatchUIEvent, EventType} from '../../event'
-import {Config} from '../../setup'
 import {
-  focus,
-  getTreeDiff,
-  isDisabled,
+  EventType,
+  focusElement,
   modifySelectionPerMouseMove,
   SelectionRange,
   setSelectionPerMouseDown,
-} from '../../utils'
-import {isDifferentPointerPosition, pointerKey, PointerPosition} from '.'
+} from '../../event'
+import type {Instance} from '../../setup'
+import {getTreeDiff, isDisabled} from '../../utils'
 import {Buttons, getMouseEventButton, MouseButton} from './buttons'
 import type {Pointer} from './pointer'
+import {isDifferentPointerPosition, pointerKey, PointerPosition} from './shared'
 
 /**
  * This object is the single "virtual" mouse that might be controlled by multiple different pointer devices.
@@ -67,9 +66,9 @@ export class Mouse {
     }
   })()
 
-  move(config: Config, position: PointerPosition) {
+  move(instance: Instance, position: PointerPosition) {
     const prevPosition = this.position
-    const prevTarget = this.getTarget(config)
+    const prevTarget = this.getTarget(instance)
 
     this.position = position
 
@@ -77,7 +76,7 @@ export class Mouse {
       return
     }
 
-    const nextTarget = this.getTarget(config)
+    const nextTarget = this.getTarget(instance)
 
     const init = this.getEventInit('mousemove')
 
@@ -86,42 +85,41 @@ export class Mouse {
     return {
       leave: () => {
         if (prevTarget !== nextTarget) {
-          dispatchUIEvent(config, prevTarget, 'mouseout', init)
-          leave.forEach(el => dispatchUIEvent(config, el, 'mouseleave', init))
+          instance.dispatchUIEvent(prevTarget, 'mouseout', init)
+          leave.forEach(el => instance.dispatchUIEvent(el, 'mouseleave', init))
         }
       },
       enter: () => {
         if (prevTarget !== nextTarget) {
-          dispatchUIEvent(config, nextTarget, 'mouseover', init)
-          enter.forEach(el => dispatchUIEvent(config, el, 'mouseenter', init))
+          instance.dispatchUIEvent(nextTarget, 'mouseover', init)
+          enter.forEach(el => instance.dispatchUIEvent(el, 'mouseenter', init))
         }
       },
       move: () => {
-        dispatchUIEvent(config, nextTarget, 'mousemove', init)
+        instance.dispatchUIEvent(nextTarget, 'mousemove', init)
 
-        this.modifySelecting(config)
+        this.modifySelecting(instance)
       },
     }
   }
 
-  down(config: Config, keyDef: pointerKey, pointer: Pointer) {
+  down(instance: Instance, keyDef: pointerKey, pointer: Pointer) {
     const button = this.buttons.down(keyDef)
 
     if (button === undefined) {
       return
     }
 
-    const target = this.getTarget(config)
+    const target = this.getTarget(instance)
     this.buttonDownTarget[button] = target
     const disabled = isDisabled(target)
     const init = this.getEventInit('mousedown', keyDef.button)
-    if (disabled || dispatchUIEvent(config, target, 'mousedown', init)) {
-      this.startSelecting(config, init.detail as number)
-      focus(target)
+    if (disabled || instance.dispatchUIEvent(target, 'mousedown', init)) {
+      this.startSelecting(instance, init.detail as number)
+      focusElement(target)
     }
     if (!disabled && getMouseEventButton(keyDef.button) === 2) {
-      dispatchUIEvent(
-        config,
+      instance.dispatchUIEvent(
         target,
         'contextmenu',
         this.getEventInit('contextmenu', keyDef.button, pointer),
@@ -129,16 +127,15 @@ export class Mouse {
     }
   }
 
-  up(config: Config, keyDef: pointerKey, pointer: Pointer) {
+  up(instance: Instance, keyDef: pointerKey, pointer: Pointer) {
     const button = this.buttons.up(keyDef)
 
     if (button === undefined) {
       return
     }
-    const target = this.getTarget(config)
+    const target = this.getTarget(instance)
     if (!isDisabled(target)) {
-      dispatchUIEvent(
-        config,
+      instance.dispatchUIEvent(
         target,
         'mouseup',
         this.getEventInit('mouseup', keyDef.button),
@@ -152,14 +149,13 @@ export class Mouse {
       if (clickTarget) {
         const init = this.getEventInit('click', keyDef.button, pointer)
         if (init.detail) {
-          dispatchUIEvent(
-            config,
+          instance.dispatchUIEvent(
             clickTarget,
             init.button === 0 ? 'click' : 'auxclick',
             init,
           )
           if (init.button === 0 && init.detail === 2) {
-            dispatchUIEvent(config, clickTarget, 'dblclick', {
+            instance.dispatchUIEvent(clickTarget, 'dblclick', {
               ...this.getEventInit('dblclick', keyDef.button),
               detail: init.detail,
             })
@@ -202,29 +198,29 @@ export class Mouse {
     return init
   }
 
-  private getTarget(config: Config) {
-    return this.position.target ?? config.document.body
+  private getTarget(instance: Instance) {
+    return this.position.target ?? instance.config.document.body
   }
 
-  private startSelecting(config: Config, clickCount: number) {
+  private startSelecting(instance: Instance, clickCount: number) {
     // TODO: support extending range (shift)
 
     this.selecting = setSelectionPerMouseDown({
-      document: config.document,
-      target: this.getTarget(config),
+      document: instance.config.document,
+      target: this.getTarget(instance),
       node: this.position.caret?.node,
       offset: this.position.caret?.offset,
       clickCount,
     })
   }
 
-  private modifySelecting(config: Config) {
+  private modifySelecting(instance: Instance) {
     if (!this.selecting) {
       return
     }
     modifySelectionPerMouseMove(this.selecting, {
-      document: config.document,
-      target: this.getTarget(config),
+      document: instance.config.document,
+      target: this.getTarget(instance),
       node: this.position.caret?.node,
       offset: this.position.caret?.offset,
     })

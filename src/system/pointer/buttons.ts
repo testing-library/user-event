@@ -1,4 +1,4 @@
-import type {pointerKey} from '.'
+import type {pointerKey} from './shared'
 
 export class Buttons {
   private readonly pressed: Record<string, pointerKey[]> = {}

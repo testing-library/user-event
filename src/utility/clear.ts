@@ -1,19 +1,13 @@
-import {Config, Instance} from '../setup'
-import {
-  focus,
-  input,
-  isAllSelected,
-  isDisabled,
-  isEditable,
-  selectAll,
-} from '../utils'
+import {focusElement, input, isAllSelected, selectAll} from '../event'
+import type {Instance} from '../setup'
+import {isDisabled, isEditable} from '../utils'
 
 export async function clear(this: Instance, element: Element) {
   if (!isEditable(element) || isDisabled(element)) {
     throw new Error('clear()` is only supported on editable elements.')
   }
 
-  focus(element)
+  focusElement(element)
 
   if (element.ownerDocument.activeElement !== element) {
     throw new Error('The element to be cleared could not be focused.')
@@ -25,5 +19,5 @@ export async function clear(this: Instance, element: Element) {
     throw new Error('The element content to be cleared could not be selected.')
   }
 
-  input(this[Config], element, '', 'deleteContentBackward')
+  input(this, element, '', 'deleteContentBackward')
 }

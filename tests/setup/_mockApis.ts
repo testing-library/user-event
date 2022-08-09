@@ -1,4 +1,4 @@
-import {Instance, UserEventApi} from '#src/setup'
+import type {Instance, UserEventApi} from '#src/setup/setup'
 
 // The following hacky mocking allows us to spy on imported API functions.
 // This way we can test assertions on the wiring of arguments without repeating tests of each API implementation.

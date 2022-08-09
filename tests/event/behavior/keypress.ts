@@ -1,12 +1,15 @@
 import cases from 'jest-in-case'
-import {dispatchUIEvent} from '#src/event'
-import {createConfig} from '#src/setup/setup'
+import {createConfig, createInstance} from '#src/setup/setup'
 import {render} from '#testHelpers'
+
+function setupInstance() {
+  return createInstance(createConfig()).instance
+}
 
 test('trigger input event for character key', () => {
   const {element, getEvents} = render<HTMLInputElement>(`<input/>`)
 
-  dispatchUIEvent(createConfig(), element, 'keypress', {key: 'x'})
+  setupInstance().dispatchUIEvent(element, 'keypress', {key: 'x'})
 
   expect(getEvents('input')).toHaveLength(1)
   expect(getEvents('input')[0]).toHaveProperty('data', 'x')
@@ -17,7 +20,7 @@ test('trigger input event for character key', () => {
 test('do not trigger input event outside of editable context', () => {
   const {element, eventWasFired} = render(`<div></div>`)
 
-  dispatchUIEvent(createConfig(), element, 'keypress', {key: 'x'})
+  setupInstance().dispatchUIEvent(element, 'keypress', {key: 'x'})
 
   expect(eventWasFired('beforeinput')).toBe(false)
   expect(eventWasFired('input')).toBe(false)
@@ -30,12 +33,12 @@ cases(
       selection: {focusOffset: 0},
     })
 
-    const config = createConfig()
+    const instance = setupInstance()
     if (shiftKey) {
-      config.system.keyboard.modifiers.Shift = true
+      instance.system.keyboard.modifiers.Shift = true
     }
 
-    dispatchUIEvent(config, element, 'keypress', {
+    instance.dispatchUIEvent(element, 'keypress', {
       key: 'Enter',
       shiftKey,
     })
@@ -80,7 +83,7 @@ test('trigger input event for [Enter] on textarea', () => {
     `<textarea></textarea>`,
   )
 
-  dispatchUIEvent(createConfig(), element, 'keypress', {key: 'x'})
+  setupInstance().dispatchUIEvent(element, 'keypress', {key: 'x'})
 
   expect(getEvents('input')).toHaveLength(1)
   expect(getEvents('input')[0]).toHaveProperty('data', 'x')
@@ -93,7 +96,7 @@ cases(
   ({html, hasClick = true}) => {
     const {element, eventWasFired, getEvents} = render(html)
 
-    dispatchUIEvent(createConfig(), element, 'keypress', {key: 'Enter'})
+    setupInstance().dispatchUIEvent(element, 'keypress', {key: 'Enter'})
 
     expect(eventWasFired('click')).toBe(hasClick)
     if (hasClick) {
@@ -126,7 +129,7 @@ cases(
   async ({html, click, submit}) => {
     const {eventWasFired, xpathNode} = render(html, {focus: 'form/*[2]'})
 
-    dispatchUIEvent(createConfig(), xpathNode('form/*[2]'), 'keypress', {
+    setupInstance().dispatchUIEvent(xpathNode('form/*[2]'), 'keypress', {
       key: 'Enter',
     })
 

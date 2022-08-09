@@ -1,6 +1,8 @@
-import {prepareDocument} from '../document'
-import {bindDispatchUIEvent} from '../event'
-import {defaultOptionsDirect, defaultOptionsSetup, Options} from '../options'
+import {prepareDocument} from '../document/prepareDocument'
+import {dispatchEvent, dispatchUIEvent} from '../event'
+import {defaultKeyMap as defaultKeyboardMap} from '../keyboard/keyMap'
+import {defaultKeyMap as defaultPointerMap} from '../pointer/keyMap'
+import {Options, PointerEventsCheckLevel} from '../options'
 import {
   ApiLevel,
   attachClipboardStubToView,
@@ -9,14 +11,58 @@ import {
   wait,
 } from '../utils'
 import {System} from '../system'
-import type {Instance, UserEvent, UserEventApi} from './index'
-import {Config} from './config'
 import * as userEventApi from './api'
 import {wrapAsync} from './wrapAsync'
 import {DirectOptions} from './directApi'
 
+/**
+ * Default options applied when API is called per `userEvent.anyApi()`
+ */
+const defaultOptionsDirect: Required<Options> = {
+  applyAccept: true,
+  autoModify: true,
+  delay: 0,
+  document: globalThis.document,
+  keyboardMap: defaultKeyboardMap,
+  pointerMap: defaultPointerMap,
+  pointerEventsCheck: PointerEventsCheckLevel.EachApiCall,
+  skipAutoClose: false,
+  skipClick: false,
+  skipHover: false,
+  writeToClipboard: false,
+  advanceTimers: () => Promise.resolve(),
+}
+
+/**
+ * Default options applied when API is called per `userEvent().anyApi()`
+ */
+const defaultOptionsSetup: Required<Options> = {
+  ...defaultOptionsDirect,
+  writeToClipboard: true,
+}
+
+export type UserEventApi = typeof userEventApi
+
+export type UserEvent = {
+  readonly setup: (...args: Parameters<typeof setupSub>) => UserEvent
+} & {
+  readonly [k in keyof UserEventApi]: (
+    ...args: Parameters<UserEventApi[k]>
+  ) => ReturnType<UserEventApi[k]>
+}
+
+export type Instance = UserEventApi & {
+  config: Config
+  dispatchEvent: OmitThisParameter<typeof dispatchEvent>
+  dispatchUIEvent: OmitThisParameter<typeof dispatchUIEvent>
+  system: System
+  levelRefs: Record<number, object | undefined>
+}
+
+export type Config = Required<Options>
+
 export function createConfig(
-  options: Partial<Config> = {},
+  options: Options = {},
   defaults: Required<Options> = defaultOptionsSetup,
   node?: Node,
 ): Config {
@@ -26,7 +72,6 @@ export function createConfig(
     ...defaults,
     ...options,
     document,
-    system: options.system ?? new System(),
   }
 }
 
@@ -42,7 +87,7 @@ export function setupMain(options: Options = {}) {
     config.document.defaultView ?? /* istanbul ignore next */ globalThis.window
   attachClipboardStubToView(view)
 
-  return doSetup(config)
+  return createInstance(config).api
 }
 
 /**
@@ -53,23 +98,16 @@ export function setupDirect(
     keyboardState,
     pointerState,
     ...options
-  }: DirectOptions & // backward-compatibility
-  {keyboardState?: System; pointerState?: System} = {},
+  }: DirectOptions & {keyboardState?: System; pointerState?: System} = {}, // backward-compatibility
   node?: Node,
 ) {
-  const config = createConfig(
-    {
-      ...options,
-      system: pointerState ?? keyboardState,
-    },
-    defaultOptionsDirect,
-    node,
-  )
+  const config = createConfig(options, defaultOptionsDirect, node)
   prepareDocument(config.document)
+  const system = pointerState ?? keyboardState ?? new System()
 
   return {
-    config,
-    api: doSetup(config),
+    api: createInstance(config, system).api,
+    system,
   }
 }
 
@@ -77,10 +115,7 @@ export function setupDirect(
  * Create a set of callbacks with different default settings but the same state.
  */
 export function setupSub(this: Instance, options: Options) {
-  return doSetup({
-    ...this[Config],
-    ...options,
-  })
+  return createInstance({...this.config, ...options}, this.system).api
 }
 
 function wrapAndBindImpl<
@@ -88,11 +123,11 @@ function wrapAndBindImpl<
   Impl extends (this: Instance, ...args: Args) => Promise<unknown>,
 >(instance: Instance, impl: Impl) {
   function method(...args: Args) {
-    setLevelRef(instance[Config], ApiLevel.Call)
+    setLevelRef(instance, ApiLevel.Call)
 
     return wrapAsync(() =>
       impl.apply(instance, args).then(async ret => {
-        await wait(instance[Config])
+        await wait(instance.config)
         return ret
       }),
     )
@@ -102,20 +137,34 @@ function wrapAndBindImpl<
   return method
 }
 
-function doSetup(config: Config): UserEvent {
-  const instance: Instance = {
-    [Config]: config,
-    dispatchUIEvent: bindDispatchUIEvent(config),
+export function createInstance(
+  config: Config,
+  system: System = new System(),
+): {
+  instance: Instance
+  api: UserEvent
+} {
+  const instance = {} as Instance
+  Object.assign(instance, {
+    config,
+    dispatchEvent: dispatchEvent.bind(instance),
+    dispatchUIEvent: dispatchUIEvent.bind(instance),
+    system,
+    levelRefs: {},
     ...userEventApi,
-  }
+  })
+
   return {
-    ...(Object.fromEntries(
-      Object.entries(userEventApi).map(([name, api]) => [
-        name,
-        wrapAndBindImpl(instance, api),
-      ]),
-    ) as UserEventApi),
-    setup: setupSub.bind(instance),
+    instance,
+    api: {
+      ...(Object.fromEntries(
+        Object.entries(userEventApi).map(([name, api]) => [
+          name,
+          wrapAndBindImpl(instance, api),
+        ]),
+      ) as UserEventApi),
+      setup: setupSub.bind(instance),
+    },
   }
 }
 

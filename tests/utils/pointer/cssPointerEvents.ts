@@ -1,6 +1,10 @@
-import {createConfig} from '#src/setup/setup'
+import {createConfig, createInstance} from '#src/setup/setup'
 import {assertPointerEvents, hasPointerEvents} from '#src/utils'
 import {setup} from '#testHelpers'
+
+function setupInstance() {
+  return createInstance(createConfig()).instance
+}
 
 test('get pointer-events from element or ancestor', async () => {
   const {element} = setup(`
@@ -11,10 +15,10 @@ test('get pointer-events from element or ancestor', async () => {
         </div>
     `)
 
-  expect(hasPointerEvents(createConfig(), element)).toBe(false)
-  expect(hasPointerEvents(createConfig(), element.children[0])).toBe(true)
-  expect(hasPointerEvents(createConfig(), element.children[1])).toBe(false)
-  expect(hasPointerEvents(createConfig(), element.children[2])).toBe(false)
+  expect(hasPointerEvents(setupInstance(), element)).toBe(false)
+  expect(hasPointerEvents(setupInstance(), element.children[0])).toBe(true)
+  expect(hasPointerEvents(setupInstance(), element.children[1])).toBe(false)
+  expect(hasPointerEvents(setupInstance(), element.children[2])).toBe(false)
 })
 
 test('report element that declared pointer-events', async () => {
@@ -34,7 +38,7 @@ test('report element that declared pointer-events', async () => {
     </div>
   `)
 
-  expect(() => assertPointerEvents(createConfig(), element))
+  expect(() => assertPointerEvents(setupInstance(), element))
     .toThrowErrorMatchingInlineSnapshot(`
     Unable to perform pointer interaction as the element has \`pointer-events: none\`:
 
@@ -43,7 +47,7 @@ test('report element that declared pointer-events', async () => {
 
   expect(() =>
     assertPointerEvents(
-      createConfig(),
+      setupInstance(),
       element.querySelector('[data-testid="target"]') as Element,
     ),
   ).toThrowErrorMatchingInlineSnapshot(`
@@ -57,7 +61,7 @@ test('report element that declared pointer-events', async () => {
 
   expect(() =>
     assertPointerEvents(
-      createConfig(),
+      setupInstance(),
       element.querySelector('button') as Element,
     ),
   ).toThrowErrorMatchingInlineSnapshot(`
@@ -71,7 +75,7 @@ test('report element that declared pointer-events', async () => {
 
   expect(() =>
     assertPointerEvents(
-      createConfig(),
+      setupInstance(),
       element.querySelector('input') as Element,
     ),
   ).toThrowErrorMatchingInlineSnapshot(`

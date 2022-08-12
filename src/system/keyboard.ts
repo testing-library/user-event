@@ -1,5 +1,4 @@
-import {dispatchUIEvent} from '../event'
-import {Config} from '../setup'
+import type {Instance} from '../setup'
 import {getActiveElementOrBody} from '../utils'
 import type {System} from '.'
 
@@ -91,11 +90,11 @@ export class KeyboardHost {
   }
 
   /** Press a key */
-  async keydown(config: Config, keyDef: keyboardKey) {
+  async keydown(instance: Instance, keyDef: keyboardKey) {
     const key = String(keyDef.key)
     const code = String(keyDef.code)
 
-    const target = getActiveElementOrBody(config.document)
+    const target = getActiveElementOrBody(instance.config.document)
     this.setKeydownTarget(target)
 
     this.pressed[code] ??= {
@@ -107,7 +106,7 @@ export class KeyboardHost {
       this.modifiers[key] = true
     }
 
-    const unprevented = dispatchUIEvent(config, target, 'keydown', {
+    const unprevented = instance.dispatchUIEvent(target, 'keydown', {
       key,
       code,
     })
@@ -120,9 +119,8 @@ export class KeyboardHost {
     this.pressed[code].unpreventedDefault ||= unprevented
 
     if (unprevented && this.hasKeyPress(key)) {
-      dispatchUIEvent(
-        config,
-        getActiveElementOrBody(config.document),
+      instance.dispatchUIEvent(
+        getActiveElementOrBody(instance.config.document),
         'keypress',
         {
           key,
@@ -135,7 +133,7 @@ export class KeyboardHost {
   }
 
   /** Release a key */
-  async keyup(config: Config, keyDef: keyboardKey) {
+  async keyup(instance: Instance, keyDef: keyboardKey) {
     const key = String(keyDef.key)
     const code = String(keyDef.code)
 
@@ -151,9 +149,8 @@ export class KeyboardHost {
       this.modifiers[key] = false
     }
 
-    dispatchUIEvent(
-      config,
-      getActiveElementOrBody(config.document),
+    instance.dispatchUIEvent(
+      getActiveElementOrBody(instance.config.document),
       'keyup',
       {
         key,

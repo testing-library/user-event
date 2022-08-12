@@ -1,6 +1,6 @@
-import {Config} from '../../setup'
+import type {Instance} from '../../setup'
 
-export function wait(config: Config) {
+export function wait(config: Instance['config']) {
   const delay = config.delay
   if (typeof delay !== 'number') {
     return

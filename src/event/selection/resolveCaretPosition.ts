@@ -1,5 +1,5 @@
 import {getUIValue} from '../../document'
-import {hasOwnSelection} from '..'
+import {hasOwnSelection} from '../../utils'
 
 export function resolveCaretPosition({
   target,

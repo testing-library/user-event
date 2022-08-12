@@ -1,20 +1,19 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 
 import {isClickableInput} from '../../utils'
-import {dispatchUIEvent} from '..'
 import {BehaviorPlugin} from '.'
 import {behavior} from './registry'
 
-behavior.keyup = (event, target, config) => {
-  return keyupBehavior[event.key]?.(event, target, config)
+behavior.keyup = (event, target, instance) => {
+  return keyupBehavior[event.key]?.(event, target, instance)
 }
 
 const keyupBehavior: {
   [key: string]: BehaviorPlugin<'keyup'> | undefined
 } = {
-  ' ': (event, target, config) => {
+  ' ': (event, target, instance) => {
     if (isClickableInput(target)) {
-      return () => dispatchUIEvent(config, target, 'click')
+      return () => instance.dispatchUIEvent(target, 'click')
     }
   },
 }

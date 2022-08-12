@@ -1,30 +1,12 @@
 import {System} from '..'
-import {PointerCoords} from '../../event'
-import {Config} from '../../setup'
-import {Buttons, MouseButton} from './buttons'
+import {Instance} from '../../setup'
+import {Buttons} from './buttons'
 import {Device} from './device'
 import {Mouse} from './mouse'
 import {Pointer} from './pointer'
+import {pointerKey, PointerPosition} from './shared'
 
-export interface pointerKey {
-  /** Name of the pointer key */
-  name: string
-  /** Type of the pointer device */
-  pointerType: 'mouse' | 'pen' | 'touch'
-  /** Type of button */
-  button?: MouseButton
-}
-
-export interface PointerPosition {
-  target?: Element
-  coords?: PointerCoords
-  caret?: CaretPosition
-}
-
-export interface CaretPosition {
-  node?: Node
-  offset?: number
-}
+export type {pointerKey, PointerPosition} from './shared'
 
 export class PointerHost {
   readonly system: System
@@ -98,11 +80,15 @@ export class PointerHost {
     return this.devices.get(keyDef.pointerType).isPressed(keyDef)
   }
 
-  async press(config: Config, keyDef: pointerKey, position: PointerPosition) {
+  async press(
+    instance: Instance,
+    keyDef: pointerKey,
+    position: PointerPosition,
+  ) {
     const pointerName = this.getPointerName(keyDef)
     const pointer =
       keyDef.pointerType === 'touch'
-        ? this.pointers.new(pointerName, keyDef).init(config, position)
+        ? this.pointers.new(pointerName, keyDef).init(instance, position)
         : this.pointers.get(pointerName)
 
     // TODO: deprecate the following implicit setting of position
@@ -114,25 +100,29 @@ export class PointerHost {
     this.devices.get(keyDef.pointerType).addPressed(keyDef)
 
     this.buttons.down(keyDef)
-    pointer.down(config, keyDef)
+    pointer.down(instance, keyDef)
 
     if (pointer.pointerType !== 'touch' && !pointer.isPrevented) {
-      this.mouse.down(config, keyDef, pointer)
+      this.mouse.down(instance, keyDef, pointer)
     }
   }
 
-  async move(config: Config, pointerName: string, position: PointerPosition) {
+  async move(
+    instance: Instance,
+    pointerName: string,
+    position: PointerPosition,
+  ) {
     const pointer = this.pointers.get(pointerName)
 
     // In (some?) browsers this order of events can be observed.
     // This interweaving of events is probably unnecessary.
     // While the order of mouse (or pointer) events is defined per spec,
     // the order in which they interweave/follow on a user interaction depends on the implementation.
-    const pointermove = pointer.move(config, position)
+    const pointermove = pointer.move(instance, position)
     const mousemove =
       pointer.pointerType === 'touch' || (pointer.isPrevented && pointer.isDown)
         ? undefined
-        : this.mouse.move(config, position)
+        : this.mouse.move(instance, position)
 
     pointermove?.leave()
     mousemove?.leave()
@@ -142,7 +132,11 @@ export class PointerHost {
     mousemove?.move()
   }
 
-  async release(config: Config, keyDef: pointerKey, position: PointerPosition) {
+  async release(
+    instance: Instance,
+    keyDef: pointerKey,
+    position: PointerPosition,
+  ) {
     const device = this.devices.get(keyDef.pointerType)
     device.removePressed(keyDef)
 
@@ -157,29 +151,29 @@ export class PointerHost {
     }
 
     if (device.countPressed === 0) {
-      pointer.up(config, keyDef)
+      pointer.up(instance, keyDef)
     }
 
     if (pointer.pointerType === 'touch') {
-      pointer.release(config)
+      pointer.release(instance)
     }
 
     if (!pointer.isPrevented) {
       if (pointer.pointerType === 'touch' && !pointer.isMultitouch) {
-        const mousemove = this.mouse.move(config, pointer.position)
+        const mousemove = this.mouse.move(instance, pointer.position)
         mousemove?.leave()
         mousemove?.enter()
         mousemove?.move()
 
-        this.mouse.down(config, keyDef, pointer)
+        this.mouse.down(instance, keyDef, pointer)
       }
       if (!pointer.isMultitouch) {
-        const mousemove = this.mouse.move(config, pointer.position)
+        const mousemove = this.mouse.move(instance, pointer.position)
         mousemove?.leave()
         mousemove?.enter()
         mousemove?.move()
 
-        this.mouse.up(config, keyDef, pointer)
+        this.mouse.up(instance, keyDef, pointer)
       }
     }
   }
@@ -198,25 +192,12 @@ export class PointerHost {
     this.mouse.resetClickCount()
   }
 
-  getMouseTarget(config: Config) {
-    return this.mouse.position.target ?? config.document.body
+  getMouseTarget(instance: Instance) {
+    return this.mouse.position.target ?? instance.config.document.body
   }
 
   setMousePosition(position: PointerPosition) {
     this.mouse.position = position
     this.pointers.get('mouse').position = position
   }
-}
-
-export function isDifferentPointerPosition(
-  positionA: PointerPosition,
-  positionB: PointerPosition,
-) {
-  return (
-    positionA.target !== positionB.target ||
-    positionA.coords?.x !== positionB.coords?.y ||
-    positionA.coords?.y !== positionB.coords?.y ||
-    positionA.caret?.node !== positionB.caret?.node ||
-    positionA.caret?.offset !== positionB.caret?.offset
-  )
 }

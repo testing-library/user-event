@@ -1,15 +1,18 @@
 import cases from 'jest-in-case'
 import {getUISelection} from '#src/document'
-import {dispatchUIEvent} from '#src/event'
-import {createConfig} from '#src/setup/setup'
 import {render} from '#testHelpers'
+import {createConfig, createInstance} from '#src/setup/setup'
+
+function setupInstance() {
+  return createInstance(createConfig()).instance
+}
 
 describe('restrict certain keydown behavior to editable context', () => {
   ;['Backspace', 'Delete', 'End', 'Home', 'PageUp', 'PageDown'].forEach(key => {
     test(key, () => {
       const {element, getEvents} = render(`<div tabIndex="1"></div>`)
 
-      dispatchUIEvent(createConfig(), element, 'keydown', {key})
+      setupInstance().dispatchUIEvent(element, 'keydown', {key})
 
       expect(getEvents().map(e => e.type)).toEqual(['keydown'])
     })
@@ -23,7 +26,7 @@ cases(
       selection,
     })
 
-    dispatchUIEvent(createConfig(), element, 'keydown', {
+    setupInstance().dispatchUIEvent(element, 'keydown', {
       key,
     })
 
@@ -95,7 +98,7 @@ cases(
     )
 
     expected.forEach(expectedSelection => {
-      dispatchUIEvent(createConfig(), div, 'keydown', {key})
+      setupInstance().dispatchUIEvent(div, 'keydown', {key})
 
       const {focusNode, focusOffset} = document.getSelection() as Selection
       expect({focusNode, focusOffset}).toEqual({
@@ -188,7 +191,7 @@ cases(
       selection: {focusNode: 'div/text()', anchorOffset: 2, focusOffset: 4},
     })
 
-    dispatchUIEvent(createConfig(), element, 'keydown', {key})
+    setupInstance().dispatchUIEvent(element, 'keydown', {key})
 
     const {focusNode, focusOffset} = document.getSelection() as Selection
     expect({focusNode, focusOffset}).toEqual({
@@ -213,10 +216,10 @@ test('select input per `Control+A`', async () => {
     selection: {focusOffset: 5},
   })
 
-  const config = createConfig()
-  config.system.keyboard.modifiers.Control = true
+  const instance = setupInstance()
+  instance.system.keyboard.modifiers.Control = true
 
-  dispatchUIEvent(config, element, 'keydown', {code: 'KeyA'})
+  instance.dispatchUIEvent(element, 'keydown', {code: 'KeyA'})
 
   expect(element).toHaveProperty('selectionStart', 0)
   expect(element).toHaveProperty('selectionEnd', 11)
@@ -229,7 +232,7 @@ cases(
       selection: {focusOffset: 2},
     })
 
-    dispatchUIEvent(createConfig(), element, 'keydown', {key})
+    setupInstance().dispatchUIEvent(element, 'keydown', {key})
 
     expect(getEvents('input')[0]).toHaveProperty('inputType', inputType)
     expect(element).toHaveValue(expectedValue)
@@ -258,10 +261,10 @@ cases(
       },
     )
 
-    const config = createConfig()
-    config.system.keyboard.modifiers.Shift = shiftKey
+    const instance = setupInstance()
+    instance.system.keyboard.modifiers.Shift = shiftKey
 
-    dispatchUIEvent(config, document.activeElement as Element, 'keydown', {
+    instance.dispatchUIEvent(document.activeElement as Element, 'keydown', {
       key: 'Tab',
     })
 
@@ -321,7 +324,7 @@ cases(
     )
 
     const active = document.activeElement as Element
-    dispatchUIEvent(createConfig(), active, 'keydown', {key})
+    setupInstance().dispatchUIEvent(active, 'keydown', {key})
 
     if (expectedTarget) {
       const target = xpathNode(expectedTarget)

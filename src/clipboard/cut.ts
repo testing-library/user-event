@@ -1,6 +1,6 @@
-import {Config, Instance} from '../setup'
+import {copySelection} from '../document'
+import type {Instance} from '../setup'
 import {
-  copySelection,
   getActiveElement,
   writeDataTransferToClipboard,
 } from '../utils'
@@ -19,7 +19,7 @@ export async function cut(this: Instance) {
     this.dispatchUIEvent(target, 'cut', {
       clipboardData,
     }) &&
-    this[Config].writeToClipboard
+    this.config.writeToClipboard
   ) {
     await writeDataTransferToClipboard(target.ownerDocument, clipboardData)
   }

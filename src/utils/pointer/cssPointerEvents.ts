@@ -1,11 +1,14 @@
 import {PointerEventsCheckLevel} from '../../options'
-import {Config} from '../../setup'
-import {ApiLevel, getLevelRef} from '..'
+import type {Instance} from '../../setup'
 import {getWindow} from '../misc/getWindow'
 import {isElementType} from '../misc/isElementType'
+import {ApiLevel, getLevelRef} from '../misc/level'
 
-export function hasPointerEvents(config: Config, element: Element): boolean {
-  return checkPointerEvents(config, element)?.pointerEvents !== 'none'
+export function hasPointerEvents(
+  instance: Instance,
+  element: Element,
+): boolean {
+  return checkPointerEvents(instance, element)?.pointerEvents !== 'none'
 }
 
 function closestPointerEventsDeclaration(element: Element):
@@ -42,22 +45,23 @@ declare global {
   }
 }
 
-function checkPointerEvents(config: Config, element: Element) {
+function checkPointerEvents(instance: Instance, element: Element) {
   const lastCheck = element[PointerEventsCheck]
 
   const needsCheck =
-    config.pointerEventsCheck !== PointerEventsCheckLevel.Never &&
+    instance.config.pointerEventsCheck !== PointerEventsCheckLevel.Never &&
     (!lastCheck ||
       (hasBitFlag(
-        config.pointerEventsCheck,
+        instance.config.pointerEventsCheck,
         PointerEventsCheckLevel.EachApiCall,
       ) &&
-        lastCheck[ApiLevel.Call] !== getLevelRef(config, ApiLevel.Call)) ||
+        lastCheck[ApiLevel.Call] !== getLevelRef(instance, ApiLevel.Call)) ||
       (hasBitFlag(
-        config.pointerEventsCheck,
+        instance.config.pointerEventsCheck,
         PointerEventsCheckLevel.EachTrigger,
       ) &&
-        lastCheck[ApiLevel.Trigger] !== getLevelRef(config, ApiLevel.Trigger)))
+        lastCheck[ApiLevel.Trigger] !==
+          getLevelRef(instance, ApiLevel.Trigger)))
 
   if (!needsCheck) {
     return lastCheck?.result
@@ -66,16 +70,16 @@ function checkPointerEvents(config: Config, element: Element) {
   const declaration = closestPointerEventsDeclaration(element)
 
   element[PointerEventsCheck] = {
-    [ApiLevel.Call]: getLevelRef(config, ApiLevel.Call),
-    [ApiLevel.Trigger]: getLevelRef(config, ApiLevel.Trigger),
+    [ApiLevel.Call]: getLevelRef(instance, ApiLevel.Call),
+    [ApiLevel.Trigger]: getLevelRef(instance, ApiLevel.Trigger),
     result: declaration,
   }
 
   return declaration
 }
 
-export function assertPointerEvents(config: Config, element: Element) {
-  const declaration = checkPointerEvents(config, element)
+export function assertPointerEvents(instance: Instance, element: Element) {
+  const declaration = checkPointerEvents(instance, element)
 
   if (declaration?.pointerEvents === 'none') {
     throw new Error(

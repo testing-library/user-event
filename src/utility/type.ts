@@ -1,11 +1,11 @@
 import type {Instance} from '../setup'
-import {setSelectionRange} from '../utils'
 import {releaseAllKeys} from '../keyboard'
-import {Config} from '../setup/config'
+import {setSelectionRange} from '../event/selection'
+import type {Options} from '../options'
 
 export interface typeOptions {
-  skipClick?: Config['skipClick']
-  skipAutoClose?: Config['skipClick']
+  skipClick?: Options['skipClick']
+  skipAutoClose?: Options['skipAutoClose']
   initialSelectionStart?: number
   initialSelectionEnd?: number
 }
@@ -15,8 +15,8 @@ export async function type(
   element: Element,
   text: string,
   {
-    skipClick = this[Config].skipClick,
-    skipAutoClose = this[Config].skipAutoClose,
+    skipClick = this.config.skipClick,
+    skipAutoClose = this.config.skipAutoClose,
     initialSelectionStart,
     initialSelectionEnd,
   }: typeOptions = {},
@@ -40,6 +40,6 @@ export async function type(
   await this.keyboard(text)
 
   if (!skipAutoClose) {
-    await releaseAllKeys(this[Config])
+    await releaseAllKeys(this)
   }
 }

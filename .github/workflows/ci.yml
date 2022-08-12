@@ -15,19 +15,10 @@ on:
     branches-ignore: ['all-contributors/**']
 jobs:
   validate:
-    strategy:
-      matrix:
-        node: [12, 14, 16]
     runs-on: ubuntu-latest
     steps:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v2
-
-      - name: ⎔ Setup node
-        uses: actions/setup-node@v2
-        with:
-          node-version: ${{ matrix.node }}
-
       - name: 📥 Download deps
         uses: bahmutov/npm-install@v1
         with:
@@ -56,12 +47,6 @@ jobs:
     steps:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v2
-
-      - name: ⎔ Setup node
-        uses: actions/setup-node@v2
-        with:
-          node-version: 14
-
       - name: 📥 Download deps
         uses: bahmutov/npm-install@v1
         with:

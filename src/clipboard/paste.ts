@@ -1,4 +1,4 @@
-import {Config, Instance} from '../setup'
+import type {Instance} from '../setup'
 import {
   createDataTransfer,
   getActiveElement,
@@ -10,8 +10,10 @@ export async function paste(
   this: Instance,
   clipboardData?: DataTransfer | string,
 ) {
+
   const doc = this[Config].document
   const target = getActiveElement(doc) ?? doc.activeElement ?? doc.body
+
   const dataTransfer: DataTransfer =
     (typeof clipboardData === 'string'
       ? getClipboardDataFromString(doc, clipboardData)

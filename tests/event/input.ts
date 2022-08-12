@@ -1,8 +1,13 @@
 import cases from 'jest-in-case'
-import {input} from '#src/utils'
 import {render, setup} from '#testHelpers'
-import {createConfig} from '#src/setup/setup'
+import {createConfig, createInstance} from '#src/setup/setup'
 import {getUIValue} from '#src/document'
+import {input} from '#src/event'
+
+function setupInstance() {
+  return createInstance(createConfig()).instance
+}
+
 ;[`<input value="abcd"/>`, `<textarea>abcd</textarea>`].forEach(html => {
   cases(
     `input on ${html}`,
@@ -20,7 +25,7 @@ import {getUIValue} from '#src/document'
         },
       )
 
-      input(createConfig(), element, data, inputType)
+      input(setupInstance(), element, data, inputType)
 
       expect(element).toHaveValue(value)
       expect(getEvents('beforeinput')[0]).toHaveProperty('data', data)
@@ -98,7 +103,7 @@ cases(
       },
     )
 
-    input(createConfig(), element, data, inputType)
+    input(setupInstance(), element, data, inputType)
 
     expect(element).toHaveTextContent(textContent)
     expect(getEvents('beforeinput')[0]).toHaveProperty('data', data)
@@ -161,7 +166,7 @@ cases(
       },
     )
 
-    input(createConfig(), element, data, inputType)
+    input(setupInstance(), element, data, inputType)
 
     expect(element.innerHTML).toBe(html)
     expect(getEvents('beforeinput')[0]).toHaveProperty('data', data)
@@ -222,13 +227,13 @@ test('prevent input on `beforeinput` event', () => {
     e => e.data === 'a' && e.preventDefault(),
   )
 
-  input(createConfig(), element, 'a')
+  input(setupInstance(), element, 'a')
 
   expect(eventWasFired('beforeinput')).toBe(true)
   expect(eventWasFired('input')).toBe(false)
   expect(element).toHaveValue('')
 
-  input(createConfig(), element, 'b')
+  input(setupInstance(), element, 'b')
   expect(eventWasFired('input')).toBe(true)
   expect(element).toHaveValue('b')
 })
@@ -238,7 +243,7 @@ cases(
   ({html, data, inputType, expectedValue}) => {
     const {element, eventWasFired} = render(html)
 
-    input(createConfig(), element, data, inputType)
+    input(setupInstance(), element, data, inputType)
 
     expect(element).toHaveValue(expectedValue)
     expect(eventWasFired('beforeinput')).toBe(true)
@@ -283,7 +288,7 @@ test('edit `<input type="date"/>`', async () => {
   const {element} = setup<HTMLInputElement>('<input type="date" />')
 
   Array.from('2020-06-29').forEach(key => {
-    input(createConfig(), element, key)
+    input(setupInstance(), element, key)
   })
 
   expect(element).toHaveValue('2020-06-29')
@@ -295,7 +300,7 @@ cases(
     const {element} = setup('<input type="time" />')
 
     Array.from(data).forEach(key => {
-      input(createConfig(), element, key)
+      input(setupInstance(), element, key)
     })
 
     expect(element).toHaveValue(value)
@@ -326,7 +331,7 @@ test.each([
     )
 
     Array.from(data).forEach(key => {
-      input(createConfig(), element, key)
+      input(setupInstance(), element, key)
     })
 
     expect(element).toHaveValue(expectedValue)

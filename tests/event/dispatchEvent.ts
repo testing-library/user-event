@@ -1,6 +1,5 @@
-import {dispatchUIEvent} from '#src/event'
 import {behavior, BehaviorPlugin} from '#src/event/behavior'
-import {createConfig} from '#src/setup/setup'
+import {createConfig, createInstance} from '#src/setup/setup'
 import {render} from '#testHelpers'
 
 jest.mock('#src/event/behavior', () => ({
@@ -17,10 +16,14 @@ afterEach(() => {
   jest.clearAllMocks()
 })
 
+function setupInstance() {
+  return createInstance(createConfig()).instance
+}
+
 test('keep default behavior', () => {
   const {element} = render(`<input type="checkbox"/>`)
 
-  dispatchUIEvent(createConfig(), element, 'click')
+  setupInstance().dispatchUIEvent(element, 'click')
 
   expect(mockPlugin).toBeCalledTimes(1)
   expect(element).toBeChecked()
@@ -32,7 +35,7 @@ test('replace default behavior', () => {
   const mockBehavior = jest.fn()
   mockPlugin.mockImplementationOnce(() => mockBehavior)
 
-  dispatchUIEvent(createConfig(), element, 'click')
+  setupInstance().dispatchUIEvent(element, 'click')
 
   expect(mockPlugin).toBeCalledTimes(1)
   expect(element).not.toBeChecked()
@@ -50,7 +53,7 @@ test('prevent replaced default behavior', () => {
   const mockBehavior = jest.fn()
   mockPlugin.mockImplementationOnce(() => mockBehavior)
 
-  dispatchUIEvent(createConfig(), element, 'click')
+  setupInstance().dispatchUIEvent(element, 'click')
 
   expect(mockPlugin).toBeCalledTimes(1)
   expect(element).not.toBeChecked()

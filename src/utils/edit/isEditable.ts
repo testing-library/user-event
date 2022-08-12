@@ -8,16 +8,14 @@ export function isEditable(
   element: Element,
 ): element is
   | GuardedType<typeof isContentEditable>
-  | GuardedType<typeof isEditableInput>
-  | (HTMLTextAreaElement & {readOnly: false}) {
+  | (EditableInputOrTextarea & {readOnly: false}) {
   return (
-    isEditableInput(element) ||
-    isElementType(element, 'textarea', {readOnly: false}) ||
+    (isEditableInputOrTextArea(element) && !element.readOnly) ||
     isContentEditable(element)
   )
 }
 
-export enum editableInputTypes {
+enum editableInputTypes {
   'text' = 'text',
   'date' = 'date',
   'datetime-local' = 'datetime-local',
@@ -32,16 +30,15 @@ export enum editableInputTypes {
   'week' = 'week',
 }
 
-export type EditableInputType = keyof typeof editableInputTypes
+export type EditableInputOrTextarea =
+  | HTMLTextAreaElement
+  | (HTMLInputElement & {type: editableInputTypes})
 
-export function isEditableInput(
+export function isEditableInputOrTextArea(
   element: Element,
-): element is HTMLInputElement & {
-  readOnly: false
-  type: editableInputTypes
-} {
+): element is EditableInputOrTextarea {
   return (
-    isElementType(element, 'input', {readOnly: false}) &&
-    Boolean(editableInputTypes[element.type as editableInputTypes])
+    isElementType(element, 'textarea') ||
+    (isElementType(element, 'input') && element.type in editableInputTypes)
   )
 }

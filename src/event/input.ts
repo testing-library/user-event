@@ -4,23 +4,19 @@ import {
   getUIValue,
   setUIValue,
   UISelectionRange,
-} from '../../document'
-import {dispatchUIEvent} from '../../event'
-import {Config} from '../../setup'
+} from '../document'
+import type {Instance} from '../setup'
 import {
-  getInputRange,
+  buildTimeValue,
+  EditableInputOrTextarea,
+  getMaxLength,
   getNextCursorPosition,
   isElementType,
-  setSelection,
-} from '../../utils'
-import {buildTimeValue} from './buildTimeValue'
-import {editableInputTypes} from './isEditable'
-import {isValidDateOrTimeValue} from './isValidDateOrTimeValue'
-import {getSpaceUntilMaxLength} from './maxLength'
+  isValidDateOrTimeValue,
+  supportsMaxLength,
+} from '../utils'
+import {getInputRange, setSelection} from './selection'
 
-type EditableInputOrTextarea =
-  | (HTMLInputElement & {type: editableInputTypes})
-  | HTMLTextAreaElement
 type DateOrTimeInput = HTMLInputElement & {type: 'date' | 'time'}
 
 function isDateOrTime(element: Element): element is DateOrTimeInput {
@@ -30,7 +26,7 @@ function isDateOrTime(element: Element): element is DateOrTimeInput {
 }
 
 export function input(
-  config: Config,
+  instance: Instance,
   element: Element,
   data: string,
   inputType: string = 'insertText',
@@ -44,7 +40,7 @@ export function input(
 
   // There is no `beforeinput` event on `date` and `time` input
   if (!isDateOrTime(element)) {
-    const unprevented = dispatchUIEvent(config, element, 'beforeinput', {
+    const unprevented = instance.dispatchUIEvent(element, 'beforeinput', {
       inputType,
       data,
     })
@@ -55,10 +51,10 @@ export function input(
   }
 
   if ('startContainer' in inputRange) {
-    editContenteditable(config, element, inputRange, data, inputType)
+    editContenteditable(instance, element, inputRange, data, inputType)
   } else {
     editInputElement(
-      config,
+      instance,
       element as EditableInputOrTextarea,
       inputRange,
       data,
@@ -68,7 +64,7 @@ export function input(
 }
 
 function editContenteditable(
-  config: Config,
+  instance: Instance,
   element: Element,
   inputRange: Range,
   data: string,
@@ -115,24 +111,27 @@ function editContenteditable(
   }
 
   if (del || data) {
-    dispatchUIEvent(config, element, 'input', {inputType})
+    instance.dispatchUIEvent(element, 'input', {inputType})
   }
 }
 
 function editInputElement(
-  config: Config,
+  instance: Instance,
   element: EditableInputOrTextarea,
   inputRange: UISelectionRange,
   data: string,
   inputType: string,
 ) {
   let dataToInsert = data
-  const spaceUntilMaxLength = getSpaceUntilMaxLength(element)
-  if (spaceUntilMaxLength !== undefined && data.length > 0) {
-    if (spaceUntilMaxLength > 0) {
-      dataToInsert = data.substring(0, spaceUntilMaxLength)
-    } else {
-      return
+  if (supportsMaxLength(element)) {
+    const maxLength = getMaxLength(element)
+    if (maxLength !== undefined && data.length > 0) {
+      const spaceUntilMaxLength = maxLength - element.value.length
+      if (spaceUntilMaxLength > 0) {
+        dataToInsert = data.substring(0, spaceUntilMaxLength)
+      } else {
+        return
+      }
     }
   }
 
@@ -167,12 +166,12 @@ function editInputElement(
 
   if (isDateOrTime(element)) {
     if (isValidDateOrTimeValue(element, newValue)) {
-      commitInput(config, element, newOffset, {})
-      dispatchUIEvent(config, element, 'change')
+      commitInput(instance, element, newOffset, {})
+      instance.dispatchUIEvent(element, 'change')
       clearInitialValue(element)
     }
   } else {
-    commitInput(config, element, newOffset, {
+    commitInput(instance, element, newOffset, {
       data,
       inputType,
     })
@@ -227,12 +226,12 @@ function calculateNewValue(
 }
 
 function commitInput(
-  config: Config,
+  instance: Instance,
   element: EditableInputOrTextarea,
   newOffset: number,
   inputInit: InputEventInit,
 ) {
-  dispatchUIEvent(config, element, 'input', inputInit)
+  instance.dispatchUIEvent(element, 'input', inputInit)
 
   commitValueAfterInput(element, newOffset)
 }

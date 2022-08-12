@@ -1,11 +1,11 @@
+import {focusElement} from '#src/event'
 import {
   getInputRange,
-  focus,
-  setSelection,
-  setSelectionRange,
   modifySelection,
   moveSelection,
-} from '#src/utils'
+  setSelection,
+  setSelectionRange,
+} from '#src/event/selection'
 import {setup} from '#testHelpers'
 
 test('range on input', async () => {
@@ -119,7 +119,7 @@ describe('update selection when moving focus into element with own selection imp
     setSelection({focusNode: text, focusOffset: 1})
     expect(document.getSelection()).toHaveProperty('focusNode', text)
 
-    focus(input)
+    focusElement(input)
     expect(document.getSelection()).toHaveProperty('anchorNode', input)
     expect(document.getSelection()).toHaveProperty('anchorOffset', 0)
     expect(document.getSelection()).toHaveProperty('focusNode', input)
@@ -135,7 +135,7 @@ describe('update selection when moving focus into element with own selection imp
     expect(document.getSelection()).toHaveProperty('focusNode', text)
     expect(document.getSelection()).toHaveProperty('focusOffset', 1)
 
-    focus(input)
+    focusElement(input)
     expect(document.getSelection()).toHaveProperty('anchorNode', text)
     expect(document.getSelection()).toHaveProperty('anchorOffset', 1)
     expect(document.getSelection()).toHaveProperty('focusNode', text)
@@ -156,7 +156,7 @@ describe('update selection when moving focus into element with own selection imp
     expect(document.getSelection()).toHaveProperty('focusNode', text)
     expect(document.getSelection()).toHaveProperty('focusOffset', 2)
 
-    focus(input)
+    focusElement(input)
     expect(document.getSelection()).toHaveProperty('anchorNode', text)
     expect(document.getSelection()).toHaveProperty('anchorOffset', 0)
     expect(document.getSelection()).toHaveProperty('focusNode', text)
@@ -177,7 +177,7 @@ describe('update selection when moving focus into element with own selection imp
     expect(document.getSelection()).toHaveProperty('focusNode', text)
     expect(document.getSelection()).toHaveProperty('focusOffset', 2)
 
-    focus(input)
+    focusElement(input)
     expect(document.getSelection()).toHaveProperty('anchorNode', element)
     expect(document.getSelection()).toHaveProperty('anchorOffset', 0)
     expect(document.getSelection()).toHaveProperty('focusNode', element)

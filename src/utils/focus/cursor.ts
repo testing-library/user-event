@@ -1,4 +1,5 @@
-import {isContentEditable, isElementType} from '..'
+import {isContentEditable} from '../edit/isContentEditable'
+import {isElementType} from '../misc/isElementType'
 
 declare global {
   interface Text {

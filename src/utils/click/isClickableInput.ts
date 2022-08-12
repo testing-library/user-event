@@ -10,13 +10,14 @@ enum clickableInputTypes {
   'checkbox' = 'checkbox',
   'radio' = 'radio',
 }
-export type ClickableInputType = keyof typeof clickableInputTypes
+
+export type ClickableInputOrButton =
+  | HTMLButtonElement
+  | (HTMLInputElement & {type: clickableInputTypes})
 
 export function isClickableInput(
   element: Element,
-): element is
-  | HTMLButtonElement
-  | (HTMLInputElement & {type: clickableInputTypes}) {
+): element is ClickableInputOrButton {
   return (
     isElementType(element, 'button') ||
     (isElementType(element, 'input') && element.type in clickableInputTypes)

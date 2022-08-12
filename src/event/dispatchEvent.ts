@@ -1,10 +1,31 @@
-import {Config} from '../setup'
-import {EventType} from './types'
+import type {Instance} from '../setup'
+import {EventType, EventTypeInit} from './types'
 import {behavior, BehaviorPlugin} from './behavior'
 import {wrapEvent} from './wrapEvent'
+import {isKeyboardEvent, isMouseEvent} from './eventMap'
+import {createEvent} from './createEvent'
+
+export function dispatchUIEvent<K extends EventType>(
+  this: Instance,
+  target: Element,
+  type: K,
+  init?: EventTypeInit<K>,
+  preventDefault: boolean = false,
+) {
+  if (isMouseEvent(type) || isKeyboardEvent(type)) {
+    init = {
+      ...init,
+      ...this.system.getUIEventModifiers(),
+    } as EventTypeInit<K>
+  }
+
+  const event = createEvent(type, target, init)
+
+  return dispatchEvent.call(this, target, event, preventDefault)
+}
 
 export function dispatchEvent(
-  config: Config,
+  this: Instance,
   target: Element,
   event: Event,
   preventDefault: boolean = false,
@@ -15,7 +36,7 @@ export function dispatchEvent(
     : (behavior[type] as BehaviorPlugin<EventType> | undefined)?.(
         event,
         target,
-        config,
+        this,
       )
 
   if (behaviorImplementation) {
@@ -40,4 +61,13 @@ export function dispatchEvent(
   }
 
   return wrapEvent(() => target.dispatchEvent(event), target)
+}
+
+export function dispatchDOMEvent<K extends EventType>(
+  target: Element,
+  type: K,
+  init?: EventTypeInit<K>,
+) {
+  const event = createEvent(type, target, init)
+  wrapEvent(() => target.dispatchEvent(event), target)
 }

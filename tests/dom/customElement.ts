@@ -121,7 +121,8 @@ test('Render open shadow DOM element - type', async () => {
   expect((element as ShadowInput).value).toEqual('test')
 })
 
-test('Render open shadow DOM element - copy', async () => {
+describe('on shadow DOM', () => {
+  test('copy', async () => {
   const {element, user} = setup('<shadow-input></shadow-input>', {
     focus: false,
   })

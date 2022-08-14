@@ -1,5 +1,6 @@
 import userEvent from '#src'
 import {render, setup} from '#testHelpers'
+import '../_helpers/shadow-input'
 
 test('copy selected value', async () => {
   const {getEvents, user} = setup<HTMLInputElement>(
@@ -96,5 +97,17 @@ describe('without Clipboard API', () => {
 
     const dt = await userEvent.copy()
     expect(dt?.getData('text/plain')).toBe('bar')
+  })
+})
+
+describe('on shadow DOM', () => {
+  test('copy in an input element', async () => {
+    const {user} = setup('<shadow-input value="test"></shadow-input>', {
+      selection: {anchorOffset: 0, focusOffset: 4},
+    })
+
+    const data = await user.copy()
+
+    expect(data?.getData('text')).toEqual('test')
   })
 })

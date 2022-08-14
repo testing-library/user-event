@@ -1,5 +1,7 @@
+import type {ShadowInput} from '../_helpers/shadow-input'
 import userEvent from '#src'
 import {render, setup} from '#testHelpers'
+import '../_helpers/shadow-input'
 
 test('cut selected value', async () => {
   const {getEvents, user} = setup<HTMLInputElement>(
@@ -104,5 +106,20 @@ describe('without Clipboard API', () => {
 
     const dt = await userEvent.cut()
     expect(dt?.getData('text/plain')).toBe('bar')
+  })
+})
+describe('on shadow DOM', () => {
+  test('cut in an input element', async () => {
+    const {element, user} = setup(
+      '<shadow-input value="test"></shadow-input>',
+      {
+        selection: {anchorOffset: 0, focusOffset: 4},
+      },
+    )
+
+    const data = await user.cut()
+
+    expect(data?.getData('text')).toEqual('test')
+    expect((element as ShadowInput).value.length).toEqual(0)
   })
 })

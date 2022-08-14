@@ -97,10 +97,6 @@ describe('on shadow DOM', () => {
   test('type into an input element', async () => {
     const {element, user} = setup('<shadow-input></shadow-input>')
 
-    const inputElement = element.shadowRoot?.querySelector('input')
-    if (inputElement) {
-      await user.click(inputElement)
-    }
     // Skip click because delegatesFocus is not implemented in jsdom
     await user.type(element, 'test', {skipClick: true})
 

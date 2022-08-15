@@ -6,7 +6,7 @@ describe('focus tests with not shadow root', () => {
   test('focus input element', async () => {
     const {element} = setup('<input />')
 
-    expect(getActiveElement(document)).toBe(element)
+    expect(getActiveElementOrBody(document)).toBe(element)
   })
 
   test('focus should be body', async () => {

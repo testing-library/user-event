@@ -1,6 +1,6 @@
 import type {ShadowInput} from '../_helpers/shadow-input'
+import {defineShadowInputCustomElementIfNotDefined} from '../_helpers/shadow-input'
 import {setup} from '#testHelpers'
-import '../_helpers/shadow-input'
 
 test('type into input', async () => {
   const {element, getEventSnapshot, user} = setup('<input value="foo"/>', {
@@ -95,11 +95,12 @@ test('do nothing on disabled element', async () => {
 
 describe('on shadow DOM', () => {
   test('type into an input element', async () => {
-    const {element, user} = setup('<shadow-input></shadow-input>')
+    defineShadowInputCustomElementIfNotDefined()
+    const {element, user} = setup<ShadowInput>('<shadow-input></shadow-input>')
 
-    // Skip click because delegatesFocus is not implemented in jsdom
+    // Skip click because the element is already focused
     await user.type(element, 'test', {skipClick: true})
 
-    expect((element as ShadowInput).value).toEqual('test')
+    expect(element.value).toEqual('test')
   })
 })

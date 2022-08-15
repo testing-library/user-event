@@ -1,23 +1,25 @@
-import '../../_helpers/shadow-input'
+import {
+  defineShadowInputCustomElementIfNotDefined,
+  ShadowInput,
+} from '../../_helpers/shadow-input'
 import {setup} from '#testHelpers'
 import {getActiveElement, getActiveElementOrBody} from '#src/utils'
 
-describe('focus tests with not shadow root', () => {
-  test('focus input element', async () => {
-    const {element} = setup('<input />')
+test('focused input element', async () => {
+  const {element} = setup('<input />')
 
-    expect(getActiveElementOrBody(document)).toBe(element)
-  })
+  expect(getActiveElementOrBody(document)).toBe(element)
+})
 
-  test('focus should be body', async () => {
-    setup('<input />', {focus: false})
-
-    expect(getActiveElementOrBody(document)).toBe(document.body)
-  })
+test('focus should be body', async () => {
+  const {element} = setup<HTMLInputElement>('<input />', {focus: false})
+  element.blur()
+  expect(getActiveElementOrBody(document)).toBe(document.body)
 })
 
 describe('on shadow DOM', () => {
   test('focus contained input element', async () => {
+    defineShadowInputCustomElementIfNotDefined()
     const {element} = setup('<shadow-input></shadow-input>')
 
     expect(getActiveElement(document)).toBe(
@@ -25,8 +27,11 @@ describe('on shadow DOM', () => {
     )
   })
   test('focus just body', async () => {
-    setup('<shadow-input></shadow-input>', {focus: false})
-
+    defineShadowInputCustomElementIfNotDefined()
+    const {element} = setup<ShadowInput>('<shadow-input></shadow-input>', {
+      focus: false,
+    })
+    element.blur()
     expect(getActiveElementOrBody(document)).toBe(document.body)
   })
 })

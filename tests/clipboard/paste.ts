@@ -1,8 +1,8 @@
 import type {ShadowInput} from '../_helpers/shadow-input'
+import {defineShadowInputCustomElementIfNotDefined} from '../_helpers/shadow-input'
 import userEvent from '#src'
 import {render, setup} from '#testHelpers'
 import {createDataTransfer} from '#src/utils'
-import '../_helpers/shadow-input'
 
 test('paste with empty clipboard', async () => {
   const {element, getEvents, user} = setup(`<input/>`)
@@ -154,10 +154,11 @@ describe('without Clipboard API', () => {
 
 describe('on shadow DOM', () => {
   test('paste into an input element', async () => {
-    const {element, user} = setup('<shadow-input></shadow-input>')
+    defineShadowInputCustomElementIfNotDefined()
+    const {element, user} = setup<ShadowInput>('<shadow-input></shadow-input>')
 
     await user.paste('test')
 
-    expect((element as ShadowInput).value).toEqual('test')
+    expect(element.value).toEqual('test')
   })
 })

@@ -31,8 +31,9 @@ export function render<Elements extends Element | Element[] = HTMLElement>(
     const element: HTMLElement | null = div.querySelector(FOCUSABLE_SELECTOR)
     if (element) {
       element.focus()
-    } else if (div.firstChild) {
-      ;(div.firstChild as HTMLElement).focus()
+    } else if (div.firstElementChild?.tagName.includes('-')) {
+      // If the element's tag contains - it is a custom element, so it is focusable.
+      ;(div.firstElementChild as HTMLElement).focus()
     }
   }
 

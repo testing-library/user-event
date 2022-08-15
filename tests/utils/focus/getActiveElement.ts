@@ -18,7 +18,7 @@ test('focus should be body', async () => {
 })
 
 describe('on shadow DOM', () => {
-  test('focus contained input element', async () => {
+  test('get focused element inside shadow tree', async () => {
     defineShadowInputCustomElementIfNotDefined()
     const {element} = setup('<shadow-input></shadow-input>')
 

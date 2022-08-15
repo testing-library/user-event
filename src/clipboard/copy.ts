@@ -1,5 +1,5 @@
 import {copySelection} from '../document'
-import {Instance} from '../setup'
+import type {Instance} from '../setup'
 import {getActiveElementOrBody, writeDataTransferToClipboard} from '../utils'
 
 export async function copy(this: Instance) {

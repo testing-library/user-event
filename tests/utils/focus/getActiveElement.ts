@@ -3,7 +3,7 @@ import {
   ShadowInput,
 } from '../../_helpers/shadow-input'
 import {setup} from '#testHelpers'
-import {getActiveElement, getActiveElementOrBody} from '#src/utils'
+import {getActiveElementOrBody} from '#src/utils'
 
 test('focused input element', async () => {
   const {element} = setup('<input />')
@@ -22,7 +22,7 @@ describe('on shadow DOM', () => {
     defineShadowInputCustomElementIfNotDefined()
     const {element} = setup('<shadow-input></shadow-input>')
 
-    expect(getActiveElement(document)).toBe(
+    expect(getActiveElementOrBody(document)).toBe(
       element.shadowRoot?.querySelector('input'),
     )
   })

@@ -125,7 +125,7 @@ export function getFocusableElement(
         if (possibleFocusableChildElement) {
           return possibleFocusableChildElement
         }
-      } else {
+      } else if (child.shadowRoot.delegatesFocus) {
         return child as HTMLElement
       }
     }

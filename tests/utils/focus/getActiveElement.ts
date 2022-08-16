@@ -11,7 +11,7 @@ test('focused input element', async () => {
   expect(getActiveElementOrBody(document)).toBe(element)
 })
 
-test('focus should be body', async () => {
+test('default to body as active element', async () => {
   const {element} = setup<HTMLInputElement>('<input />', {focus: false})
   element.blur()
   expect(getActiveElementOrBody(document)).toBe(document.body)

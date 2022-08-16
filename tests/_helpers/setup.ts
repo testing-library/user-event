@@ -28,7 +28,7 @@ export function render<Elements extends Element | Element[] = HTMLElement>(
   if (typeof focus === 'string') {
     ;(assertSingleNodeFromXPath(focus, div) as HTMLElement).focus()
   } else if (focus !== false) {
-    const element: HTMLElement | null = getFocusableElement(div)
+    const element: HTMLElement | null = findFocusable(div)
     element?.focus()
   }
 
@@ -103,23 +103,14 @@ export function setup<Elements extends Element | Element[] = HTMLElement>(
     ...render<Elements>(ui, {eventHandlers, focus, selection}),
   }
 }
-export function getFocusableElement(
-  parent: Element | ShadowRoot,
-): HTMLElement | null {
-  const possibleFocusableElement: HTMLElement | null =
-    parent.querySelector(FOCUSABLE_SELECTOR)
-  if (possibleFocusableElement) {
-    return possibleFocusableElement
-  }
-
-  const children = Array.from(parent.children)
-  for (const child of children) {
-    if ('shadowRoot' in child && child.shadowRoot) {
-      const possibleFocusableChildElement = getFocusableElement(
-        child.shadowRoot,
-      )
-      if (possibleFocusableChildElement) {
-        return possibleFocusableChildElement
+function findFocusable(container: Element | ShadowRoot): HTMLElement | null {
+  for (const el of Array.from(container.querySelectorAll('*'))) {
+    if (el.matches(FOCUSABLE_SELECTOR)) {
+      return el as HTMLElement
+    } else if (el.shadowRoot) {
+      const f = findFocusable(el.shadowRoot)
+      if (f) {
+        return f
       }
     }
   }

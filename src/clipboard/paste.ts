@@ -10,7 +10,7 @@ export async function paste(
   this: Instance,
   clipboardData?: DataTransfer | string,
 ) {
-  const doc: Document = this.config.document
+  const doc = this.config.document
   const target = getActiveElementOrBody(doc)
 
   const dataTransfer: DataTransfer =

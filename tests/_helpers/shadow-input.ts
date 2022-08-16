@@ -14,7 +14,7 @@ class ShadowInput extends HTMLElement {
   constructor() {
     super()
 
-    this.attachShadow({mode: 'open', delegatesFocus: false})
+    this.attachShadow({mode: 'open', delegatesFocus: true})
     if (this.shadowRoot) {
       this.shadowRoot.appendChild(template.content.cloneNode(true))
       this.$input = this.shadowRoot.querySelector('input') as HTMLInputElement
@@ -38,15 +38,6 @@ class ShadowInput extends HTMLElement {
 
   public get value(): string {
     return this.$input?.value ?? ''
-  }
-
-  /**
-   * Overwrite focus handling, so that when the component is focused, the focus is delegated to the containing input.
-   * @param options
-   */
-  public override focus(options?: FocusOptions) {
-    super.focus(options)
-    this.$input?.focus(options)
   }
 }
 

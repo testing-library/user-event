@@ -28,13 +28,8 @@ export function render<Elements extends Element | Element[] = HTMLElement>(
   if (typeof focus === 'string') {
     ;(assertSingleNodeFromXPath(focus, div) as HTMLElement).focus()
   } else if (focus !== false) {
-    const element: HTMLElement | null = div.querySelector(FOCUSABLE_SELECTOR)
-    if (element) {
-      element.focus()
-    } else if (div.firstElementChild?.tagName.includes('-')) {
-      // If the element's tag contains - it is a custom element, so it is focusable.
-      ;(div.firstElementChild as HTMLElement).focus()
-    }
+    const element: HTMLElement | null = getFocusableElement(div)
+    element?.focus()
   }
 
   if (selection) {
@@ -107,4 +102,33 @@ export function setup<Elements extends Element | Element[] = HTMLElement>(
     user: userEvent.setup(options),
     ...render<Elements>(ui, {eventHandlers, focus, selection}),
   }
+}
+export function getFocusableElement(
+  parent: Element | ShadowRoot,
+): HTMLElement | null {
+  const possibleFocusableElement: HTMLElement | null =
+    parent.querySelector(FOCUSABLE_SELECTOR)
+  if (possibleFocusableElement) {
+    return possibleFocusableElement
+  }
+
+  const children = Array.from(parent.children)
+  for (const child of children) {
+    if ('shadowRoot' in child && child.shadowRoot) {
+      //JSDOM currently does not support delegatesFocus, find the focusable element ourselves, if delegatesFocus is undefined
+
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      if (child.shadowRoot.delegatesFocus === undefined) {
+        const possibleFocusableChildElement = getFocusableElement(
+          child.shadowRoot,
+        )
+        if (possibleFocusableChildElement) {
+          return possibleFocusableChildElement
+        }
+      } else {
+        return child as HTMLElement
+      }
+    }
+  }
+  return null
 }

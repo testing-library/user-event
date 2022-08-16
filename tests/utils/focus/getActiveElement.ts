@@ -1,7 +1,4 @@
-import {
-  defineShadowInputCustomElementIfNotDefined,
-  ShadowInput,
-} from '../../_helpers/shadow-input'
+import {defineShadowInputCustomElementIfNotDefined} from '../../_helpers/shadow-input'
 import {setup} from '#testHelpers'
 import {getActiveElementOrBody} from '#src/utils'
 
@@ -25,13 +22,5 @@ describe('on shadow DOM', () => {
     expect(getActiveElementOrBody(document)).toBe(
       element.shadowRoot?.querySelector('input'),
     )
-  })
-  test('focus just body', async () => {
-    defineShadowInputCustomElementIfNotDefined()
-    const {element} = setup<ShadowInput>('<shadow-input></shadow-input>', {
-      focus: false,
-    })
-    element.blur()
-    expect(getActiveElementOrBody(document)).toBe(document.body)
   })
 })

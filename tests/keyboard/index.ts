@@ -1,5 +1,9 @@
 import userEvent from '#src'
 import {addListeners, render, setup} from '#testHelpers'
+import {
+  defineShadowInputCustomElementIfNotDefined,
+  ShadowInput,
+} from '../_helpers/shadow-input'
 
 it('type without focus', async () => {
   const {element, user} = setup('<input/>', {focus: false})
@@ -162,4 +166,15 @@ test('disabling activeElement moves action to HTMLBodyElement', async () => {
     body - keypress: c
     body - keyup: c
   `)
+})
+
+describe('on shadow DOM', () => {
+  test('type into an input element', async () => {
+    defineShadowInputCustomElementIfNotDefined()
+    const {element, user} = setup<ShadowInput>('<shadow-input></shadow-input>')
+
+    await user.keyboard('test')
+
+    expect(element.value).toEqual('test')
+  })
 })

@@ -115,18 +115,11 @@ export function getFocusableElement(
   const children = Array.from(parent.children)
   for (const child of children) {
     if ('shadowRoot' in child && child.shadowRoot) {
-      //JSDOM currently does not support delegatesFocus, find the focusable element ourselves, if delegatesFocus is undefined
-
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      if (child.shadowRoot.delegatesFocus === undefined) {
-        const possibleFocusableChildElement = getFocusableElement(
-          child.shadowRoot,
-        )
-        if (possibleFocusableChildElement) {
-          return possibleFocusableChildElement
-        }
-      } else if (child.shadowRoot.delegatesFocus) {
-        return child as HTMLElement
+      const possibleFocusableChildElement = getFocusableElement(
+        child.shadowRoot,
+      )
+      if (possibleFocusableChildElement) {
+        return possibleFocusableChildElement
       }
     }
   }

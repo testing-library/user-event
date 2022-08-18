@@ -1,4 +1,3 @@
-import {defineShadowInputCustomElementIfNotDefined} from '../../_helpers/shadow-input'
 import {setup} from '#testHelpers'
 import {getActiveElementOrBody} from '#src/utils'
 
@@ -16,7 +15,6 @@ test('default to body as active element', async () => {
 
 describe('on shadow DOM', () => {
   test('get focused element inside shadow tree', async () => {
-    defineShadowInputCustomElementIfNotDefined()
     const {element} = setup('<shadow-input></shadow-input>')
 
     expect(getActiveElementOrBody(document)).toBe(

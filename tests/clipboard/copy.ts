@@ -1,4 +1,3 @@
-import {defineShadowInputCustomElementIfNotDefined} from '../_helpers/shadow-input'
 import userEvent from '#src'
 import {render, setup} from '#testHelpers'
 
@@ -102,7 +101,6 @@ describe('without Clipboard API', () => {
 
 describe('on shadow DOM', () => {
   test('copy in an input element', async () => {
-    defineShadowInputCustomElementIfNotDefined()
     const {user} = setup('<shadow-input value="test"></shadow-input>', {
       selection: {anchorOffset: 0, focusOffset: 4},
     })

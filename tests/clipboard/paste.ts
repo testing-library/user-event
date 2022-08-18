@@ -1,7 +1,5 @@
-import type {ShadowInput} from '../_helpers/shadow-input'
-import {defineShadowInputCustomElementIfNotDefined} from '../_helpers/shadow-input'
 import userEvent from '#src'
-import {render, setup} from '#testHelpers'
+import {CustomElements, render, setup} from '#testHelpers'
 import {createDataTransfer} from '#src/utils'
 
 test('paste with empty clipboard', async () => {
@@ -154,8 +152,9 @@ describe('without Clipboard API', () => {
 
 describe('on shadow DOM', () => {
   test('paste into an input element', async () => {
-    defineShadowInputCustomElementIfNotDefined()
-    const {element, user} = setup<ShadowInput>('<shadow-input></shadow-input>')
+    const {element, user} = setup<CustomElements['shadow-input']>(
+      '<shadow-input></shadow-input>',
+    )
 
     await user.paste('test')
 

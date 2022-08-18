@@ -1,3 +1,4 @@
+import {prettyDOM} from '@testing-library/dom'
 import {addListeners, EventHandlers} from './listeners'
 import userEvent from '#src'
 import {Options} from '#src/options'
@@ -71,6 +72,8 @@ export function render<Elements extends Element | Element[] = HTMLElement>(
     ),
     xpathNode: <NodeType extends Node = HTMLElement>(xpath: string) =>
       assertSingleNodeFromXPath(xpath, div) as NodeType,
+    query: ((...selectors: string[]) =>
+      assertDeepQuery(div, ...selectors)) as deepQuery,
   }
 }
 
@@ -86,6 +89,40 @@ function assertSingleNodeFromXPath(xpath: string, context: Node) {
     throw new Error(`invalid XPath: "${xpath}"`)
   }
 
+  return node
+}
+
+interface deepQuery {
+  <K extends keyof HTMLElementTagNameMap>(
+    ...selectors: [...string[], K]
+  ): HTMLElementTagNameMap[K]
+  <K extends keyof SVGElementTagNameMap>(
+    ...selectors: [...string[], K]
+  ): SVGElementTagNameMap[K]
+  <E extends Element = Element>(...selectors: string[]): E
+}
+function assertDeepQuery(context: HTMLElement, ...selectors: string[]) {
+  let node: Element = context
+  for (let i = 0; i < selectors.length; i++) {
+    const container = node.shadowRoot?.mode === 'open' ? node.shadowRoot : node
+    const el = container.querySelector(selectors[i])
+    if (!el) {
+      throw new Error(
+        [
+          i > 0 &&
+            `inside ${selectors
+              .slice(0, i)
+              .map(q => `"${q}"`)
+              .join(', ')}`,
+          `no element found for selector: "${selectors[i]}"`,
+          ...Array.from(container.children).map(e => prettyDOM(e)),
+        ]
+          .filter(Boolean)
+          .join('\n'),
+      )
+    }
+    node = el
+  }
   return node
 }
 

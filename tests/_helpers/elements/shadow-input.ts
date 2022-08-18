@@ -5,7 +5,7 @@ template.innerHTML = `
   <input>
 `
 
-class ShadowInput extends HTMLElement {
+export class ShadowInput extends HTMLElement {
   private $input?: HTMLInputElement
 
   static getObservedAttributes() {
@@ -38,13 +38,5 @@ class ShadowInput extends HTMLElement {
 
   public get value(): string {
     return this.$input?.value ?? ''
-  }
-}
-
-export type {ShadowInput}
-
-export function defineShadowInputCustomElementIfNotDefined() {
-  if (window.customElements.get('shadow-input') === undefined) {
-    window.customElements.define('shadow-input', ShadowInput)
   }
 }

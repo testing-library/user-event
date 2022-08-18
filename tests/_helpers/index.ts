@@ -1,3 +1,5 @@
+import {CustomElements, registerCustomElements} from './elements'
+
 // this is pretty helpful:
 // https://codesandbox.io/s/quizzical-worker-eo909
 
@@ -10,6 +12,10 @@ expect.addSnapshotSerializer({
     ),
   print: val => String((<null | {snapshot?: string}>val)?.snapshot),
 })
+
+registerCustomElements()
+
+export type {CustomElements}
 
 export {render, setup} from './setup'
 export {addEventListener, addListeners} from './listeners'

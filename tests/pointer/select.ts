@@ -16,6 +16,59 @@ test('single mousedown moves cursor to the end', async () => {
   expect(element).toHaveProperty('selectionStart', 11)
 })
 
+describe('move focus per mousedown in shadow DOM', () => {
+  test('into input element', async () => {
+    const {user, query} = setup(
+      `<shadow-input value="foo"></shadow-input><button></button>`,
+      {focus: '//button'},
+    )
+    const input = query('shadow-input', 'input')
+
+    await user.pointer({keys: '[MouseLeft>]', target: input})
+
+    expect(input).toBeActive()
+    expect(input).toHaveProperty('selectionStart', 3)
+  })
+
+  test('into element which delegatesFocus to input', async () => {
+    const {element, user, query} = setup(
+      `<shadow-input value="foo"></shadow-input><button></button>`,
+      {focus: '//button'},
+    )
+    const input = query('shadow-input', 'input')
+
+    await user.pointer({keys: '[MouseLeft>]', target: element})
+
+    expect(input).toBeActive()
+    expect(input).toHaveProperty('selectionStart', 0)
+    expect(input).toHaveProperty('selectionEnd', 3)
+  })
+
+  test('into element which delegatesFocus to nothing', async () => {
+    const {element, user} = setup(
+      `<hello-world delegates></hello-world><button></button>`,
+    )
+
+    await user.pointer({keys: '[MouseLeft>]', target: element})
+
+    // This is not consistent across browsers if there is a focusable descendant.
+    // Firefox falls back to the closest focusable descendant
+    // of the shadow host as if `delegatesFocus` was `false`.
+    // Chrome falls back to `document.body`.
+    expect(document.body).toBeActive()
+  })
+
+  test('into element without delegatesFocus', async () => {
+    const {element, user} = setup(
+      `<hello-world tabindex="0"></hello-world><button></button>`,
+    )
+
+    await user.pointer({keys: '[MouseLeft>]', target: element})
+
+    expect(document.body).toBeActive()
+  })
+})
+
 test('move focus to closest focusable element', async () => {
   const {element, user} = setup(`
     <div tabIndex="0">

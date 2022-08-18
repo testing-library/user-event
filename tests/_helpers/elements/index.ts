@@ -1,6 +1,8 @@
+import {HelloWorld} from './hello-world'
 import {ShadowInput} from './shadow-input'
 
 const customElements = {
+  'hello-world': HelloWorld,
   'shadow-input': ShadowInput,
 }
 

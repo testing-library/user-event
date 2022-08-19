@@ -2,7 +2,7 @@ import {prettyDOM} from '@testing-library/dom'
 import {addListeners, EventHandlers} from './listeners'
 import userEvent from '#src'
 import {Options} from '#src/options'
-import {FOCUSABLE_SELECTOR, getActiveElementOrBody} from '#src/utils'
+import {findFocusable, getActiveElementOrBody} from '#src/utils'
 import {setSelection} from '#src/event/selection'
 
 export function render<Elements extends Element | Element[] = HTMLElement>(
@@ -29,8 +29,7 @@ export function render<Elements extends Element | Element[] = HTMLElement>(
   if (typeof focus === 'string') {
     ;(assertSingleNodeFromXPath(focus, div) as HTMLElement).focus()
   } else if (focus !== false) {
-    const element: HTMLElement | null = findFocusable(div)
-    element?.focus()
+    findFocusable(div)?.focus()
   }
 
   if (selection) {
@@ -139,17 +138,4 @@ export function setup<Elements extends Element | Element[] = HTMLElement>(
     user: userEvent.setup(options),
     ...render<Elements>(ui, {eventHandlers, focus, selection}),
   }
-}
-function findFocusable(container: Element | ShadowRoot): HTMLElement | null {
-  for (const el of Array.from(container.querySelectorAll('*'))) {
-    if (el.matches(FOCUSABLE_SELECTOR)) {
-      return el as HTMLElement
-    } else if (el.shadowRoot) {
-      const f = findFocusable(el.shadowRoot)
-      if (f) {
-        return f
-      }
-    }
-  }
-  return null
 }

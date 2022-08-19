@@ -19,7 +19,7 @@ export const FOCUSABLE_SELECTOR = [
 /**
  * Determine if an element can be the target for `focusElement()`.
  *
- * This does not necessarily mean that this element will be the `activeElement`
+ * This does not necessarily mean that this element will be the `activeElement`,
  * as it might delegate focus into a shadow tree.
  */
 export function isFocusTarget(element: Element): element is HTMLElement {

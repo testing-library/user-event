@@ -24,10 +24,10 @@ export const FOCUSABLE_SELECTOR = [
  */
 export function isFocusTarget(element: Element): element is HTMLElement {
   if (element.tagName.includes('-')) {
-    // custom elements without delegatesFocus are ignored
+    // custom elements without `delegatesFocus` are ignored
     return delegatesFocus(element)
   }
-  // elements that don't delegateFocus behave normal even if they're a shadow host
+  // elements without `delegatesFocus` behave normal even if they're a shadow host
   return delegatesFocus(element) || element.matches(FOCUSABLE_SELECTOR)
 }
 

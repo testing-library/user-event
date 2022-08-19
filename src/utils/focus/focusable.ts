@@ -69,18 +69,17 @@ export function findFocusable(
   }
 }
 
-// TODO: use for tab
-// /**
-//  * Find the all focusable elements in a DOM tree.
-//  */
-// export function findAllFocusable(element: Element | ShadowRoot): HTMLElement[] {
-//   const all: HTMLElement[] = []
-//   for (const el of Array.from(element.querySelectorAll('*'))) {
-//     if (isFocusable(el)) {
-//       all.push(el)
-//     } else if (el.shadowRoot) {
-//       all.push(...findAllFocusable(el.shadowRoot))
-//     }
-//   }
-//   return all
-// }
+/**
+ * Find the all focusable elements in a DOM tree.
+ */
+export function findAllFocusable(element: Element | ShadowRoot): HTMLElement[] {
+  const all: HTMLElement[] = []
+  for (const el of Array.from(element.querySelectorAll('*'))) {
+    if (isFocusable(el)) {
+      all.push(el)
+    } else if (el.shadowRoot) {
+      all.push(...findAllFocusable(el.shadowRoot))
+    }
+  }
+  return all
+}

@@ -1,4 +1,20 @@
-import {FOCUSABLE_SELECTOR} from './selector'
+/**
+ * CSS selector to query focusable elements.
+ *
+ * This does not eliminate the following elements which are not focusable:
+ *  - Custom elements with `tabindex` or `contenteditable` attribute
+ *  - Shadow hosts with `delegatesFocus: true`
+ */
+export const FOCUSABLE_SELECTOR = [
+  'input:not([type=hidden]):not([disabled])',
+  'button:not([disabled])',
+  'select:not([disabled])',
+  'textarea:not([disabled])',
+  '[contenteditable=""]',
+  '[contenteditable="true"]',
+  'a[href]',
+  '[tabindex]:not([disabled])',
+].join(', ')
 
 /**
  * Determine if an element can be the target for `focusElement()`.
@@ -16,7 +32,11 @@ export function isFocusTarget(element: Element): element is HTMLElement {
 }
 
 export function isFocusable(element: Element): element is HTMLElement {
-  return !delegatesFocus(element) && element.matches(FOCUSABLE_SELECTOR)
+  return (
+    !element.tagName.includes('-') &&
+    !delegatesFocus(element) &&
+    element.matches(FOCUSABLE_SELECTOR)
+  )
 }
 
 export function delegatesFocus(

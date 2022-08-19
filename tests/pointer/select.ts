@@ -16,6 +16,80 @@ test('single mousedown moves cursor to the end', async () => {
   expect(element).toHaveProperty('selectionStart', 11)
 })
 
+describe('move focus per mousedown in shadow DOM', () => {
+  test('into input element', async () => {
+    const {user, query} = setup(
+      `<shadow-input value="foo"></shadow-input><button></button>`,
+      {focus: '//button'},
+    )
+    const input = query('shadow-input', 'input')
+
+    await user.pointer({keys: '[MouseLeft>]', target: input})
+
+    expect(input).toBeActive()
+    expect(input).toHaveProperty('selectionStart', 3)
+  })
+
+  test('on element which delegatesFocus to input', async () => {
+    const {element, user, query} = setup(
+      `<shadow-input value="foo"></shadow-input><button></button>`,
+      {focus: '//button'},
+    )
+    const input = query('shadow-input', 'input')
+
+    await user.pointer({keys: '[MouseLeft>]', target: element})
+
+    expect(input).toBeActive()
+    expect(input).toHaveProperty('selectionStart', 0)
+    expect(input).toHaveProperty('selectionEnd', 3)
+  })
+
+  test('per delegatesFocus into another shadow tree', async () => {
+    const {element, user, query} = setup(
+      `<shadow-host innerHTML="<shadow-input value='foo'></shadow-input>"></shadow-host><button></button>`,
+      {focus: '//button'},
+    )
+    const input = query('shadow-host', 'shadow-input', 'input')
+
+    await user.pointer({keys: '[MouseLeft>]', target: element})
+
+    expect(input).toBeActive()
+    expect(input).toHaveProperty('selectionStart', 0)
+    expect(input).toHaveProperty('selectionEnd', 3)
+  })
+
+  test('per delegatesFocus to nothing', async () => {
+    const {element, user} = setup(
+      `<hello-world delegates></hello-world><button></button>`,
+    )
+
+    await user.pointer({keys: '[MouseLeft>]', target: element})
+
+    expect(document.body).toBeActive()
+  })
+
+  test('per delegatesFocus to nothing through another shadow host', async () => {
+    const {element, user} = setup(
+      `<shadow-host innerHTML="<hello-world delegates></hello-world>"></shadow-host><button></button>`,
+      {focus: '//button'},
+    )
+
+    await user.pointer({keys: '[MouseLeft>]', target: element})
+
+    expect(document.body).toBeActive()
+  })
+
+  test('on element without delegatesFocus', async () => {
+    const {element, user} = setup(
+      `<hello-world tabindex="0"></hello-world><button></button>`,
+    )
+
+    await user.pointer({keys: '[MouseLeft>]', target: element})
+
+    expect(document.body).toBeActive()
+  })
+})
+
 test('move focus to closest focusable element', async () => {
   const {element, user} = setup(`
     <div tabIndex="0">

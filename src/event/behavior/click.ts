@@ -8,7 +8,7 @@ behavior.click = (event, target, instance) => {
   if (control) {
     return () => {
       if (isFocusable(control)) {
-        focusElement(control)
+        focusElement(control, true)
       }
       instance.dispatchEvent(control, cloneEvent(event))
     }

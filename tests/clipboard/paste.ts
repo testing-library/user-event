@@ -1,5 +1,5 @@
 import userEvent from '#src'
-import {render, setup} from '#testHelpers'
+import {CustomElements, render, setup} from '#testHelpers'
 import {createDataTransfer} from '#src/utils'
 
 test('paste with empty clipboard', async () => {
@@ -147,5 +147,17 @@ describe('without Clipboard API', () => {
       `[Error: \`userEvent.paste()\` without \`clipboardData\` requires the \`ClipboardAPI\` to be available.]`,
     )
     expect(getEvents()).toHaveLength(0)
+  })
+})
+
+describe('on shadow DOM', () => {
+  test('paste into an input element', async () => {
+    const {element, user} = setup<CustomElements['shadow-input']>(
+      '<shadow-input></shadow-input>',
+    )
+
+    await user.paste('test')
+
+    expect(element.value).toEqual('test')
   })
 })

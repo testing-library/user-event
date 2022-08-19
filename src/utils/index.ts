@@ -14,9 +14,8 @@ export * from './edit/setFiles'
 export * from './focus/cursor'
 export * from './focus/getActiveElement'
 export * from './focus/getTabDestination'
-export * from './focus/isFocusable'
+export * from './focus/focusable'
 export * from './focus/selection'
-export * from './focus/selector'
 
 export * from './keyDef/readNextDescriptor'
 

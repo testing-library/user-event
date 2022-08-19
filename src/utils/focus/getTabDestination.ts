@@ -1,7 +1,7 @@
 import {isDisabled} from '../misc/isDisabled'
 import {isElementType} from '../misc/isElementType'
 import {isVisible} from '../misc/isVisible'
-import {FOCUSABLE_SELECTOR} from './selector'
+import {FOCUSABLE_SELECTOR} from './focusable'
 
 export function getTabDestination(activeElement: Element, shift: boolean) {
   const document = activeElement.ownerDocument

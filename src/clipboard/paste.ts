@@ -1,6 +1,7 @@
 import type {Instance} from '../setup'
 import {
   createDataTransfer,
+  getActiveElementOrBody,
   getWindow,
   readDataTransferFromClipboard,
 } from '../utils'
@@ -10,7 +11,7 @@ export async function paste(
   clipboardData?: DataTransfer | string,
 ) {
   const doc = this.config.document
-  const target = doc.activeElement ?? /* istanbul ignore next */ doc.body
+  const target = getActiveElementOrBody(doc)
 
   const dataTransfer: DataTransfer =
     (typeof clipboardData === 'string'

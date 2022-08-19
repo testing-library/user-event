@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 
-import {getUIValue, setUISelection, getValueOrTextContent} from '../../document'
+import {getUIValue, getValueOrTextContent} from '../../document'
 import {
   getTabDestination,
-  hasOwnSelection,
   isContentEditable,
   isEditable,
   isElementType,
@@ -106,13 +105,7 @@ const keydownBehavior: {
         target,
         instance.system.keyboard.modifiers.Shift,
       )
-      focusElement(dest)
-      if (hasOwnSelection(dest)) {
-        setUISelection(dest, {
-          anchorOffset: 0,
-          focusOffset: dest.value.length,
-        })
-      }
+      focusElement(dest, true)
     }
   },
 }

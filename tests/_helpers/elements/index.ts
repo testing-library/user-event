@@ -1,9 +1,11 @@
 import {HelloWorld} from './hello-world'
 import {ShadowInput} from './shadow-input'
+import {ShadowHost} from './shadow-host'
 
 const customElements = {
   'hello-world': HelloWorld,
   'shadow-input': ShadowInput,
+  'shadow-host': ShadowHost,
 }
 
 export type CustomElements = {

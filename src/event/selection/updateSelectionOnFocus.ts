@@ -1,10 +1,10 @@
-import {getContentEditable, hasOwnSelection} from '../../utils'
+import {EditableInputOrTextarea, getContentEditable} from '../../utils'
 
 /**
  * Reset the Document Selection when moving focus into an element
  * with own selection implementation.
  */
-export function updateSelectionOnFocus(element: Element) {
+export function updateSelectionOnFocus(element: EditableInputOrTextarea) {
   const selection = element.ownerDocument.getSelection()
 
   /* istanbul ignore if */
@@ -19,18 +19,16 @@ export function updateSelectionOnFocus(element: Element) {
   // 2) other selections will be replaced by a cursor
   //  2.a) at the start of the first child if it is a text node
   //  2.b) at the start of the contenteditable.
-  if (hasOwnSelection(element)) {
-    const contenteditable = getContentEditable(selection.focusNode)
-    if (contenteditable) {
-      if (!selection.isCollapsed) {
-        const focusNode =
-          contenteditable.firstChild?.nodeType === 3
-            ? contenteditable.firstChild
-            : contenteditable
-        selection.setBaseAndExtent(focusNode, 0, focusNode, 0)
-      }
-    } else {
-      selection.setBaseAndExtent(element, 0, element, 0)
+  const contenteditable = getContentEditable(selection.focusNode)
+  if (contenteditable) {
+    if (!selection.isCollapsed) {
+      const focusNode =
+        contenteditable.firstChild?.nodeType === 3
+          ? contenteditable.firstChild
+          : contenteditable
+      selection.setBaseAndExtent(focusNode, 0, focusNode, 0)
     }
+  } else {
+    selection.setBaseAndExtent(element, 0, element, 0)
   }
 }

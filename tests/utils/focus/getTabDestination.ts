@@ -141,3 +141,27 @@ test('skip unchecked radios if group has one checked', () => {
   expect(getTabDestination(elF, false)).toBe(elG)
   expect(getTabDestination(elF, true)).toBe(elE)
 })
+
+test('tab through shadow trees', () => {
+  const {query} = setup(`
+    <input id="a"/>
+    <shadow-host innerHTML='
+      <input id="b"/>
+      <shadow-host innerHTML=&apos;
+        <input id="c"/>
+        <input id="d"/>
+      &apos;></shadow-host>
+      <input id="e"/>
+    '></shadow-host>
+    <input id="f"/>
+  `)
+
+  assertTabOrder([
+    query('#a'),
+    query('shadow-host', '#b'),
+    query('shadow-host', 'shadow-host', '#c'),
+    query('shadow-host', 'shadow-host', '#d'),
+    query('shadow-host', '#e'),
+    query('#f'),
+  ])
+})

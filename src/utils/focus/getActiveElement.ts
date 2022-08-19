@@ -1,8 +1,6 @@
 import {isDisabled} from '../misc/isDisabled'
 
-export function getActiveElement(
-  document: Document | ShadowRoot,
-): Element | null {
+function getActiveElement(document: Document | ShadowRoot): Element | null {
   const activeElement = document.activeElement
 
   if (activeElement?.shadowRoot) {

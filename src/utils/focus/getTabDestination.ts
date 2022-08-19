@@ -1,11 +1,11 @@
 import {isDisabled} from '../misc/isDisabled'
 import {isElementType} from '../misc/isElementType'
 import {isVisible} from '../misc/isVisible'
-import {FOCUSABLE_SELECTOR} from './selector'
+import {findAllFocusable} from './focusable'
 
 export function getTabDestination(activeElement: Element, shift: boolean) {
   const document = activeElement.ownerDocument
-  const focusableElements = document.querySelectorAll(FOCUSABLE_SELECTOR)
+  const focusableElements = findAllFocusable(document.body)
 
   const enabledElements = Array.from(focusableElements).filter(
     el =>

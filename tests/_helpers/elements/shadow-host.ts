@@ -5,6 +5,6 @@ export class ShadowHost extends HTMLElement {
     this.attachShadow({
       mode: 'open',
       delegatesFocus: true,
-    }).innerHTML = `${this.getAttribute('innerHTML')}`
+    }).innerHTML = String(this.getAttribute('innerHTML'))
   }
 }

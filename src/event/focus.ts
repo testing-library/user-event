@@ -51,7 +51,7 @@ function doFocus(target: HTMLElement, select: boolean, source: Element) {
   wrapEvent(() => target.focus(), source)
 
   if (hasOwnSelection(target)) {
-    if (select && hasOwnSelection(target)) {
+    if (select) {
       setUISelection(target, {
         anchorOffset: 0,
         focusOffset: target.value.length,

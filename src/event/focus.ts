@@ -28,8 +28,8 @@ export function focusElement(element: Element, select: boolean = false) {
       if (effectiveTarget) {
         doFocus(effectiveTarget, true, element)
       } else {
-        // This is not consistent across browsers if there is a focusable descendant.
-        // Firefox falls back to the closest focusable descendant
+        // This is not consistent across browsers if there is a focusable ancestor.
+        // Firefox falls back to the closest focusable ancestor
         // of the shadow host as if `delegatesFocus` was `false`.
         // Chrome falls back to `document.body`.
         // We follow the minimal implementation of Chrome.

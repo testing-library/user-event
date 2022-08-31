@@ -28,7 +28,7 @@ const keydownBehavior: {
   ArrowDown: (event, target, instance) => {
     /* istanbul ignore else */
     if (isElementType(target, 'input', {type: 'radio'} as const)) {
-      return () => walkRadio(instance, target, -1)
+      return () => walkRadio(instance, target, 1)
     }
   },
   ArrowLeft: (event, target, instance) => {
@@ -46,7 +46,7 @@ const keydownBehavior: {
   ArrowUp: (event, target, instance) => {
     /* istanbul ignore else */
     if (isElementType(target, 'input', {type: 'radio'} as const)) {
-      return () => walkRadio(instance, target, 1)
+      return () => walkRadio(instance, target, -1)
     }
   },
   Backspace: (event, target, instance) => {

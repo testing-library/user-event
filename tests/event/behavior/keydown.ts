@@ -360,25 +360,15 @@ cases(
       key: 'ArrowUp',
       expectedTarget: '//input[@value="a"]',
     },
-    'ArrowRight around the corner': {
+    'forward around the corner': {
       focus: '//input[@value="e"]',
       key: 'ArrowRight',
       expectedTarget: '//input[@value="a"]',
     },
-    'ArrowLeft around the corner': {
+    'backward around the corner': {
       focus: '//input[@value="a"]',
       key: 'ArrowLeft',
       expectedTarget: '//input[@value="e"]',
-    },
-    'ArrowUp around the corner': {
-      focus: '//input[@value="a"]',
-      key: 'ArrowUp',
-      expectedTarget: '//input[@value="e"]',
-    },
-    'ArrowDown around the corner': {
-      focus: '//input[@value="e"]',
-      key: 'ArrowDown',
-      expectedTarget: '//input[@value="a"]',
     },
     'do nothing on single radio': {
       focus: '//input[@name="solo"]',

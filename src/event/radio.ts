@@ -14,13 +14,20 @@ export function walkRadio(
         ? `input[type="radio"][name="${window.CSS.escape(el.name)}"]`
         : `input[type="radio"][name=""], input[type="radio"]:not([name])`,
     ),
-  ).filter(elt => !isDisabled(elt))
-  // 1 or 0 radio buttons found
-  if (group.length <= 1) {
-    return;
+  )
+  for (let i = group.findIndex(e => e === el) + direction; ; i += direction) {
+    if (!group[i]) {
+      i = direction > 0 ? 0 : group.length - 1
+    }
+    if (group[i] === el) {
+      return
+    }
+    if (isDisabled(group[i])) {
+      continue
+    }
+
+    focusElement(group[i])
+    instance.dispatchUIEvent(group[i], 'click')
+    return
   }
-  // Multiple buttons found
-  const nextRadioElement = group[(group.indexOf(el) + direction + group.length) % group.length];
-  focusElement(nextRadioElement)
-  instance.dispatchUIEvent(nextRadioElement, 'click')
 }

@@ -155,15 +155,19 @@ test('do nothing when element is disabled', async () => {
 
 test.each([
   [true, 'video/*,audio/*', 2],
+  [true, 'image/jpeg, image/png, image/gif', 1],
+  [true, 'image/JPG', 1],
+  [true, '.JPEG', 3],
   [true, '.png', 1],
   [true, 'text/csv', 1],
-  [true, '', 4],
-  [false, 'video/*', 4],
+  [true, '', 5],
+  [false, 'video/*', 5],
 ])(
   'filter according to accept attribute applyAccept=%s, acceptAttribute=%s',
   async (applyAccept, acceptAttribute, expectedLength) => {
     const files = [
       new File(['hello'], 'hello.png', {type: 'image/png'}),
+      new File(['hello'], 'hello.jpeg', {type: 'image/jpg'}),
       new File(['there'], 'there.jpg', {type: 'audio/mp3'}),
       new File(['there'], 'there.csv', {type: 'text/csv'}),
       new File(['there'], 'there.jpg', {type: 'video/mp4'}),

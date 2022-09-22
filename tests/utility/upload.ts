@@ -183,8 +183,23 @@ test.each([
     )
 
     await user.upload(element, files)
-
     expect(element.files).toHaveLength(expectedLength)
+  },
+)
+
+test.each([true, false])(
+  'throw if no files are accepted, multiple=%s',
+  async multiple => {
+    const files = [
+      new File(['hello'], 'hello.png', {type: 'image/png'}),
+      new File(['hello'], 'hello.jpeg', {type: 'image/jpg'}),
+    ]
+    const {element, user} = setup<HTMLInputElement>(
+      `<input type="file" accept="video/*" ${multiple ? 'multiple' : ''} />`,
+    )
+    await expect(async () => {
+      await user.upload(element, multiple ? files : files[0])
+    }).rejects.toThrowError('No files were accepted by the `accept` attribute')
   },
 )
 

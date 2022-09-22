@@ -67,8 +67,10 @@ function isAcceptableFile(file: File, accept: string) {
   const wildcards = ['audio/*', 'image/*', 'video/*']
 
   return accept
-    .replace(' ', '')
+    .replace(/\s+/, '')
     .toLowerCase()
+    .replace('.jpeg', '.jpg')
+    .replace('/jpeg', '/jpg')
     .split(/,/)
     .some(acceptToken => {
       if (acceptToken.startsWith('.')) {
@@ -76,12 +78,12 @@ function isAcceptableFile(file: File, accept: string) {
         return file.name
           .toLowerCase()
           .replace(/\.jpeg$/, '.jpg')
-          .endsWith(acceptToken.replace(/^\.jpeg$/, '.jpg'))
+          .endsWith(acceptToken)
       } else if (wildcards.includes(acceptToken)) {
         return file.type
           .toLowerCase()
           .startsWith(acceptToken.slice(0, acceptToken.length - 1))
       }
-      return file.type.toLowerCase() === acceptToken
+      return file.type.toLowerCase().replace('/jpeg', '/jpg') === acceptToken
     })
 }

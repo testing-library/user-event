@@ -155,7 +155,13 @@ test('do nothing when element is disabled', async () => {
 
 test.each([
   [true, 'video/*,audio/*', 2],
-  [true, 'image/jpeg, image/png, image/gif', 1],
+  [true, 'image/jpeg, image/png, image/gif', 2],
+  [
+    true,
+    `image/jpeg,
+  image/png, image/gif`,
+    2,
+  ],
   [true, 'image/JPG', 1],
   [true, '.JPEG', 3],
   [true, '.png', 1],

@@ -59,6 +59,11 @@ export async function upload(
   input.removeEventListener('fileDialog', fileDialog)
 }
 
+// When matching files, browsers ignore case and consider jpeg/jpg interchangeable.
+function normalize(nameOrType: string) {
+  return nameOrType.toLowerCase().replace(/(\.|\/)jpg\b/g, '$1jpeg')
+}
+
 function isAcceptableFile(file: File, accept: string) {
   if (!accept) {
     return true
@@ -66,24 +71,16 @@ function isAcceptableFile(file: File, accept: string) {
 
   const wildcards = ['audio/*', 'image/*', 'video/*']
 
-  return accept
-    .replace(/\s+/, '')
-    .toLowerCase()
-    .replace('.jpeg', '.jpg')
-    .replace('/jpeg', '/jpg')
-    .split(/,/)
+  return normalize(accept)
+    .trim()
+    .split(/\s*,\s*/)
     .some(acceptToken => {
+      // tokens starting with a dot represent a file extension
       if (acceptToken.startsWith('.')) {
-        // tokens starting with a dot represent a file extension
-        return file.name
-          .toLowerCase()
-          .replace(/\.jpeg$/, '.jpg')
-          .endsWith(acceptToken)
+        return normalize(file.name).endsWith(acceptToken)
       } else if (wildcards.includes(acceptToken)) {
-        return file.type
-          .toLowerCase()
-          .startsWith(acceptToken.slice(0, acceptToken.length - 1))
+        return normalize(file.type).startsWith(acceptToken.replace('*', ''))
       }
-      return file.type.toLowerCase().replace('/jpeg', '/jpg') === acceptToken
+      return normalize(file.type) === acceptToken
     })
 }

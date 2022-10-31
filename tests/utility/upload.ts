@@ -158,23 +158,24 @@ test.each([
   [
     true,
     'image/png, image/gif, image/jpeg',
-    ['image.png', 'image.jpeg', 'image.jpg'],
+    ['image.png', 'image2.PNG', 'image.jpeg', 'image.jpg'],
   ],
   [
     true,
     `image/jpeg,
   image/png, image/gif`,
-    ['image.png', 'image.jpeg', 'image.jpg'],
+    ['image.png', 'image2.PNG', 'image.jpeg', 'image.jpg'],
   ],
   [true, 'image/JPG', ['image.jpeg', 'image.jpg']],
   [true, '.JPEG', ['image.jpeg', 'image.jpg', 'mp3.jpg']],
-  [true, '.png', ['image.png']],
+  [true, '.png', ['image.png', 'image2.PNG']],
   [true, 'text/csv', ['file.csv']],
   [
     true,
     '',
     [
       'image.png',
+      'image2.PNG',
       'image.jpeg',
       'image.jpg',
       'audio.mp3',
@@ -188,6 +189,7 @@ test.each([
     'video/*',
     [
       'image.png',
+      'image2.PNG',
       'image.jpeg',
       'image.jpg',
       'audio.mp3',
@@ -201,6 +203,7 @@ test.each([
   async (applyAccept, acceptAttribute, expectedFileNames) => {
     const files = [
       new File(['hello'], 'image.png', {type: 'image/png'}),
+      new File(['hello'], 'image2.PNG', {type: 'image/png'}),
       new File(['hello'], 'image.jpeg', {type: 'image/jpeg'}),
       new File(['hello'], 'image.jpg', {type: 'image/jpeg'}),
       new File(['hello'], 'audio.mp3', {type: 'audio/mp3'}),

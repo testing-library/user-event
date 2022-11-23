@@ -1,8 +1,10 @@
-import {getConfig} from '@testing-library/dom'
+import DOMTestingLibrary from '#src/_interop/dtl'
 import {getSpy} from './_mockApis'
 import userEvent from '#src'
 import type {Instance, UserEventApi} from '#src/setup/setup'
 import {render} from '#testHelpers'
+
+const { getConfig } = DOMTestingLibrary
 
 type ApiDeclarations = {
   [api in keyof UserEventApi]: {

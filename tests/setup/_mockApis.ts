@@ -1,5 +1,5 @@
+import type {MockedFunction, MockInstance} from 'jest-mock'
 import type {Instance, UserEventApi} from '#src/setup/setup'
-import type {Mock, MockedFunction, MockInstance} from 'jest-mock'
 import { userEventApi } from '#src/setup/api'
 
 // `const` are not initialized when mocking is executed, but `function` are when prefixed with `mock`

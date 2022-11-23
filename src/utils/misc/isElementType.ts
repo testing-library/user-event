@@ -25,7 +25,7 @@ export function isElementType<
   }
 
   if (props) {
-    return Object.entries(props as NonNullable<P>).every(
+    return Object.entries(props).every(
       ([k, v]) => element[k as keyof Element] === v,
     )
   }

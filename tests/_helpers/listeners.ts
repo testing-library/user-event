@@ -177,10 +177,10 @@ function getElementDisplayName(element: Element) {
     displayName.push(`#${element.id}`)
   }
   if (hasProperty(element, 'name') && element.name) {
-    displayName.push(`[name="${element.name}"]`)
+    displayName.push(`[name="${String(element.name)}"]`)
   }
   if (hasProperty(element, 'htmlFor') && element.htmlFor) {
-    displayName.push(`[for="${element.htmlFor}"]`)
+    displayName.push(`[for="${String(element.htmlFor)}"]`)
   }
   if (
     isElementType(element, 'input') &&

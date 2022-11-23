@@ -210,17 +210,16 @@ export async function writeDataTransferToClipboard(
   }
 }
 
-declare global {
-  const afterAll: undefined | ((cb: () => void) => void);
-  const afterEach: undefined | ((cb: () => void) => void);
+const g = globalThis as {
+  afterEach?: (cb?: () => void) => void
+  afterAll?: (cb?: () => void) => void
+}
+/* istanbul ignore else */
+if (typeof g.afterEach === 'function') {
+  g.afterEach(() => resetClipboardStubOnView(globalThis.window))
 }
 
 /* istanbul ignore else */
-if (typeof globalThis.afterEach === 'function') {
-  globalThis.afterEach(() => resetClipboardStubOnView(globalThis.window))
-}
-
-/* istanbul ignore else */
-if (typeof globalThis.afterAll === 'function') {
-  globalThis.afterAll(() => detachClipboardStubFromView(globalThis.window))
+if (typeof g.afterAll === 'function') {
+  g.afterAll(() => detachClipboardStubFromView(globalThis.window))
 }

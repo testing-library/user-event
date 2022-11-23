@@ -11,7 +11,7 @@ config.moduleNameMapper = {
 config.testEnvironment = 'jsdom'
 
 config.setupFilesAfterEnv = [
-  '<rootDir>/tests/_setup-env.js',
+  '<rootDir>/testenv/jest.js',
   '<rootDir>/tests/react/_env/setup-env.js',
 ]
 

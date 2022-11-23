@@ -3,16 +3,16 @@ import {wait} from '#src/utils/misc/wait'
 
 test('advances timers when set', async () => {
   const beforeReal = performance.now()
-  jest.useFakeTimers()
+  timers.useFakeTimers()
   const beforeFake = performance.now()
 
   const config = createConfig({
     delay: 1000,
-    advanceTimers: jest.advanceTimersByTime,
+    advanceTimers: t => timers.advanceTimersByTime(t),
   })
   await wait(config)
 
   expect(performance.now() - beforeFake).toBe(1000)
-  jest.useRealTimers()
+  timers.useRealTimers()
   expect(performance.now() - beforeReal).toBeLessThan(1000)
 }, 10)

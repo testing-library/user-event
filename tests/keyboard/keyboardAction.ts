@@ -47,11 +47,11 @@ test('do not leak repeatKey in state', async () => {
   render(`<input/>`)
 
   const keyboardState = await userEvent.keyboard('{a>2}')
-  expect(keyboardState).toHaveProperty('repeatKey', undefined)
+  expect(keyboardState).not.toHaveProperty('repeatKey')
 })
 
 describe('pressing and releasing keys', () => {
-  it('fires event with releasing key twice', async () => {
+  test('fires event with releasing key twice', async () => {
     const {getEventSnapshot, user} = setup(`<input/>`)
 
     await user.keyboard('{ArrowLeft>}{ArrowLeft}')
@@ -66,7 +66,7 @@ describe('pressing and releasing keys', () => {
     `)
   })
 
-  it('fires event without releasing key', async () => {
+  test('fires event without releasing key', async () => {
     const {getEventSnapshot, user} = setup(`<input/>`)
 
     await user.keyboard('{a>}')
@@ -81,7 +81,7 @@ describe('pressing and releasing keys', () => {
     `)
   })
 
-  it('fires event multiple times without releasing key', async () => {
+  test('fires event multiple times without releasing key', async () => {
     const {getEventSnapshot, user} = setup(`<input/>`)
 
     await user.keyboard('{a>2}')
@@ -100,7 +100,7 @@ describe('pressing and releasing keys', () => {
     `)
   })
 
-  it('fires event multiple times and releases key', async () => {
+  test('fires event multiple times and releases key', async () => {
     const {getEventSnapshot, user} = setup(`<input/>`)
 
     await user.keyboard('{a>2/}')
@@ -120,7 +120,7 @@ describe('pressing and releasing keys', () => {
     `)
   })
 
-  it('fires event multiple times for multiple keys', async () => {
+  test('fires event multiple times for multiple keys', async () => {
     const {getEventSnapshot, user} = setup(`<input/>`)
 
     await user.keyboard('{a>2}{b>2/}{c>2}{/a}')
@@ -182,7 +182,7 @@ describe('prevent default behavior', () => {
 
 test('do not call setTimeout with delay `null`', async () => {
   const {user} = setup(`<div></div>`)
-  const spy = jest.spyOn(global, 'setTimeout')
+  const spy = mocks.spyOn(global, 'setTimeout')
   await user.keyboard('ab')
   expect(spy.mock.calls.length).toBeGreaterThanOrEqual(1)
 

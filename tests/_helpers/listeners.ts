@@ -48,7 +48,7 @@ export function addListeners(
   }
   let eventHandlerCalls: CallData[] = []
 
-  const generalListener = jest.fn(eventHandler).mockName('eventListener')
+  const generalListener = mocks.fn(eventHandler).mockName('eventListener')
 
   for (const eventType of Object.keys(eventMapKeys) as Array<
     keyof typeof eventMapKeys

@@ -1,7 +1,7 @@
 import userEvent from '#src'
 import {addListeners, render, setup} from '#testHelpers'
 
-it('type without focus', async () => {
+test('type without focus', async () => {
   const {element, user} = setup('<input/>', {focus: false})
   const {getEventSnapshot} = addListeners(document.body)
 
@@ -23,7 +23,7 @@ it('type without focus', async () => {
   `)
 })
 
-it('type with focus', async () => {
+test('type with focus', async () => {
   const {element, user, getEventSnapshot} = setup('<input/>')
 
   await user.keyboard('foo')
@@ -50,7 +50,7 @@ it('type with focus', async () => {
   `)
 })
 
-it('type asynchronous', async () => {
+test('type asynchronous', async () => {
   const {element, user, getEventSnapshot} = setup('<input/>', {delay: 1})
 
   await user.keyboard('foo')
@@ -77,14 +77,14 @@ it('type asynchronous', async () => {
   `)
 })
 
-it('error in async', async () => {
+test('error in async', async () => {
   const {user} = setup('')
   await expect(user.keyboard('[!')).rejects.toThrowError(
     'Expected key descriptor but found "!" in "[!"',
   )
 })
 
-it('continue typing with state', async () => {
+test('continue typing with state', async () => {
   const {getEventSnapshot, clearEventCalls} = render('<input/>')
 
   const state = await userEvent.keyboard('[ShiftRight>]')
@@ -111,7 +111,7 @@ it('continue typing with state', async () => {
 })
 
 describe('delay', () => {
-  const spy = jest.spyOn(global, 'setTimeout')
+  const spy = mocks.spyOn(global, 'setTimeout')
 
   beforeEach(() => {
     spy.mockClear()

@@ -1,84 +1,81 @@
 import type {Instance, UserEventApi} from '#src/setup/setup'
-
-// The following hacky mocking allows us to spy on imported API functions.
-// This way we can test assertions on the wiring of arguments without repeating tests of each API implementation.
+import type {Mock, MockedFunction, MockInstance} from 'jest-mock'
+import { userEventApi } from '#src/setup/api'
 
 // `const` are not initialized when mocking is executed, but `function` are when prefixed with `mock`
-function mockApis() {}
-// access the `function` as object
-type mockApisRefHack = (() => void) & {
+const mockApis = {} as {
   [name in keyof UserEventApi]: {
-    mock: APIMock
+    mock: APIMock<name>
     real: UserEventApi[name]
   }
 }
 
-// make the tests more readable by applying the typecast here
-export function getSpy(k: keyof UserEventApi) {
-  return (mockApis as mockApisRefHack)[k].mock
+export function getSpy<K extends keyof UserEventApi>(k: K) {
+  return mockApis[k].mock
 }
-export function getReal(k: keyof UserEventApi) {
-  return (mockApis as mockApisRefHack)[k].real
+export function getReal<K extends keyof UserEventApi>(k: K) {
+  return mockApis[k].real
 }
 
-interface APIMock
-  extends Function,
-    jest.MockInstance<
-      ReturnType<UserEventApi[keyof UserEventApi]>,
-      Parameters<UserEventApi[keyof UserEventApi]> & {
-        this?: Instance
-      }
-    > {
-  (
-    this: Instance,
-    ...args: Parameters<UserEventApi[keyof UserEventApi]>
-  ): ReturnType<UserEventApi[keyof UserEventApi]>
+type APIMock<name extends keyof UserEventApi> = UserEventApi[name] & MockInstance<UserEventApi[name]> & {
   originalMockImplementation: (
     this: Instance,
     ...args: Parameters<UserEventApi[keyof UserEventApi]>
   ) => ReturnType<UserEventApi[keyof UserEventApi]>
+  mock: {
+    lastCall?: {
+      this: Instance
+    }
+    calls: {this: Instance}[]
+  }
 }
 
-jest.mock('#src/setup/api', () => {
-  const real: UserEventApi & {__esModule: true} =
-    jest.requireActual('#src/setup/api')
-  const fake = {} as {
-    [K in keyof UserEventApi]: jest.MockedFunction<UserEventApi[K]>
+const real = {
+  ...userEventApi,
+}
+const fake = {} as {
+  [K in keyof UserEventApi]: MockedFunction<UserEventApi[K]>
+}
+;(Object.keys(userEventApi) as Array<keyof UserEventApi>).forEach(key => {
+  const mock = mocks.fn<UserEventApi[keyof UserEventApi]>(mockImpl)
+  function mockImpl(this: Instance, ...args: unknown[]) {
+    Object.defineProperty(mock.mock.lastCall, 'this', {
+      get: () => this,
+      configurable: true,
+    })
+    return (real[key] as Function).apply(this, args)
   }
-
-  ;(Object.keys(real) as Array<keyof UserEventApi>).forEach(key => {
-    const mock = jest.fn<unknown, unknown[]>(mockImpl) as unknown as APIMock
-    function mockImpl(this: Instance, ...args: unknown[]) {
-      Object.defineProperty(mock.mock.lastCall, 'this', {
-        get: () => this,
-      })
-      return (real[key] as Function).apply(this, args)
-    }
-    mock.originalMockImplementation = mockImpl
-
-    Object.defineProperty(mock, 'name', {
-      get: () => `mock-${key}`,
-    })
-
-    Object.defineProperty(fake, key, {
-      get: () => mock,
-      enumerable: true,
-    })
-
-    Object.defineProperty(mockApis, key, {
-      get: () => ({
-        mock: fake[key],
-        real: real[key],
-      }),
-    })
+  Object.defineProperty(mock, 'originalMockImplementation', {
+    get: () => mockImpl,
+    configurable: true,
   })
 
-  return {
-    __esmodule: true,
-    ...fake,
-  }
+  Object.defineProperty(mock, 'name', {
+    get: () => `mock-${key}`,
+    configurable: true,
+  })
+
+  Object.defineProperty(fake, key, {
+    get: () => mock,
+    enumerable: true,
+    configurable: true,
+  })
+
+  Object.defineProperty(mockApis, key, {
+    get: () => ({
+      mock: fake[key],
+      real: real[key],
+    }),
+    configurable: true,
+  })
+
+  Object.defineProperty(userEventApi, key, {
+    get: () => fake[key],
+    enumerable: true,
+    configurable: true,
+  })
 })
 
 afterEach(async () => {
-  jest.clearAllMocks()
+  mocks.clearAllMocks()
 })

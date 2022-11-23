@@ -1,5 +1,5 @@
-import DOMTestingLibrary from '#src/_interop/dtl'
 import {getSpy} from './_mockApis'
+import DOMTestingLibrary from '#src/_interop/dtl'
 import userEvent from '#src'
 import type {Instance, UserEventApi} from '#src/setup/setup'
 import {render} from '#testHelpers'
@@ -128,7 +128,7 @@ test.each(apiDeclarationsEntries)(
     await (apis[name] as Function)(...args)
 
     expect(spy).toBeCalledTimes(1)
-    expect(spy.mock.lastCall?.this?.config[opt]).toBe(true)
+    expect(spy.mock.lastCall?.this.config[opt]).toBe(true)
 
     // Make sure the asyncWrapper mock has been used in the API call
     expect(asyncWrapper).toBeCalled()
@@ -138,9 +138,9 @@ test.each(apiDeclarationsEntries)(
     await (subApis[name] as Function)(...args)
 
     expect(spy).toBeCalledTimes(2)
-    expect(spy.mock.lastCall?.this?.config[opt]).toBe(true)
-    expect(spy.mock.calls[1]?.this?.system).toBe(
-      spy.mock.calls[0]?.this?.system,
+    expect(spy.mock.lastCall?.this.config[opt]).toBe(true)
+    expect(spy.mock.calls[1].this.system).toBe(
+      spy.mock.calls[0].this.system,
     )
   },
 )
@@ -170,13 +170,13 @@ test.each(apiDeclarationsEntries)(
 
     if (!['clear', 'tab'].includes(name)) {
       // TODO: add options param to these direct APIs
-      expect(spy.mock.lastCall?.this?.config[opt]).toBe(true)
+      expect(spy.mock.lastCall?.this.config[opt]).toBe(true)
     }
 
     // options arg can be omitted
     await (userEvent[name] as Function)(...args.slice(0, -1))
 
     expect(spy).toBeCalledTimes(2)
-    expect(spy.mock.lastCall?.this?.config[opt]).toBe(undefined)
+    expect(spy.mock.lastCall?.this.config[opt]).toBe(undefined)
   },
 )

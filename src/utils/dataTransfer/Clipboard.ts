@@ -210,6 +210,11 @@ export async function writeDataTransferToClipboard(
   }
 }
 
+declare global {
+  const afterAll: undefined | ((cb: () => void) => void);
+  const afterEach: undefined | ((cb: () => void) => void);
+}
+
 /* istanbul ignore else */
 if (typeof globalThis.afterEach === 'function') {
   globalThis.afterEach(() => resetClipboardStubOnView(globalThis.window))

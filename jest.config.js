@@ -24,4 +24,8 @@ config.testPathIgnorePatterns.push('/_.*(?<!\\.test\\.[jt]sx?)$')
 // Ignore declaration files
 config.testPathIgnorePatterns.push('\\.d\\.ts$')
 
+config.snapshotSerializers = [
+  require.resolve('jest-snapshot-serializer-raw/always'),
+]
+
 module.exports = config

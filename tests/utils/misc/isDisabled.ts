@@ -2,7 +2,9 @@ import cases from 'jest-in-case'
 import {isDisabled} from '#src/utils'
 import {render} from '#testHelpers'
 
-customElements.define(
+const HTMLElement = window.HTMLElement
+
+window.customElements.define(
   'form-associated',
   class FormAssociated extends HTMLElement {
     static formAssociated = true
@@ -12,7 +14,7 @@ customElements.define(
   },
 )
 
-customElements.define(
+window.customElements.define(
   'custom-el',
   class CustomEl extends HTMLElement {
     get disabled() {

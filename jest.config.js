@@ -12,7 +12,6 @@ config.testEnvironment = 'jsdom'
 
 config.setupFilesAfterEnv = [
   '<rootDir>/testenv/jest.js',
-  '<rootDir>/tests/react/_env/setup-env.js',
 ]
 
 config.testMatch.push('<rootDir>/tests/**/*.+(js|jsx|ts|tsx)')

@@ -7,6 +7,8 @@ const dirname = path.dirname(new URL(import.meta.url).pathname)
 const indexDirLib = path.join(dirname, '../testenv/libs')
 const indexDirEnv = path.join(dirname, '../testenv')
 
+const ignoreEnv = ['node.js', 'jest.js']
+
 const cmd = process.argv[2]
 const names = process.argv.length > 3 ? process.argv.slice(3) : undefined
 
@@ -46,7 +48,10 @@ async function getLibDirs(names) {
 }
 
 async function getEnvFiles(names) {
-    names ??= (await fs.readdir(indexDirLib)).filter(n => /\w+\.js/.test(n))
+    names ??= (await fs.readdir(indexDirEnv))
+        .filter(n => /^\w+\.js$/.test(n))
+        .filter(n => !ignoreEnv.includes(n))
+        .map(f => f.slice(0, f.length - 3))
 
     return await Promise.all(names.map(async name => {
         const file = `${indexDirEnv}/${name}.js`
@@ -85,11 +90,12 @@ async function buildLib(name, dir) {
     builder.inputFiles.set(`${dir}/index.js`, undefined)
 
     builder.emitter.addListener('complete', e => {
-        fs.writeFile(`${dir}/index.bundle.js`, String(e.outputFiles.get('index.js')?.content))
+        const content = String(e.outputFiles.get('index.js')?.content)
+        fs.writeFile(`${dir}/index.bundle.js`, content)
             .then(() => process.stdout.write([
                 '<<<',
                 `Wrote ${dir}/index.bundle.js`,
-                `[${e.outputFiles.get('index.js')?.content.length} bytes]`,
+                `[${content.length} bytes]`,
                 ...((globals && Object.keys(globals).length)
                     ? [
                         `  Depending on:`,
@@ -108,16 +114,18 @@ async function buildEnv(name, file) {
     process.stdout.write(`Bundling environment "${name}" at ${file}\n`)
 
     const builder = createBundleBuilder({
-        basePath: `${indexDir}/`,
+        basePath: `${indexDirEnv}/`,
     })
+    const basename = path.basename(file, '.js')
     builder.inputFiles.set(file, undefined)
 
     builder.emitter.addListener('complete', e => {
-        fs.writeFile(`${indexDir}/${basename}.bundle.js`, String(e.outputFiles.get(name)?.content))
+        const content = String(e.outputFiles.get(`${basename}.js`)?.content)
+        fs.writeFile(`${indexDirEnv}/${basename}.bundle.js`, content)
             .then(() => process.stdout.write([
                 '<<<',
-                `Wrote ${indexDir}/${basename}.bundle.js`,
-                `[${e.outputFiles.get(name)?.content.length} bytes]`,
+                `Wrote ${indexDirEnv}/${basename}.bundle.js`,
+                `[${content.length} bytes]`,
                 '>>>',
                 '',
             ].join('\n')))

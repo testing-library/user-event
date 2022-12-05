@@ -27,4 +27,6 @@ config.snapshotSerializers = [
   require.resolve('jest-snapshot-serializer-raw/always'),
 ]
 
+config.coverageThreshold = undefined
+
 module.exports = config

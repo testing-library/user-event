@@ -86,7 +86,9 @@ onBuildDone(async () => {
     const runs = conductors.map(c => c.createTestRun(files))
     const stack = new TestRunStack(runs.map(r => r.run))
 
-    runs.forEach(r => r.exec())
+    for (const r of runs) {
+        await r.exec()
+    }
 
     await stack.then()
 

@@ -3,6 +3,12 @@ import { NodeTestConductor } from '@ph.fritsche/toolbox/dist/conductor/NodeTestC
 import { ChromeTestConductor } from '@ph.fritsche/toolbox/dist/conductor/ChromeTestConductor.js'
 import { ConsoleReporter } from '@ph.fritsche/toolbox/dist/reporter/ConsoleReporter.js'
 import { ReporterServer } from '@ph.fritsche/toolbox/dist/reporter/ReporterServer.js'
+import { TestRunStack } from '@ph.fritsche/toolbox/dist/reporter/TestRunStack.js'
+
+import IstanbulLibCoverage from 'istanbul-lib-coverage'
+import IstanbulLibReport from 'istanbul-lib-report'
+import IstanbulLibSourceMaps from 'istanbul-lib-source-maps'
+import IstanbulReports from 'istanbul-reports'
 
 const tsConfigFile = './tests/tsconfig.json'
 
@@ -77,7 +83,35 @@ onBuildDone(async () => {
         server: await fileServer.url,
         paths: Array.from(fileProvider.files.keys()).filter(filter),
     }
-    await Promise.all(conductors.map(c => c.runTests(files)))
+    const runs = conductors.map(c => c.createTestRun(files))
+    const stack = new TestRunStack(runs.map(r => r.run))
+
+    runs.forEach(r => r.exec())
+
+    await stack.then()
+
+    const coverageMap = IstanbulLibCoverage.createCoverageMap()
+    for (const run of stack.runs) {
+        for (const coverage of run.coverage.values()) {
+            coverageMap.merge(coverage)
+        }
+    }
+    
+    const sourceStore = IstanbulLibSourceMaps.createSourceMapStore()
+    const reportContext = IstanbulLibReport.createContext({
+        coverageMap: await sourceStore.transformCoverage(coverageMap),
+        dir: fileProvider.origin,
+        sourceFinder: sourceStore.sourceFinder,
+        defaultSummarizer: 'nested',
+        watermarks: {
+            branches: [80, 100],
+            functions: [80, 100],
+            lines: [80, 100],
+            statements: [80, 100],
+        },
+    })
+
+    IstanbulReports.create('text').execute(reportContext)
 
     if (process.env.CI) {
         process.exit(0)

@@ -116,6 +116,11 @@ onBuildDone(async () => {
     IstanbulReports.create('text').execute(reportContext)
 
     if (process.env.CI) {
-        process.exit(0)
+        toolbox.server.close()
+        env.server.close()
+        fileServer.close()
+        buildProvider.close()
+        reporterServer.close()
+        conductors.forEach(c => c.close())
     }
 })

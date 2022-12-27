@@ -27,21 +27,37 @@ export function toThrowErrorMatchingInlineSnapshot(
     callback,
     expected,
 ) {
-    let didThrow = false, actual = undefined
-    try {
-        callback()
-    } catch (e) {
-        didThrow = true
-        actual = e
+    if (typeof callback === 'function') {
+        try {
+            const promise = callback()
+            if (typeof promise === 'object' && 'then' in promise) {
+                return promise
+                    .then(() => ({ didThrow: false }), r => ({ didThrow: true, actual: r }))
+                    .then(({ didThrow, actual }) => matchError.call(this, didThrow, actual, expected))
+            }
+        } catch (e) {
+            return matchError.call(this, true, e, expected)
+        }
+        return matchError.call(this, false, undefined, expected)
+    } else if (this.promise === 'rejects') {
+        return matchError.call(this, true, callback, expected)
     }
 
+    throw new Error('Invalid argument')
+}
+
+function matchError(
+    didThrow,
+    actual,
+    expected,
+) {
     const normalizedActual = didThrow && stripAddedLinebreaks(stripAddedIndentation(typeof actual === 'object' && 'message' in actual ? actual.message : String(actual)))
     const normalizedExpected = stripAddedLinebreaks(stripAddedIndentation(expected))
 
     return {
         pass: this.isNot === !didThrow && normalizedActual === normalizedExpected,
         message: () => [
-            this.utils.matcherHint('toMatchInlineSnapshot', undefined, undefined, {
+            this.utils.matcherHint('toThrowErrorMatchingInlineSnapshot', undefined, undefined, {
                 isNot: this.isNot,
                 promise: this.promise,
             }),

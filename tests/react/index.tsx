@@ -24,7 +24,7 @@ test.each([0, 1])('maintain cursor position on controlled input', async () => {
 })
 
 test('trigger Synthetic `keypress` event for printable characters', async () => {
-  const onKeyPress = jest.fn<unknown, [React.KeyboardEvent]>()
+  const onKeyPress = mocks.fn()
   render(<input onKeyPress={onKeyPress} />)
   const user = userEvent.setup()
   screen.getByRole('textbox').focus()
@@ -106,8 +106,8 @@ test('detect value and selection change', async () => {
 })
 
 test('trigger onChange SyntheticEvent on input', async () => {
-  const inputHandler = jest.fn()
-  const changeHandler = jest.fn()
+  const inputHandler = mocks.fn()
+  const changeHandler = mocks.fn()
 
   render(<input onInput={inputHandler} onChange={changeHandler} />)
   const user = userEvent.setup()

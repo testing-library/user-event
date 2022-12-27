@@ -11,8 +11,7 @@ config.moduleNameMapper = {
 config.testEnvironment = 'jsdom'
 
 config.setupFilesAfterEnv = [
-  '<rootDir>/tests/_setup-env.js',
-  '<rootDir>/tests/react/_env/setup-env.js',
+  '<rootDir>/testenv/jest.js',
 ]
 
 config.testMatch.push('<rootDir>/tests/**/*.+(js|jsx|ts|tsx)')
@@ -23,5 +22,11 @@ config.testPathIgnorePatterns.push('/_.*(?<!\\.test\\.[jt]sx?)$')
 
 // Ignore declaration files
 config.testPathIgnorePatterns.push('\\.d\\.ts$')
+
+config.snapshotSerializers = [
+  require.resolve('jest-snapshot-serializer-raw/always'),
+]
+
+config.coverageThreshold = undefined
 
 module.exports = config

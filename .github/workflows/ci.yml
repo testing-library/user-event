@@ -31,6 +31,10 @@ jobs:
         run: npm run lint
       - name: 🧪 Test
         run: npm run test -- --coverage
+      - name: 🚧 Build test environments
+        run: npm run setup:env
+      - name: 🔬 Test with toolbox
+        run: npm run test:toolbox
       - name: 🏗 Build
         run: npm run build
 

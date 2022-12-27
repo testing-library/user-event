@@ -1,0 +1,8 @@
+import './modules/global.js'
+import './modules/process.js'
+import './modules/expect.js'
+import './modules/mocks.js'
+import './modules/timers.js'
+import './modules/testinglibrary.js'
+import './modules/inlineSnapshot.js'
+import './modules/console.js'

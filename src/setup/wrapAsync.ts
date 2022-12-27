@@ -1,4 +1,6 @@
-import {getConfig} from '@testing-library/dom'
+import dtl from '../_interop/dtl'
+
+const { getConfig } = dtl
 
 /**
  * Wrap an internal Promise

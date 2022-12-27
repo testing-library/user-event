@@ -179,7 +179,7 @@ test('double click per touch device', async () => {
   expect(getEvents('click')[0]).toHaveProperty('pointerId', 2)
   expect(getEvents('click')[1]).toHaveProperty('pointerId', 3)
   expect(getEvents('dblclick')).toHaveLength(1)
-  expect(getEvents('dblclick')[0]).toHaveProperty('pointerId', undefined)
+  expect(getEvents('dblclick')[0]).not.toHaveProperty('pointerId')
 })
 
 test('multi touch does not click', async () => {

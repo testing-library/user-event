@@ -1,19 +1,11 @@
-import {behavior, BehaviorPlugin} from '#src/event/behavior'
+import {behavior} from '#src/event/behavior'
 import {createConfig, createInstance} from '#src/setup/setup'
 import {render} from '#testHelpers'
 
-jest.mock('#src/event/behavior', () => ({
-  behavior: {
-    click: jest.fn(),
-  },
-}))
-
-const mockPlugin = behavior.click as jest.MockedFunction<
-  BehaviorPlugin<'click'>
->
+const mockPlugin = mocks.spyOn(behavior as Required<typeof behavior>, 'click').mockImplementation(() => void 0)
 
 afterEach(() => {
-  jest.clearAllMocks()
+  mockPlugin.mockClear()
 })
 
 function setupInstance() {
@@ -32,7 +24,7 @@ test('keep default behavior', () => {
 test('replace default behavior', () => {
   const {element} = render(`<input type="checkbox"/>`)
 
-  const mockBehavior = jest.fn()
+  const mockBehavior = mocks.fn(() => void 0)
   mockPlugin.mockImplementationOnce(() => mockBehavior)
 
   setupInstance().dispatchUIEvent(element, 'click')
@@ -50,7 +42,7 @@ test('prevent replaced default behavior', () => {
     expect(e).toHaveProperty('defaultPrevented', true)
   })
 
-  const mockBehavior = jest.fn()
+  const mockBehavior = mocks.fn(() => void 0)
   mockPlugin.mockImplementationOnce(() => mockBehavior)
 
   setupInstance().dispatchUIEvent(element, 'click')

@@ -1,7 +1,9 @@
-import {getConfig} from '@testing-library/dom'
+import dtl from '../_interop/dtl'
 import {hasPointerEvents, isDisabled, isElementType, wait} from '../utils'
 import type {Instance} from '../setup'
 import {focusElement} from '../event'
+
+const { getConfig } = dtl
 
 export async function selectOptions(
   this: Instance,

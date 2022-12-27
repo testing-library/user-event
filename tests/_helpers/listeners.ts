@@ -1,4 +1,3 @@
-import {TestData, TestDataProps} from './trackProps'
 import {eventMapKeys} from '#src/event/eventMap'
 import {isElementType} from '#src/utils'
 import {MouseButton, MouseButtonFlip} from '#src/system/pointer/buttons'
@@ -36,7 +35,7 @@ export type EventHandlers = {[k in keyof DocumentEventMap]?: EventListener}
  * Add listeners for logging events.
  */
 export function addListeners(
-  element: Element & {testData?: TestData},
+  element: Element,
   {
     eventHandlers = {},
   }: {
@@ -46,11 +45,10 @@ export function addListeners(
   type CallData = {
     event: Event
     elementDisplayName: string
-    testData?: TestData
   }
   let eventHandlerCalls: CallData[] = []
 
-  const generalListener = jest.fn(eventHandler).mockName('eventListener')
+  const generalListener = mocks.fn(eventHandler).mockName('eventListener')
 
   for (const eventType of Object.keys(eventMapKeys) as Array<
     keyof typeof eventMapKeys
@@ -77,14 +75,6 @@ export function addListeners(
       event,
       elementDisplayName:
         target && isElement(target) ? getElementDisplayName(target) : '',
-    }
-    if (element.testData && !element.testData.handled) {
-      callData.testData = element.testData
-      // sometimes firing a single event (like click on a checkbox) will
-      // automatically fire more events (line input and change).
-      // and we don't want the test data applied to those, so we'll store
-      // this and not add the testData to our call if that was already handled
-      element.testData.handled = true
     }
     eventHandlerCalls.push(callData)
   }
@@ -119,7 +109,7 @@ export function addListeners(
 
   function getEventSnapshot() {
     const eventCalls = eventHandlerCalls
-      .map(({event, testData, elementDisplayName}) => {
+      .map(({event, elementDisplayName}) => {
         const firstLine = [
           `${elementDisplayName} - ${event.type}`,
           [getEventLabel(event), getEventModifiers(event)]
@@ -129,7 +119,7 @@ export function addListeners(
           .filter(Boolean)
           .join(': ')
 
-        return [firstLine, getChanges(testData)].filter(Boolean).join('\n')
+        return firstLine
       })
       .join('\n')
       .trim()
@@ -187,10 +177,10 @@ function getElementDisplayName(element: Element) {
     displayName.push(`#${element.id}`)
   }
   if (hasProperty(element, 'name') && element.name) {
-    displayName.push(`[name="${element.name}"]`)
+    displayName.push(`[name="${String(element.name)}"]`)
   }
   if (hasProperty(element, 'htmlFor') && element.htmlFor) {
-    displayName.push(`[for="${element.htmlFor}"]`)
+    displayName.push(`[for="${String(element.htmlFor)}"]`)
   }
   if (
     isElementType(element, 'input') &&
@@ -260,52 +250,4 @@ function getMouseButtonName(button: number) {
   return Object.keys(MouseButton).find(
     k => MouseButton[k as keyof typeof MouseButton] === button,
   )
-}
-
-function getChanges({before, after}: TestData = {}) {
-  const changes = new Set()
-  if (before && after) {
-    for (const key of Object.keys(before) as Array<keyof typeof before>) {
-      if (after[key] !== before[key]) {
-        if (key === 'checked') {
-          changes.add(
-            [
-              before.checked ? 'checked' : 'unchecked',
-              after.checked ? 'checked' : 'unchecked',
-            ].join(' -> '),
-          )
-        } else {
-          changes.add(
-            [
-              JSON.stringify(getValueWithSelection(before)),
-              JSON.stringify(getValueWithSelection(after)),
-            ].join(' -> '),
-          )
-        }
-      }
-    }
-  }
-
-  return Array.from(changes)
-    .filter(Boolean)
-    .map(line => `  ${line}`)
-    .join('\n')
-}
-
-function getValueWithSelection({
-  value,
-  selectionStart,
-  selectionEnd,
-}: TestDataProps = {}) {
-  return [
-    value?.slice(0, selectionStart ?? undefined),
-    ...(selectionStart === selectionEnd
-      ? ['{CURSOR}']
-      : [
-          '{SELECTION}',
-          value?.slice(selectionStart ?? 0, selectionEnd ?? undefined),
-          '{/SELECTION}',
-        ]),
-    value?.slice(selectionEnd ?? undefined),
-  ].join('')
 }

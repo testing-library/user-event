@@ -209,8 +209,8 @@ test('circumvent setters/methods for UI changes', () => {
   const prototypeDescr = Object.getOwnPropertyDescriptors<HTMLInputElement>(
     Object.getPrototypeOf(element) as HTMLInputElement,
   )
-  const valueSpy = jest.fn(prototypeDescr.value.set)
-  const setSelectionRangeSpy = jest.fn(prototypeDescr.setSelectionRange.value)
+  const valueSpy = mocks.fn(prototypeDescr.value.set)
+  const setSelectionRangeSpy = mocks.fn(prototypeDescr.setSelectionRange.value)
 
   Object.defineProperties(element, {
     value: {

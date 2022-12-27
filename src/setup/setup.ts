@@ -11,7 +11,7 @@ import {
   wait,
 } from '../utils'
 import {System} from '../system'
-import * as userEventApi from './api'
+import {userEventApi} from './api'
 import {wrapAsync} from './wrapAsync'
 import {DirectOptions} from './directApi'
 

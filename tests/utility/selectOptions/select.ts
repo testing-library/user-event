@@ -192,10 +192,10 @@ test('does not select anything if options are disabled', async () => {
 
 test('should call onChange/input bubbling up the event when a new option is selected', async () => {
   const {select, form, user} = setupSelect({multiple: true})
-  const onChangeSelect = jest.fn()
-  const onChangeForm = jest.fn()
-  const onInputSelect = jest.fn()
-  const onInputForm = jest.fn()
+  const onChangeSelect = mocks.fn()
+  const onChangeForm = mocks.fn()
+  const onInputSelect = mocks.fn()
+  const onInputForm = mocks.fn()
   addListeners(select, {
     eventHandlers: {change: onChangeSelect, input: onInputSelect},
   })

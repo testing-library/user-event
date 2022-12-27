@@ -5,6 +5,7 @@ import {addListeners} from '#testHelpers'
 // Can this be removed? Is it sufficient?
 
 const observed = ['value']
+const HTMLElement = window.HTMLElement
 
 class CustomEl extends HTMLElement {
   private $input: HTMLInputElement

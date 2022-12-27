@@ -1,0 +1,6 @@
+{
+    "type": "module",
+    "dependencies": {
+        "@testing-library/dom": "^8"
+    }
+}

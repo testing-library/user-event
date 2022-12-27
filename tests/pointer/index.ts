@@ -1,3 +1,4 @@
+import type { SpyInstance } from 'jest-mock'
 import {PointerEventsCheckLevel} from '#src'
 import {setup} from '#testHelpers'
 
@@ -57,7 +58,7 @@ test('apply modifiers from keyboardstate', async () => {
 })
 
 describe('delay', () => {
-  const spy = jest.spyOn(global, 'setTimeout')
+  const spy = mocks.spyOn(global, 'setTimeout')
 
   beforeEach(() => {
     spy.mockClear()
@@ -123,13 +124,9 @@ test('no mousedown/mouseup on disabled elements', async () => {
 })
 
 describe('check for pointer-events', () => {
-  let getComputedStyle: jest.SpyInstance<
-    ReturnType<Window['getComputedStyle']>,
-    Parameters<Window['getComputedStyle']>
-  >
+  let getComputedStyle: SpyInstance<Window['getComputedStyle']>
   beforeAll(() => {
-    getComputedStyle = jest
-      .spyOn(window, 'getComputedStyle')
+    getComputedStyle = mocks.spyOn(window, 'getComputedStyle')
       .mockImplementation(
         () =>
           ({
@@ -145,7 +142,7 @@ describe('check for pointer-events', () => {
     )
   })
   afterAll(() => {
-    jest.restoreAllMocks()
+    mocks.restoreAllMocks()
   })
 
   test('skip check', async () => {
@@ -240,7 +237,7 @@ test('reject if target has `pointer-events: none`', async () => {
 
 test('omit pointer events on previous target if it has `pointer-events: none`', async () => {
   const {element, user} = setup(`<input/>`)
-  const onPointerLeave = jest.fn()
+  const onPointerLeave = mocks.fn()
   element.addEventListener('pointerleave', onPointerLeave)
 
   await user.pointer({target: element})

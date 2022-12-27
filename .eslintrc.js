@@ -23,5 +23,11 @@ module.exports = {
         'local-rules/explicit-globals': 'error',
       },
     },
+    {
+      files: ['**.{ts,tsx}'],
+      rules: {
+        '@typescript-eslint/no-unsafe-argument': 1,
+      },
+    },
   ],
 }

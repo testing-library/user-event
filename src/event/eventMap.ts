@@ -1,8 +1,8 @@
-import {eventMap as baseEventMap} from '@testing-library/dom/dist/event-map.js'
+import dtlEvents from '../_interop/dtlEventMap'
 import {EventType} from './types'
 
 export const eventMap = {
-  ...baseEventMap,
+  ...dtlEvents.eventMap,
 
   click: {
     EventType: 'PointerEvent',

@@ -1,8 +1,10 @@
-import {getConfig} from '@testing-library/dom'
 import {getSpy} from './_mockApis'
+import DOMTestingLibrary from '#src/_interop/dtl'
 import userEvent from '#src'
 import type {Instance, UserEventApi} from '#src/setup/setup'
 import {render} from '#testHelpers'
+
+const { getConfig } = DOMTestingLibrary
 
 type ApiDeclarations = {
   [api in keyof UserEventApi]: {
@@ -65,9 +67,9 @@ const apiDeclarations: ApiDeclarations = {
     elementHtml: `<input type="file"/>`,
   },
 }
-const apiDeclarationsEntries = Object.entries(apiDeclarations) as Array<
-  [keyof ApiDeclarations, ApiDeclarations[keyof ApiDeclarations]]
->
+
+type ApiDeclarationsEntry<k extends keyof ApiDeclarations = keyof ApiDeclarations> = [k, ApiDeclarations[k]]
+const apiDeclarationsEntries = Object.entries(apiDeclarations) as ApiDeclarationsEntry[]
 
 const opt = Symbol('testOption')
 declare module '#src/setup' {
@@ -85,7 +87,7 @@ declare module '#src/options' {
 const realAsyncWrapper = getConfig().asyncWrapper
 afterEach(() => {
   getConfig().asyncWrapper = realAsyncWrapper
-  jest.restoreAllMocks()
+  mocks.restoreAllMocks()
 })
 
 test.each(apiDeclarationsEntries)(
@@ -104,7 +106,7 @@ test.each(apiDeclarationsEntries)(
     expect(apis[name]).toHaveProperty('name', `mock-${name}`)
 
     // Replace the asyncWrapper to make sure that a delayed state update happens inside of it
-    const stateUpdate = jest.fn()
+    const stateUpdate = mocks.fn()
     spy.mockImplementation(async function impl(
       this: Instance,
       ...a: Parameters<typeof spy>
@@ -112,8 +114,8 @@ test.each(apiDeclarationsEntries)(
       const ret = spy.originalMockImplementation.apply(this, a)
       void ret.then(() => setTimeout(stateUpdate))
       return ret
-    } as typeof spy['originalMockImplementation'])
-    const asyncWrapper = jest.fn(async (cb: () => Promise<unknown>) => {
+    } as UserEventApi[typeof name])
+    const asyncWrapper = mocks.fn(async (cb: () => Promise<unknown>) => {
       stateUpdate.mockClear()
       const ret = cb()
       expect(stateUpdate).not.toBeCalled()
@@ -126,7 +128,7 @@ test.each(apiDeclarationsEntries)(
     await (apis[name] as Function)(...args)
 
     expect(spy).toBeCalledTimes(1)
-    expect(spy.mock.lastCall?.this?.config[opt]).toBe(true)
+    expect(spy.mock.lastCall?.this.config[opt]).toBe(true)
 
     // Make sure the asyncWrapper mock has been used in the API call
     expect(asyncWrapper).toBeCalled()
@@ -136,9 +138,9 @@ test.each(apiDeclarationsEntries)(
     await (subApis[name] as Function)(...args)
 
     expect(spy).toBeCalledTimes(2)
-    expect(spy.mock.lastCall?.this?.config[opt]).toBe(true)
-    expect(spy.mock.calls[1]?.this?.system).toBe(
-      spy.mock.calls[0]?.this?.system,
+    expect(spy.mock.lastCall?.this.config[opt]).toBe(true)
+    expect(spy.mock.calls[1].this.system).toBe(
+      spy.mock.calls[0].this.system,
     )
   },
 )
@@ -168,13 +170,13 @@ test.each(apiDeclarationsEntries)(
 
     if (!['clear', 'tab'].includes(name)) {
       // TODO: add options param to these direct APIs
-      expect(spy.mock.lastCall?.this?.config[opt]).toBe(true)
+      expect(spy.mock.lastCall?.this.config[opt]).toBe(true)
     }
 
     // options arg can be omitted
     await (userEvent[name] as Function)(...args.slice(0, -1))
 
     expect(spy).toBeCalledTimes(2)
-    expect(spy.mock.lastCall?.this?.config[opt]).toBe(undefined)
+    expect(spy.mock.lastCall?.this.config[opt]).toBe(undefined)
   },
 )

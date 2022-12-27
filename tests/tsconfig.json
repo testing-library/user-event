@@ -6,7 +6,13 @@
       "#src": ["./src/index"],
       "#src/*": ["./src/*"],
       "#testHelpers": ["./tests/_helpers/index"]
-    }
+    },
+    "typeRoots": [
+      "../testenv",
+    ],
+    "types": [
+      "types",
+    ],
   },
-  "include": ["."]
+  "include": [".", "../testenv"],
 }

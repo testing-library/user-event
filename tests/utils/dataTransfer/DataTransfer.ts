@@ -7,7 +7,7 @@ describe('create DataTransfer', () => {
 
     expect(dt.getData('text/plain')).toBe('foo')
 
-    const callback = jest.fn()
+    const callback = mocks.fn()
     dt.items[0].getAsString(callback)
     expect(callback).toBeCalledWith('foo')
   })
@@ -60,7 +60,7 @@ describe('create DataTransfer', () => {
     expect(dt.items[0].getAsFile()).toBe(null)
     expect(dt.items[1].getAsFile()).toBe(f0)
 
-    const callback = jest.fn()
+    const callback = mocks.fn()
     dt.items[1].getAsString(callback)
     expect(callback).not.toBeCalled()
   })

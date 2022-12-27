@@ -7,22 +7,18 @@ export function toMatchInlineSnapshot(
     actual,
     expected,
 ) {
-    const normalizedActual = stripAddedLinebreaks(stripAddedIndentation(actual.snapshot ?? actual))
+    const normalizedActual = stripAddedLinebreaks(stripAddedIndentation(String(actual?.snapshot ?? actual)))
     const normalizedExpected = stripAddedLinebreaks(stripAddedIndentation(expected))
 
     return {
         pass: normalizedActual === normalizedExpected,
         message: () => [
-            this.utils.matcherHint(
-                `${this.isNot ? '.not' : ''}.toMatchInlineSnapshot`,
-                'element',
-                '',
-            ),
+            this.utils.matcherHint('toMatchInlineSnapshot', undefined, undefined, {
+                isNot: this.isNot,
+                promise: this.promise,
+            }),
             '',
-            `Expected: ${this.isNot ? 'not ' : ''}${this.promise}`,
-            `  ${this.utils.printExpected(normalizedExpected)}`,
-            'Received:',
-            `  ${this.utils.printReceived(normalizedActual)}`,
+            this.utils.diff(normalizedExpected, normalizedActual, {expand: this.expand}),
         ].join('\n'),
     }
 }
@@ -31,30 +27,44 @@ export function toThrowErrorMatchingInlineSnapshot(
     callback,
     expected,
 ) {
-    let didThrow = false, actual = undefined
-    try {
-        callback()
-    } catch (e) {
-        didThrow = true
-        actual = e
+    if (typeof callback === 'function') {
+        try {
+            const promise = callback()
+            if (typeof promise === 'object' && 'then' in promise) {
+                return promise
+                    .then(() => ({ didThrow: false }), r => ({ didThrow: true, actual: r }))
+                    .then(({ didThrow, actual }) => matchError.call(this, didThrow, actual, expected))
+            }
+        } catch (e) {
+            return matchError.call(this, true, e, expected)
+        }
+        return matchError.call(this, false, undefined, expected)
+    } else if (this.promise === 'rejects') {
+        return matchError.call(this, true, callback, expected)
     }
 
+    throw new Error('Invalid argument')
+}
+
+function matchError(
+    didThrow,
+    actual,
+    expected,
+) {
     const normalizedActual = didThrow && stripAddedLinebreaks(stripAddedIndentation(typeof actual === 'object' && 'message' in actual ? actual.message : String(actual)))
     const normalizedExpected = stripAddedLinebreaks(stripAddedIndentation(expected))
 
     return {
         pass: this.isNot === !didThrow && normalizedActual === normalizedExpected,
         message: () => [
-            this.utils.matcherHint(
-                `${this.isNot ? '.not' : ''}.toThrowErrorMatchingInlineSnapshot`,
-                'callback',
-                '',
-            ),
+            this.utils.matcherHint('toThrowErrorMatchingInlineSnapshot', undefined, undefined, {
+                isNot: this.isNot,
+                promise: this.promise,
+            }),
             '',
-            `Expected: ${this.isNot ? 'not ' : ''}${this.promise}`,
-            `  ${this.utils.printExpected(normalizedExpected)}`,
-            'Received:',
-            `  ${didThrow ? this.utils.printReceived(normalizedActual) : '[Did not throw]'}`,
+            didThrow
+                ? this.utils.diff(normalizedExpected, normalizedActual, { expand: this.expand })
+                : '[Did not throw]',
         ].join('\n'),
     }
 }

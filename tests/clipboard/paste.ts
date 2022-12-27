@@ -143,8 +143,8 @@ describe('without Clipboard API', () => {
   test('reject if trying to use missing API', async () => {
     const {getEvents} = render(`<input/>`)
 
-    await expect(userEvent.paste()).rejects.toMatchInlineSnapshot(
-      `[Error: \`userEvent.paste()\` without \`clipboardData\` requires the \`ClipboardAPI\` to be available.]`,
+    await expect(userEvent.paste()).rejects.toThrowErrorMatchingInlineSnapshot(
+      `\`userEvent.paste()\` without \`clipboardData\` requires the \`ClipboardAPI\` to be available.`,
     )
     expect(getEvents()).toHaveLength(0)
   })

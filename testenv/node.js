@@ -2,23 +2,11 @@ import './modules/expect.js'
 import './modules/mocks.js'
 import './modules/timers.js'
 import './modules/testinglibrary.js'
+import './modules/inlineSnapshot.js'
 import './modules/console.js'
 
 import 'css.escape'
-import jestSnapshot from 'jest-snapshot'
 import {JSDOM} from 'jsdom'
-
-expect.setState({
-    snapshotState: new jestSnapshot.SnapshotState('tests/__snapshot__/', {
-        updateSnapshot: 'none',
-    })
-})
-expect.extend({
-    toMatchInlineSnapshot: jestSnapshot.toMatchInlineSnapshot,
-    toMatchSnapshot: jestSnapshot.toMatchSnapshot,
-    toThrowErrorMatchingInlineSnapshot: jestSnapshot.toThrowErrorMatchingInlineSnapshot,
-    toThrowErrorMatchingSnapshot: jestSnapshot.toThrowErrorMatchingSnapshot,
-})
 
 const jsdom = new JSDOM()
 globalThis.navigator = jsdom.window.navigator

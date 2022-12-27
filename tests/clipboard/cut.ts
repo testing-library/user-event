@@ -92,8 +92,8 @@ describe('without Clipboard API', () => {
 
     await expect(
       userEvent.cut({writeToClipboard: true}),
-    ).rejects.toMatchInlineSnapshot(
-      `[Error: The Clipboard API is unavailable.]`,
+    ).rejects.toThrowErrorMatchingInlineSnapshot(
+      `The Clipboard API is unavailable.`,
     )
   })
 

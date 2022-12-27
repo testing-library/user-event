@@ -7,7 +7,7 @@ export function toMatchInlineSnapshot(
     actual,
     expected,
 ) {
-    const normalizedActual = stripAddedLinebreaks(stripAddedIndentation(actual.snapshot ?? actual))
+    const normalizedActual = stripAddedLinebreaks(stripAddedIndentation(String(actual?.snapshot ?? actual)))
     const normalizedExpected = stripAddedLinebreaks(stripAddedIndentation(expected))
 
     return {

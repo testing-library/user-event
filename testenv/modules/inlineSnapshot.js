@@ -13,16 +13,12 @@ export function toMatchInlineSnapshot(
     return {
         pass: normalizedActual === normalizedExpected,
         message: () => [
-            this.utils.matcherHint(
-                `${this.isNot ? '.not' : ''}.toMatchInlineSnapshot`,
-                'element',
-                '',
-            ),
+            this.utils.matcherHint('toMatchInlineSnapshot', undefined, undefined, {
+                isNot: this.isNot,
+                promise: this.promise,
+            }),
             '',
-            `Expected: ${this.isNot ? 'not ' : ''}${this.promise}`,
-            `  ${this.utils.printExpected(normalizedExpected)}`,
-            'Received:',
-            `  ${this.utils.printReceived(normalizedActual)}`,
+            this.utils.diff(normalizedExpected, normalizedActual, {expand: this.expand}),
         ].join('\n'),
     }
 }
@@ -45,16 +41,14 @@ export function toThrowErrorMatchingInlineSnapshot(
     return {
         pass: this.isNot === !didThrow && normalizedActual === normalizedExpected,
         message: () => [
-            this.utils.matcherHint(
-                `${this.isNot ? '.not' : ''}.toThrowErrorMatchingInlineSnapshot`,
-                'callback',
-                '',
-            ),
+            this.utils.matcherHint('toMatchInlineSnapshot', undefined, undefined, {
+                isNot: this.isNot,
+                promise: this.promise,
+            }),
             '',
-            `Expected: ${this.isNot ? 'not ' : ''}${this.promise}`,
-            `  ${this.utils.printExpected(normalizedExpected)}`,
-            'Received:',
-            `  ${didThrow ? this.utils.printReceived(normalizedActual) : '[Did not throw]'}`,
+            didThrow
+                ? this.utils.diff(normalizedExpected, normalizedActual, { expand: this.expand })
+                : '[Did not throw]',
         ].join('\n'),
     }
 }

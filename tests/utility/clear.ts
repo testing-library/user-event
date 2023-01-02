@@ -1,3 +1,4 @@
+import {setUISelectionClean} from '#src/document/UI'
 import {setup} from '#testHelpers'
 
 describe('clear elements', () => {
@@ -110,12 +111,18 @@ describe('throw error when clear is impossible', () => {
     )
   })
 
-  test('abort if event handler prevents content being selected', async () => {
+  test('abort if selecting content is prevented', async () => {
     const {element, user} = setup<HTMLInputElement>(`<input value="hello"/>`)
-    element.addEventListener('select', async () => {
-      if (element.selectionStart === 0) {
-        element.selectionStart = 1
-      }
+    // In some environments a `select` event handler can reset the selection before we can clear the input.
+    // In browser the `.clear()` API is done before the event is dispatched.
+    Object.defineProperty(element, 'setSelectionRange', {
+      configurable: true,
+      value(start: number, end: number) {
+        ;(
+          Object.getPrototypeOf(element) as HTMLInputElement
+        ).setSelectionRange.call(this, 1, end)
+        setUISelectionClean(element)
+      },
     })
 
     await expect(

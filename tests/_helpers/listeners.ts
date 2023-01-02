@@ -116,6 +116,7 @@ export function addListeners(
 
   function getEventSnapshot() {
     const eventCalls = eventHandlerCalls
+      .filter(({event}) => event.type !== 'select')
       .map(({event, elementDisplayName}) => {
         const firstLine = [
           `${elementDisplayName} - ${event.type}`,

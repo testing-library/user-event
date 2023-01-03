@@ -96,7 +96,7 @@ cases(
       `<div contenteditable="true">abcd</div>`,
       {
         selection: {
-          focusNode: '//text()',
+          focusNode: './/text()',
           anchorOffset: range[0],
           focusOffset: range[1],
         },

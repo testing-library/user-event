@@ -1,6 +1,7 @@
+import {fireEvent} from '@testing-library/dom'
 import type {Instance} from '../setup'
 import type {keyboardKey} from '../system/keyboard'
-import {wait} from '../utils'
+import {getActiveElementOrBody, wait} from '../utils'
 import {parseKeyDef} from './parseKeyDef'
 
 interface KeyboardAction {
@@ -11,6 +12,9 @@ interface KeyboardAction {
 }
 
 export async function keyboard(this: Instance, text: string): Promise<void> {
+  if (this.config.autoFocusDocumentBeforeTyping) {
+    fireEvent.focus(getActiveElementOrBody(this.config.document))
+  }
   const actions: KeyboardAction[] = parseKeyDef(this.config.keyboardMap, text)
 
   for (let i = 0; i < actions.length; i++) {

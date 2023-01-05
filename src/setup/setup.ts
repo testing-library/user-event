@@ -21,6 +21,7 @@ import {DirectOptions} from './directApi'
 const defaultOptionsDirect: Required<Options> = {
   applyAccept: true,
   autoModify: true,
+  autoFocusDocumentBeforeTyping: false,
   delay: 0,
   document: globalThis.document,
   keyboardMap: defaultKeyboardMap,

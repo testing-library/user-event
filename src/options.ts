@@ -36,6 +36,16 @@ export interface Options {
   autoModify?: boolean
 
   /**
+   * Automatically focus the active document before interacting with the keyboard
+   *
+   * Recommended to enable whenever the test is running against a real web-browser
+   * and a real user interaction may interfere the test.
+   *
+   * @default false
+   */
+  autoFocusDocumentBeforeTyping?: boolean
+
+  /**
    * Between some subsequent inputs like typing a series of characters
    * the code execution is delayed per `setTimeout` for (at least) `delay` seconds.
    * This moves the next changes at least to next macro task

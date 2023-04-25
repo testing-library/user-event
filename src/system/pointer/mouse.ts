@@ -36,14 +36,14 @@ export class Mouse {
 
     incOnClick(button: number) {
       const current =
-        this.down[button] === undefined
-          ? undefined
-          : Number(this.down[button]) + 1
+          this.down[button] === undefined
+              ? undefined
+              : Number(this.down[button]) + 1
 
       this.count =
-        this.count[button] === undefined
-          ? {}
-          : {[button]: Number(this.count[button]) + 1}
+          this.count[button] === undefined
+              ? {}
+              : {[button]: Number(this.count[button]) + 1}
 
       return current
     }
@@ -57,8 +57,8 @@ export class Mouse {
 
     getOnUp(button: number) {
       return this.down[button] === undefined
-        ? undefined
-        : Number(this.down[button]) + 1
+          ? undefined
+          : Number(this.down[button]) + 1
     }
 
     reset() {
@@ -66,7 +66,10 @@ export class Mouse {
     }
   })()
 
-  move(instance: Instance, position: PointerPosition) {
+  move(instance: Instance, position: PointerPosition, pointer: Pointer) {
+    if (pointer.isPrevented) {
+      return
+    }
     const prevPosition = this.position
     const prevTarget = this.getTarget(instance)
 
@@ -112,17 +115,20 @@ export class Mouse {
 
     const target = this.getTarget(instance)
     this.buttonDownTarget[button] = target
-    const disabled = isDisabled(target)
     const init = this.getEventInit('mousedown', keyDef.button)
+    if (pointer.isPrevented) {
+      return
+    }
+    const disabled = isDisabled(target)
     if (disabled || instance.dispatchUIEvent(target, 'mousedown', init)) {
       this.startSelecting(instance, init.detail as number)
       focusElement(target)
     }
     if (!disabled && getMouseEventButton(keyDef.button) === 2) {
       instance.dispatchUIEvent(
-        target,
-        'contextmenu',
-        this.getEventInit('contextmenu', keyDef.button, pointer),
+          target,
+          'contextmenu',
+          this.getEventInit('contextmenu', keyDef.button, pointer),
       )
     }
   }
@@ -135,24 +141,27 @@ export class Mouse {
     }
     const target = this.getTarget(instance)
     if (!isDisabled(target)) {
-      instance.dispatchUIEvent(
-        target,
-        'mouseup',
-        this.getEventInit('mouseup', keyDef.button),
-      )
-      this.endSelecting()
+      const init = this.getEventInit('mouseup', keyDef.button)
+      if (!pointer.isPrevented) {
+        instance.dispatchUIEvent(
+            target,
+            'mouseup',
+            init,
+        )
+        this.endSelecting()
+      }
 
       const clickTarget = getTreeDiff(
-        this.buttonDownTarget[button],
-        target,
+          this.buttonDownTarget[button],
+          target,
       )[2][0] as Element | undefined
       if (clickTarget) {
         const init = this.getEventInit('click', keyDef.button, pointer)
         if (init.detail) {
           instance.dispatchUIEvent(
-            clickTarget,
-            init.button === 0 ? 'click' : 'auxclick',
-            init,
+              clickTarget,
+              init.button === 0 ? 'click' : 'auxclick',
+              init,
           )
           if (init.button === 0 && init.detail === 2) {
             instance.dispatchUIEvent(clickTarget, 'dblclick', {
@@ -170,9 +179,9 @@ export class Mouse {
   }
 
   private getEventInit(
-    type: EventType,
-    button?: MouseButton,
-    pointer?: Pointer,
+      type: EventType,
+      button?: MouseButton,
+      pointer?: Pointer,
   ) {
     const init: PointerEventInit = {
       ...this.position.coords,

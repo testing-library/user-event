@@ -41,6 +41,7 @@ export class Pointer {
     return this
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   move(instance: Instance, position: PointerPosition, pointer: Pointer) {
     const prevPosition = this.position
     const prevTarget = this.getTarget(instance)

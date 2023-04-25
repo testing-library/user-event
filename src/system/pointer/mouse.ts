@@ -141,12 +141,12 @@ export class Mouse {
     }
     const target = this.getTarget(instance)
     if (!isDisabled(target)) {
-      const init = this.getEventInit('mouseup', keyDef.button)
+      const mouseUpInit = this.getEventInit('mouseup', keyDef.button)
       if (!pointer.isPrevented) {
         instance.dispatchUIEvent(
             target,
             'mouseup',
-            init,
+            mouseUpInit,
         )
         this.endSelecting()
       }

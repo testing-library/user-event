@@ -19,9 +19,9 @@ export type UIValueString = String & {[UIValue]: true}
 export type UISelectionStart = Number & {[UISelection]: true}
 
 export function isUIValue(
-  value: string | UIValueString,
+  value: string | UIValueString | null,
 ): value is UIValueString {
-  return typeof value === 'object' && UIValue in value
+  return typeof value === 'object' && value !== null && UIValue in value
 }
 
 export function isUISelectionStart(

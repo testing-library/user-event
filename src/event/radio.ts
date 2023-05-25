@@ -15,18 +15,26 @@ export function walkRadio(
         : `input[type="radio"][name=""], input[type="radio"]:not([name])`,
     ),
   )
-  for (let i = group.findIndex(e => e === el) + direction; ; i += direction) {
-    if (!group[i]) {
-      i = direction > 0 ? 0 : group.length - 1
+
+  let indexOfRadiogroup = group.findIndex(e => e === el)
+  do {
+    // move to the next element
+    indexOfRadiogroup += direction
+    if (!group[indexOfRadiogroup]) {
+      indexOfRadiogroup = direction > 0 ? 0 : group.length - 1
     }
-    if (group[i] === el) {
-      return
-    }
-    if (isDisabled(group[i])) {
+    const element = group[indexOfRadiogroup]
+
+    if (isDisabled(element)) {
       continue
     }
 
-    focusElement(group[i])
-    instance.dispatchUIEvent(group[i], 'click')
-  }
+    if (element === el) {
+      // If there is only one available radiobutton element, do nothing
+    } else {
+      focusElement(element)
+      instance.dispatchUIEvent(element, 'click')
+    }
+    break
+  } while (true)
 }

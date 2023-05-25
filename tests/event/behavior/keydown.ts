@@ -317,6 +317,8 @@ cases(
       <input type="radio" name="" value="nameless2"/>
       <input type="radio" name="group" value="c" disabled/>
       <input type="radio" name="group" value="d"/>
+      <input type="radio" name="group" value="e"/>
+      <input type="radio" name="group" value="f"/>
       <input type="radio" name="foo"/>
       <input type="text" name="group"/>
     `,

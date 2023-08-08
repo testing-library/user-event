@@ -61,13 +61,18 @@ function isAcceptableFile(file: File, accept: string) {
 
   const wildcards = ['audio/*', 'image/*', 'video/*']
 
-  return accept.split(',').some(acceptToken => {
-    if (acceptToken.startsWith('.')) {
-      // tokens starting with a dot represent a file extension
-      return file.name.endsWith(acceptToken)
-    } else if (wildcards.includes(acceptToken)) {
-      return file.type.startsWith(acceptToken.substr(0, acceptToken.length - 1))
-    }
-    return file.type === acceptToken
-  })
+  return accept
+    .split(',')
+    .map(acceptToken => acceptToken.trim())
+    .some(acceptToken => {
+      if (acceptToken.startsWith('.')) {
+        // tokens starting with a dot represent a file extension
+        return file.name.endsWith(acceptToken)
+      } else if (wildcards.includes(acceptToken)) {
+        return file.type.startsWith(
+          acceptToken.substr(0, acceptToken.length - 1),
+        )
+      }
+      return file.type === acceptToken
+    })
 }

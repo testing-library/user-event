@@ -155,6 +155,7 @@ test.each([
   [true, '.png', 1],
   [true, 'text/csv', 1],
   [true, '', 4],
+  [true, '.png, .jpg', 3],
   [false, 'video/*', 4],
 ])(
   'filter according to accept attribute applyAccept=%s, acceptAttribute=%s',

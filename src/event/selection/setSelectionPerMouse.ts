@@ -1,6 +1,6 @@
 import {getUIValue, setUISelection} from '../../document'
 import {hasNoSelection, hasOwnSelection} from '../../utils'
-import type {SelectionRange} from '.'
+import {type SelectionRange} from '.'
 import {resolveCaretPosition} from './resolveCaretPosition'
 
 export function setSelectionPerMouseDown({

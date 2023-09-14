@@ -1,5 +1,5 @@
 import {PointerEventsCheckLevel} from '../../options'
-import type {Instance} from '../../setup'
+import {type Instance} from '../../setup'
 import {getWindow} from '../misc/getWindow'
 import {isElementType} from '../misc/isElementType'
 import {ApiLevel, getLevelRef} from '../misc/level'

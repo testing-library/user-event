@@ -1,4 +1,4 @@
-import type {pointerKey} from '.'
+import {type pointerKey} from '.'
 
 export class Device {
   private pressedKeys = new Set<string>()

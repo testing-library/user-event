@@ -14,7 +14,7 @@ globalThis.window = jsdom.window
 globalThis.document = jsdom.window.document
 
 globalThis.window.CSS = {
-    escape: global.CSS.escape,
+  escape: global.CSS.escape,
 }
 
 globalThis.XPathResult = jsdom.window.XPathResult

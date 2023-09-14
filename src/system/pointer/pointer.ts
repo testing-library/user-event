@@ -1,4 +1,4 @@
-import type {Instance} from '../../setup'
+import {type Instance} from '../../setup'
 import {assertPointerEvents, getTreeDiff, hasPointerEvents} from '../../utils'
 import {isDifferentPointerPosition, pointerKey, PointerPosition} from './shared'
 

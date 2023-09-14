@@ -1,6 +1,6 @@
-import type {MockedFunction, MockInstance} from 'jest-mock'
-import type {Instance, UserEventApi} from '#src/setup/setup'
-import { userEventApi } from '#src/setup/api'
+import {type MockedFunction, type MockInstance} from 'jest-mock'
+import {type Instance, type UserEventApi} from '#src/setup/setup'
+import {userEventApi} from '#src/setup/api'
 
 // `const` are not initialized when mocking is executed, but `function` are when prefixed with `mock`
 const mockApis = {} as {
@@ -17,18 +17,19 @@ export function getReal<K extends keyof UserEventApi>(k: K) {
   return mockApis[k].real
 }
 
-type APIMock<name extends keyof UserEventApi> = UserEventApi[name] & MockInstance<UserEventApi[name]> & {
-  originalMockImplementation: (
-    this: Instance,
-    ...args: Parameters<UserEventApi[keyof UserEventApi]>
-  ) => ReturnType<UserEventApi[keyof UserEventApi]>
-  mock: {
-    lastCall?: {
-      this: Instance
+type APIMock<name extends keyof UserEventApi> = UserEventApi[name] &
+  MockInstance<UserEventApi[name]> & {
+    originalMockImplementation: (
+      this: Instance,
+      ...args: Parameters<UserEventApi[keyof UserEventApi]>
+    ) => ReturnType<UserEventApi[keyof UserEventApi]>
+    mock: {
+      lastCall?: {
+        this: Instance
+      }
+      calls: {this: Instance}[]
     }
-    calls: {this: Instance}[]
   }
-}
 
 const real = {
   ...userEventApi,

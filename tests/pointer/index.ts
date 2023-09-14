@@ -1,4 +1,4 @@
-import type { SpyInstance } from 'jest-mock'
+import {type SpyInstance} from 'jest-mock'
 import {PointerEventsCheckLevel} from '#src'
 import {setup} from '#testHelpers'
 
@@ -126,7 +126,8 @@ test('no mousedown/mouseup on disabled elements', async () => {
 describe('check for pointer-events', () => {
   let getComputedStyle: SpyInstance<Window['getComputedStyle']>
   beforeAll(() => {
-    getComputedStyle = mocks.spyOn(window, 'getComputedStyle')
+    getComputedStyle = mocks
+      .spyOn(window, 'getComputedStyle')
       .mockImplementation(
         () =>
           ({

@@ -2,7 +2,9 @@ import {behavior} from '#src/event/behavior'
 import {createConfig, createInstance} from '#src/setup/setup'
 import {render} from '#testHelpers'
 
-const mockPlugin = mocks.spyOn(behavior as Required<typeof behavior>, 'click').mockImplementation(() => void 0)
+const mockPlugin = mocks
+  .spyOn(behavior as Required<typeof behavior>, 'click')
+  .mockImplementation(() => void 0)
 
 afterEach(() => {
   mockPlugin.mockClear()

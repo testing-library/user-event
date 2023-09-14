@@ -1,4 +1,4 @@
-import type {EditableInputOrTextarea} from '../../utils'
+import {type EditableInputOrTextarea} from '../../utils'
 
 export {getInputRange} from './getInputRange'
 export {modifySelection} from './modifySelection'

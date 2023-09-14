@@ -1,6 +1,6 @@
 import dtl from '../_interop/dtl'
 
-const { getConfig } = dtl
+const {getConfig} = dtl
 
 /**
  * Wrap an internal Promise

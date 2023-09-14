@@ -1,7 +1,7 @@
-import type {Instance} from '../setup'
+import {type Instance} from '../setup'
 import {releaseAllKeys} from '../keyboard'
 import {setSelectionRange} from '../event/selection'
-import type {Options} from '../options'
+import {type Options} from '../options'
 
 export interface typeOptions {
   skipClick?: Options['skipClick']

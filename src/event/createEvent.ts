@@ -1,6 +1,10 @@
 import {getWindow} from '../utils'
 import {eventMap, eventMapKeys} from './eventMap'
-import type {EventType, EventTypeInit, FixedDocumentEventMap} from './types'
+import {
+  type EventType,
+  type EventTypeInit,
+  type FixedDocumentEventMap,
+} from './types'
 
 const eventInitializer = {
   ClipboardEvent: [initClipboardEvent],

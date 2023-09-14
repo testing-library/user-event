@@ -1,6 +1,6 @@
-import type {PointerCoords} from '../event'
-import type {Instance} from '../setup'
-import type {pointerKey, PointerPosition} from '../system/pointer'
+import {type PointerCoords} from '../event'
+import {type Instance} from '../setup'
+import {type pointerKey, type PointerPosition} from '../system/pointer'
 import {ApiLevel, setLevelRef, wait} from '../utils'
 import {parseKeyDef} from './parseKeyDef'
 

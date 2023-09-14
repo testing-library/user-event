@@ -5,10 +5,10 @@ import {
   SelectionRange,
   setSelectionPerMouseDown,
 } from '../../event'
-import type {Instance} from '../../setup'
+import {type Instance} from '../../setup'
 import {getTreeDiff, isDisabled} from '../../utils'
 import {Buttons, getMouseEventButton, MouseButton} from './buttons'
-import type {Pointer} from './pointer'
+import {type Pointer} from './pointer'
 import {isDifferentPointerPosition, pointerKey, PointerPosition} from './shared'
 
 /**

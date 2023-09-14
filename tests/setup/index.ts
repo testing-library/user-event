@@ -1,10 +1,10 @@
 import {getSpy} from './_mockApis'
 import DOMTestingLibrary from '#src/_interop/dtl'
 import userEvent from '#src'
-import type {Instance, UserEventApi} from '#src/setup/setup'
+import {type Instance, type UserEventApi} from '#src/setup/setup'
 import {render} from '#testHelpers'
 
-const { getConfig } = DOMTestingLibrary
+const {getConfig} = DOMTestingLibrary
 
 type ApiDeclarations = {
   [api in keyof UserEventApi]: {
@@ -68,8 +68,12 @@ const apiDeclarations: ApiDeclarations = {
   },
 }
 
-type ApiDeclarationsEntry<k extends keyof ApiDeclarations = keyof ApiDeclarations> = [k, ApiDeclarations[k]]
-const apiDeclarationsEntries = Object.entries(apiDeclarations) as ApiDeclarationsEntry[]
+type ApiDeclarationsEntry<
+  k extends keyof ApiDeclarations = keyof ApiDeclarations,
+> = [k, ApiDeclarations[k]]
+const apiDeclarationsEntries = Object.entries(
+  apiDeclarations,
+) as ApiDeclarationsEntry[]
 
 const opt = Symbol('testOption')
 declare module '#src/setup' {
@@ -139,9 +143,7 @@ test.each(apiDeclarationsEntries)(
 
     expect(spy).toBeCalledTimes(2)
     expect(spy.mock.lastCall?.this.config[opt]).toBe(true)
-    expect(spy.mock.calls[1].this.system).toBe(
-      spy.mock.calls[0].this.system,
-    )
+    expect(spy.mock.calls[1].this.system).toBe(spy.mock.calls[0].this.system)
   },
 )
 

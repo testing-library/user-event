@@ -2,7 +2,7 @@ type tag = keyof HTMLElementTagNameMap
 
 export function isElementType<
   T extends tag,
-  P extends {[k: string]: unknown} | undefined = undefined
+  P extends {[k: string]: unknown} | undefined = undefined,
 >(
   element: Element,
   tag: T | T[],

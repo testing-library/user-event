@@ -1,4 +1,4 @@
-import type {Instance} from '../../setup'
+import {type Instance} from '../../setup'
 
 export enum ApiLevel {
   Trigger = 2,

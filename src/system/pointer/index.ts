@@ -23,6 +23,7 @@ export class PointerHost {
     private registry = {} as Record<string, Device>
 
     get(k: string) {
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       this.registry[k] ??= new Device()
       return this.registry[k]
     }

@@ -1,4 +1,4 @@
-import type {Instance} from '../setup'
+import {type Instance} from '../setup'
 import {getWindow, isDisabled} from '../utils'
 import {focusElement} from './focus'
 

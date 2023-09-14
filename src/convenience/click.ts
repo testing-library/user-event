@@ -1,5 +1,5 @@
-import type {PointerInput} from '../pointer'
-import type {Instance} from '../setup'
+import {type PointerInput} from '../pointer'
+import {type Instance} from '../setup'
 
 export async function click(this: Instance, element: Element): Promise<void> {
   const pointerIn: PointerInput = []

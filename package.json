@@ -29,7 +29,7 @@
     "build": "scripts ts-build2 --cjs --target es2019",
     "lint": "kcd-scripts lint",
     "setup": "npm install && npm run validate -s",
-    "setup:env": "node scripts/setup.js",
+    "setup:env": "node --experimental-import-meta-resolve scripts/setup.js",
     "test": "kcd-scripts test",
     "test:jest": "kcd-scripts test",
     "test:toolbox": "NODE_OPTIONS='--experimental-vm-modules --experimental-modules --experimental-import-meta-resolve' node scripts/test.js",

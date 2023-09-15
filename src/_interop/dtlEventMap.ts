@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unnecessary-condition */
+import * as named from '@testing-library/dom/dist/event-map.js'
 
-import def, * as named from '@testing-library/dom/dist/event-map.js'
-
-export default def ?? named
+export default named

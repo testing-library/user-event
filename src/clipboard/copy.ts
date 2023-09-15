@@ -1,6 +1,6 @@
 import {copySelection} from '../document'
-import type {type Instance} from '../setup'
-import {writeDataTransferToClipboard,  getActiveElementOrBody,} from '../utils'
+import {type Instance} from '../setup'
+import {writeDataTransferToClipboard, getActiveElementOrBody} from '../utils'
 
 export async function copy(this: Instance) {
   const doc = this.config.document

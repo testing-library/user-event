@@ -18,7 +18,7 @@ import {DirectOptions} from './directApi'
 /**
  * Default options applied when API is called per `userEvent.anyApi()`
  */
-const defaultOptionsDirect: Required<Options> = {
+const defaultOptionsDirect: Config = {
   applyAccept: true,
   autoModify: true,
   delay: 0,
@@ -36,7 +36,7 @@ const defaultOptionsDirect: Required<Options> = {
 /**
  * Default options applied when API is called per `userEvent().anyApi()`
  */
-const defaultOptionsSetup: Required<Options> = {
+const defaultOptionsSetup: Config = {
   ...defaultOptionsDirect,
   writeToClipboard: true,
 }
@@ -63,10 +63,10 @@ export type Config = Required<Options>
 
 export function createConfig(
   options: Options = {},
-  defaults: Required<Options> = defaultOptionsSetup,
+  defaults: Config = defaultOptionsSetup,
   node?: Node,
 ): Config {
-  const document = getDocument(options, node, defaults)
+  const document = getDocument(options, defaults, node)
 
   return {
     ...defaults,
@@ -168,11 +168,7 @@ export function createInstance(
   }
 }
 
-function getDocument(
-  options: Partial<Config>,
-  node: Node | undefined,
-  defaults: Required<Options>,
-) {
+function getDocument(options: Options, defaults: Config, node?: Node) {
   return (
     options.document ?? (node && getDocumentFromNode(node)) ?? defaults.document
   )

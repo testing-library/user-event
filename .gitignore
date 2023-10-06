@@ -7,3 +7,6 @@ dist
 # when working with contributors
 package-lock.json
 yarn.lock
+
+# don't commit JetBrains IDE configs
+.idea

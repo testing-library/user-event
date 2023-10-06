@@ -38,6 +38,23 @@ describe.each([
     expect(getEvents('click')).toHaveLength(clickCount)
   })
 
+  test('can not click hidden elements', async () => {
+    const {element, getEvents, user} = setup(
+      ` <button
+      style="visibility: hidden"
+    >
+      Click me!
+    </button>`,
+      {
+        pointerEventsCheck: PointerEventsCheckLevel.Never,
+      },
+    )
+
+    await user[method](element)
+
+    expect(getEvents('click')).toHaveLength(0)
+  })
+
   if (method === 'click') {
     test('skip hover', async () => {
       const {element, getEvents, user} = setup(`<div></div>`, {

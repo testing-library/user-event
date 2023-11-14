@@ -148,7 +148,7 @@ export function attachClipboardStubToView(window: Window & typeof globalThis) {
 }
 
 export function resetClipboardStubOnView(window: Window & typeof globalThis) {
-  if (isClipboardStub(window.navigator.clipboard)) {
+  if (isClipboardStub(window?.navigator.clipboard)) {
     window.navigator.clipboard[ClipboardStubControl].resetClipboardStub()
   }
 }
@@ -156,7 +156,7 @@ export function resetClipboardStubOnView(window: Window & typeof globalThis) {
 export function detachClipboardStubFromView(
   window: Window & typeof globalThis,
 ) {
-  if (isClipboardStub(window.navigator.clipboard)) {
+  if (isClipboardStub(window?.navigator.clipboard)) {
     window.navigator.clipboard[ClipboardStubControl].detachClipboardStub()
   }
 }

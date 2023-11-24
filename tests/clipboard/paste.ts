@@ -132,6 +132,21 @@ test('should replace selected text all at once', async () => {
   expect(element).toHaveValue('hello friend')
 })
 
+test('should ignore format case', async () => {
+  const {element, user} = setup<HTMLInputElement>('<input />')
+  element.addEventListener('paste', event => {
+    event.preventDefault()
+
+    const data = event.clipboardData?.getData('Text')
+
+    element.value = data ?? ''
+  })
+
+  await user.paste('friend')
+
+  expect(element).toHaveValue('friend')
+})
+
 describe('without Clipboard API', () => {
   beforeEach(() => {
     Object.defineProperty(window.navigator, 'clipboard', {

@@ -1,8 +1,6 @@
-import DOMTestingLibrary from '#src/_interop/dtl'
+import {screen} from '@testing-library/dom'
 import {isVisible} from '#src/utils'
 import {setup} from '#testHelpers'
-
-const {screen} = DOMTestingLibrary
 
 test('check if element is visible', async () => {
   setup(`

@@ -1,13 +1,30 @@
 import {getWindow} from '../utils'
-import {eventMap, eventMapKeys} from './eventMap'
+import {eventMap} from './eventMap'
 import {
   type EventType,
   type EventTypeInit,
   type FixedDocumentEventMap,
 } from './types'
 
-const eventInitializer = {
+interface InterfaceMap {
+  ClipboardEvent: {type: ClipboardEvent; init: ClipboardEventInit}
+  InputEvent: {type: InputEvent; init: InputEventInit}
+  MouseEvent: {type: MouseEvent; init: MouseEventInit}
+  PointerEvent: {type: PointerEvent; init: PointerEventInit}
+  KeyboardEvent: {type: KeyboardEvent; init: KeyboardEventInit}
+}
+type InterfaceNames = typeof eventMap[keyof typeof eventMap]['EventType']
+type Interface<k extends InterfaceNames> = k extends keyof InterfaceMap
+  ? InterfaceMap[k]
+  : never
+
+const eventInitializer: {
+  [k in InterfaceNames]: Array<
+    (e: Interface<k>['type'], i: Interface<k>['init']) => void
+  >
+} = {
   ClipboardEvent: [initClipboardEvent],
+  Event: [],
   InputEvent: [initUIEvent, initInputEvent],
   MouseEvent: [initUIEvent, initUIEventModififiers, initMouseEvent],
   PointerEvent: [
@@ -17,7 +34,7 @@ const eventInitializer = {
     initPointerEvent,
   ],
   KeyboardEvent: [initUIEvent, initUIEventModififiers, initKeyboardEvent],
-} as Record<EventInterface, undefined | Array<(e: Event, i: EventInit) => void>>
+}
 
 export function createEvent<K extends EventType>(
   type: K,
@@ -25,10 +42,11 @@ export function createEvent<K extends EventType>(
   init?: EventTypeInit<K>,
 ) {
   const window = getWindow(target)
-  const {EventType, defaultInit} =
-    eventMap[eventMapKeys[type] as keyof typeof eventMap]
+  const {EventType, defaultInit} = eventMap[type]
   const event = new (getEventConstructors(window)[EventType])(type, defaultInit)
-  eventInitializer[EventType]?.forEach(f => f(event, init ?? {}))
+  eventInitializer[EventType].forEach(f =>
+    f(event as never, (init ?? {}) as never),
+  )
 
   return event as FixedDocumentEventMap[K]
 }

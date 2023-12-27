@@ -1,4 +1,6 @@
-export type EventType = keyof DocumentEventMap
+import {eventMap} from './eventMap'
+
+export type EventType = keyof typeof eventMap
 
 export type EventTypeInit<K extends EventType> = SpecificEventInit<
   FixedDocumentEventMap[K]

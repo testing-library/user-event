@@ -1,4 +1,4 @@
-import {eventMapKeys} from '#src/event/eventMap'
+import {eventMap} from '#src/event/eventMap'
 import {isElementType} from '#src/utils'
 import {MouseButton, MouseButtonFlip} from '#src/system/pointer/buttons'
 
@@ -31,6 +31,15 @@ export function addEventListener(
 
 export type EventHandlers = {[k in keyof DocumentEventMap]?: EventListener}
 
+const loggedEvents = [
+  ...(Object.keys(eventMap) as Array<keyof typeof eventMap>),
+  'focus',
+  'focusin',
+  'focusout',
+  'blur',
+  'select',
+] as const
+
 /**
  * Add listeners for logging events.
  */
@@ -50,9 +59,7 @@ export function addListeners(
 
   const generalListener = mocks.fn(eventHandler).mockName('eventListener')
 
-  for (const eventType of Object.keys(eventMapKeys) as Array<
-    keyof typeof eventMapKeys
-  >) {
+  for (const eventType of loggedEvents) {
     addEventListener(element, eventType, (...args) => {
       generalListener(...args)
       eventHandlers[eventType]?.(...args)

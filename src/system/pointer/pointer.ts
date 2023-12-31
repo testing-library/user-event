@@ -41,7 +41,8 @@ export class Pointer {
     return this
   }
 
-  move(instance: Instance, position: PointerPosition) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  move(instance: Instance, position: PointerPosition, pointer: Pointer) {
     const prevPosition = this.position
     const prevTarget = this.getTarget(instance)
 
@@ -63,7 +64,7 @@ export class Pointer {
           if (prevTarget !== nextTarget) {
             instance.dispatchUIEvent(prevTarget, 'pointerout', init)
             leave.forEach(el =>
-              instance.dispatchUIEvent(el, 'pointerleave', init),
+                instance.dispatchUIEvent(el, 'pointerleave', init),
             )
           }
         }
@@ -74,7 +75,7 @@ export class Pointer {
         if (prevTarget !== nextTarget) {
           instance.dispatchUIEvent(nextTarget, 'pointerover', init)
           enter.forEach(el =>
-            instance.dispatchUIEvent(el, 'pointerenter', init),
+              instance.dispatchUIEvent(el, 'pointerenter', init),
           )
         }
       },
@@ -94,9 +95,9 @@ export class Pointer {
 
     this.isDown = true
     this.isPrevented = !instance.dispatchUIEvent(
-      target,
-      'pointerdown',
-      this.getEventInit(),
+        target,
+        'pointerdown',
+        this.getEventInit(),
     )
   }
 

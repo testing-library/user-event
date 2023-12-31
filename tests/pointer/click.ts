@@ -50,13 +50,35 @@ test('double click', async () => {
   expect(getEvents('click')).toHaveLength(2)
 
   // detail reflects the click count
-  expect(getEvents('mousedown')[1]).toHaveProperty('detail', 2)
+  expect(getEvents('dblclick')[0]).toHaveProperty('detail', 2)
+})
+
+test('double click with prevent compatibility', async () => {
+  const {element, getClickEventsSnapshot, getEvents, user} =
+      setup(`<div></div>`, {eventHandlers: {pointerdown: e => e.preventDefault()}});
+
+  await user.pointer({keys: '[MouseLeft][MouseLeft]', target: element})
+
+  expect(getClickEventsSnapshot()).toMatchInlineSnapshot(`
+    pointerdown - pointerId=1; pointerType=mouse; isPrimary=true
+    pointerup - pointerId=1; pointerType=mouse; isPrimary=true
+    click - button=0; buttons=0; detail=1
+    pointerdown - pointerId=1; pointerType=mouse; isPrimary=true
+    pointerup - pointerId=1; pointerType=mouse; isPrimary=true
+    click - button=0; buttons=0; detail=2
+    dblclick - button=0; buttons=0; detail=2
+  `)
+
+  expect(getEvents('dblclick')).toHaveLength(1)
+  expect(getEvents('click')).toHaveLength(2)
+
+  // detail reflects the click count
   expect(getEvents('dblclick')[0]).toHaveProperty('detail', 2)
 })
 
 test('two clicks', async () => {
   const {element, getClickEventsSnapshot, getEvents, user} =
-    setup(`<div></div>`)
+      setup(`<div></div>`)
 
   await user.pointer({
     keys: '[MouseLeft]',
@@ -85,7 +107,7 @@ test('two clicks', async () => {
 
 test('other keys reset click counter', async () => {
   const {element, getClickEventsSnapshot, getEvents, user} =
-    setup(`<div></div>`)
+      setup(`<div></div>`)
 
   await user.pointer({
     keys: '[MouseLeft][MouseLeft>][MouseRight][MouseLeft]',
@@ -119,7 +141,7 @@ test('other keys reset click counter', async () => {
 
 test('click per touch device', async () => {
   const {element, getClickEventsSnapshot, getEvents, user} =
-    setup(`<div></div>`)
+      setup(`<div></div>`)
 
   await user.pointer({keys: '[TouchA]', target: element})
 
@@ -145,7 +167,7 @@ test('click per touch device', async () => {
 
 test('double click per touch device', async () => {
   const {element, getClickEventsSnapshot, getEvents, user} =
-    setup(`<div></div>`)
+      setup(`<div></div>`)
 
   await user.pointer({keys: '[TouchA][TouchA]', target: element})
 
@@ -193,7 +215,7 @@ test('multi touch does not click', async () => {
 describe('label', () => {
   test('click associated control per label', async () => {
     const {element, getEvents, user} = setup(
-      `<label for="in">foo</label><input id="in"/>`,
+        `<label for="in">foo</label><input id="in"/>`,
     )
 
     await user.pointer({keys: '[MouseLeft]', target: element})
@@ -268,7 +290,7 @@ describe('check/uncheck control per click', () => {
 describe('submit form per click', () => {
   test('submits a form when clicking on a <button>', async () => {
     const {element, eventWasFired, user} = setup(
-      `<form><button></button></form>`,
+        `<form><button></button></form>`,
     )
 
     await user.pointer({keys: '[MouseLeft]', target: element.children[0]})
@@ -278,7 +300,7 @@ describe('submit form per click', () => {
 
   test('does not submit a form when clicking on a <button type="button">', async () => {
     const {element, eventWasFired, user} = setup(
-      `<form><button type="button"></button></form>`,
+        `<form><button type="button"></button></form>`,
     )
 
     await user.pointer({keys: '[MouseLeft]', target: element.children[0]})
@@ -300,7 +322,7 @@ test('secondary mouse button fires `contextmenu`', async () => {
 
 test('non-primary mouse buttons fire `auxclick`', async () => {
   const {element, eventWasFired, getEvents, clearEventCalls, user} =
-    setup(`<button/>`)
+      setup(`<button/>`)
 
   await user.pointer({keys: '[MouseLeft]', target: element})
   expect(eventWasFired('click')).toBe(true)
@@ -321,7 +343,7 @@ test('non-primary mouse buttons fire `auxclick`', async () => {
 
 test('click closest common ancestor of pointerdown/pointerup', async () => {
   const {element, getEvents, user, xpathNode, clearEventCalls} = setup(
-    `<div><span>foo</span><span>bar</span></div>`,
+      `<div><span>foo</span><span>bar</span></div>`,
   )
 
   await user.pointer([
@@ -339,4 +361,16 @@ test('click closest common ancestor of pointerdown/pointerup', async () => {
   ])
   expect(getEvents('mouseup')).toHaveLength(1)
   expect(getEvents('click')).toHaveLength(0)
+})
+
+test('preventDefault on pointer down prevents compatibility events works with pointer', async () => {
+  const {element, getClickEventsSnapshot, getEvents, user} = setup('<div />', {eventHandlers: {pointerdown: e => e.preventDefault()}})
+  await user.pointer({keys: '[MouseLeft]', target: element})
+
+  expect(getClickEventsSnapshot()).toMatchInlineSnapshot(`
+    pointerdown - pointerId=1; pointerType=mouse; isPrimary=true
+    pointerup - pointerId=1; pointerType=mouse; isPrimary=true
+    click - button=0; buttons=0; detail=1
+  `)
+  expect(getEvents('click')).toHaveLength(1)
 })

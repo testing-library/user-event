@@ -216,6 +216,24 @@ describe('label', () => {
 
     expect(getEvents('click')).toHaveLength(2)
   })
+
+  test('do not click associated non-focusable control per label', async () => {
+    const {element, getEvents, user} = setup(
+      `<label for="in">foo</label><input disabled id="in"/>`,
+    )
+
+    await user.pointer({keys: '[MouseLeft]', target: element})
+
+    expect(getEvents('click')).toHaveLength(1)
+  })
+
+  test('do not click nested non-focusable control per label', async () => {
+    const {element, getEvents, user} = setup(`<label><input disabled/></label>`)
+
+    await user.pointer({keys: '[MouseLeft]', target: element})
+
+    expect(getEvents('click')).toHaveLength(1)
+  })
 })
 
 describe('check/uncheck control per click', () => {
@@ -258,6 +276,19 @@ describe('check/uncheck control per click', () => {
     await user.pointer({keys: '[MouseLeft]', target: label})
 
     expect(input).toBeChecked()
+
+    await user.pointer({keys: '[MouseLeft]', target: label})
+
+    expect(input).not.toBeChecked()
+  })
+
+  test('clicking label does not change non-focusable checkable input', async () => {
+    const {
+      elements: [input, label],
+      user,
+    } = setup(`<input type="checkbox" disabled id="a"/><label for="a"></label>`)
+
+    expect(input).not.toBeChecked()
 
     await user.pointer({keys: '[MouseLeft]', target: label})
 

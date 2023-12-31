@@ -50,6 +50,7 @@ export const defaultKeyMap: keyboardKey[] = [
 
   {code: 'OSLeft', key: 'OS', location: DOM_KEY_LOCATION.LEFT},
   {code: 'OSRight', key: 'OS', location: DOM_KEY_LOCATION.RIGHT},
+  {code: 'ContextMenu', key: 'ContextMenu'},
 
   {code: 'Tab', key: 'Tab'},
   {code: 'CapsLock', key: 'CapsLock'},

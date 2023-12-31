@@ -62,15 +62,22 @@ class DataTransferItemListStub
   }
 }
 
+function normalizeFormat(format: string) {
+  return format.toLowerCase()
+}
+
 function getTypeMatcher(type: string, exact: boolean) {
-  const [group, sub] = type.split('/')
+  const normalizedType = normalizeFormat(type)
+  const [group, sub] = normalizedType.split('/')
   const isGroup = !sub || sub === '*'
   return (item: DataTransferItem) => {
+    const normalizedItemType = normalizeFormat(item.type)
+
     return exact
-      ? item.type === (isGroup ? group : type)
+      ? normalizedItemType === (isGroup ? group : normalizedType)
       : isGroup
-      ? item.type.startsWith(`${group}/`)
-      : item.type === group
+      ? normalizedItemType.startsWith(`${group}/`)
+      : normalizedItemType === group
   }
 }
 

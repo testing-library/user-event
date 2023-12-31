@@ -28,5 +28,6 @@ export function walkRadio(
 
     focusElement(group[i])
     instance.dispatchUIEvent(group[i], 'click')
+    return
   }
 }

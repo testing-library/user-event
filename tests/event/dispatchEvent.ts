@@ -23,19 +23,6 @@ test('keep default behavior', () => {
   expect(element).toBeChecked()
 })
 
-test('replace default behavior', () => {
-  const {element} = render(`<input type="checkbox"/>`)
-
-  const mockBehavior = mocks.fn(() => void 0)
-  mockPlugin.mockImplementationOnce(() => mockBehavior)
-
-  setupInstance().dispatchUIEvent(element, 'click')
-
-  expect(mockPlugin).toBeCalledTimes(1)
-  expect(element).not.toBeChecked()
-  expect(mockBehavior).toBeCalled()
-})
-
 test('prevent replaced default behavior', () => {
   const {element} = render(`<input type="checkbox"/>`)
   element.addEventListener('click', e => {

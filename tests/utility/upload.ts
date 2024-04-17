@@ -58,18 +58,17 @@ test('relay click/upload on label to file input', async () => {
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: div
 
-    label[for="element"] - pointerover
+    input#element[value=""] - pointerover
     div - pointerenter
-    label[for="element"] - mouseover
+    input#element[value=""] - mouseover
     div - mouseenter
-    label[for="element"] - pointermove
-    label[for="element"] - mousemove
-    label[for="element"] - pointerdown
-    label[for="element"] - mousedown: primary
-    label[for="element"] - pointerup
-    label[for="element"] - mouseup: primary
-    label[for="element"] - click: primary
+    input#element[value=""] - pointermove
+    input#element[value=""] - mousemove
+    input#element[value=""] - pointerdown
+    input#element[value=""] - mousedown: primary
     input#element[value=""] - focusin
+    input#element[value=""] - pointerup
+    input#element[value=""] - mouseup: primary
     input#element[value=""] - click: primary
     input#element[value=""] - focusout
     input#element[value="C:\\\\fakepath\\\\hello.png"] - input

@@ -1,5 +1,5 @@
-import {getSpy} from './_mockApis'
 import {getConfig} from '@testing-library/dom'
+import {getSpy} from './_mockApis'
 import userEvent from '#src'
 import {type Instance, type UserEventApi} from '#src/setup/setup'
 import {render} from '#testHelpers'

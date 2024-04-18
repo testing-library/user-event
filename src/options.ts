@@ -109,6 +109,17 @@ export interface Options {
   skipHover?: boolean
 
   /**
+   * The `:hover` pseudo-class cannot be applied programmatically.
+   *
+   * Instead, you can choose a CSS class name to be applied to elements when they are hovered.
+   * This requires the CSS to be written/transformed such that hover styles
+   * are applied with this custom class.
+   *
+   * @default null
+   */
+  hoverClass?: string | null
+
+  /**
    * Write selected data to Clipboard API when a `cut` or `copy` is triggered.
    *
    * The Clipboard API is usually not available to test code.

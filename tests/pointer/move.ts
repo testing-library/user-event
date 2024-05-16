@@ -129,3 +129,24 @@ test('declare pointer coordinates', async () => {
     expect(getEvents('mouseover')[0]).toHaveProperty(prop, value)
   })
 })
+
+test('move pointer by x/y coords', async () => {
+  const {elements, getEventSnapshot, user} = setup('<div></div>')
+
+  await user.pointer([
+    {keys: '[MouseLeft>]', target: elements[0], coords: {x: 20, y: 20}},
+    {coords: {x: 40, y: 20}},
+    {coords: {x: 40, y: 40}},
+  ])
+
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
+    Events fired on: div
+
+    div - pointerdown
+    div - mousedown: primary
+    div - pointermove
+    div - mousemove
+    div - pointermove
+    div - mousemove
+  `)
+})

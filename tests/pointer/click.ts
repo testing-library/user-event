@@ -5,9 +5,9 @@ test('click element', async () => {
   await user.pointer({keys: '[MouseLeft]', target: element})
 
   expect(getClickEventsSnapshot()).toMatchInlineSnapshot(`
-    pointerdown - pointerId=1; pointerType=mouse; isPrimary=true
+    pointerdown - pointerId=1; pointerType=mouse; isPrimary=true; button=0; buttons=1
     mousedown - button=0; buttons=1; detail=1
-    pointerup - pointerId=1; pointerType=mouse; isPrimary=true
+    pointerup - pointerId=1; pointerType=mouse; isPrimary=true; button=0; buttons=0
     mouseup - button=0; buttons=0; detail=1
     click - button=0; buttons=0; detail=1
   `)
@@ -19,7 +19,7 @@ test('secondary button triggers contextmenu', async () => {
   await user.pointer({keys: '[MouseRight>]', target: element})
 
   expect(getClickEventsSnapshot()).toMatchInlineSnapshot(`
-    pointerdown - pointerId=1; pointerType=mouse; isPrimary=true
+    pointerdown - pointerId=1; pointerType=mouse; isPrimary=true; button=2; buttons=2
     mousedown - button=2; buttons=2; detail=1
     contextmenu - button=2; buttons=2; detail=0
   `)
@@ -33,14 +33,14 @@ test('double click', async () => {
   await user.pointer({keys: '[MouseLeft][MouseLeft]', target: element})
 
   expect(getClickEventsSnapshot()).toMatchInlineSnapshot(`
-    pointerdown - pointerId=1; pointerType=mouse; isPrimary=true
+    pointerdown - pointerId=1; pointerType=mouse; isPrimary=true; button=0; buttons=1
     mousedown - button=0; buttons=1; detail=1
-    pointerup - pointerId=1; pointerType=mouse; isPrimary=true
+    pointerup - pointerId=1; pointerType=mouse; isPrimary=true; button=0; buttons=0
     mouseup - button=0; buttons=0; detail=1
     click - button=0; buttons=0; detail=1
-    pointerdown - pointerId=1; pointerType=mouse; isPrimary=true
+    pointerdown - pointerId=1; pointerType=mouse; isPrimary=true; button=0; buttons=1
     mousedown - button=0; buttons=1; detail=2
-    pointerup - pointerId=1; pointerType=mouse; isPrimary=true
+    pointerup - pointerId=1; pointerType=mouse; isPrimary=true; button=0; buttons=0
     mouseup - button=0; buttons=0; detail=2
     click - button=0; buttons=0; detail=2
     dblclick - button=0; buttons=0; detail=2
@@ -65,14 +65,14 @@ test('two clicks', async () => {
   await user.pointer({keys: '[MouseLeft]'})
 
   expect(getClickEventsSnapshot()).toMatchInlineSnapshot(`
-    pointerdown - pointerId=1; pointerType=mouse; isPrimary=true
+    pointerdown - pointerId=1; pointerType=mouse; isPrimary=true; button=0; buttons=1
     mousedown - button=0; buttons=1; detail=1
-    pointerup - pointerId=1; pointerType=mouse; isPrimary=true
+    pointerup - pointerId=1; pointerType=mouse; isPrimary=true; button=0; buttons=0
     mouseup - button=0; buttons=0; detail=1
     click - button=0; buttons=0; detail=1
-    pointerdown - pointerId=1; pointerType=mouse; isPrimary=true
+    pointerdown - pointerId=1; pointerType=mouse; isPrimary=true; button=0; buttons=1
     mousedown - button=0; buttons=1; detail=1
-    pointerup - pointerId=1; pointerType=mouse; isPrimary=true
+    pointerup - pointerId=1; pointerType=mouse; isPrimary=true; button=0; buttons=0
     mouseup - button=0; buttons=0; detail=1
     click - button=0; buttons=0; detail=1
   `)
@@ -93,22 +93,22 @@ test('other keys reset click counter', async () => {
   })
 
   expect(getClickEventsSnapshot()).toMatchInlineSnapshot(`
-    pointerdown - pointerId=1; pointerType=mouse; isPrimary=true
+    pointerdown - pointerId=1; pointerType=mouse; isPrimary=true; button=0; buttons=1
     mousedown - button=0; buttons=1; detail=1
-    pointerup - pointerId=1; pointerType=mouse; isPrimary=true
+    pointerup - pointerId=1; pointerType=mouse; isPrimary=true; button=0; buttons=0
     mouseup - button=0; buttons=0; detail=1
     click - button=0; buttons=0; detail=1
-    pointerdown - pointerId=1; pointerType=mouse; isPrimary=true
+    pointerdown - pointerId=1; pointerType=mouse; isPrimary=true; button=0; buttons=1
     mousedown - button=0; buttons=1; detail=2
     mousedown - button=2; buttons=3; detail=1
     contextmenu - button=2; buttons=3; detail=0
     mouseup - button=2; buttons=1; detail=1
     auxclick - button=2; buttons=1; detail=1
-    pointerup - pointerId=1; pointerType=mouse; isPrimary=true
+    pointerup - pointerId=1; pointerType=mouse; isPrimary=true; button=0; buttons=0
     mouseup - button=0; buttons=0; detail=0
-    pointerdown - pointerId=1; pointerType=mouse; isPrimary=true
+    pointerdown - pointerId=1; pointerType=mouse; isPrimary=true; button=0; buttons=1
     mousedown - button=0; buttons=1; detail=1
-    pointerup - pointerId=1; pointerType=mouse; isPrimary=true
+    pointerup - pointerId=1; pointerType=mouse; isPrimary=true; button=0; buttons=0
     mouseup - button=0; buttons=0; detail=1
     click - button=0; buttons=0; detail=1
   `)
@@ -124,12 +124,12 @@ test('click per touch device', async () => {
   await user.pointer({keys: '[TouchA]', target: element})
 
   expect(getClickEventsSnapshot()).toMatchInlineSnapshot(`
-    pointerover - pointerId=2; pointerType=touch; isPrimary=true
-    pointerenter - pointerId=2; pointerType=touch; isPrimary=true
-    pointerdown - pointerId=2; pointerType=touch; isPrimary=true
-    pointerup - pointerId=2; pointerType=touch; isPrimary=true
-    pointerout - pointerId=2; pointerType=touch; isPrimary=true
-    pointerleave - pointerId=2; pointerType=touch; isPrimary=true
+    pointerover - pointerId=2; pointerType=touch; isPrimary=true; button=0; buttons=1
+    pointerenter - pointerId=2; pointerType=touch; isPrimary=true; button=0; buttons=1
+    pointerdown - pointerId=2; pointerType=touch; isPrimary=true; button=0; buttons=1
+    pointerup - pointerId=2; pointerType=touch; isPrimary=true; button=0; buttons=0
+    pointerout - pointerId=2; pointerType=touch; isPrimary=true; button=0; buttons=0
+    pointerleave - pointerId=2; pointerType=touch; isPrimary=true; button=0; buttons=0
     mouseover - button=0; buttons=0; detail=0
     mouseenter - button=0; buttons=0; detail=0
     mousemove - button=0; buttons=0; detail=0
@@ -150,24 +150,24 @@ test('double click per touch device', async () => {
   await user.pointer({keys: '[TouchA][TouchA]', target: element})
 
   expect(getClickEventsSnapshot()).toMatchInlineSnapshot(`
-    pointerover - pointerId=2; pointerType=touch; isPrimary=true
-    pointerenter - pointerId=2; pointerType=touch; isPrimary=true
-    pointerdown - pointerId=2; pointerType=touch; isPrimary=true
-    pointerup - pointerId=2; pointerType=touch; isPrimary=true
-    pointerout - pointerId=2; pointerType=touch; isPrimary=true
-    pointerleave - pointerId=2; pointerType=touch; isPrimary=true
+    pointerover - pointerId=2; pointerType=touch; isPrimary=true; button=0; buttons=1
+    pointerenter - pointerId=2; pointerType=touch; isPrimary=true; button=0; buttons=1
+    pointerdown - pointerId=2; pointerType=touch; isPrimary=true; button=0; buttons=1
+    pointerup - pointerId=2; pointerType=touch; isPrimary=true; button=0; buttons=0
+    pointerout - pointerId=2; pointerType=touch; isPrimary=true; button=0; buttons=0
+    pointerleave - pointerId=2; pointerType=touch; isPrimary=true; button=0; buttons=0
     mouseover - button=0; buttons=0; detail=0
     mouseenter - button=0; buttons=0; detail=0
     mousemove - button=0; buttons=0; detail=0
     mousedown - button=0; buttons=1; detail=1
     mouseup - button=0; buttons=0; detail=1
     click - button=0; buttons=0; detail=1
-    pointerover - pointerId=3; pointerType=touch; isPrimary=true
-    pointerenter - pointerId=3; pointerType=touch; isPrimary=true
-    pointerdown - pointerId=3; pointerType=touch; isPrimary=true
-    pointerup - pointerId=3; pointerType=touch; isPrimary=true
-    pointerout - pointerId=3; pointerType=touch; isPrimary=true
-    pointerleave - pointerId=3; pointerType=touch; isPrimary=true
+    pointerover - pointerId=3; pointerType=touch; isPrimary=true; button=0; buttons=1
+    pointerenter - pointerId=3; pointerType=touch; isPrimary=true; button=0; buttons=1
+    pointerdown - pointerId=3; pointerType=touch; isPrimary=true; button=0; buttons=1
+    pointerup - pointerId=3; pointerType=touch; isPrimary=true; button=0; buttons=0
+    pointerout - pointerId=3; pointerType=touch; isPrimary=true; button=0; buttons=0
+    pointerleave - pointerId=3; pointerType=touch; isPrimary=true; button=0; buttons=0
     mousedown - button=0; buttons=1; detail=2
     mouseup - button=0; buttons=0; detail=2
     click - button=0; buttons=0; detail=2

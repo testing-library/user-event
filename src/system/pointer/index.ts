@@ -87,7 +87,7 @@ export class PointerHost {
     const pointerName = this.getPointerName(keyDef)
     const pointer =
       keyDef.pointerType === 'touch'
-        ? this.pointers.new(pointerName, keyDef).init(instance, position)
+        ? this.pointers.new(pointerName, keyDef).init(instance, position, keyDef)
         : this.pointers.get(pointerName)
 
     // TODO: deprecate the following implicit setting of position

@@ -103,3 +103,23 @@ test('move touch over elements', async () => {
     div - click: primary
   `)
 })
+
+test('move pointer by x coord', async () => {
+  const {elements, getEventSnapshot, user} = setup('<div></div>')
+
+  // Only x changes
+  await user.pointer([
+    {keys: '[MouseLeft>]', target: elements[0], coords: {x: 20, y: 20}},
+    {keys: '[/MouseLeft]', target: elements[0], coords: {x: 40, y: 20}},
+  ])
+
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
+    Events fired on: div
+
+    div - pointerdown
+    div - mousedown: primary
+    div - pointerup
+    div - mouseup: primary
+    div - click: primary
+  `)
+})

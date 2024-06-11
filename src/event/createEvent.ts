@@ -262,8 +262,8 @@ function initPointerEvent(
 ) {
   assignProps(event, {
     pointerId: sanitizeNumber(pointerId),
-    width: sanitizeNumber(width),
-    height: sanitizeNumber(height),
+    width: width ?? 1,
+    height: height ?? 1,
     pressure: sanitizeNumber(pressure),
     tangentialPressure: sanitizeNumber(tangentialPressure),
     tiltX: sanitizeNumber(tiltX),

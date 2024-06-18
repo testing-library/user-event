@@ -18,6 +18,10 @@ export const defaultKeyMap: keyboardKey[] = [
 
   // alphanumeric block - functional
   {code: 'Space', key: ' '},
+  {code: 'BracketLeft', key: '['},
+  {code: 'BracketRight', key: ']'},
+  {code: 'BracketLeft', key: '{', shiftKey: true},
+  {code: 'BracketRight', key: '}', shiftKey: true},
 
   {code: 'AltLeft', key: 'Alt', location: DOM_KEY_LOCATION.LEFT},
   {code: 'AltRight', key: 'Alt', location: DOM_KEY_LOCATION.RIGHT},

@@ -227,7 +227,7 @@ if (typeof g.afterEach === 'function') {
 if (typeof g.afterAll === 'function') {
   g.afterAll(() => {
     if (typeof globalThis.window !== 'undefined') {
-      resetClipboardStubOnView(globalThis.window)
+      detachClipboardStubFromView(globalThis.window)
     }
   })
 }

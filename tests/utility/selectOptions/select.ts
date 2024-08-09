@@ -1,4 +1,8 @@
-import {setupListbox, setupSelect} from './_setup'
+import {
+  setupListbox,
+  setupListboxWithComplexOptions,
+  setupSelect,
+} from './_setup'
 import {PointerEventsCheckLevel} from '#src'
 import {addListeners, setup} from '#testHelpers'
 
@@ -39,6 +43,35 @@ test('fires correct events', async () => {
 
 test('fires correct events on listBox select', async () => {
   const {listbox, options, getEventSnapshot, user} = setupListbox()
+  await user.selectOptions(listbox, '2')
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
+    Events fired on: ul[value="2"]
+
+    li#2[value="2"][aria-selected=false] - pointerover
+    ul - pointerenter
+    li#2[value="2"][aria-selected=false] - mouseover
+    ul - mouseenter
+    li#2[value="2"][aria-selected=false] - pointermove
+    li#2[value="2"][aria-selected=false] - mousemove
+    li#2[value="2"][aria-selected=false] - pointerdown
+    li#2[value="2"][aria-selected=false] - mousedown: primary
+    li#2[value="2"][aria-selected=false] - pointerup
+    li#2[value="2"][aria-selected=false] - mouseup: primary
+    li#2[value="2"][aria-selected=true] - click: primary
+    li#2[value="2"][aria-selected=true] - pointerout
+    ul[value="2"] - pointerleave
+    li#2[value="2"][aria-selected=true] - mouseout
+    ul[value="2"] - mouseleave
+  `)
+  const [o1, o2, o3] = options
+  expect(o1).toHaveAttribute('aria-selected', 'false')
+  expect(o2).toHaveAttribute('aria-selected', 'true')
+  expect(o3).toHaveAttribute('aria-selected', 'false')
+})
+
+test('fires correct events on listBox select with complex options', async () => {
+  const {listbox, options, getEventSnapshot, user} =
+    setupListboxWithComplexOptions()
   await user.selectOptions(listbox, '2')
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: ul[value="2"]

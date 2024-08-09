@@ -95,6 +95,7 @@ export function setupListboxWithComplexOptions() {
       </li>
       <li id="2" role="option" aria-selected="false">
         <span>2</span>
+        <span>is the best option</span>
         <span aria-hidden="true">Not visible 1</span>
         <span style="display:none">Not visible 2</span>
         <span style="visibility:hidden">Not visible 3</span>

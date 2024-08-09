@@ -72,25 +72,25 @@ test('fires correct events on listBox select', async () => {
 test('fires correct events on listBox select with complex options', async () => {
   const {listbox, options, getEventSnapshot, user} =
     setupListboxWithComplexOptions()
-  await user.selectOptions(listbox, '2')
+  await user.selectOptions(listbox, '2 is the best option')
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
-    Events fired on: ul[value="2"]
+    Events fired on: ul[value="2 is the best option"]
 
-    li#2[value="2"][aria-selected=false] - pointerover
+    li#2[value="2 is the best option"][aria-selected=false] - pointerover
     ul - pointerenter
-    li#2[value="2"][aria-selected=false] - mouseover
+    li#2[value="2 is the best option"][aria-selected=false] - mouseover
     ul - mouseenter
-    li#2[value="2"][aria-selected=false] - pointermove
-    li#2[value="2"][aria-selected=false] - mousemove
-    li#2[value="2"][aria-selected=false] - pointerdown
-    li#2[value="2"][aria-selected=false] - mousedown: primary
-    li#2[value="2"][aria-selected=false] - pointerup
-    li#2[value="2"][aria-selected=false] - mouseup: primary
-    li#2[value="2"][aria-selected=true] - click: primary
-    li#2[value="2"][aria-selected=true] - pointerout
-    ul[value="2"] - pointerleave
-    li#2[value="2"][aria-selected=true] - mouseout
-    ul[value="2"] - mouseleave
+    li#2[value="2 is the best option"][aria-selected=false] - pointermove
+    li#2[value="2 is the best option"][aria-selected=false] - mousemove
+    li#2[value="2 is the best option"][aria-selected=false] - pointerdown
+    li#2[value="2 is the best option"][aria-selected=false] - mousedown: primary
+    li#2[value="2 is the best option"][aria-selected=false] - pointerup
+    li#2[value="2 is the best option"][aria-selected=false] - mouseup: primary
+    li#2[value="2 is the best option"][aria-selected=true] - click: primary
+    li#2[value="2 is the best option"][aria-selected=true] - pointerout
+    ul[value="2 is the best option"] - pointerleave
+    li#2[value="2 is the best option"][aria-selected=true] - mouseout
+    ul[value="2 is the best option"] - mouseleave
   `)
   const [o1, o2, o3] = options
   expect(o1).toHaveAttribute('aria-selected', 'false')

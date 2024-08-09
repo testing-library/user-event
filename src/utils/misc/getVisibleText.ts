@@ -21,5 +21,5 @@ export const getVisibleText = (element: Element | null) => {
 
   const clone = element.cloneNode(true) as Element
   removeNotVisibleChildren(clone)
-  return clone.textContent?.trim()
+  return clone.textContent?.trim().replace(/\s+/gm, ' ')
 }

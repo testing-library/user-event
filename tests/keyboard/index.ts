@@ -165,3 +165,30 @@ test('disabling activeElement moves action to HTMLBodyElement', async () => {
     body - keyup: c
   `)
 })
+
+test('typing on focused element with shadow root', async () => {
+  const keypressHandler = mocks.fn()
+  class CustomElement extends HTMLElement {
+    constructor() {
+      super()
+
+      this.attachShadow({mode: 'open'})
+      this.addEventListener('keypress', keypressHandler)
+    }
+  }
+
+  customElements.define('custom-element', CustomElement)
+
+  const {element, user} = setup(
+    '<custom-element tabindex="0"></custom-element>',
+  )
+
+  // Tab to body
+  await user.tab()
+  // Tab to custom element
+  await user.tab()
+  expect(element).toHaveFocus()
+
+  await user.keyboard('[Space]')
+  expect(keypressHandler).toHaveBeenCalled()
+})

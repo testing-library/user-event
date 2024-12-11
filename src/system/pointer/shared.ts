@@ -27,7 +27,7 @@ export function isDifferentPointerPosition(
 ) {
   return (
     positionA.target !== positionB.target ||
-    positionA.coords?.x !== positionB.coords?.y ||
+    positionA.coords?.x !== positionB.coords?.x ||
     positionA.coords?.y !== positionB.coords?.y ||
     positionA.caret?.node !== positionB.caret?.node ||
     positionA.caret?.offset !== positionB.caret?.offset

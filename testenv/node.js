@@ -9,9 +9,21 @@ import 'css.escape'
 import {JSDOM} from 'jsdom'
 
 const jsdom = new JSDOM()
-globalThis.navigator = jsdom.window.navigator
-globalThis.window = jsdom.window
-globalThis.document = jsdom.window.document
+
+Object.defineProperties(globalThis, {
+  navigator: {
+    get: () => jsdom.window.navigator,
+    configurable: true,
+  },
+  window: {
+    get: () => jsdom.window,
+    configurable: true,
+  },
+  document: {
+    get: () => jsdom.window.document,
+    configurable: true,
+  },
+})
 
 globalThis.window.CSS = {
   escape: global.CSS.escape,

@@ -14,7 +14,9 @@ export async function keyboard(this: Instance, text: string): Promise<void> {
   const actions: KeyboardAction[] = parseKeyDef(this.config.keyboardMap, text)
 
   for (let i = 0; i < actions.length; i++) {
-    await wait(this.config)
+    if (i > 0) {
+      await wait(this.config)
+    }
 
     await keyboardAction(this, actions[i])
   }

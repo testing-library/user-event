@@ -1,4 +1,4 @@
-import {findClosest, getActiveElement, isFocusable} from '../utils'
+import {findClosest, getActiveElementOrBody, isFocusable} from '../utils'
 import {updateSelectionOnFocus} from './selection'
 import {wrapEvent} from './wrapEvent'
 
@@ -8,7 +8,7 @@ import {wrapEvent} from './wrapEvent'
 export function focusElement(element: Element) {
   const target = findClosest(element, isFocusable)
 
-  const activeElement = getActiveElement(element.ownerDocument)
+  const activeElement = getActiveElementOrBody(element.ownerDocument)
   if ((target ?? element.ownerDocument.body) === activeElement) {
     return
   } else if (target) {
@@ -23,7 +23,7 @@ export function focusElement(element: Element) {
 export function blurElement(element: Element) {
   if (!isFocusable(element)) return
 
-  const wasActive = getActiveElement(element.ownerDocument) === element
+  const wasActive = getActiveElementOrBody(element.ownerDocument) === element
   if (!wasActive) return
 
   wrapEvent(() => element.blur(), element)

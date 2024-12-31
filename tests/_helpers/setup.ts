@@ -1,7 +1,7 @@
 import {addListeners, EventHandlers} from './listeners'
 import userEvent from '#src'
 import {Options} from '#src/options'
-import {FOCUSABLE_SELECTOR} from '#src/utils'
+import {FOCUSABLE_SELECTOR, getActiveElementOrBody} from '#src/utils'
 import {setSelection} from '#src/event/selection'
 
 export function render<Elements extends Element | Element[] = HTMLElement>(
@@ -28,14 +28,15 @@ export function render<Elements extends Element | Element[] = HTMLElement>(
   if (typeof focus === 'string') {
     ;(assertSingleNodeFromXPath(focus, div) as HTMLElement).focus()
   } else if (focus !== false) {
-    ;(div.querySelector(FOCUSABLE_SELECTOR) as HTMLElement | undefined)?.focus()
+    const element: HTMLElement | null = findFocusable(div)
+    element?.focus()
   }
 
   if (selection) {
     const focusNode =
       typeof selection.focusNode === 'string'
         ? assertSingleNodeFromXPath(selection.focusNode, div)
-        : document.activeElement
+        : getActiveElementOrBody(document)
     const anchorNode =
       typeof selection.anchorNode === 'string'
         ? assertSingleNodeFromXPath(selection.anchorNode, div)
@@ -43,9 +44,6 @@ export function render<Elements extends Element | Element[] = HTMLElement>(
     const focusOffset = selection.focusOffset ?? 0
     const anchorOffset = selection.anchorOffset ?? focusOffset
 
-    if (!focusNode || !anchorNode) {
-      throw new Error(`missing/invalid selection.focusNode`)
-    }
     setSelection({
       focusNode,
       anchorNode,
@@ -104,4 +102,17 @@ export function setup<Elements extends Element | Element[] = HTMLElement>(
     user: userEvent.setup(options),
     ...render<Elements>(ui, {eventHandlers, focus, selection}),
   }
+}
+function findFocusable(container: Element | ShadowRoot): HTMLElement | null {
+  for (const el of Array.from(container.querySelectorAll('*'))) {
+    if (el.matches(FOCUSABLE_SELECTOR)) {
+      return el as HTMLElement
+    } else if (el.shadowRoot) {
+      const f = findFocusable(el.shadowRoot)
+      if (f) {
+        return f
+      }
+    }
+  }
+  return null
 }

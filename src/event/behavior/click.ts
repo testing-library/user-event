@@ -1,8 +1,8 @@
-import {cloneEvent, getWindow, isElementType, isFocusable} from '../../utils'
+import {getWindow, isElementType, isFocusable} from '../../utils'
 import {blurElement, focusElement} from '../focus'
 import {behavior} from './registry'
 
-behavior.click = (event, target, instance) => {
+behavior.click = (event, target) => {
   const context = target.closest('button,input,label,select,textarea')
   const control = context && isElementType(context, 'label') && context.control
   if (control) {
@@ -10,7 +10,6 @@ behavior.click = (event, target, instance) => {
       if (isFocusable(control)) {
         focusElement(control)
       }
-      instance.dispatchEvent(control, cloneEvent(event))
     }
   } else if (isElementType(target, 'input', {type: 'file'})) {
     return () => {

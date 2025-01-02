@@ -19,7 +19,7 @@ test('copy selected value', async () => {
 
 test('copy selected text outside of editable', async () => {
   const {getEvents, user} = setup(`<div tabindex="-1">foo bar baz</div>`, {
-    selection: {focusNode: '//text()', anchorOffset: 1, focusOffset: 5},
+    selection: {focusNode: './/text()', anchorOffset: 1, focusOffset: 5},
   })
 
   const dt = await user.copy()
@@ -32,7 +32,7 @@ test('copy selected text outside of editable', async () => {
 
 test('copy selected text in contenteditable', async () => {
   const {getEvents, user} = setup(`<div contenteditable>foo bar baz</div>`, {
-    selection: {focusNode: '//text()', anchorOffset: 1, focusOffset: 5},
+    selection: {focusNode: './/text()', anchorOffset: 1, focusOffset: 5},
   })
 
   const dt = await user.copy()

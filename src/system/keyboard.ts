@@ -70,23 +70,51 @@ export class KeyboardHost {
     Symbol: false,
     SymbolLock: false,
   }
-  readonly pressed: Record<
-    string,
-    {
-      keyDef: keyboardKey
-      unpreventedDefault: boolean
+  private readonly pressed = new (class {
+    registry: {
+      [k in string]?: {
+        keyDef: keyboardKey
+        unpreventedDefault: boolean
+      }
+    } = {}
+    add(code: string, keyDef: keyboardKey) {
+      this.registry[code] ??= {
+        keyDef,
+        unpreventedDefault: false,
+      }
     }
-  > = {}
+    has(code: string) {
+      return !!this.registry[code]
+    }
+    setUnprevented(code: string) {
+      const o = this.registry[code]
+      if (o) {
+        o.unpreventedDefault = true
+      }
+    }
+    isUnprevented(code: string) {
+      return !!this.registry[code]?.unpreventedDefault
+    }
+    delete(code: string) {
+      // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+      delete this.registry[code]
+    }
+    values() {
+      return Object.values(this.registry) as NonNullable<
+        typeof this.registry[string]
+      >[]
+    }
+  })()
   carryChar = ''
   private lastKeydownTarget: Element | undefined = undefined
   private readonly modifierLockStart: Record<string, boolean> = {}
 
   isKeyPressed(keyDef: keyboardKey) {
-    return !!this.pressed[String(keyDef.code)]
+    return this.pressed.has(String(keyDef.code))
   }
 
   getPressedKeys() {
-    return Object.values(this.pressed).map(p => p.keyDef)
+    return this.pressed.values().map(p => p.keyDef)
   }
 
   /** Press a key */
@@ -97,11 +125,7 @@ export class KeyboardHost {
     const target = getActiveElementOrBody(instance.config.document)
     this.setKeydownTarget(target)
 
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    this.pressed[code] ??= {
-      keyDef,
-      unpreventedDefault: false,
-    }
+    this.pressed.add(code, keyDef)
 
     if (isModifierKey(key)) {
       this.modifiers[key] = true
@@ -117,7 +141,9 @@ export class KeyboardHost {
       this.modifierLockStart[key] = true
     }
 
-    this.pressed[code].unpreventedDefault ||= unprevented
+    if (unprevented) {
+      this.pressed.setUnprevented(code)
+    }
 
     if (unprevented && this.hasKeyPress(key)) {
       instance.dispatchUIEvent(
@@ -138,14 +164,13 @@ export class KeyboardHost {
     const key = String(keyDef.key)
     const code = String(keyDef.code)
 
-    const unprevented = this.pressed[code].unpreventedDefault
+    const unprevented = this.pressed.isUnprevented(code)
 
-    // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-    delete this.pressed[code]
+    this.pressed.delete(code)
 
     if (
       isModifierKey(key) &&
-      !Object.values(this.pressed).find(p => p.keyDef.key === key)
+      !this.pressed.values().find(p => p.keyDef.key === key)
     ) {
       this.modifiers[key] = false
     }

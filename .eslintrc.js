@@ -15,6 +15,7 @@ module.exports = {
     '@typescript-eslint/non-nullable-type-assertion-style': 0,
     // ES2022 will be released in June 2022
     'prefer-object-has-own': 0,
+    'import/consistent-type-specifier-style': 0,
   },
   overrides: [
     {

@@ -98,9 +98,7 @@ async function buildLib(name, dir) {
     entryPoints: [`${dir}/index.js`],
     outfile: `${dir}/index.bundle.js`,
     bundle: true,
-    plugins: [
-      pluginGlobals(globals),
-    ],
+    plugins: [pluginGlobals(globals)],
   })
 }
 
@@ -114,8 +112,6 @@ async function buildEnv(name, file) {
     outfile: `${indexDirEnv}/${base}.bundle.js`,
     bundle: true,
     sourcemap: 'inline',
-    plugins: [
-      NodeModulesPolyfillPlugin(),
-    ],
+    plugins: [NodeModulesPolyfillPlugin()],
   })
 }

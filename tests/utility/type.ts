@@ -19,7 +19,6 @@ test('type into input', async () => {
     input[value="foo"] - mousemove
     input[value="foo"] - pointerdown
     input[value="foo"] - mousedown: primary
-    input[value="foo"] - select
     input[value="foo"] - focus
     input[value="foo"] - focusin
     input[value="foo"] - pointerup

@@ -14,9 +14,9 @@ const env = await serveDir('testenv')
 const {cli, connectCoverageReporter} = await setupToolboxTester(
   ['src', 'tests'],
   [
-    setupNodeConductor('Node, DTL8, React18', [
+    setupNodeConductor('Node, DTL10, React18', [
       new URL('../testenv/node.js', import.meta.url),
-      new URL('./libs/dom8/index.bundle.js', env.url),
+      new URL('./libs/dom10/index.bundle.js', env.url),
       new URL('./libs/react18/index.bundle.js', env.url),
     ]),
     setupNodeConductor('Node, DTL8, React17', [
@@ -24,9 +24,9 @@ const {cli, connectCoverageReporter} = await setupToolboxTester(
       new URL('./libs/dom8/index.bundle.js', env.url),
       new URL('./libs/react17/index.bundle.js', env.url),
     ]),
-    setupChromeConductor('Chrome, DTL8, React18', [
+    setupChromeConductor('Chrome, DTL10, React18', [
       new URL('./browser.bundle.js', env.url),
-      new URL('./libs/dom8/index.bundle.js', env.url),
+      new URL('./libs/dom10/index.bundle.js', env.url),
       new URL('./libs/react18/index.bundle.js', env.url),
     ]),
   ],

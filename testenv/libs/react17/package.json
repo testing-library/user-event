@@ -1,11 +1,11 @@
 {
-    "type": "module",
-    "dependencies": {
-        "@testing-library/react": "^12",
-        "react": "^17",
-        "react-dom": "^17"
-    },
-    "globals": {
-        "@testing-library/dom": "DomTestingLibrary"
-    }
+  "type": "module",
+  "dependencies": {
+    "@testing-library/react": "^12",
+    "react": "^17",
+    "react-dom": "^17"
+  },
+  "globals": {
+    "@testing-library/dom": "DomTestingLibrary"
+  }
 }

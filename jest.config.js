@@ -10,9 +10,7 @@ config.moduleNameMapper = {
 
 config.testEnvironment = 'jsdom'
 
-config.setupFilesAfterEnv = [
-  '<rootDir>/testenv/jest.js',
-]
+config.setupFilesAfterEnv = ['<rootDir>/testenv/jest.js']
 
 config.testMatch.push('<rootDir>/tests/**/*.+(js|jsx|ts|tsx)')
 

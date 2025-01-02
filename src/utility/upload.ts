@@ -5,7 +5,7 @@ import {
   isElementType,
   setFiles,
 } from '../utils'
-import type {Instance} from '../setup'
+import {type Instance} from '../setup'
 
 export interface uploadInit {
   changeInit?: EventInit

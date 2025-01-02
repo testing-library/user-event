@@ -1,4 +1,4 @@
-import type {Instance} from '../../setup'
+import {type Instance} from '../../setup'
 
 export function wait(config: Instance['config']) {
   const delay = config.delay

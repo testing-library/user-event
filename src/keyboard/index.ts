@@ -1,5 +1,5 @@
-import type {Instance} from '../setup'
-import type {keyboardKey} from '../system/keyboard'
+import {type Instance} from '../setup'
+import {type keyboardKey} from '../system/keyboard'
 import {wait} from '../utils'
 import {parseKeyDef} from './parseKeyDef'
 

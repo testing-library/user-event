@@ -1,5 +1,5 @@
-import type {keyboardKey} from './system/keyboard'
-import type {pointerKey} from './system/pointer'
+import {type keyboardKey} from './system/keyboard'
+import {type pointerKey} from './system/pointer'
 
 export enum PointerEventsCheckLevel {
   /**

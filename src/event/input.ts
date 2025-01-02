@@ -5,7 +5,7 @@ import {
   setUIValue,
   UISelectionRange,
 } from '../document'
-import type {Instance} from '../setup'
+import {type Instance} from '../setup'
 import {
   buildTimeValue,
   EditableInputOrTextarea,

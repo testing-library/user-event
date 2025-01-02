@@ -1,5 +1,5 @@
 import {setUISelection} from '../../document'
-import type {SelectionRange} from '.'
+import {type SelectionRange} from '.'
 import {resolveCaretPosition} from './resolveCaretPosition'
 
 export function modifySelectionPerMouseMove(

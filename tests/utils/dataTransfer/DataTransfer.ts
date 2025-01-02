@@ -1,5 +1,5 @@
 import {createDataTransfer, getBlobFromDataTransferItem} from '#src/utils'
-import DTL from '#src/_interop/dtl'
+import {waitFor} from '@testing-library/dom'
 
 describe('create DataTransfer', () => {
   test('plain string', async () => {
@@ -10,7 +10,7 @@ describe('create DataTransfer', () => {
 
     const callback = mocks.fn()
     dt.items[0].getAsString(callback)
-    await DTL.waitFor(() => expect(callback).toBeCalledWith('foo'))
+    await waitFor(() => expect(callback).toBeCalledWith('foo'))
   })
 
   test('multi format', async () => {

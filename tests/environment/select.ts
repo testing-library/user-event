@@ -1,5 +1,5 @@
 import {isJsdomEnv, render} from '#testHelpers'
-import DTL from '#src/_interop/dtl'
+import {waitFor} from '@testing-library/dom'
 
 test('`Selection.setBaseAndExtent()` resets input selection in browser', async () => {
   const {element} = render<HTMLInputElement>(`<input value="foo"/>`, {
@@ -21,7 +21,7 @@ test('events are not guaranteed to be dispatched on same microtask in browser', 
 
   expect(onSelect).toBeCalledTimes(isJsdomEnv() ? 1 : 0)
 
-  await DTL.waitFor(() => expect(onSelect).toBeCalledTimes(1))
+  await waitFor(() => expect(onSelect).toBeCalledTimes(1))
 })
 
 test('`HTMLInputElement.focus()` in contenteditable changes `Selection` in browser', () => {

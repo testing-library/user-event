@@ -1,6 +1,6 @@
-import type {Instance} from '../setup'
+import {type Instance} from '../setup'
 import {getActiveElementOrBody} from '../utils'
-import type {System} from '.'
+import {type System} from '.'
 
 export enum DOM_KEY_LOCATION {
   STANDARD = 0,

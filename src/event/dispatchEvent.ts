@@ -1,4 +1,4 @@
-import type {Instance} from '../setup'
+import {type Instance} from '../setup'
 import {EventType, EventTypeInit} from './types'
 import {behavior, BehaviorPlugin} from './behavior'
 import {wrapEvent} from './wrapEvent'

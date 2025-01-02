@@ -1,4 +1,4 @@
-import type {Instance} from '../setup'
+import {type Instance} from '../setup'
 import {assertPointerEvents} from '../utils'
 
 export async function hover(this: Instance, element: Element) {

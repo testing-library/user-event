@@ -1,4 +1,4 @@
-import type {Instance} from '../../setup'
+import {type Instance} from '../../setup'
 import {EventType} from '../types'
 
 export interface BehaviorPlugin<Type extends EventType> {

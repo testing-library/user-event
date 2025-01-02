@@ -1,8 +1,7 @@
-import type {Options} from '../options'
-import type {PointerInput} from '../pointer'
-import type {System} from '../system'
-import type {UserEventApi} from './setup'
-import {setupDirect} from './setup'
+import {type Options} from '../options'
+import {type PointerInput} from '../pointer'
+import {type System} from '../system'
+import {setupDirect, type UserEventApi} from './setup'
 
 export type DirectOptions = Options & {
   keyboardState?: System

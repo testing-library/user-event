@@ -1,14 +1,15 @@
-import dtlEvents from '../_interop/dtlEventMap'
 import {EventType} from './types'
 
 export const eventMap = {
-  ...dtlEvents.eventMap,
-
-  click: {
+  auxclick: {
     EventType: 'PointerEvent',
     defaultInit: {bubbles: true, cancelable: true, composed: true},
   },
-  auxclick: {
+  beforeinput: {
+    EventType: 'InputEvent',
+    defaultInit: {bubbles: true, cancelable: true, composed: true},
+  },
+  click: {
     EventType: 'PointerEvent',
     defaultInit: {bubbles: true, cancelable: true, composed: true},
   },
@@ -16,24 +17,115 @@ export const eventMap = {
     EventType: 'PointerEvent',
     defaultInit: {bubbles: true, cancelable: true, composed: true},
   },
-  beforeInput: {
-    EventType: 'InputEvent',
+  copy: {
+    EventType: 'ClipboardEvent',
     defaultInit: {bubbles: true, cancelable: true, composed: true},
+  },
+  change: {
+    EventType: 'Event',
+    defaultInit: {bubbles: true, cancelable: false},
+  },
+  cut: {
+    EventType: 'ClipboardEvent',
+    defaultInit: {bubbles: true, cancelable: true, composed: true},
+  },
+  dblclick: {
+    EventType: 'MouseEvent',
+    defaultInit: {bubbles: true, cancelable: true, composed: true},
+  },
+  keydown: {
+    EventType: 'KeyboardEvent',
+    defaultInit: {bubbles: true, cancelable: true, composed: true},
+  },
+  keypress: {
+    EventType: 'KeyboardEvent',
+    defaultInit: {bubbles: true, cancelable: true, composed: true},
+  },
+  keyup: {
+    EventType: 'KeyboardEvent',
+    defaultInit: {bubbles: true, cancelable: true, composed: true},
+  },
+  paste: {
+    EventType: 'ClipboardEvent',
+    defaultInit: {bubbles: true, cancelable: true, composed: true},
+  },
+  input: {
+    EventType: 'InputEvent',
+    defaultInit: {bubbles: true, cancelable: false, composed: true},
+  },
+  mousedown: {
+    EventType: 'MouseEvent',
+    defaultInit: {bubbles: true, cancelable: true, composed: true},
+  },
+  mouseenter: {
+    EventType: 'MouseEvent',
+    defaultInit: {bubbles: false, cancelable: false, composed: true},
+  },
+  mouseleave: {
+    EventType: 'MouseEvent',
+    defaultInit: {bubbles: false, cancelable: false, composed: true},
+  },
+  mousemove: {
+    EventType: 'MouseEvent',
+    defaultInit: {bubbles: true, cancelable: true, composed: true},
+  },
+  mouseout: {
+    EventType: 'MouseEvent',
+    defaultInit: {bubbles: true, cancelable: true, composed: true},
+  },
+  mouseover: {
+    EventType: 'MouseEvent',
+    defaultInit: {bubbles: true, cancelable: true, composed: true},
+  },
+  mouseup: {
+    EventType: 'MouseEvent',
+    defaultInit: {bubbles: true, cancelable: true, composed: true},
+  },
+  pointerover: {
+    EventType: 'PointerEvent',
+    defaultInit: {bubbles: true, cancelable: true, composed: true},
+  },
+  pointerenter: {
+    EventType: 'PointerEvent',
+    defaultInit: {bubbles: false, cancelable: false},
+  },
+  pointerdown: {
+    EventType: 'PointerEvent',
+    defaultInit: {bubbles: true, cancelable: true, composed: true},
+  },
+  pointermove: {
+    EventType: 'PointerEvent',
+    defaultInit: {bubbles: true, cancelable: true, composed: true},
+  },
+  pointerup: {
+    EventType: 'PointerEvent',
+    defaultInit: {bubbles: true, cancelable: true, composed: true},
+  },
+  pointercancel: {
+    EventType: 'PointerEvent',
+    defaultInit: {bubbles: true, cancelable: false, composed: true},
+  },
+  pointerout: {
+    EventType: 'PointerEvent',
+    defaultInit: {bubbles: true, cancelable: true, composed: true},
+  },
+  pointerleave: {
+    EventType: 'PointerEvent',
+    defaultInit: {bubbles: false, cancelable: false},
+  },
+  submit: {
+    EventType: 'Event',
+    defaultInit: {bubbles: true, cancelable: true},
   },
 } as const
 
-export const eventMapKeys: {
-  [k in keyof DocumentEventMap]?: keyof typeof eventMap
-} = Object.fromEntries(Object.keys(eventMap).map(k => [k.toLowerCase(), k]))
-
 function getEventClass(type: EventType) {
-  const k = eventMapKeys[type]
-  return k && eventMap[k].EventType
+  return eventMap[type].EventType
 }
 
 const mouseEvents = ['MouseEvent', 'PointerEvent']
 export function isMouseEvent(type: EventType) {
-  return mouseEvents.includes(getEventClass(type) as string)
+  return mouseEvents.includes(getEventClass(type))
 }
 
 export function isKeyboardEvent(type: EventType) {

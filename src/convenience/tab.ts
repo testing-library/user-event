@@ -1,4 +1,4 @@
-import type {Instance} from '../setup'
+import {type Instance} from '../setup'
 
 export async function tab(
   this: Instance,

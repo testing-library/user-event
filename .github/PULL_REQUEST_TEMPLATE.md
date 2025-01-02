@@ -15,16 +15,19 @@ merge of your pull request!
 -->
 
 **What**:
+
 <!-- What changes are being made? (What feature/bug is being fixed here?) -->
 
 **Why**:
+
 <!-- Why are these changes necessary? -->
 
 **How**:
+
 <!-- How were these changes implemented? -->
 
-
 **Checklist**:
+
 <!-- Have you done all of these things?  -->
 
 <!-- To check an item, place an "x" in the box like so: "- [x] Documentation" -->

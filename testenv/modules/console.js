@@ -8,23 +8,18 @@ beforeEach(() => {
 })
 
 afterEach(() => {
-  if (isCI && console.error.mock.calls.length) {
-    throw new Error(`console.error should not be called in tests`)
+  for (const k of ['error', 'log', 'warn', 'info']) {
+    const calls = console[k].mock.calls
+    if (isCI && calls.length) {
+      throw new Error(`console.${k} should not be calls in tests and was called ${calls.length} times:\n`
+        + calls.map((args, i) => (`\n#${i}:\n` + args.map(a => (
+          (typeof a === 'object' || typeof a === 'function'
+              ? typeof a
+              : JSON.stringify(a)
+          ) + '\n'
+        ))))
+      )
+    }
+    console[k].mockRestore()
   }
-  console.error.mockRestore()
-
-  if (isCI && console.log.mock.calls.length) {
-    throw new Error(`console.log should not be called in tests`)
-  }
-  console.log.mockRestore()
-
-  if (isCI && console.warn.mock.calls.length) {
-    throw new Error(`console.warn should not be called in tests`)
-  }
-  console.warn.mockRestore()
-
-  if (isCI && console.info.mock.calls.length) {
-    throw new Error(`console.info should not be called in tests`)
-  }
-  console.info.mockRestore()
 })

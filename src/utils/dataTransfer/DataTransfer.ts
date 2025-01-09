@@ -157,6 +157,7 @@ export function getBlobFromDataTransferItem(
   if (item.kind === 'file') {
     return item.getAsFile() as File
   }
+  // TODO: await callback
   let data: string = ''
   item.getAsString(s => {
     data = s

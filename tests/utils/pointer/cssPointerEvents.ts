@@ -1,6 +1,6 @@
 import {createConfig, createInstance} from '#src/setup/setup'
 import {assertPointerEvents, hasPointerEvents} from '#src/utils'
-import {setup} from '#testHelpers'
+import {isJsdomEnv, setup} from '#testHelpers'
 
 function setupInstance() {
   return createInstance(createConfig()).instance
@@ -44,6 +44,13 @@ test('report element that declared pointer-events', async () => {
 
     DIV#foo
   `)
+
+  if(!isJsdomEnv()) {
+    // In the browser `window.getComputedStyle` includes inherited styles.
+    // Therefore we can not distinguish between inherited `pointer-events` declarations
+    // and those applied to the element itself.
+    return
+  }
 
   expect(() =>
     assertPointerEvents(

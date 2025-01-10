@@ -1,6 +1,6 @@
 import cases from 'jest-in-case'
 import userEvent from '#src'
-import {render, setup} from '#testHelpers'
+import {render, resetWrappers, setup} from '#testHelpers'
 
 // Maybe this should not trigger keypress event on HTMLAnchorElement
 // see https://github.com/testing-library/user-event/issues/589
@@ -180,13 +180,17 @@ describe('prevent default behavior', () => {
   })
 })
 
-test('do not call setTimeout with delay `null`', async () => {
-  const {user} = setup(`<div></div>`)
-  const spy = mocks.spyOn(global, 'setTimeout')
-  await user.keyboard('ab')
-  expect(spy.mock.calls.length).toBeGreaterThanOrEqual(1)
+describe('delay', () => {
+  beforeAll(() => resetWrappers())
 
-  spy.mockClear()
-  await user.setup({delay: null}).keyboard('cd')
-  expect(spy).not.toBeCalled()
+  test('do not call setTimeout with delay `null`', async () => {
+    const {user} = setup(`<div></div>`)
+    const spy = mocks.spyOn(global, 'setTimeout')
+    await user.keyboard('ab')
+    expect(spy.mock.calls.length).toBeGreaterThanOrEqual(1)
+  
+    spy.mockClear()
+    await user.setup({delay: null}).keyboard('cd')
+    expect(spy).not.toBeCalled()
+  })
 })

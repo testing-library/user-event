@@ -1,5 +1,5 @@
 import userEvent from '#src'
-import {addListeners, render, setup} from '#testHelpers'
+import {addListeners, render, resetWrappers, setup} from '#testHelpers'
 
 test('type without focus', async () => {
   const {element, user} = setup('<input/>', {focus: false})
@@ -112,6 +112,8 @@ test('continue typing with state', async () => {
 
 describe('delay', () => {
   const spy = mocks.spyOn(global, 'setTimeout')
+
+  beforeAll(() => resetWrappers())
 
   beforeEach(() => {
     spy.mockClear()

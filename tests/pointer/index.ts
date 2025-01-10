@@ -1,6 +1,6 @@
 import {type SpyInstance} from 'jest-mock'
 import {PointerEventsCheckLevel} from '#src'
-import {setup} from '#testHelpers'
+import {resetWrappers, setup} from '#testHelpers'
 
 test('continue previous target', async () => {
   const {element, getEvents, user} = setup(`<div></div>`)
@@ -59,6 +59,8 @@ test('apply modifiers from keyboardstate', async () => {
 
 describe('delay', () => {
   const spy = mocks.spyOn(global, 'setTimeout')
+
+  beforeAll(() => resetWrappers())
 
   beforeEach(() => {
     spy.mockClear()

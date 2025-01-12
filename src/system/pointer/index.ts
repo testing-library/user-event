@@ -20,12 +20,10 @@ export class PointerHost {
   private readonly buttons
 
   private readonly devices = new (class {
-    private registry = {} as Record<string, Device>
+    private registry: {[k in string]?: Device} = {}
 
     get(k: string) {
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      this.registry[k] ??= new Device()
-      return this.registry[k]
+      return (this.registry[k] ??= new Device())
     }
   })()
 

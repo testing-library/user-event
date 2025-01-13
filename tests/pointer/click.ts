@@ -216,6 +216,28 @@ describe('label', () => {
 
     expect(getEvents('click')).toHaveLength(2)
   })
+
+  // TODO: enable as soon as jsdom properly supports CEs
+  test.skip('click nested FACE per label', async () => {
+    const {elements, getEvents, user} = setup(`
+      <script>
+        class FaCe extends HTMLElement {
+          static formAssociated = true;
+        }
+        customElements.define("fa-ce", FaCe);
+      </script>
+      <label>
+        <fa-ce></fa-ce>
+      </label>
+    `)
+
+    await user.pointer({
+      keys: '[MouseLeft]',
+      target: Array.from(elements).at(-1),
+    })
+
+    expect(getEvents('click')).toHaveLength(2)
+  })
 })
 
 describe('check/uncheck control per click', () => {

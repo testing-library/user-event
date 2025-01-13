@@ -1397,9 +1397,19 @@
       "contributions": [
         "bug"
       ]
+    },
+    {
+      "login": "remcovaes",
+      "name": "remcovaes",
+      "avatar_url": "https://avatars.githubusercontent.com/u/20537012?v=4",
+      "profile": "https://github.com/remcovaes",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "commitConvention": "none",
   "skipCi": false,
-  "contributorsPerLine": 7
+  "contributorsPerLine": 7,
+  "commitType": "docs"
 }

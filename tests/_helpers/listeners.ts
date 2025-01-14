@@ -33,10 +33,6 @@ export type EventHandlers = {[k in keyof DocumentEventMap]?: EventListener}
 
 const loggedEvents = [
   ...(Object.keys(eventMap) as Array<keyof typeof eventMap>),
-  'focus',
-  'focusin',
-  'focusout',
-  'blur',
   'select',
 ] as const
 
@@ -174,6 +170,12 @@ function isKeyboardEvent(event: Event): event is KeyboardEvent {
   )
 }
 
+function isFocusEvent(event: Event): event is FocusEvent {
+  return (
+    event.constructor.name === 'FocusEvent'
+  )
+}
+
 function isPointerEvent(event: Event): event is PointerEvent {
   return event.type.startsWith('pointer')
 }
@@ -241,6 +243,14 @@ function getEventLabel(event: Event) {
     return getMouseButtonName(event.button) ?? `button${event.button}`
   } else if (isKeyboardEvent(event)) {
     return event.key === ' ' ? 'Space' : event.key
+  } else if (isFocusEvent(event)) {
+    if (!event.relatedTarget) {
+      return `(from null)`
+    } else if (isElement(event.relatedTarget)) {
+      return `(from ${getElementDisplayName(event.relatedTarget as Element)})`
+    } else {
+      return `(from ${event.relatedTarget.constructor.name})`
+    }
   }
 }
 

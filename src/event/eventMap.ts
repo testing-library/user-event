@@ -9,6 +9,10 @@ export const eventMap = {
     EventType: 'InputEvent',
     defaultInit: {bubbles: true, cancelable: true, composed: true},
   },
+  blur: {
+    EventType: 'FocusEvent',
+    defaultInit: {bubbles: false, cancelable: false, composed: true},
+  },
   click: {
     EventType: 'PointerEvent',
     defaultInit: {bubbles: true, cancelable: true, composed: true},
@@ -32,6 +36,18 @@ export const eventMap = {
   dblclick: {
     EventType: 'MouseEvent',
     defaultInit: {bubbles: true, cancelable: true, composed: true},
+  },
+  focus: {
+    EventType: 'FocusEvent',
+    defaultInit: {bubbles: false, cancelable: false, composed: true},
+  },
+  focusin: {
+    EventType: 'FocusEvent',
+    defaultInit: {bubbles: true, cancelable: false, composed: true},
+  },
+  focusout: {
+    EventType: 'FocusEvent',
+    defaultInit: {bubbles: true, cancelable: false, composed: true},
   },
   keydown: {
     EventType: 'KeyboardEvent',

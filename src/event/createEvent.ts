@@ -25,6 +25,7 @@ const eventInitializer: {
 } = {
   ClipboardEvent: [initClipboardEvent],
   Event: [],
+  FocusEvent: [],
   InputEvent: [initUIEvent, initInputEvent],
   MouseEvent: [initUIEvent, initUIEventModififiers, initMouseEvent],
   PointerEvent: [

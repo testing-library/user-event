@@ -20,6 +20,8 @@ type SpecificEventInit<E extends Event> = E extends InputEvent
   ? PointerEventInit
   : E extends MouseEvent
   ? MouseEventInit
+  : E extends FocusEvent
+  ? FocusEventInit
   : E extends UIEvent
   ? UIEventInit
   : EventInit

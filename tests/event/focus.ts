@@ -1,5 +1,11 @@
+import {patchFocus, restoreFocus} from '#src/document/patchFocus'
 import {focusElement, blurElement} from '#src/event'
 import {addListeners, setup} from '#testHelpers'
+
+beforeAll(() => {
+  patchFocus(globalThis.window.HTMLElement)
+  return () => restoreFocus(globalThis.window.HTMLElement)
+})
 
 test('move focus', async () => {
   const {elements, clearEventCalls, getEvents, getEventSnapshot} = setup(
@@ -16,10 +22,12 @@ test('move focus', async () => {
   expect(elB).toHaveFocus()
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
-    Events fired on: div
+    Events fired on: input#a[value=""],input#b[value=""]
 
-    input#a[value=""] - focusout
-    input#b[value=""] - focusin
+    input#a[value=""] - blur: → input#b[value=""]
+    input#a[value=""] - focusout: → input#b[value=""]
+    input#b[value=""] - focus: ← input#a[value=""]
+    input#b[value=""] - focusin: ← input#a[value=""]
   `)
   expect(getEvents('focusout')[0]).toHaveProperty('target', elA)
   expect(getEvents('focusin')[0]).toHaveProperty('target', elB)
@@ -42,8 +50,8 @@ test('focus with tabindex', async () => {
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: div
 
-    div - focus
-    div - focusin
+    div - focus: ← null
+    div - focusin: ← null
   `)
   expect(element).toHaveFocus()
 })
@@ -106,8 +114,8 @@ test('blur a button', async () => {
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: button
 
-    button - blur
-    button - focusout
+    button - blur: → null
+    button - focusout: → null
   `)
   expect(element).not.toHaveFocus()
 })
@@ -127,8 +135,8 @@ test('blur with tabindex', async () => {
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: div
 
-    div - blur
-    div - focusout
+    div - blur: → null
+    div - focusout: → null
   `)
   expect(element).not.toHaveFocus()
 })

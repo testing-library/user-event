@@ -1,4 +1,4 @@
-import { waitFor } from '@testing-library/dom'
+import {waitFor} from '@testing-library/dom'
 import {createDataTransfer, getBlobFromDataTransferItem} from '#src/utils'
 
 describe('create DataTransfer', () => {
@@ -45,12 +45,14 @@ describe('create DataTransfer', () => {
     const dt = createDataTransfer(window, [f0, f1])
     dt.setData('text/html', 'foo')
 
-    expect(dt.types).toEqual(expect.arrayContaining(
+    expect(dt.types).toEqual(
+      expect.arrayContaining(
         // TODO: Fix DataTransferStub
         typeof window.DataTransfer === 'undefined'
-        ? ['Files', 'text/html']
-        : ['text/html']
-    ))
+          ? ['Files', 'text/html']
+          : ['text/html'],
+      ),
+    )
     expect(dt.files.length).toBe(2)
   })
 
@@ -108,16 +110,18 @@ test('get Blob from DataTransfer', async () => {
   dt.items.add('foo', 'text/plain')
   dt.items.add(new File(['bar'], 'bar.txt', {type: 'text/plain'}))
 
-  expect(getBlobFromDataTransferItem(window, dt.items[0])).toHaveProperty(
+  expect(await getBlobFromDataTransferItem(window, dt.items[0])).toHaveProperty(
     'type',
     'text/plain',
   )
-  expect(getBlobFromDataTransferItem(window, dt.items[0])).not.toBeInstanceOf(
+  expect(
+    await getBlobFromDataTransferItem(window, dt.items[0]),
+  ).not.toBeInstanceOf(File)
+  expect(await getBlobFromDataTransferItem(window, dt.items[1])).toHaveProperty(
+    'type',
+    'text/plain',
+  )
+  expect(await getBlobFromDataTransferItem(window, dt.items[1])).toBeInstanceOf(
     File,
   )
-  expect(getBlobFromDataTransferItem(window, dt.items[1])).toHaveProperty(
-    'type',
-    'text/plain',
-  )
-  expect(getBlobFromDataTransferItem(window, dt.items[1])).toBeInstanceOf(File)
 })

@@ -192,7 +192,7 @@ export async function writeDataTransferToClipboard(
   const items = []
   for (let i = 0; i < clipboardData.items.length; i++) {
     const dtItem = clipboardData.items[i]
-    const blob = getBlobFromDataTransferItem(window, dtItem)
+    const blob = await getBlobFromDataTransferItem(window, dtItem)
     items.push(createClipboardItem(window, blob))
   }
 

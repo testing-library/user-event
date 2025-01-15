@@ -29,6 +29,14 @@ export function isDifferentPointerPosition(
     positionA.target !== positionB.target ||
     positionA.coords?.x !== positionB.coords?.x ||
     positionA.coords?.y !== positionB.coords?.y ||
+    positionA.coords?.clientX !== positionB.coords?.clientX ||
+    positionA.coords?.clientY !== positionB.coords?.clientY ||
+    positionA.coords?.offsetX !== positionB.coords?.offsetX ||
+    positionA.coords?.offsetY !== positionB.coords?.offsetY ||
+    positionA.coords?.pageX !== positionB.coords?.pageX ||
+    positionA.coords?.pageY !== positionB.coords?.pageY ||
+    positionA.coords?.screenX !== positionB.coords?.screenX ||
+    positionA.coords?.screenY !== positionB.coords?.screenY ||
     positionA.caret?.node !== positionB.caret?.node ||
     positionA.caret?.offset !== positionB.caret?.offset
   )

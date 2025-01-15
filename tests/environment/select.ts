@@ -1,5 +1,4 @@
 import {isJsdomEnv, render} from '#testHelpers'
-import {waitFor} from '@testing-library/dom'
 
 test('`Selection.setBaseAndExtent()` resets input selection in browser', async () => {
   const {element} = render<HTMLInputElement>(`<input value="foo"/>`, {
@@ -12,7 +11,7 @@ test('`Selection.setBaseAndExtent()` resets input selection in browser', async (
   expect(element.selectionStart).toBe(isJsdomEnv() ? 3 : 0)
 })
 
-test('events are not dispatched on same microtask in browser', async () => {
+test('`select` event is not dispatched in (hidden) browser window', async () => {
   const {element} = render<HTMLInputElement>(`<input value="foo"/>`)
   const onSelect = mocks.fn()
   element.addEventListener('select', onSelect)
@@ -21,7 +20,10 @@ test('events are not dispatched on same microtask in browser', async () => {
 
   expect(onSelect).toBeCalledTimes(isJsdomEnv() ? 1 : 0)
 
-  await waitFor(() => expect(onSelect).toBeCalledTimes(1))
+  // on visible documents the event is dispatched on a new event loop step
+  await new Promise(r => setTimeout(r))
+
+  expect(onSelect).toBeCalledTimes(isJsdomEnv() ? 1 : 0)
 })
 
 test('`HTMLInputElement.focus()` in contenteditable changes `Selection` in browser', () => {

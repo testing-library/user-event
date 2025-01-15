@@ -192,13 +192,13 @@ test('multi touch does not click', async () => {
 
 describe('label', () => {
   test('click associated control per label', async () => {
-    const {element, getEvents, user} = setup(
-      `<label for="in">foo</label><input id="in"/>`,
-    )
+    const onClick = mocks.fn()
+    const {element, user} = setup(`<label for="in">foo</label><input id="in"/>`)
+    element.nextSibling?.addEventListener('click', onClick)
 
     await user.pointer({keys: '[MouseLeft]', target: element})
 
-    expect(getEvents('click')).toHaveLength(2)
+    expect(onClick).toHaveBeenCalledTimes(1)
   })
 
   test('click nested control per label', async () => {

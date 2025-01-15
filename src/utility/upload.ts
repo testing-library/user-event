@@ -49,7 +49,7 @@ export async function upload(
 
   input.addEventListener('fileDialog', fileDialog)
 
-  await this.click(element)
+  await this.click(input)
 
   input.removeEventListener('fileDialog', fileDialog)
 }

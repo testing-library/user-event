@@ -40,24 +40,13 @@ export function dispatchEvent(
       )
 
   if (behaviorImplementation) {
-    event.preventDefault()
-    let defaultPrevented = false
-    Object.defineProperty(event, 'defaultPrevented', {
-      get: () => defaultPrevented,
-    })
-    Object.defineProperty(event, 'preventDefault', {
-      value: () => {
-        defaultPrevented = event.cancelable
-      },
-    })
-
     wrapEvent(() => target.dispatchEvent(event), target)
 
-    if (!defaultPrevented as boolean) {
+    if (!event.defaultPrevented) {
       behaviorImplementation()
     }
 
-    return !defaultPrevented
+    return !event.defaultPrevented
   }
 
   return wrapEvent(() => target.dispatchEvent(event), target)

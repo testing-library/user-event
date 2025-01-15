@@ -107,3 +107,25 @@ test('move touch over elements', async () => {
     div - click: primary
   `)
 })
+
+test('declare pointer coordinates', async () => {
+  const {element, getEvents, user} = setup(`<div></div>`)
+
+  const coords: Partial<MouseEvent> = {
+    x: 1,
+    y: 2,
+    offsetX: 3,
+    offsetY: 4,
+    pageX: 5,
+    pageY: 6,
+    screenX: 7,
+    screenY: 8,
+  }
+
+  await user.pointer({target: element, coords})
+
+  // .toEqual(expect.objectContaining) yields a misleading diff
+  Object.entries(coords).forEach(([prop, value]) => {
+    expect(getEvents('mouseover')[0]).toHaveProperty(prop, value)
+  })
+})

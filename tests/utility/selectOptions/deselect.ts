@@ -20,8 +20,8 @@ test('fires correct events', async () => {
     option[value="1"][selected=true] - mousemove
     option[value="1"][selected=true] - pointerdown
     option[value="1"][selected=true] - mousedown: primary
-    select[name="select"][value=["1"]] - focus
-    select[name="select"][value=["1"]] - focusin
+    select[name="select"][value=["1"]] - focus: ← null
+    select[name="select"][value=["1"]] - focusin: ← null
     option[value="1"][selected=true] - pointerup
     option[value="1"][selected=true] - mouseup: primary
     select[name="select"][value=[]] - input
@@ -52,8 +52,8 @@ test('blurs previously focused element', async () => {
     option[value="1"][selected=false] - mousemove
     option[value="1"][selected=false] - pointerdown
     option[value="1"][selected=false] - mousedown: primary
-    button - focusout
-    select[name="select"][value=[]] - focusin
+    button - focusout: → select[name="select"][value=[]]
+    select[name="select"][value=[]] - focusin: ← button
     option[value="1"][selected=false] - pointerup
     option[value="1"][selected=false] - mouseup: primary
     select[name="select"][value=[]] - input

@@ -9,7 +9,7 @@ test('hover to other element', async () => {
   ])
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
-    Events fired on: div
+    Events fired on: div,div
 
     div - pointerover
     div - pointerenter
@@ -18,9 +18,13 @@ test('hover to other element', async () => {
     div - pointermove
     div - mousemove
     div - pointerout
+    div - pointerleave
     div - mouseout
+    div - mouseleave
     div - pointerover
+    div - pointerenter
     div - mouseover
+    div - mouseenter
     div - pointermove
     div - mousemove
   `)

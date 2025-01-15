@@ -11,8 +11,8 @@ describe('clear elements', () => {
     expect(getEventSnapshot()).toMatchInlineSnapshot(`
       Events fired on: input[value=""]
 
-      input[value="hello"] - focus
-      input[value="hello"] - focusin
+      input[value="hello"] - focus: ← null
+      input[value="hello"] - focusin: ← null
       input[value="hello"] - beforeinput
       input[value=""] - input
     `)
@@ -28,8 +28,8 @@ describe('clear elements', () => {
     expect(getEventSnapshot()).toMatchInlineSnapshot(`
       Events fired on: textarea[value=""]
 
-      textarea[value="hello"] - focus
-      textarea[value="hello"] - focusin
+      textarea[value="hello"] - focus: ← null
+      textarea[value="hello"] - focusin: ← null
       textarea[value="hello"] - beforeinput
       textarea[value=""] - input
     `)
@@ -45,8 +45,8 @@ describe('clear elements', () => {
     expect(getEventSnapshot()).toMatchInlineSnapshot(`
       Events fired on: div
 
-      div - focus
-      div - focusin
+      div - focus: ← null
+      div - focusin: ← null
       div - beforeinput
       div - input
     `)

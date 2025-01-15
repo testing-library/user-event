@@ -64,13 +64,9 @@ export function render<Elements extends Element | Element[] = HTMLElement>(
   return {
     element: div.firstChild as ElementsArray[0],
     elements: div.children as ElementsCollection,
-    // for single elements add the listeners to the element for capturing non-bubbling events
-    ...addListeners(
-      div.children.length === 1 ? (div.firstChild as Element) : div,
-      {
-        eventHandlers,
-      },
-    ),
+    ...addListeners(Array.from(div.children), {
+      eventHandlers,
+    }),
     xpathNode: <NodeType extends Node = HTMLElement>(xpath: string) =>
       assertSingleNodeFromXPath(xpath, div) as NodeType,
   }

@@ -33,10 +33,6 @@ export type EventHandlers = {[k in keyof DocumentEventMap]?: EventListener}
 
 const loggedEvents = [
   ...(Object.keys(eventMap) as Array<keyof typeof eventMap>),
-  'focus',
-  'focusin',
-  'focusout',
-  'blur',
   'select',
 ] as const
 
@@ -44,13 +40,15 @@ const loggedEvents = [
  * Add listeners for logging events.
  */
 export function addListeners(
-  element: Element,
+  element: Element | Element[],
   {
     eventHandlers = {},
   }: {
     eventHandlers?: EventHandlers
   } = {},
 ) {
+  const elements = Array.isArray(element) ? element : [element]
+
   type CallData = {
     event: Event
     elementDisplayName: string
@@ -59,14 +57,16 @@ export function addListeners(
 
   const generalListener = mocks.fn(eventHandler).mockName('eventListener')
 
-  for (const eventType of loggedEvents) {
-    addEventListener(element, eventType, (...args) => {
-      generalListener(...args)
-      eventHandlers[eventType]?.(...args)
-    })
-  }
+  for (const el of elements) {
+    for (const eventType of loggedEvents) {
+      addEventListener(el, eventType, (...args) => {
+        generalListener(...args)
+        eventHandlers[eventType]?.(...args)
+      })
+    }
 
-  addEventListener(element, 'submit', e => e.preventDefault())
+    addEventListener(el, 'submit', e => e.preventDefault())
+  }
 
   return {
     clearEventCalls,
@@ -132,16 +132,14 @@ export function addListeners(
       .join('\n')
       .trim()
 
+    const displayNames = elements.map(el => getElementDisplayName(el)).join(',')
     if (eventCalls.length) {
       return {
-        snapshot: [
-          `Events fired on: ${getElementDisplayName(element)}`,
-          eventCalls,
-        ].join('\n\n'),
+        snapshot: [`Events fired on: ${displayNames}`, eventCalls].join('\n\n'),
       }
     } else {
       return {
-        snapshot: `No events were fired on: ${getElementDisplayName(element)}`,
+        snapshot: `No events were fired on: ${displayNames}`,
       }
     }
   }
@@ -172,6 +170,10 @@ function isKeyboardEvent(event: Event): event is KeyboardEvent {
   return (
     event.constructor.name === 'KeyboardEvent' || event.type.startsWith('key')
   )
+}
+
+function isFocusEvent(event: Event): event is FocusEvent {
+  return event.constructor.name === 'FocusEvent'
 }
 
 function isPointerEvent(event: Event): event is PointerEvent {
@@ -241,6 +243,22 @@ function getEventLabel(event: Event) {
     return getMouseButtonName(event.button) ?? `button${event.button}`
   } else if (isKeyboardEvent(event)) {
     return event.key === ' ' ? 'Space' : event.key
+  } else if (isFocusEvent(event)) {
+    const direction =
+      event.type === 'focus' || event.type === 'focusin' ? '←' : '→'
+    let label
+    if (
+      !event.relatedTarget ||
+      // Jsdom sets `relatedTarget` to `Document` on blur/focusout
+      ('nodeType' in event.relatedTarget && event.relatedTarget.nodeType === 9)
+    ) {
+      label = 'null'
+    } else if (isElement(event.relatedTarget)) {
+      label = getElementDisplayName(event.relatedTarget)
+    } else {
+      label = event.relatedTarget.constructor.name
+    }
+    return `${direction} ${label}`
   }
 }
 

@@ -12,6 +12,7 @@ interface InterfaceMap {
   MouseEvent: {type: MouseEvent; init: MouseEventInit}
   PointerEvent: {type: PointerEvent; init: PointerEventInit}
   KeyboardEvent: {type: KeyboardEvent; init: KeyboardEventInit}
+  FocusEvent: {type: FocusEvent; init: FocusEventInit}
 }
 type InterfaceNames = typeof eventMap[keyof typeof eventMap]['EventType']
 type Interface<k extends InterfaceNames> = k extends keyof InterfaceMap
@@ -25,6 +26,7 @@ const eventInitializer: {
 } = {
   ClipboardEvent: [initClipboardEvent],
   Event: [],
+  FocusEvent: [initUIEvent, initFocusEvent],
   InputEvent: [initUIEvent, initInputEvent],
   MouseEvent: [initUIEvent, initUIEventModififiers, initMouseEvent],
   PointerEvent: [
@@ -114,6 +116,12 @@ function initClipboardEvent(
 ) {
   assignProps(event, {
     clipboardData,
+  })
+}
+
+function initFocusEvent(event: FocusEvent, {relatedTarget}: FocusEventInit) {
+  assignProps(event, {
+    relatedTarget,
   })
 }
 

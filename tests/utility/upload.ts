@@ -24,17 +24,17 @@ test('change file input', async () => {
     input[value=""] - mousemove
     input[value=""] - pointerdown
     input[value=""] - mousedown: primary
-    input[value=""] - focus
-    input[value=""] - focusin
+    input[value=""] - focus: ← null
+    input[value=""] - focusin: ← null
     input[value=""] - pointerup
     input[value=""] - mouseup: primary
     input[value=""] - click: primary
-    input[value=""] - blur
-    input[value=""] - focusout
+    input[value=""] - blur: → null
+    input[value=""] - focusout: → null
     input[value="C:\\\\fakepath\\\\hello.png"] - input
     input[value="C:\\\\fakepath\\\\hello.png"] - change
-    input[value="C:\\\\fakepath\\\\hello.png"] - focus
-    input[value="C:\\\\fakepath\\\\hello.png"] - focusin
+    input[value="C:\\\\fakepath\\\\hello.png"] - focus: ← null
+    input[value="C:\\\\fakepath\\\\hello.png"] - focusin: ← null
   `)
 })
 
@@ -56,12 +56,12 @@ test('relay click/upload on label to file input', async () => {
   await user.upload(label, file)
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
-    Events fired on: div
+    Events fired on: label[for="element"],input#element[value="C:\\\\fakepath\\\\hello.png"]
 
     label[for="element"] - pointerover
-    div - pointerenter
+    label[for="element"] - pointerenter
     label[for="element"] - mouseover
-    div - mouseenter
+    label[for="element"] - mouseenter
     label[for="element"] - pointermove
     label[for="element"] - mousemove
     label[for="element"] - pointerdown
@@ -69,12 +69,15 @@ test('relay click/upload on label to file input', async () => {
     label[for="element"] - pointerup
     label[for="element"] - mouseup: primary
     label[for="element"] - click: primary
-    input#element[value=""] - focusin
+    input#element[value=""] - focus: ← null
+    input#element[value=""] - focusin: ← null
     input#element[value=""] - click: primary
-    input#element[value=""] - focusout
+    input#element[value=""] - blur: → null
+    input#element[value=""] - focusout: → null
     input#element[value="C:\\\\fakepath\\\\hello.png"] - input
     input#element[value="C:\\\\fakepath\\\\hello.png"] - change
-    input#element[value="C:\\\\fakepath\\\\hello.png"] - focusin
+    input#element[value="C:\\\\fakepath\\\\hello.png"] - focus: ← null
+    input#element[value="C:\\\\fakepath\\\\hello.png"] - focusin: ← null
   `)
 })
 

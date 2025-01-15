@@ -150,17 +150,14 @@ export function createDataTransfer(
   return dt
 }
 
-export function getBlobFromDataTransferItem(
+export async function getBlobFromDataTransferItem(
   window: Window & typeof globalThis,
   item: DataTransferItem,
 ) {
   if (item.kind === 'file') {
     return item.getAsFile() as File
   }
-  // TODO: await callback
-  let data: string = ''
-  item.getAsString(s => {
-    data = s
+  return new window.Blob([await new Promise(r => item.getAsString(r))], {
+    type: item.type,
   })
-  return new window.Blob([data], {type: item.type})
 }

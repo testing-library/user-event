@@ -9,17 +9,17 @@ test('focus events are not dispatched in (hidden) browser window', () => {
   if (isJsdomEnv()) {
     expect(document.visibilityState).not.toBe('hidden')
     expect(getEventSnapshot()).toMatchInlineSnapshot(`
-          Events fired on: input[value=""]
-          
-          input[value=""] - focus: ← null
-          input[value=""] - focusin: ← null
-          input[value=""] - blur: → null
-          input[value=""] - focusout: → null
-        `)
+      Events fired on: input[value=""]
+      
+      input[value=""] - focus: ← null
+      input[value=""] - focusin: ← null
+      input[value=""] - blur: → null
+      input[value=""] - focusout: → null
+    `)
   } else {
     expect(document.visibilityState).toBe('hidden')
     expect(getEventSnapshot()).toMatchInlineSnapshot(`
-          No events were fired on: input[value=""]
-        `)
+      No events were fired on: input[value=""]
+    `)
   }
 })

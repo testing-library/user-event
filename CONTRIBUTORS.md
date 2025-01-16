@@ -194,6 +194,7 @@ Thanks goes to these wonderful people ([emoji key][emojis]):
       <td align="center" valign="top" width="14.28%"><a href="http://kyliesy.com"><img src="https://avatars.githubusercontent.com/u/10233535?v=4?s=100" width="100px;" alt="Kylie Sy"/><br /><sub><b>Kylie Sy</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=kksy" title="Documentation">📖</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/pmvc/pmvc"><img src="https://avatars.githubusercontent.com/u/1877738?v=4?s=100" width="100px;" alt="Hill Liu"/><br /><sub><b>Hill Liu</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3AHillLiu" title="Bug reports">🐛</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/remcovaes"><img src="https://avatars.githubusercontent.com/u/20537012?v=4?s=100" width="100px;" alt="remcovaes"/><br /><sub><b>remcovaes</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3Aremcovaes" title="Bug reports">🐛</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/FritsvanCampen"><img src="https://avatars.githubusercontent.com/u/4331206?v=4?s=100" width="100px;" alt="Frits van Campen"/><br /><sub><b>Frits van Campen</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3AFritsvanCampen" title="Bug reports">🐛</a></td>
     </tr>
   </tbody>
 </table>

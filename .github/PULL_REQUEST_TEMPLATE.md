@@ -14,24 +14,21 @@ Please fill out the information below to expedite the review and (hopefully)
 merge of your pull request!
 -->
 
-**What**:
-
+### What
 <!-- What changes are being made? (What feature/bug is being fixed here?) -->
 
-**Why**:
-
+### Why
 <!-- Why are these changes necessary? -->
 
-**How**:
-
+### How
 <!-- How were these changes implemented? -->
 
-**Checklist**:
+### Checklist
 
 <!-- Have you done all of these things?  -->
 
 <!-- To check an item, place an "x" in the box like so: "- [x] Documentation" -->
-<!-- If the item is irrelevant to your changes, replace or fill the box with "N/A" -->
+<!-- If the item is irrelevant to your changes, remove the item or replace or fill the box with "N/A" -->
 
 - [ ] Documentation
 - [ ] Tests

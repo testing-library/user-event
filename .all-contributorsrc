@@ -1051,6 +1051,13 @@
       "avatar_url": "https://avatars.githubusercontent.com/u/4331206?v=4",
       "profile": "https://github.com/FritsvanCampen",
       "contributions": ["bug"]
+    },
+    {
+      "login": "sf-kialo",
+      "name": "Siegfried Friedo",
+      "avatar_url": "https://avatars.githubusercontent.com/u/56590179?v=4",
+      "profile": "https://github.com/sf-kialo",
+      "contributions": ["bug"]
     }
   ],
   "commitConvention": "none",

@@ -196,6 +196,9 @@ Thanks goes to these wonderful people ([emoji key][emojis]):
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/remcovaes"><img src="https://avatars.githubusercontent.com/u/20537012?v=4?s=100" width="100px;" alt="remcovaes"/><br /><sub><b>remcovaes</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3Aremcovaes" title="Bug reports">🐛</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/FritsvanCampen"><img src="https://avatars.githubusercontent.com/u/4331206?v=4?s=100" width="100px;" alt="Frits van Campen"/><br /><sub><b>Frits van Campen</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3AFritsvanCampen" title="Bug reports">🐛</a></td>
     </tr>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/sf-kialo"><img src="https://avatars.githubusercontent.com/u/56590179?v=4?s=100" width="100px;" alt="Siegfried Friedo"/><br /><sub><b>Siegfried Friedo</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3Asf-kialo" title="Bug reports">🐛</a></td>
+    </tr>
   </tbody>
 </table>
 

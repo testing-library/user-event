@@ -1072,6 +1072,13 @@
       "avatar_url": "https://avatars.githubusercontent.com/u/5616165?v=4",
       "profile": "https://github.com/dermoumi",
       "contributions": ["bug"]
+    },
+    {
+      "login": "bawjensen",
+      "name": "Bryan Jensen",
+      "avatar_url": "https://avatars.githubusercontent.com/u/5619111?v=4",
+      "profile": "http://www.bawjensen.com/",
+      "contributions": ["code"]
     }
   ],
   "commitConvention": "none",

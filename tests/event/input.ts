@@ -3,6 +3,7 @@ import {render, setup} from '#testHelpers'
 import {createConfig, createInstance} from '#src/setup/setup'
 import {getUIValue} from '#src/document'
 import {input} from '#src/event'
+import {selectAll} from '#src/event/selection'
 
 function setupInstance() {
   return createInstance(createConfig()).instance
@@ -248,6 +249,12 @@ cases(
     expect(element).toHaveValue(expectedValue)
     expect(eventWasFired('beforeinput')).toBe(true)
     expect(eventWasFired('input')).toBe(!!expectedValue)
+
+    selectAll(element)
+    input(setupInstance(), element, '4')
+    expect(element).toHaveValue(
+      expectedValue ? (typeof expectedValue === 'string' ? '4' : 4) : '',
+    )
   },
   {
     'on text input': {

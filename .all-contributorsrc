@@ -1058,6 +1058,13 @@
       "avatar_url": "https://avatars.githubusercontent.com/u/56590179?v=4",
       "profile": "https://github.com/sf-kialo",
       "contributions": ["bug"]
+    },
+    {
+      "login": "jdufresne",
+      "name": "Jon Dufresne",
+      "avatar_url": "https://avatars.githubusercontent.com/u/347634?v=4",
+      "profile": "https://github.com/jdufresne",
+      "contributions": ["code"]
     }
   ],
   "commitConvention": "none",

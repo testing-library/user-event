@@ -1079,6 +1079,13 @@
       "avatar_url": "https://avatars.githubusercontent.com/u/5619111?v=4",
       "profile": "http://www.bawjensen.com/",
       "contributions": ["code"]
+    },
+    {
+      "login": "liamcmitchell-sc",
+      "name": "Liam Mitchell",
+      "avatar_url": "https://avatars.githubusercontent.com/u/31351270?v=4",
+      "profile": "http://liam.geek.nz/",
+      "contributions": ["bug"]
     }
   ],
   "commitConvention": "none",

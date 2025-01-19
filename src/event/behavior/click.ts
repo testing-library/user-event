@@ -5,10 +5,7 @@ import {behavior} from './registry'
 behavior.click = (event, target, instance) => {
   const context = target.closest('button,input,label,select,textarea')
   const control = context && isElementType(context, 'label') && context.control
-  if (
-    control &&
-    !(control.constructor as {formAssociated?: boolean}).formAssociated
-  ) {
+  if (control && control !== target) {
     return () => {
       if (isFocusable(control)) {
         focusElement(control)

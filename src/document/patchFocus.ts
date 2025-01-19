@@ -39,27 +39,27 @@ export function patchFocus(HTMLElement: typeof globalThis['HTMLElement']) {
       return focus.call(this, options)
     }
 
-    const blured = getActiveTarget(this.ownerDocument)
-    if (blured === this) {
+    const blurred = getActiveTarget(this.ownerDocument)
+    if (blurred === this) {
       return
     }
 
     const thisCall = Symbol('focus call')
     activeCall = thisCall
 
-    if (blured) {
-      blur.call(blured)
-      dispatchDOMEvent(blured, 'blur', {relatedTarget: this})
-      dispatchDOMEvent(blured, 'focusout', {
+    if (blurred) {
+      blur.call(blurred)
+      dispatchDOMEvent(blurred, 'blur', {relatedTarget: this})
+      dispatchDOMEvent(blurred, 'focusout', {
         relatedTarget: activeCall === thisCall ? this : null,
       })
     }
     if (activeCall === thisCall) {
       focus.call(this, options)
-      dispatchDOMEvent(this, 'focus', {relatedTarget: blured})
+      dispatchDOMEvent(this, 'focus', {relatedTarget: blurred})
     }
     if (activeCall === thisCall) {
-      dispatchDOMEvent(this, 'focusin', {relatedTarget: blured})
+      dispatchDOMEvent(this, 'focusin', {relatedTarget: blurred})
     }
   }
 
@@ -68,8 +68,8 @@ export function patchFocus(HTMLElement: typeof globalThis['HTMLElement']) {
       return blur.call(this)
     }
 
-    const blured = getActiveTarget(this.ownerDocument)
-    if (blured !== this) {
+    const blurred = getActiveTarget(this.ownerDocument)
+    if (blurred !== this) {
       return
     }
 
@@ -77,8 +77,8 @@ export function patchFocus(HTMLElement: typeof globalThis['HTMLElement']) {
     activeCall = thisCall
 
     blur.call(this)
-    dispatchDOMEvent(blured, 'blur', {relatedTarget: null})
-    dispatchDOMEvent(blured, 'focusout', {relatedTarget: null})
+    dispatchDOMEvent(blurred, 'blur', {relatedTarget: null})
+    dispatchDOMEvent(blurred, 'focusout', {relatedTarget: null})
   }
 }
 

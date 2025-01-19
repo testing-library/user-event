@@ -39,10 +39,10 @@ export class PointerHost {
 
     new(pointerName: string, keyDef: pointerKey) {
       const isPrimary =
-          keyDef.pointerType !== 'touch' ||
-          !Object.values(this.registry).some(
-              p => p.pointerType === 'touch' && !p.isCancelled,
-          )
+        keyDef.pointerType !== 'touch' ||
+        !Object.values(this.registry).some(
+          p => p.pointerType === 'touch' && !p.isCancelled,
+        )
 
       if (!isPrimary) {
         Object.values(this.registry).forEach(p => {
@@ -64,7 +64,7 @@ export class PointerHost {
     get(pointerName: string) {
       if (!this.has(pointerName)) {
         throw new Error(
-            `Trying to access pointer "${pointerName}" which does not exist.`,
+          `Trying to access pointer "${pointerName}" which does not exist.`,
         )
       }
       return this.registry[pointerName]
@@ -80,15 +80,15 @@ export class PointerHost {
   }
 
   async press(
-      instance: Instance,
-      keyDef: pointerKey,
-      position: PointerPosition,
+    instance: Instance,
+    keyDef: pointerKey,
+    position: PointerPosition,
   ) {
     const pointerName = this.getPointerName(keyDef)
     const pointer =
-        keyDef.pointerType === 'touch'
-            ? this.pointers.new(pointerName, keyDef).init(instance, position)
-            : this.pointers.get(pointerName)
+      keyDef.pointerType === 'touch'
+        ? this.pointers.new(pointerName, keyDef).init(instance, position)
+        : this.pointers.get(pointerName)
 
     // TODO: deprecate the following implicit setting of position
     pointer.position = position
@@ -107,9 +107,9 @@ export class PointerHost {
   }
 
   async move(
-      instance: Instance,
-      pointerName: string,
-      position: PointerPosition,
+    instance: Instance,
+    pointerName: string,
+    position: PointerPosition,
   ) {
     const pointer = this.pointers.get(pointerName)
 
@@ -119,9 +119,9 @@ export class PointerHost {
     // the order in which they interweave/follow on a user interaction depends on the implementation.
     const pointermove = pointer.move(instance, position, pointer)
     const mousemove =
-        pointer.pointerType === 'touch' || (pointer.isPrevented && pointer.isDown)
-            ? undefined
-            : this.mouse.move(instance, position, pointer)
+      pointer.pointerType === 'touch' || (pointer.isPrevented && pointer.isDown)
+        ? undefined
+        : this.mouse.move(instance, position, pointer)
 
     pointermove?.leave()
     mousemove?.leave()
@@ -132,9 +132,9 @@ export class PointerHost {
   }
 
   async release(
-      instance: Instance,
-      keyDef: pointerKey,
-      position: PointerPosition,
+    instance: Instance,
+    keyDef: pointerKey,
+    position: PointerPosition,
   ) {
     const device = this.devices.get(keyDef.pointerType)
     device.removePressed(keyDef)
@@ -181,8 +181,8 @@ export class PointerHost {
 
   getPreviousPosition(pointerName: string) {
     return this.pointers.has(pointerName)
-        ? this.pointers.get(pointerName).position
-        : undefined
+      ? this.pointers.get(pointerName).position
+      : undefined
   }
 
   resetClickCount() {

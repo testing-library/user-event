@@ -18,9 +18,10 @@ describe.each([
     expect(getEvents('dblclick')).toHaveLength(clickCount >= 2 ? 1 : 0)
   })
 
-
   test('preventDefault on pointer down prevents compatibility events', async () => {
-    const {element, getEvents, user} = setup(`<div></div>`, {eventHandlers: {pointerdown: e => e.preventDefault()}})
+    const {element, getEvents, user} = setup(`<div></div>`, {
+      eventHandlers: {pointerdown: e => e.preventDefault()},
+    })
 
     await user[method](element)
 
@@ -33,21 +34,20 @@ describe.each([
     expect(getEvents('dblclick')).toHaveLength(clickCount >= 2 ? 1 : 0)
   })
 
-
   test('throw when clicking element with pointer-events set to none', async () => {
     const {element, user} = setup(`<div style="pointer-events: none"></div>`)
 
     await expect(user[method](element)).rejects.toThrowError(
-        /has `pointer-events: none`/i,
+      /has `pointer-events: none`/i,
     )
   })
 
   test('skip check for pointer-events', async () => {
     const {element, getEvents, user} = setup(
-        `<div style="pointer-events: none"></div>`,
-        {
-          pointerEventsCheck: PointerEventsCheckLevel.Never,
-        },
+      `<div style="pointer-events: none"></div>`,
+      {
+        pointerEventsCheck: PointerEventsCheckLevel.Never,
+      },
     )
 
     await user[method](element)

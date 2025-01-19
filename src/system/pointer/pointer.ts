@@ -64,7 +64,7 @@ export class Pointer {
           if (prevTarget !== nextTarget) {
             instance.dispatchUIEvent(prevTarget, 'pointerout', init)
             leave.forEach(el =>
-                instance.dispatchUIEvent(el, 'pointerleave', init),
+              instance.dispatchUIEvent(el, 'pointerleave', init),
             )
           }
         }
@@ -75,7 +75,7 @@ export class Pointer {
         if (prevTarget !== nextTarget) {
           instance.dispatchUIEvent(nextTarget, 'pointerover', init)
           enter.forEach(el =>
-              instance.dispatchUIEvent(el, 'pointerenter', init),
+            instance.dispatchUIEvent(el, 'pointerenter', init),
           )
         }
       },
@@ -95,9 +95,9 @@ export class Pointer {
 
     this.isDown = true
     this.isPrevented = !instance.dispatchUIEvent(
-        target,
-        'pointerdown',
-        this.getEventInit(),
+      target,
+      'pointerdown',
+      this.getEventInit(),
     )
   }
 

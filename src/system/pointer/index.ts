@@ -102,7 +102,7 @@ export class PointerHost {
     pointer.down(instance, keyDef)
 
     if (pointer.pointerType !== 'touch') {
-      this.mouse.down(instance, keyDef, pointer)
+      this.mouse.down(instance, keyDef, pointer.isPrevented)
     }
   }
 
@@ -117,11 +117,11 @@ export class PointerHost {
     // This interweaving of events is probably unnecessary.
     // While the order of mouse (or pointer) events is defined per spec,
     // the order in which they interweave/follow on a user interaction depends on the implementation.
-    const pointermove = pointer.move(instance, position, pointer)
+    const pointermove = pointer.move(instance, position)
     const mousemove =
-      pointer.pointerType === 'touch' || (pointer.isPrevented && pointer.isDown)
+      pointer.pointerType === 'touch'
         ? undefined
-        : this.mouse.move(instance, position, pointer)
+        : this.mouse.move(instance, position, pointer.isPrevented)
 
     pointermove?.leave()
     mousemove?.leave()
@@ -143,6 +143,8 @@ export class PointerHost {
 
     const pointer = this.pointers.get(this.getPointerName(keyDef))
 
+    const isPrevented = pointer.isPrevented
+
     // TODO: deprecate the following implicit setting of position
     pointer.position = position
     if (pointer.pointerType !== 'touch') {
@@ -158,20 +160,20 @@ export class PointerHost {
     }
 
     if (pointer.pointerType === 'touch' && !pointer.isMultitouch) {
-      const mousemove = this.mouse.move(instance, position, pointer)
+      const mousemove = this.mouse.move(instance, position, isPrevented)
       mousemove?.leave()
       mousemove?.enter()
       mousemove?.move()
 
-      this.mouse.down(instance, keyDef, pointer)
+      this.mouse.down(instance, keyDef, isPrevented)
     }
     if (!pointer.isMultitouch) {
-      const mousemove = this.mouse.move(instance, position, pointer)
+      const mousemove = this.mouse.move(instance, position, isPrevented)
       mousemove?.leave()
       mousemove?.enter()
       mousemove?.move()
 
-      this.mouse.up(instance, keyDef, pointer)
+      this.mouse.up(instance, keyDef, isPrevented)
     }
   }
 

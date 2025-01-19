@@ -162,9 +162,7 @@ test('click per touch device', async () => {
     click - button=0; buttons=0; detail=1
   `)
 
-  // mouse is pointerId=1, every other pointer gets a new id
   expect(getEvents('click')).toHaveLength(1)
-  expect(getEvents('click')[0]).toHaveProperty('pointerId', 2)
 })
 
 test('double click per touch device', async () => {
@@ -200,10 +198,7 @@ test('double click per touch device', async () => {
 
   // mouse is pointerId=1, every other pointer gets a new id
   expect(getEvents('click')).toHaveLength(2)
-  expect(getEvents('click')[0]).toHaveProperty('pointerId', 2)
-  expect(getEvents('click')[1]).toHaveProperty('pointerId', 3)
   expect(getEvents('dblclick')).toHaveLength(1)
-  expect(getEvents('dblclick')[0]).not.toHaveProperty('pointerId')
 })
 
 test('multi touch does not click', async () => {

@@ -41,8 +41,7 @@ export class Pointer {
     return this
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  move(instance: Instance, position: PointerPosition, pointer: Pointer) {
+  move(instance: Instance, position: PointerPosition) {
     const prevPosition = this.position
     const prevTarget = this.getTarget(instance)
 
@@ -110,6 +109,7 @@ export class Pointer {
     assertPointerEvents(instance, target)
 
     this.isDown = false
+    this.isPrevented = false
     instance.dispatchUIEvent(target, 'pointerup', this.getEventInit())
   }
 

@@ -8,7 +8,6 @@ import {
 import {type Instance} from '../../setup'
 import {getTreeDiff, isDisabled} from '../../utils'
 import {Buttons, getMouseEventButton, MouseButton} from './buttons'
-import {type Pointer} from './pointer'
 import {isDifferentPointerPosition, pointerKey, PointerPosition} from './shared'
 
 /**
@@ -66,10 +65,12 @@ export class Mouse {
     }
   })()
 
-  move(instance: Instance, position: PointerPosition, pointer: Pointer) {
-    if (pointer.isPrevented) {
-      return
-    }
+  move(
+    instance: Instance,
+    position: PointerPosition,
+    /** Whether `preventDefault()` has been called on the `pointerdown` event */
+    isPrevented: boolean,
+  ) {
     const prevPosition = this.position
     const prevTarget = this.getTarget(instance)
 
@@ -99,6 +100,10 @@ export class Mouse {
         }
       },
       move: () => {
+        if (isPrevented) {
+          return
+        }
+
         instance.dispatchUIEvent(nextTarget, 'mousemove', init)
 
         this.modifySelecting(instance)
@@ -106,7 +111,12 @@ export class Mouse {
     }
   }
 
-  down(instance: Instance, keyDef: pointerKey, pointer: Pointer) {
+  down(
+    instance: Instance,
+    keyDef: pointerKey,
+    /** Whether `preventDefault()` has been called on the `pointerdown` event */
+    isPrevented: boolean,
+  ) {
     const button = this.buttons.down(keyDef)
 
     if (button === undefined) {
@@ -116,11 +126,11 @@ export class Mouse {
     const target = this.getTarget(instance)
     this.buttonDownTarget[button] = target
     const init = this.getEventInit('mousedown', keyDef.button)
-    if (pointer.isPrevented) {
-      return
-    }
     const disabled = isDisabled(target)
-    if (disabled || instance.dispatchUIEvent(target, 'mousedown', init)) {
+    if (
+      !isPrevented &&
+      (disabled || instance.dispatchUIEvent(target, 'mousedown', init))
+    ) {
       this.startSelecting(instance, init.detail as number)
       focusElement(target)
     }
@@ -128,12 +138,17 @@ export class Mouse {
       instance.dispatchUIEvent(
         target,
         'contextmenu',
-        this.getEventInit('contextmenu', keyDef.button, pointer),
+        this.getEventInit('contextmenu', keyDef.button),
       )
     }
   }
 
-  up(instance: Instance, keyDef: pointerKey, pointer: Pointer) {
+  up(
+    instance: Instance,
+    keyDef: pointerKey,
+    /** Whether `preventDefault()` has been called on the `pointerdown` event */
+    isPrevented: boolean,
+  ) {
     const button = this.buttons.up(keyDef)
 
     if (button === undefined) {
@@ -141,8 +156,8 @@ export class Mouse {
     }
     const target = this.getTarget(instance)
     if (!isDisabled(target)) {
-      const mouseUpInit = this.getEventInit('mouseup', keyDef.button)
-      if (!pointer.isPrevented) {
+      if (!isPrevented) {
+        const mouseUpInit = this.getEventInit('mouseup', keyDef.button)
         instance.dispatchUIEvent(target, 'mouseup', mouseUpInit)
         this.endSelecting()
       }
@@ -152,7 +167,7 @@ export class Mouse {
         target,
       )[2][0] as Element | undefined
       if (clickTarget) {
-        const init = this.getEventInit('click', keyDef.button, pointer)
+        const init = this.getEventInit('click', keyDef.button)
         if (init.detail) {
           instance.dispatchUIEvent(
             clickTarget,
@@ -174,19 +189,9 @@ export class Mouse {
     this.clickCount.reset()
   }
 
-  private getEventInit(
-    type: EventType,
-    button?: MouseButton,
-    pointer?: Pointer,
-  ) {
-    const init: PointerEventInit = {
+  private getEventInit(type: EventType, button?: MouseButton) {
+    const init: MouseEventInit = {
       ...this.position.coords,
-    }
-
-    if (pointer) {
-      init.pointerId = pointer.pointerId
-      init.pointerType = pointer.pointerType
-      init.isPrimary = pointer.isPrimary
     }
 
     init.button = getMouseEventButton(button)

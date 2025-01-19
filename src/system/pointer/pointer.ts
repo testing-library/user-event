@@ -1,7 +1,7 @@
 import {type Instance} from '../../setup'
 import {assertPointerEvents, getTreeDiff, hasPointerEvents} from '../../utils'
-import {isDifferentPointerPosition, pointerKey, PointerPosition} from './shared'
-import {Buttons, getMouseButtonId, getMouseEventButton, MouseButton} from './buttons'
+import {isDifferentPointerPosition, PointerPosition} from './shared'
+import {Buttons, getMouseEventButton, MouseButton} from './buttons'
 
 type PointerInit = {
   pointerId: number
@@ -10,30 +10,29 @@ type PointerInit = {
 }
 
 export class Pointer {
-  constructor({pointerId, pointerType, isPrimary}: PointerInit) {
+  constructor(
+    {pointerId, pointerType, isPrimary}: PointerInit,
+    buttons: Buttons,
+  ) {
     this.pointerId = pointerId
     this.pointerType = pointerType
     this.isPrimary = isPrimary
     this.isMultitouch = !isPrimary
+    this.buttons = buttons
   }
   readonly pointerId: number
   readonly pointerType: string
   readonly isPrimary: boolean
+  readonly buttons: Buttons
 
   isMultitouch: boolean = false
   isCancelled: boolean = false
   isDown: boolean = false
   isPrevented: boolean = false
-  private buttons: number = 0
 
   position: PointerPosition = {}
 
-  init(instance: Instance, position: PointerPosition, keyDef: pointerKey) {
-    if(keyDef.pointerType === 'touch') {
-      this.buttons = 1
-    }
-    this.position = position
-
+  init(instance: Instance) {
     const target = this.getTarget(instance)
     const [, enter] = getTreeDiff(null, target)
     const init = this.getEventInit()
@@ -89,14 +88,9 @@ export class Pointer {
     }
   }
 
-  down(instance: Instance, keyDef: pointerKey) {
+  down(instance: Instance, button: MouseButton = 0) {
     if (this.isDown) {
       return
-    }
-    if(keyDef.pointerType === 'touch') {
-      this.buttons = 1
-    } else {
-      this.buttons = 2 ** getMouseButtonId(keyDef.button)
     }
     const target = this.getTarget(instance)
 
@@ -106,27 +100,26 @@ export class Pointer {
     this.isPrevented = !instance.dispatchUIEvent(
       target,
       'pointerdown',
-      this.getEventInit(keyDef.button),
+      this.getEventInit(button),
     )
   }
 
-  up(instance: Instance, keyDef: pointerKey) {
+  up(instance: Instance, button: MouseButton = 0) {
     if (!this.isDown) {
       return
     }
-    this.buttons = 0
     const target = this.getTarget(instance)
 
     assertPointerEvents(instance, target)
 
     this.isDown = false
-    instance.dispatchUIEvent(target, 'pointerup', this.getEventInit(keyDef.button))
+    instance.dispatchUIEvent(target, 'pointerup', this.getEventInit(button))
   }
 
   release(instance: Instance) {
     const target = this.getTarget(instance)
     const [leave] = getTreeDiff(target, null)
-    const init = this.getEventInit(this.pointerType === 'touch' ? 0 : -1)
+    const init = this.getEventInit()
 
     // Currently there is no PointerEventsCheckLevel that would
     // make this check not use the *asserted* cached value from `up`.
@@ -144,7 +137,13 @@ export class Pointer {
   }
 
   private getEventInit(
-    button?: MouseButton
+    /**
+     * The `button` that caused the event.
+     *
+     * This should be `-1` if the event is not caused by a button or touch/pen contact,
+     * e.g. a moving pointer.
+     */
+    button?: MouseButton,
   ): PointerEventInit {
     return {
       ...this.position.coords,
@@ -152,7 +151,7 @@ export class Pointer {
       pointerType: this.pointerType,
       isPrimary: this.isPrimary,
       button: getMouseEventButton(button),
-      buttons: this.buttons,
+      buttons: this.buttons.getButtons(),
     }
   }
 }

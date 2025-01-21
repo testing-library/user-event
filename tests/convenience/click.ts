@@ -13,6 +13,23 @@ describe.each([
 
     expect(getEvents('mouseover')).toHaveLength(1)
     expect(getEvents('mousedown')).toHaveLength(clickCount)
+    expect(getEvents('pointerdown')).toHaveLength(clickCount)
+    expect(getEvents('click')).toHaveLength(clickCount)
+    expect(getEvents('dblclick')).toHaveLength(clickCount >= 2 ? 1 : 0)
+  })
+
+  test('preventDefault on pointer down prevents compatibility events', async () => {
+    const {element, getEvents, user} = setup(`<div></div>`, {
+      eventHandlers: {pointerdown: e => e.preventDefault()},
+    })
+
+    await user[method](element)
+
+    expect(getEvents('mouseover')).toHaveLength(1)
+    expect(getEvents('mousedown')).toHaveLength(0)
+    expect(getEvents('mouseup')).toHaveLength(0)
+    expect(getEvents('pointerdown')).toHaveLength(clickCount)
+    expect(getEvents('pointerup')).toHaveLength(clickCount)
     expect(getEvents('click')).toHaveLength(clickCount)
     expect(getEvents('dblclick')).toHaveLength(clickCount >= 2 ? 1 : 0)
   })

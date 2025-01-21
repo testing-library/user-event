@@ -108,6 +108,7 @@ export class Pointer {
 
     assertPointerEvents(instance, target)
 
+    this.isPrevented = false
     this.isDown = false
     instance.dispatchUIEvent(target, 'pointerup', this.getEventInit())
   }

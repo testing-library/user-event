@@ -101,8 +101,8 @@ export class PointerHost {
     this.buttons.down(keyDef)
     pointer.down(instance, keyDef)
 
-    if (pointer.pointerType !== 'touch' && !pointer.isPrevented) {
-      this.mouse.down(instance, keyDef, pointer)
+    if (pointer.pointerType !== 'touch') {
+      this.mouse.down(instance, keyDef, pointer.isPrevented)
     }
   }
 
@@ -119,9 +119,9 @@ export class PointerHost {
     // the order in which they interweave/follow on a user interaction depends on the implementation.
     const pointermove = pointer.move(instance, position)
     const mousemove =
-      pointer.pointerType === 'touch' || (pointer.isPrevented && pointer.isDown)
+      pointer.pointerType === 'touch'
         ? undefined
-        : this.mouse.move(instance, position)
+        : this.mouse.move(instance, position, pointer.isPrevented)
 
     pointermove?.leave()
     mousemove?.leave()
@@ -143,6 +143,8 @@ export class PointerHost {
 
     const pointer = this.pointers.get(this.getPointerName(keyDef))
 
+    const isPrevented = pointer.isPrevented
+
     // TODO: deprecate the following implicit setting of position
     pointer.position = position
     if (pointer.pointerType !== 'touch') {
@@ -157,23 +159,21 @@ export class PointerHost {
       pointer.release(instance)
     }
 
-    if (!pointer.isPrevented) {
-      if (pointer.pointerType === 'touch' && !pointer.isMultitouch) {
-        const mousemove = this.mouse.move(instance, pointer.position)
-        mousemove?.leave()
-        mousemove?.enter()
-        mousemove?.move()
+    if (pointer.pointerType === 'touch' && !pointer.isMultitouch) {
+      const mousemove = this.mouse.move(instance, position, isPrevented)
+      mousemove?.leave()
+      mousemove?.enter()
+      mousemove?.move()
 
-        this.mouse.down(instance, keyDef, pointer)
-      }
-      if (!pointer.isMultitouch) {
-        const mousemove = this.mouse.move(instance, pointer.position)
-        mousemove?.leave()
-        mousemove?.enter()
-        mousemove?.move()
+      this.mouse.down(instance, keyDef, isPrevented)
+    }
+    if (!pointer.isMultitouch) {
+      const mousemove = this.mouse.move(instance, position, isPrevented)
+      mousemove?.leave()
+      mousemove?.enter()
+      mousemove?.move()
 
-        this.mouse.up(instance, keyDef, pointer)
-      }
+      this.mouse.up(instance, keyDef, isPrevented)
     }
   }
 

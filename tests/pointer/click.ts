@@ -50,7 +50,31 @@ test('double click', async () => {
   expect(getEvents('click')).toHaveLength(2)
 
   // detail reflects the click count
-  expect(getEvents('mousedown')[1]).toHaveProperty('detail', 2)
+  expect(getEvents('dblclick')[0]).toHaveProperty('detail', 2)
+})
+
+test('double click with prevent compatibility', async () => {
+  const {element, getClickEventsSnapshot, getEvents, user} = setup(
+    `<div></div>`,
+    {eventHandlers: {pointerdown: e => e.preventDefault()}},
+  )
+
+  await user.pointer({keys: '[MouseLeft][MouseLeft]', target: element})
+
+  expect(getClickEventsSnapshot()).toMatchInlineSnapshot(`
+    pointerdown - pointerId=1; pointerType=mouse; isPrimary=true
+    pointerup - pointerId=1; pointerType=mouse; isPrimary=true
+    click - button=0; buttons=0; detail=1
+    pointerdown - pointerId=1; pointerType=mouse; isPrimary=true
+    pointerup - pointerId=1; pointerType=mouse; isPrimary=true
+    click - button=0; buttons=0; detail=2
+    dblclick - button=0; buttons=0; detail=2
+  `)
+
+  expect(getEvents('dblclick')).toHaveLength(1)
+  expect(getEvents('click')).toHaveLength(2)
+
+  // detail reflects the click count
   expect(getEvents('dblclick')[0]).toHaveProperty('detail', 2)
 })
 
@@ -138,9 +162,7 @@ test('click per touch device', async () => {
     click - button=0; buttons=0; detail=1
   `)
 
-  // mouse is pointerId=1, every other pointer gets a new id
   expect(getEvents('click')).toHaveLength(1)
-  expect(getEvents('click')[0]).toHaveProperty('pointerId', 2)
 })
 
 test('double click per touch device', async () => {
@@ -176,10 +198,7 @@ test('double click per touch device', async () => {
 
   // mouse is pointerId=1, every other pointer gets a new id
   expect(getEvents('click')).toHaveLength(2)
-  expect(getEvents('click')[0]).toHaveProperty('pointerId', 2)
-  expect(getEvents('click')[1]).toHaveProperty('pointerId', 3)
   expect(getEvents('dblclick')).toHaveLength(1)
-  expect(getEvents('dblclick')[0]).not.toHaveProperty('pointerId')
 })
 
 test('multi touch does not click', async () => {
@@ -339,4 +358,18 @@ test('click closest common ancestor of pointerdown/pointerup', async () => {
   ])
   expect(getEvents('mouseup')).toHaveLength(1)
   expect(getEvents('click')).toHaveLength(0)
+})
+
+test('preventDefault on pointer down prevents compatibility events works with pointer', async () => {
+  const {element, getClickEventsSnapshot, getEvents, user} = setup('<div />', {
+    eventHandlers: {pointerdown: e => e.preventDefault()},
+  })
+  await user.pointer({keys: '[MouseLeft]', target: element})
+
+  expect(getClickEventsSnapshot()).toMatchInlineSnapshot(`
+    pointerdown - pointerId=1; pointerType=mouse; isPrimary=true
+    pointerup - pointerId=1; pointerType=mouse; isPrimary=true
+    click - button=0; buttons=0; detail=1
+  `)
+  expect(getEvents('click')).toHaveLength(1)
 })

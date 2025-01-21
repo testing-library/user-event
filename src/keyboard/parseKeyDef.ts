@@ -2,7 +2,7 @@ import {keyboardKey} from '../system/keyboard'
 import {readNextDescriptor} from '../utils'
 
 /**
- * Parse key defintions per `keyboardMap`
+ * Parse key definitions per `keyboardMap`
  *
  * Keys can be referenced by `{key}` or `{special}` as well as physical locations per `[code]`.
  * Everything else will be interpreted as a typed character - e.g. `a`.

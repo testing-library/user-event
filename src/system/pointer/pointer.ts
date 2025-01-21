@@ -1,6 +1,7 @@
 import {type Instance} from '../../setup'
 import {assertPointerEvents, getTreeDiff, hasPointerEvents} from '../../utils'
-import {isDifferentPointerPosition, pointerKey, PointerPosition} from './shared'
+import {isDifferentPointerPosition, PointerPosition} from './shared'
+import {Buttons, getMouseEventButton, MouseButton} from './buttons'
 
 type PointerInit = {
   pointerId: number
@@ -9,15 +10,20 @@ type PointerInit = {
 }
 
 export class Pointer {
-  constructor({pointerId, pointerType, isPrimary}: PointerInit) {
+  constructor(
+    {pointerId, pointerType, isPrimary}: PointerInit,
+    buttons: Buttons,
+  ) {
     this.pointerId = pointerId
     this.pointerType = pointerType
     this.isPrimary = isPrimary
     this.isMultitouch = !isPrimary
+    this.buttons = buttons
   }
   readonly pointerId: number
   readonly pointerType: string
   readonly isPrimary: boolean
+  readonly buttons: Buttons
 
   isMultitouch: boolean = false
   isCancelled: boolean = false
@@ -26,9 +32,7 @@ export class Pointer {
 
   position: PointerPosition = {}
 
-  init(instance: Instance, position: PointerPosition) {
-    this.position = position
-
+  init(instance: Instance) {
     const target = this.getTarget(instance)
     const [, enter] = getTreeDiff(null, target)
     const init = this.getEventInit()
@@ -53,7 +57,7 @@ export class Pointer {
 
     const nextTarget = this.getTarget(instance)
 
-    const init = this.getEventInit()
+    const init = this.getEventInit(-1)
 
     const [leave, enter] = getTreeDiff(prevTarget, nextTarget)
 
@@ -84,7 +88,7 @@ export class Pointer {
     }
   }
 
-  down(instance: Instance, _keyDef: pointerKey) {
+  down(instance: Instance, button: MouseButton = 0) {
     if (this.isDown) {
       return
     }
@@ -96,11 +100,11 @@ export class Pointer {
     this.isPrevented = !instance.dispatchUIEvent(
       target,
       'pointerdown',
-      this.getEventInit(),
+      this.getEventInit(button),
     )
   }
 
-  up(instance: Instance, _keyDef: pointerKey) {
+  up(instance: Instance, button: MouseButton = 0) {
     if (!this.isDown) {
       return
     }
@@ -110,7 +114,7 @@ export class Pointer {
 
     this.isPrevented = false
     this.isDown = false
-    instance.dispatchUIEvent(target, 'pointerup', this.getEventInit())
+    instance.dispatchUIEvent(target, 'pointerup', this.getEventInit(button))
   }
 
   release(instance: Instance) {
@@ -133,12 +137,22 @@ export class Pointer {
     return this.position.target ?? instance.config.document.body
   }
 
-  private getEventInit(): PointerEventInit {
+  private getEventInit(
+    /**
+     * The `button` that caused the event.
+     *
+     * This should be `-1` if the event is not caused by a button or touch/pen contact,
+     * e.g. a moving pointer.
+     */
+    button?: MouseButton,
+  ): PointerEventInit {
     return {
       ...this.position.coords,
       pointerId: this.pointerId,
       pointerType: this.pointerType,
       isPrimary: this.isPrimary,
+      button: getMouseEventButton(button),
+      buttons: this.buttons.getButtons(),
     }
   }
 }

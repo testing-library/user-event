@@ -264,7 +264,7 @@ function initPointerEvent(
     pointerId: sanitizeNumber(pointerId),
     width: sanitizeNumber(width ?? 1),
     height: sanitizeNumber(height ?? 1),
-    pressure: sanitizeNumber(pressure),
+    pressure: sanitizeNumber(pressure ?? 0.5),
     tangentialPressure: sanitizeNumber(tangentialPressure),
     tiltX: sanitizeNumber(tiltX),
     tiltY: sanitizeNumber(tiltY),

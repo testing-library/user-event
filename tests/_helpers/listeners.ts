@@ -145,10 +145,10 @@ export function addListeners(
   }
 }
 
-function hasProperty<T extends {}, K extends PropertyKey, V = string>(
+function hasProperty<T extends {}, K extends PropertyKey>(
   obj: T,
   prop: K,
-): obj is T & {[k in K]: V} {
+): obj is T & {[k in K]: unknown} {
   return prop in obj
 }
 

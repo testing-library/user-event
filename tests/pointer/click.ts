@@ -62,11 +62,11 @@ test('double click with prevent compatibility', async () => {
   await user.pointer({keys: '[MouseLeft][MouseLeft]', target: element})
 
   expect(getClickEventsSnapshot()).toMatchInlineSnapshot(`
-    pointerdown - pointerId=1; pointerType=mouse; isPrimary=true
-    pointerup - pointerId=1; pointerType=mouse; isPrimary=true
+    pointerdown - pointerId=1; pointerType=mouse; isPrimary=true; button=0; buttons=1
+    pointerup - pointerId=1; pointerType=mouse; isPrimary=true; button=0; buttons=0
     click - button=0; buttons=0; detail=1
-    pointerdown - pointerId=1; pointerType=mouse; isPrimary=true
-    pointerup - pointerId=1; pointerType=mouse; isPrimary=true
+    pointerdown - pointerId=1; pointerType=mouse; isPrimary=true; button=0; buttons=1
+    pointerup - pointerId=1; pointerType=mouse; isPrimary=true; button=0; buttons=0
     click - button=0; buttons=0; detail=2
     dblclick - button=0; buttons=0; detail=2
   `)
@@ -421,8 +421,8 @@ test('preventDefault on pointer down prevents compatibility events works with po
   await user.pointer({keys: '[MouseLeft]', target: element})
 
   expect(getClickEventsSnapshot()).toMatchInlineSnapshot(`
-    pointerdown - pointerId=1; pointerType=mouse; isPrimary=true
-    pointerup - pointerId=1; pointerType=mouse; isPrimary=true
+    pointerdown - pointerId=1; pointerType=mouse; isPrimary=true; button=0; buttons=1
+    pointerup - pointerId=1; pointerType=mouse; isPrimary=true; button=0; buttons=0
     click - button=0; buttons=0; detail=1
   `)
   expect(getEvents('click')).toHaveLength(1)

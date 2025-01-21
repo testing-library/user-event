@@ -27,16 +27,11 @@ export async function upload(
   }
   if (isDisabled(element)) return
 
-  const selectedFiles = Array.isArray(fileOrFiles) ? fileOrFiles : [fileOrFiles]
-  const files = selectedFiles
+  const files = (Array.isArray(fileOrFiles) ? fileOrFiles : [fileOrFiles])
     .filter(
       file => !this.config.applyAccept || isAcceptableFile(file, input.accept),
     )
     .slice(0, input.multiple ? undefined : 1)
-
-  if (selectedFiles.length > 0 && files.length === 0) {
-    throw new Error('No files were accepted by the `accept` attribute')
-  }
 
   const fileDialog = () => {
     // do not fire an input event if the file selection does not change

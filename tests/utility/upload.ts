@@ -228,22 +228,6 @@ test.each([
   },
 )
 
-test.each([true, false])(
-  'throw if no files are accepted, multiple=%s',
-  async multiple => {
-    const files = [
-      new File(['hello'], 'hello.png', {type: 'image/png'}),
-      new File(['hello'], 'hello.jpeg', {type: 'image/jpg'}),
-    ]
-    const {element, user} = setup<HTMLInputElement>(
-      `<input type="file" accept="video/*" ${multiple ? 'multiple' : ''} />`,
-    )
-    await expect(async () => {
-      await user.upload(element, multiple ? files : files[0])
-    }).rejects.toThrowError('No files were accepted by the `accept` attribute')
-  },
-)
-
 test('do not trigger input event when selected files are the same', async () => {
   const {element, eventWasFired, clearEventCalls, user} =
     setup<HTMLInputElement>('<input type="file" multiple/>')

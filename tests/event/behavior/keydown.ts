@@ -317,6 +317,8 @@ cases(
       <input type="radio" name="" value="nameless2"/>
       <input type="radio" name="group" value="c" disabled/>
       <input type="radio" name="group" value="d"/>
+      <input type="radio" name="group" value="f" aria-disabled />
+      <input type="radio" name="group" value="e" />
       <input type="radio" name="foo"/>
       <input type="text" name="group"/>
     `,
@@ -360,14 +362,14 @@ cases(
       expectedTarget: '//input[@value="a"]',
     },
     'forward around the corner': {
-      focus: '//input[@value="d"]',
+      focus: '//input[@value="e"]',
       key: 'ArrowRight',
       expectedTarget: '//input[@value="a"]',
     },
     'backward around the corner': {
       focus: '//input[@value="a"]',
       key: 'ArrowUp',
-      expectedTarget: '//input[@value="d"]',
+      expectedTarget: '//input[@value="e"]',
     },
     'do nothing on single radio': {
       focus: '//input[@name="solo"]',
@@ -377,6 +379,11 @@ cases(
       focus: '//input[@value="nameless1"]',
       key: 'ArrowRight',
       expectedTarget: '//input[@value="nameless2"]',
+    },
+    'on radios with aria-disabled': {
+      focus: '//input[@value="d"]',
+      key: 'ArrowDown',
+      expectedTarget: '//input[@value="f"]',
     },
   },
 )

@@ -4,7 +4,7 @@ import {DOM_KEY_LOCATION, keyboardKey} from '../system/keyboard'
  * Mapping for a default US-104-QWERTY keyboard
  */
 export const defaultKeyMap: keyboardKey[] = [
-  // alphanumeric keys
+  // alphanumeric block - writing system
   ...'0123456789'.split('').map(c => ({code: `Digit${c}`, key: c})),
   ...')!@#$%^&*('
     .split('')
@@ -15,6 +15,11 @@ export const defaultKeyMap: keyboardKey[] = [
   ...'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
     .split('')
     .map(c => ({code: `Key${c}`, key: c, shiftKey: true})),
+
+  {code: 'BracketLeft', key: '['},
+  {code: 'BracketLeft', key: '{', shiftKey: true},
+  {code: 'BracketRight', key: ']'},
+  {code: 'BracketRight', key: '}', shiftKey: true},
 
   // alphanumeric block - functional
   {code: 'Space', key: ' '},

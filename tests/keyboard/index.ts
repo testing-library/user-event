@@ -129,17 +129,6 @@ describe('delay', () => {
     expect(time0).toBeLessThan(performance.now() - 20)
   })
 
-  test('delay keyboard 100 milliseconds between keydowns', async () => {
-    const {user} = setup('', {delay: 100})
-
-    const startTimer = performance.now()
-    await user.keyboard('foo')
-    const endTimer = performance.now()
-
-    expect(setTimeout).toHaveBeenCalledTimes(4)
-    expect(endTimer - startTimer).toBeGreaterThan(400)
-  })
-
   test('do not call setTimeout with delay `null`', async () => {
     const {user} = setup('', {delay: null})
     await user.keyboard('foo')

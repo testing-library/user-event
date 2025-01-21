@@ -115,8 +115,8 @@ export class Mouse {
     const disabled = isDisabled(target)
     const init = this.getEventInit('mousedown', keyDef.button)
     if (disabled || instance.dispatchUIEvent(target, 'mousedown', init)) {
-      this.startSelecting(instance, init.detail as number)
       focusElement(target)
+      this.startSelecting(instance, init.detail as number)
     }
     if (!disabled && getMouseEventButton(keyDef.button) === 2) {
       instance.dispatchUIEvent(

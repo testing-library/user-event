@@ -1,4 +1,4 @@
-import {setup} from '#testHelpers'
+import {isJsdomEnv, setup} from '#testHelpers'
 
 test('click element', async () => {
   const {element, getClickEventsSnapshot, getEvents, user} = setup('<div />')
@@ -236,6 +236,29 @@ describe('label', () => {
     expect(getEvents('click')).toHaveLength(2)
   })
 
+  test('click nested FACE per label', async () => {
+    const {element, getEvents, user} = setup(`<label><fa-ce></fa-ce></label>`)
+
+    await user.pointer({
+      keys: '[MouseLeft]',
+      target: element,
+    })
+
+    // JSDOM does not set `HTMLLabelElement.control` to the form-associated custom element
+    expect(getEvents('click')).toHaveLength(isJsdomEnv() ? 1 : 2)
+  })
+
+  test('click nested FACE', async () => {
+    const {element, getEvents, user} = setup(`<label><fa-ce></fa-ce></label>`)
+
+    await user.pointer({
+      keys: '[MouseLeft]',
+      target: element.firstChild as Element,
+    })
+
+    expect(getEvents('click')).toHaveLength(1)
+  })
+
   test('do not click associated non-focusable control per label', async () => {
     const {element, getEvents, user} = setup(
       `<label for="in">foo</label><input disabled id="in"/>`,
@@ -404,3 +427,10 @@ test('preventDefault on pointer down prevents compatibility events works with po
   `)
   expect(getEvents('click')).toHaveLength(1)
 })
+
+customElements.define(
+  'fa-ce',
+  class FaCe extends globalThis.window.HTMLElement {
+    static formAssociated = true
+  },
+)

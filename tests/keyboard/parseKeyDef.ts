@@ -44,18 +44,18 @@ cases(
     },
     '{ as printable': {
       text: '{{',
-      keyDef: {key: '{', code: 'Unknown'},
+      keyDef: {key: '{', code: 'BracketLeft', shiftKey: true},
     },
     '{ as printable followed by descriptor': {
       text: '{{{foo}',
       keyDef: [
-        {key: '{', code: 'Unknown'},
+        {key: '{', code: 'BracketLeft', shiftKey: true},
         {key: 'foo', code: 'Unknown'},
       ],
     },
     '{ as key with modifiers': {
       text: '{\\{>5/}',
-      keyDef: {key: '{', code: 'Unknown'},
+      keyDef: {key: '{', code: 'BracketLeft', shiftKey: true},
     },
     'modifier as key with modifiers': {
       text: '{/\\/>5/}',
@@ -63,7 +63,7 @@ cases(
     },
     '[ as printable': {
       text: '[[',
-      keyDef: {key: '[', code: 'Unknown'},
+      keyDef: {key: '[', code: 'BracketLeft'},
     },
   },
 )

@@ -9,8 +9,8 @@ behavior.click = (event, target, instance) => {
     return () => {
       if (isFocusable(control)) {
         focusElement(control)
+        instance.dispatchEvent(control, cloneEvent(event))
       }
-      instance.dispatchEvent(control, cloneEvent(event))
     }
   } else if (isElementType(target, 'input', {type: 'file'})) {
     return () => {

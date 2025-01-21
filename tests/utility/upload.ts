@@ -154,19 +154,62 @@ test('do nothing when element is disabled', async () => {
 })
 
 test.each([
-  [true, 'video/*,audio/*', 2],
-  [true, '.png', 1],
-  [true, 'text/csv', 1],
-  [true, '', 4],
-  [false, 'video/*', 4],
+  [true, 'video/*,audio/*', ['audio.mp3', 'mp3.jpg', 'video.mp4']],
+  [
+    true,
+    'image/png, image/gif, image/jpeg',
+    ['image.png', 'image2.PNG', 'image.jpeg', 'image.jpg'],
+  ],
+  [
+    true,
+    `image/jpeg,
+  image/png, image/gif`,
+    ['image.png', 'image2.PNG', 'image.jpeg', 'image.jpg'],
+  ],
+  [true, 'image/JPG', ['image.jpeg', 'image.jpg']],
+  [true, '.JPEG', ['image.jpeg', 'image.jpg', 'mp3.jpg']],
+  [true, '.png', ['image.png', 'image2.PNG']],
+  [true, 'text/csv', ['file.csv']],
+  [
+    true,
+    '',
+    [
+      'image.png',
+      'image2.PNG',
+      'image.jpeg',
+      'image.jpg',
+      'audio.mp3',
+      'mp3.jpg',
+      'file.csv',
+      'video.mp4',
+    ],
+  ],
+  [
+    false,
+    'video/*',
+    [
+      'image.png',
+      'image2.PNG',
+      'image.jpeg',
+      'image.jpg',
+      'audio.mp3',
+      'mp3.jpg',
+      'file.csv',
+      'video.mp4',
+    ],
+  ],
 ])(
   'filter according to accept attribute applyAccept=%s, acceptAttribute=%s',
-  async (applyAccept, acceptAttribute, expectedLength) => {
+  async (applyAccept, acceptAttribute, expectedFileNames) => {
     const files = [
-      new File(['hello'], 'hello.png', {type: 'image/png'}),
-      new File(['there'], 'there.jpg', {type: 'audio/mp3'}),
-      new File(['there'], 'there.csv', {type: 'text/csv'}),
-      new File(['there'], 'there.jpg', {type: 'video/mp4'}),
+      new File(['hello'], 'image.png', {type: 'image/png'}),
+      new File(['hello'], 'image2.PNG', {type: 'image/png'}),
+      new File(['hello'], 'image.jpeg', {type: 'image/jpeg'}),
+      new File(['hello'], 'image.jpg', {type: 'image/jpeg'}),
+      new File(['hello'], 'audio.mp3', {type: 'audio/mp3'}),
+      new File(['hello'], 'mp3.jpg', {type: 'audio/mp3'}),
+      new File(['hello'], 'file.csv', {type: 'text/csv'}),
+      new File(['hello'], 'video.mp4', {type: 'video/mp4'}),
     ]
     const {element, user} = setup<HTMLInputElement>(
       `
@@ -179,8 +222,9 @@ test.each([
     )
 
     await user.upload(element, files)
-
-    expect(element.files).toHaveLength(expectedLength)
+    expect(
+      Array.from(element.files as FileList).map(item => item.name),
+    ).toEqual(expectedFileNames)
   },
 )
 

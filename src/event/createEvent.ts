@@ -28,14 +28,14 @@ const eventInitializer: {
   Event: [],
   FocusEvent: [initUIEvent, initFocusEvent],
   InputEvent: [initUIEvent, initInputEvent],
-  MouseEvent: [initUIEvent, initUIEventModififiers, initMouseEvent],
+  MouseEvent: [initUIEvent, initUIEventModifiers, initMouseEvent],
   PointerEvent: [
     initUIEvent,
-    initUIEventModififiers,
+    initUIEventModifiers,
     initMouseEvent,
     initPointerEvent,
   ],
-  KeyboardEvent: [initUIEvent, initUIEventModififiers, initKeyboardEvent],
+  KeyboardEvent: [initUIEvent, initUIEventModifiers, initKeyboardEvent],
 }
 
 export function createEvent<K extends EventType>(
@@ -143,7 +143,7 @@ function initUIEvent(event: UIEvent, {view, detail}: UIEventInit) {
   })
 }
 
-function initUIEventModififiers(
+function initUIEventModifiers(
   event: KeyboardEvent | MouseEvent,
   {
     altKey,
@@ -262,8 +262,8 @@ function initPointerEvent(
 ) {
   assignProps(event, {
     pointerId: sanitizeNumber(pointerId),
-    width: sanitizeNumber(width),
-    height: sanitizeNumber(height),
+    width: sanitizeNumber(width ?? 1),
+    height: sanitizeNumber(height ?? 1),
     pressure: sanitizeNumber(pressure),
     tangentialPressure: sanitizeNumber(tangentialPressure),
     tiltX: sanitizeNumber(tiltX),

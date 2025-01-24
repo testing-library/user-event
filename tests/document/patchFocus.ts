@@ -31,6 +31,44 @@ test('dispatch focus events', () => {
   `)
 })
 
+describe('reassign focus and blur', () => {
+  let currentFocus: HTMLElement['focus'],
+   currentBlur: HTMLElement['blur']
+
+  beforeAll(() => {
+    // eslint-disable-next-line @typescript-eslint/unbound-method
+    currentFocus = HTMLElement.prototype.focus
+    // eslint-disable-next-line @typescript-eslint/unbound-method
+    currentBlur = HTMLElement.prototype.blur
+  })
+
+  afterEach(() => {
+    HTMLElement.prototype.focus = currentFocus
+    HTMLElement.prototype.blur = currentBlur
+  })
+
+  test('set custom focus and blur', () => {
+    const {
+      elements: [a],
+      getEventSnapshot,
+    } = render(`<input id="a"/>`, {focus: false})
+
+    const mockFocus = mocks.fn()
+    HTMLElement.prototype.focus = mockFocus
+    const mockBlur = mocks.fn()
+    HTMLElement.prototype.blur = mockBlur
+
+    a.focus()
+    a.blur()
+
+    expect(getEventSnapshot()).toMatchInlineSnapshot(
+      `No events were fired on: input#a[value=""]`,
+    )
+    expect(mockFocus).toHaveBeenCalledTimes(1)
+    expect(mockBlur).toHaveBeenCalledTimes(1)
+  })
+})
+
 test('`focus` handler can prevent subsequent `focusin`', () => {
   const {element, getEventSnapshot} = render(`<input/>`, {focus: false})
 

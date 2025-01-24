@@ -17,14 +17,23 @@ export function patchFocus(HTMLElement: typeof globalThis['HTMLElement']) {
   // eslint-disable-next-line @typescript-eslint/unbound-method
   const {focus, blur} = HTMLElement.prototype
 
+  let focusOverride: null | typeof patchedFocus = null
+  let blurOverride: null | typeof patchedBlur = null
+
   Object.defineProperties(HTMLElement.prototype, {
     focus: {
       configurable: true,
-      get: () => patchedFocus,
+      get: () => focusOverride ?? patchedFocus,
+      set: (f: typeof patchedFocus) => {
+        focusOverride = f
+      },
     },
     blur: {
       configurable: true,
-      get: () => patchedBlur,
+      get: () => blurOverride ?? patchedBlur,
+      set: (b: typeof patchedBlur) => {
+        blurOverride = b
+      },
     },
     [patched]: {
       configurable: true,

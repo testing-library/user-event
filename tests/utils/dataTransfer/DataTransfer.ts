@@ -23,6 +23,7 @@ describe('create DataTransfer', () => {
     expect(dt.getData('text/plain')).toBe('foo')
     expect(dt.getData('text/html')).toBe('bar')
     expect(dt.getData('text')).toBe('foo')
+    expect(dt.getData('Text')).toBe('foo')
 
     dt.clearData()
     dt.setData('text', 'baz')

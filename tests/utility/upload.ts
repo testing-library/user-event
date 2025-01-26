@@ -1,4 +1,5 @@
-import {setup} from '#testHelpers'
+import {render, setup} from '#testHelpers'
+import userEvent from '#src'
 
 test('change file input', async () => {
   const file = new File(['hello'], 'hello.png', {type: 'image/png'})
@@ -271,4 +272,26 @@ test('throw error if trying to use upload on an invalid element', async () => {
   ).rejects.toThrowErrorMatchingInlineSnapshot(
     `The associated INPUT element does not accept file uploads`,
   )
+})
+
+test('uploaded file can be read with FormData', async () => {
+  const file = new File(['hello'], 'hello.png', {type: 'image/png'})
+  const {element: form} = render<HTMLFormElement>(
+    '<form><input name="file" type="file" /></form>',
+  )
+
+  const input = form.querySelector('input') as HTMLInputElement
+
+  await userEvent.upload(input, file)
+
+  const data = new FormData(form)
+
+  const formFile = data.get('file')
+  if (!(formFile instanceof File)) {
+    throw new Error('formFile is not a File')
+  }
+
+  expect(formFile).toBeInstanceOf(File)
+  expect(formFile.name).toBe('hello.png')
+  expect(formFile).toBe(input.files?.[0])
 })

@@ -63,7 +63,7 @@ module.exports = {
 
         // `scope` is `GlobalScope` and `scope.variables` are the global variables
         scope.variables.forEach(variable => {
-          if (whitelist.includes(variable.name)) {
+          if (variable.name === 'globalThis' || whitelist.includes(variable.name)) {
             return
           }
 

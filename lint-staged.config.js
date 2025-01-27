@@ -1,5 +1,7 @@
-const conf = require('kcd-scripts/dist/config/lintstagedrc')
-
-delete conf['README.md']
-
-module.exports = conf
+module.exports = {
+  '*.+(js|jsx|json|yml|yaml|css|less|scss|ts|tsx|md|gql|graphql|mdx|vue)': [
+    `kcd-scripts format`,
+    `eslint`,
+    `kcd-scripts test --findRelatedTests`,
+  ],
+}

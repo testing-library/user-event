@@ -27,7 +27,7 @@
   ],
   "scripts": {
     "build": "scripts ts-build2 --cjs --target es2019",
-    "lint": "kcd-scripts lint",
+    "lint": "eslint",
     "setup": "npm install && npm run validate -s",
     "setup:env": "node --experimental-import-meta-resolve scripts/setup.js",
     "test": "kcd-scripts test",
@@ -39,6 +39,8 @@
   },
   "devDependencies": {
     "@esbuild-plugins/node-modules-polyfill": "^0.2.2",
+    "@eslint/compat": "^1.2.5",
+    "@ph.fritsche/eslint-config": "^3.0.0-beta.12",
     "@ph.fritsche/scripts-config": "^2.4.0",
     "@ph.fritsche/toolbox": "^1.0.0-alpha.11",
     "@testing-library/dom": "^10.4.0",
@@ -50,8 +52,9 @@
     "css.escape": "^1.5.1",
     "esbuild": "^0.19.10",
     "esbuild-plugin-globals": "^0.2.0",
+    "eslint": "^9.19.0",
     "eslint-import-resolver-typescript": "^3.5.2",
-    "eslint-plugin-local-rules": "^1.3.2",
+    "eslint-plugin-local-rules": "^3.0.2",
     "expect": "^28.1.3",
     "is-ci": "^3.0.1",
     "istanbul-lib-coverage": "^3.2.0",

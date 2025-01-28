@@ -1,7 +1,7 @@
 import baseConfig from '@ph.fritsche/eslint-config'
 import localRules from 'eslint-plugin-local-rules'
 import globals from 'globals'
-import { fixupPluginRules } from '@eslint/compat'
+import {fixupPluginRules} from '@eslint/compat'
 
 export default [
   ...baseConfig,
@@ -32,17 +32,26 @@ export default [
   },
   {
     rules: {
-      'indent': ['warn', 2, {
+      '@stylistic/block-spacing': 'off',
+      '@stylistic/brace-style': 'warn',
+      '@stylistic/indent': ['warn', 2, {
         offsetTernaryExpressions: true,
       }],
-      'operator-linebreak': ['warn', 'after', {
+      '@stylistic/indent-binary-ops': 'warn',
+      '@stylistic/keyword-spacing': 'warn',
+      '@stylistic/lines-between-class-members': 'off',
+      '@stylistic/member-delimiter-style': 'warn',
+      '@stylistic/no-trailing-spaces': 'warn',
+      '@stylistic/operator-linebreak': ['warn', 'after', {
         overrides: {
           '?': 'before',
           ':': 'before',
         },
       }],
+      '@stylistic/quote-props': 'warn',
+      '@stylistic/space-in-parens': 'warn',
+      '@stylistic/spaced-comment': 'warn',
       'no-await-in-loop': 'off',
-      'no-trailing-spaces': 'warn',
       'testing-library/no-dom-import': 'off',
       'testing-library/no-node-access': 'off',
     },

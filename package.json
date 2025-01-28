@@ -40,7 +40,7 @@
   "devDependencies": {
     "@esbuild-plugins/node-modules-polyfill": "^0.2.2",
     "@eslint/compat": "^1.2.5",
-    "@ph.fritsche/eslint-config": "^3.0.0-beta.12",
+    "@ph.fritsche/eslint-config": "^3.0.0-beta.13",
     "@ph.fritsche/scripts-config": "^2.4.0",
     "@ph.fritsche/toolbox": "^1.0.0-alpha.11",
     "@testing-library/dom": "^10.4.0",

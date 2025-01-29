@@ -1086,6 +1086,13 @@
       "avatar_url": "https://avatars.githubusercontent.com/u/31351270?v=4",
       "profile": "http://liam.geek.nz/",
       "contributions": ["bug"]
+    },
+    {
+      "login": "vgpena",
+      "name": "Violet Peña",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1166226?v=4",
+      "profile": "http://violet.is/",
+      "contributions": ["code", "bug"]
     }
   ],
   "commitConvention": "none",

@@ -1078,7 +1078,7 @@
       "name": "Bryan Jensen",
       "avatar_url": "https://avatars.githubusercontent.com/u/5619111?v=4",
       "profile": "http://www.bawjensen.com/",
-      "contributions": ["code"]
+      "contributions": ["code", "bug"]
     },
     {
       "login": "liamcmitchell-sc",
@@ -1086,6 +1086,83 @@
       "avatar_url": "https://avatars.githubusercontent.com/u/31351270?v=4",
       "profile": "http://liam.geek.nz/",
       "contributions": ["bug"]
+    },
+    {
+      "login": "vgpena",
+      "name": "Violet Peña",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1166226?v=4",
+      "profile": "http://violet.is/",
+      "contributions": ["code", "bug"]
+    },
+    {
+      "login": "joshferrell",
+      "name": "Joshua Ferrell",
+      "avatar_url": "https://avatars.githubusercontent.com/u/19213986?v=4",
+      "profile": "http://joshferrell.me/",
+      "contributions": ["test"]
+    },
+    {
+      "login": "ktmud",
+      "name": "Jesse Yang",
+      "avatar_url": "https://avatars.githubusercontent.com/u/335541?v=4",
+      "profile": "https://yjc.me/",
+      "contributions": ["bug", "code"]
+    },
+    {
+      "login": "dlech",
+      "name": "David Lechner",
+      "avatar_url": "https://avatars.githubusercontent.com/u/963645?v=4",
+      "profile": "https://lechnology.com/",
+      "contributions": ["code"]
+    },
+    {
+      "login": "snowystinger",
+      "name": "Robert Snow",
+      "avatar_url": "https://avatars.githubusercontent.com/u/698229?v=4",
+      "profile": "https://github.com/snowystinger",
+      "contributions": ["bug", "code"]
+    },
+    {
+      "login": "JesseCheng77",
+      "name": "Jianxun Cheng",
+      "avatar_url": "https://avatars.githubusercontent.com/u/31310280?v=4",
+      "profile": "https://github.com/JesseCheng77",
+      "contributions": ["bug"]
+    },
+    {
+      "login": "a0js",
+      "name": "Ammon Sarver",
+      "avatar_url": "https://avatars.githubusercontent.com/u/3289501?v=4",
+      "profile": "https://github.com/a0js",
+      "contributions": ["code"]
+    },
+    {
+      "login": "bsheps",
+      "name": "bsheps",
+      "avatar_url": "https://avatars.githubusercontent.com/u/35780702?v=4",
+      "profile": "https://github.com/bsheps",
+      "contributions": ["doc"]
+    },
+    {
+      "login": "illandril",
+      "name": "Joe Spandrusyszyn",
+      "avatar_url": "https://avatars.githubusercontent.com/u/469205?v=4",
+      "profile": "http://www.spandrusyszyn.com/joe/",
+      "contributions": ["bug", "code"]
+    },
+    {
+      "login": "chuganzy",
+      "name": "Takeru Chuganji",
+      "avatar_url": "https://avatars.githubusercontent.com/u/2619092?v=4",
+      "profile": "http://ganzy.jp/",
+      "contributions": ["code"]
+    },
+    {
+      "login": "hesxenon",
+      "name": "hesxenon",
+      "avatar_url": "https://avatars.githubusercontent.com/u/10255566?v=4",
+      "profile": "https://github.com/hesxenon",
+      "contributions": ["bug", "code"]
     }
   ],
   "commitConvention": "none",

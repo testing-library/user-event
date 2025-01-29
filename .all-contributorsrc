@@ -1107,6 +1107,13 @@
       "avatar_url": "https://avatars.githubusercontent.com/u/335541?v=4",
       "profile": "https://yjc.me/",
       "contributions": ["bug", "code"]
+    },
+    {
+      "login": "dlech",
+      "name": "David Lechner",
+      "avatar_url": "https://avatars.githubusercontent.com/u/963645?v=4",
+      "profile": "https://lechnology.com/",
+      "contributions": ["code"]
     }
   ],
   "commitConvention": "none",

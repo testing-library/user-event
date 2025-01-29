@@ -207,6 +207,7 @@ Thanks goes to these wonderful people ([emoji key][emojis]):
     </tr>
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://yjc.me/"><img src="https://avatars.githubusercontent.com/u/335541?v=4?s=100" width="100px;" alt="Jesse Yang"/><br /><sub><b>Jesse Yang</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3Aktmud" title="Bug reports">🐛</a> <a href="https://github.com/testing-library/user-event/commits?author=ktmud" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://lechnology.com/"><img src="https://avatars.githubusercontent.com/u/963645?v=4?s=100" width="100px;" alt="David Lechner"/><br /><sub><b>David Lechner</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=dlech" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>

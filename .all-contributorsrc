@@ -1128,6 +1128,13 @@
       "avatar_url": "https://avatars.githubusercontent.com/u/31310280?v=4",
       "profile": "https://github.com/JesseCheng77",
       "contributions": ["bug"]
+    },
+    {
+      "login": "a0js",
+      "name": "Ammon Sarver",
+      "avatar_url": "https://avatars.githubusercontent.com/u/3289501?v=4",
+      "profile": "https://github.com/a0js",
+      "contributions": ["code"]
     }
   ],
   "commitConvention": "none",

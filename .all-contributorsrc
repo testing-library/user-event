@@ -1156,6 +1156,13 @@
       "avatar_url": "https://avatars.githubusercontent.com/u/2619092?v=4",
       "profile": "http://ganzy.jp/",
       "contributions": ["code"]
+    },
+    {
+      "login": "hesxenon",
+      "name": "hesxenon",
+      "avatar_url": "https://avatars.githubusercontent.com/u/10255566?v=4",
+      "profile": "https://github.com/hesxenon",
+      "contributions": ["bug", "code"]
     }
   ],
   "commitConvention": "none",

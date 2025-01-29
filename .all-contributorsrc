@@ -1135,6 +1135,13 @@
       "avatar_url": "https://avatars.githubusercontent.com/u/3289501?v=4",
       "profile": "https://github.com/a0js",
       "contributions": ["code"]
+    },
+    {
+      "login": "bsheps",
+      "name": "bsheps",
+      "avatar_url": "https://avatars.githubusercontent.com/u/35780702?v=4",
+      "profile": "https://github.com/bsheps",
+      "contributions": ["doc"]
     }
   ],
   "commitConvention": "none",

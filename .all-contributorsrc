@@ -1121,6 +1121,13 @@
       "avatar_url": "https://avatars.githubusercontent.com/u/698229?v=4",
       "profile": "https://github.com/snowystinger",
       "contributions": ["bug", "code"]
+    },
+    {
+      "login": "JesseCheng77",
+      "name": "Jianxun Cheng",
+      "avatar_url": "https://avatars.githubusercontent.com/u/31310280?v=4",
+      "profile": "https://github.com/JesseCheng77",
+      "contributions": ["bug"]
     }
   ],
   "commitConvention": "none",

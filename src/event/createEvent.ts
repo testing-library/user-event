@@ -258,13 +258,14 @@ function initPointerEvent(
     twist,
     pointerType,
     isPrimary,
+    buttons,
   }: PointerEventInit,
 ) {
   assignProps(event, {
     pointerId: sanitizeNumber(pointerId),
     width: sanitizeNumber(width ?? 1),
     height: sanitizeNumber(height ?? 1),
-    pressure: sanitizeNumber(pressure ?? 0.5),
+    pressure: sanitizeNumber(pressure ?? (buttons ? 0.5 : 0)),
     tangentialPressure: sanitizeNumber(tangentialPressure),
     tiltX: sanitizeNumber(tiltX),
     tiltY: sanitizeNumber(tiltY),

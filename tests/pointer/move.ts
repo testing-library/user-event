@@ -9,7 +9,7 @@ test('hover to other element', async () => {
   ])
 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
-    Events fired on: div
+    Events fired on: div,div
 
     div - pointerover
     div - pointerenter
@@ -18,9 +18,13 @@ test('hover to other element', async () => {
     div - pointermove
     div - mousemove
     div - pointerout
+    div - pointerleave
     div - mouseout
+    div - mouseleave
     div - pointerover
+    div - pointerenter
     div - mouseover
+    div - mouseenter
     div - pointermove
     div - mousemove
   `)
@@ -101,5 +105,48 @@ test('move touch over elements', async () => {
     div - mousedown: primary
     div - mouseup: primary
     div - click: primary
+  `)
+})
+
+test('declare pointer coordinates', async () => {
+  const {element, getEvents, user} = setup(`<div></div>`)
+
+  const coords: Partial<MouseEvent> = {
+    x: 1,
+    y: 2,
+    offsetX: 3,
+    offsetY: 4,
+    pageX: 5,
+    pageY: 6,
+    screenX: 7,
+    screenY: 8,
+  }
+
+  await user.pointer({target: element, coords})
+
+  // .toEqual(expect.objectContaining) yields a misleading diff
+  Object.entries(coords).forEach(([prop, value]) => {
+    expect(getEvents('mouseover')[0]).toHaveProperty(prop, value)
+  })
+})
+
+test('move pointer by x/y coords', async () => {
+  const {elements, getEventSnapshot, user} = setup('<div></div>')
+
+  await user.pointer([
+    {keys: '[MouseLeft>]', target: elements[0], coords: {x: 20, y: 20}},
+    {coords: {x: 40, y: 20}},
+    {coords: {x: 40, y: 40}},
+  ])
+
+  expect(getEventSnapshot()).toMatchInlineSnapshot(`
+    Events fired on: div
+
+    div - pointerdown
+    div - mousedown: primary
+    div - pointermove
+    div - mousemove
+    div - pointermove
+    div - mousemove
   `)
 })

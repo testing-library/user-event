@@ -5,12 +5,12 @@ import {behavior} from './registry'
 behavior.click = (event, target, instance) => {
   const context = target.closest('button,input,label,select,textarea')
   const control = context && isElementType(context, 'label') && context.control
-  if (control) {
+  if (control && control !== target) {
     return () => {
       if (isFocusable(control)) {
         focusElement(control)
+        instance.dispatchEvent(control, cloneEvent(event))
       }
-      instance.dispatchEvent(control, cloneEvent(event))
     }
   } else if (isElementType(target, 'input', {type: 'file'})) {
     return () => {

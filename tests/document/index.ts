@@ -6,8 +6,10 @@ import {
   setUISelection,
 } from '#src/document'
 import {prepareDocument} from '#src/document/prepareDocument'
+import {patchFocus} from '#src/document/patchFocus'
 
 function prepare(element: Element) {
+  patchFocus(globalThis.window.HTMLElement)
   prepareDocument(element.ownerDocument)
   // safe to call multiple times
   prepareDocument(element.ownerDocument)

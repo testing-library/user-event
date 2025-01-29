@@ -12,6 +12,7 @@ interface InterfaceMap {
   MouseEvent: {type: MouseEvent; init: MouseEventInit}
   PointerEvent: {type: PointerEvent; init: PointerEventInit}
   KeyboardEvent: {type: KeyboardEvent; init: KeyboardEventInit}
+  FocusEvent: {type: FocusEvent; init: FocusEventInit}
 }
 type InterfaceNames = typeof eventMap[keyof typeof eventMap]['EventType']
 type Interface<k extends InterfaceNames> = k extends keyof InterfaceMap
@@ -25,15 +26,16 @@ const eventInitializer: {
 } = {
   ClipboardEvent: [initClipboardEvent],
   Event: [],
+  FocusEvent: [initUIEvent, initFocusEvent],
   InputEvent: [initUIEvent, initInputEvent],
-  MouseEvent: [initUIEvent, initUIEventModififiers, initMouseEvent],
+  MouseEvent: [initUIEvent, initUIEventModifiers, initMouseEvent],
   PointerEvent: [
     initUIEvent,
-    initUIEventModififiers,
+    initUIEventModifiers,
     initMouseEvent,
     initPointerEvent,
   ],
-  KeyboardEvent: [initUIEvent, initUIEventModififiers, initKeyboardEvent],
+  KeyboardEvent: [initUIEvent, initUIEventModifiers, initKeyboardEvent],
 }
 
 export function createEvent<K extends EventType>(
@@ -117,6 +119,12 @@ function initClipboardEvent(
   })
 }
 
+function initFocusEvent(event: FocusEvent, {relatedTarget}: FocusEventInit) {
+  assignProps(event, {
+    relatedTarget,
+  })
+}
+
 function initInputEvent(
   event: InputEvent,
   {data, inputType, isComposing}: InputEventInit,
@@ -135,7 +143,7 @@ function initUIEvent(event: UIEvent, {view, detail}: UIEventInit) {
   })
 }
 
-function initUIEventModififiers(
+function initUIEventModifiers(
   event: KeyboardEvent | MouseEvent,
   {
     altKey,
@@ -211,7 +219,14 @@ function initMouseEvent(
     button,
     buttons,
     relatedTarget,
-  }: MouseEventInit & {x?: number; y?: number},
+    offsetX,
+    offsetY,
+    pageX,
+    pageY,
+  }: MouseEventInit &
+    Partial<
+      Pick<MouseEvent, 'x' | 'y' | 'offsetX' | 'offsetY' | 'pageX' | 'pageY'>
+    >,
 ) {
   assignProps(event, {
     screenX: sanitizeNumber(screenX),
@@ -223,6 +238,10 @@ function initMouseEvent(
     button: sanitizeNumber(button),
     buttons: sanitizeNumber(buttons),
     relatedTarget,
+    offsetX: sanitizeNumber(offsetX),
+    offsetY: sanitizeNumber(offsetY),
+    pageX: sanitizeNumber(pageX),
+    pageY: sanitizeNumber(pageY),
   })
 }
 
@@ -243,8 +262,8 @@ function initPointerEvent(
 ) {
   assignProps(event, {
     pointerId: sanitizeNumber(pointerId),
-    width: sanitizeNumber(width),
-    height: sanitizeNumber(height),
+    width: sanitizeNumber(width ?? 1),
+    height: sanitizeNumber(height ?? 1),
     pressure: sanitizeNumber(pressure),
     tangentialPressure: sanitizeNumber(tangentialPressure),
     tiltX: sanitizeNumber(tiltX),

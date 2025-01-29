@@ -17,6 +17,7 @@ function describe(val: unknown) {
   return typeof val === 'function'
     ? `function ${val.name}`
     : val === null
-    ? 'null'
-    : String(val)
+      ? 'null'
+      // eslint-disable-next-line @typescript-eslint/no-base-to-string
+      : String(val)
 }

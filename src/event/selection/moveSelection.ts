@@ -17,8 +17,8 @@ export function moveSelection(node: Element, direction: -1 | 1) {
         selection.startOffset === selection.endOffset
           ? selection.focusOffset + direction
           : direction < 0
-          ? selection.startOffset
-          : selection.endOffset,
+            ? selection.startOffset
+            : selection.endOffset,
     })
   } else {
     const selection = node.ownerDocument.getSelection()

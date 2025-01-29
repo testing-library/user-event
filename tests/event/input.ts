@@ -37,7 +37,7 @@ function setupInstance() {
       }
     },
     {
-      insertText: {
+      'insertText': {
         range: [1, 3],
         data: 'XYZ',
         value: 'aXYZd',
@@ -116,7 +116,7 @@ cases(
     }
   },
   {
-    insertText: {
+    'insertText': {
       range: [1, 3],
       data: 'XYZ',
       textContent: 'aXYZd',
@@ -179,7 +179,7 @@ cases(
     }
   },
   {
-    insertText: {
+    'insertText': {
       range: [1, 3],
       data: 'XYZ',
       html: '<button>a</button>XYZ<button>d</button>',

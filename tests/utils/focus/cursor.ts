@@ -31,11 +31,11 @@ cases<{
     expect(node).toBeTruthy()
     const expectedNode = expectedSelector
       ? document.evaluate(
-          expectedSelector,
-          element,
-          null,
-          XPathResult.FIRST_ORDERED_NODE_TYPE,
-        ).singleNodeValue
+        expectedSelector,
+        element,
+        null,
+        XPathResult.FIRST_ORDERED_NODE_TYPE,
+      ).singleNodeValue
       : undefined
     expect(expectedNode)[expectedSelector ? 'toBeTruthy' : 'toBeFalsy']()
 

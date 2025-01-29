@@ -18,7 +18,7 @@ cases(
     )
   },
   {
-    code: {
+    'code': {
       text: '[ControlLeft]',
       keyDef: {key: 'Control', code: 'ControlLeft'},
     },
@@ -26,7 +26,7 @@ cases(
       text: '[Foo]',
       keyDef: {key: 'Unknown', code: 'Foo'},
     },
-    key: {
+    'key': {
       text: '{Control}',
       keyDef: {key: 'Control', code: 'ControlLeft'},
     },

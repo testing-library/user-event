@@ -198,7 +198,7 @@ test.each([
       'video.mp4',
     ],
   ],
-])(
+] as const)(
   'filter according to accept attribute applyAccept=%s, acceptAttribute=%s',
   async (applyAccept, acceptAttribute, expectedFileNames) => {
     const files = [

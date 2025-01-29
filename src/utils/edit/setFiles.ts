@@ -20,7 +20,6 @@ function restoreProperty<T extends object>(
   if (descriptor) {
     Object.defineProperty(obj, prop, descriptor)
   } else {
-    // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
     delete obj[prop]
   }
 }

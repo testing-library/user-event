@@ -100,8 +100,8 @@ export function addListeners(
       isMouseEvent(e)
         ? `${e.type} - button=${e.button}; buttons=${e.buttons}; detail=${e.detail}`
         : isPointerEvent(e)
-        ? `${e.type} - pointerId=${e.pointerId}; pointerType=${e.pointerType}; isPrimary=${e.isPrimary}; button=${e.button}; buttons=${e.buttons}`
-        : e.type,
+          ? `${e.type} - pointerId=${e.pointerId}; pointerType=${e.pointerType}; isPrimary=${e.isPrimary}; button=${e.button}; buttons=${e.buttons}`
+          : e.type,
     )
     return {snapshot: lines.join('\n')}
   }
@@ -145,7 +145,7 @@ export function addListeners(
   }
 }
 
-function hasProperty<T extends {}, K extends PropertyKey>(
+function hasProperty<T extends object, K extends PropertyKey>(
   obj: T,
   prop: K,
 ): obj is T & {[k in K]: unknown} {

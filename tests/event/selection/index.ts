@@ -216,20 +216,6 @@ describe('move selection', () => {
       element.firstChild,
     )
     expect(document.getSelection()).toHaveProperty('focusOffset', 2)
-  })
-
-  test('move to next cursor position', () => {
-    const {element} = setup(`<div tabindex="0">foo</div>`, {
-      selection: {focusNode: 'div/text()', focusOffset: 1},
-    })
-
-    moveSelection(element, 1)
-
-    expect(document.getSelection()).toHaveProperty(
-      'focusNode',
-      element.firstChild,
-    )
-    expect(document.getSelection()).toHaveProperty('focusOffset', 2)
     expect(document.getSelection()).toHaveProperty('isCollapsed', true)
   })
 

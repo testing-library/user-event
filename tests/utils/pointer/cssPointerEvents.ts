@@ -45,7 +45,7 @@ test('report element that declared pointer-events', async () => {
     DIV#foo
   `)
 
-  if(!isJsdomEnv()) {
+  if (!isJsdomEnv()) {
     // In the browser `window.getComputedStyle` includes inherited styles.
     // Therefore we can not distinguish between inherited `pointer-events` declarations
     // and those applied to the element itself.

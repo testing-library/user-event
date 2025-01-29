@@ -100,7 +100,7 @@ describe('throw error when clear is impossible', () => {
 
   test('abort if event handler prevents element being focused', async () => {
     const {element, user} = setup(`<input value="hello"/>`, {focus: false})
-    element.addEventListener('focus', async () => element.blur())
+    element.addEventListener('focus', () => element.blur())
 
     await expect(
       user.clear(element),

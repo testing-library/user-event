@@ -35,7 +35,7 @@ const {cli, connectCoverageReporter} = await setupToolboxTester(
       globals: {
         '@testing-library/dom': 'DomTestingLibrary',
         '@testing-library/react': 'ReactTestingLibrary',
-        react: 'React',
+        'react': 'React',
         'react-dom': 'ReactDom',
       },
     }),

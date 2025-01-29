@@ -6,7 +6,6 @@ export class Buttons {
   getButtons() {
     let v = 0
     for (const button of Object.keys(this.pressed)) {
-      // eslint-disable-next-line no-bitwise
       v |= 2 ** Number(button)
     }
     return v
@@ -32,7 +31,6 @@ export class Buttons {
         k => k.name !== keyDef.name,
       )
       if (this.pressed[button].length === 0) {
-        // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
         delete this.pressed[button]
         return button
       }

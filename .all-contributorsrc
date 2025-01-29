@@ -1142,6 +1142,13 @@
       "avatar_url": "https://avatars.githubusercontent.com/u/35780702?v=4",
       "profile": "https://github.com/bsheps",
       "contributions": ["doc"]
+    },
+    {
+      "login": "illandril",
+      "name": "Joe Spandrusyszyn",
+      "avatar_url": "https://avatars.githubusercontent.com/u/469205?v=4",
+      "profile": "http://www.spandrusyszyn.com/joe/",
+      "contributions": ["bug", "code"]
     }
   ],
   "commitConvention": "none",

@@ -205,6 +205,9 @@ Thanks goes to these wonderful people ([emoji key][emojis]):
       <td align="center" valign="top" width="14.28%"><a href="http://violet.is/"><img src="https://avatars.githubusercontent.com/u/1166226?v=4?s=100" width="100px;" alt="Violet Peña"/><br /><sub><b>Violet Peña</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=vgpena" title="Code">💻</a> <a href="https://github.com/testing-library/user-event/issues?q=author%3Avgpena" title="Bug reports">🐛</a></td>
       <td align="center" valign="top" width="14.28%"><a href="http://joshferrell.me/"><img src="https://avatars.githubusercontent.com/u/19213986?v=4?s=100" width="100px;" alt="Joshua Ferrell"/><br /><sub><b>Joshua Ferrell</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=joshferrell" title="Tests">⚠️</a></td>
     </tr>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://yjc.me/"><img src="https://avatars.githubusercontent.com/u/335541?v=4?s=100" width="100px;" alt="Jesse Yang"/><br /><sub><b>Jesse Yang</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3Aktmud" title="Bug reports">🐛</a> <a href="https://github.com/testing-library/user-event/commits?author=ktmud" title="Code">💻</a></td>
+    </tr>
   </tbody>
 </table>
 

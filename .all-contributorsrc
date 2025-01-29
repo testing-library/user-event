@@ -1100,6 +1100,13 @@
       "avatar_url": "https://avatars.githubusercontent.com/u/19213986?v=4",
       "profile": "http://joshferrell.me/",
       "contributions": ["test"]
+    },
+    {
+      "login": "ktmud",
+      "name": "Jesse Yang",
+      "avatar_url": "https://avatars.githubusercontent.com/u/335541?v=4",
+      "profile": "https://yjc.me/",
+      "contributions": ["bug", "code"]
     }
   ],
   "commitConvention": "none",

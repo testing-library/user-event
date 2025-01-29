@@ -7,8 +7,8 @@ type GuardedType<T> = T extends (x: any) => x is infer R ? R : never
 export function isEditable(
   element: Element,
 ): element is
-  | GuardedType<typeof isContentEditable>
-  | (EditableInputOrTextarea & {readOnly: false}) {
+| GuardedType<typeof isContentEditable>
+| (EditableInputOrTextarea & {readOnly: false}) {
   return (
     (isEditableInputOrTextArea(element) && !element.readOnly) ||
     isContentEditable(element)

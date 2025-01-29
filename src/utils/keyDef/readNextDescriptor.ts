@@ -1,7 +1,7 @@
-enum bracketDict {
-  '{' = '}',
-  '[' = ']',
-}
+const bracketDict = {
+  '{': '}',
+  '[': ']',
+} as const
 
 type Context = 'pointer' | 'keyboard'
 

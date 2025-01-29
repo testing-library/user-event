@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-use-before-define */
-
 import {getUIValue, setUISelection, getValueOrTextContent} from '../../document'
 import {
   getTabDestination,

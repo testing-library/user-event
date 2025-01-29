@@ -16,11 +16,11 @@ export async function paste(
     (typeof clipboardData === 'string'
       ? getClipboardDataFromString(doc, clipboardData)
       : clipboardData) ??
-    (await readDataTransferFromClipboard(doc).catch(() => {
-      throw new Error(
-        '`userEvent.paste()` without `clipboardData` requires the `ClipboardAPI` to be available.',
-      )
-    }))
+      (await readDataTransferFromClipboard(doc).catch(() => {
+        throw new Error(
+          '`userEvent.paste()` without `clipboardData` requires the `ClipboardAPI` to be available.',
+        )
+      }))
 
   this.dispatchUIEvent(target, 'paste', {
     clipboardData: dataTransfer,

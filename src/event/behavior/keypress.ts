@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-use-before-define */
-
 import {isContentEditable, isEditable, isElementType} from '../../utils'
 import {input} from '../input'
 import {behavior} from './registry'
@@ -10,7 +8,7 @@ behavior.keypress = (event, target, instance) => {
       isElementType(target, 'button') ||
       (isElementType(target, 'input') &&
         ClickInputOnEnter.includes(target.type)) ||
-      (isElementType(target, 'a') && Boolean(target.href))
+        (isElementType(target, 'a') && Boolean(target.href))
     ) {
       return () => {
         instance.dispatchUIEvent(target, 'click')

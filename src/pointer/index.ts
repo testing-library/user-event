@@ -69,8 +69,8 @@ async function pointerAction(instance: Instance, action: PointerAction) {
     'pointerName' in action && action.pointerName
       ? action.pointerName
       : 'keyDef' in action
-      ? instance.system.pointer.getPointerName(action.keyDef)
-      : 'mouse'
+        ? instance.system.pointer.getPointerName(action.keyDef)
+        : 'mouse'
 
   const previousPosition =
     instance.system.pointer.getPreviousPosition(pointerName)

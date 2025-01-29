@@ -14,9 +14,9 @@ export function getNextCursorPosition(
   inputType?: string,
 ):
   | {
-      node: Node
-      offset: number
-    }
+    node: Node
+    offset: number
+  }
   | undefined {
   // The behavior at text node zero offset is inconsistent.
   // When walking backwards:

@@ -31,10 +31,10 @@ export function setSelectionPerMouseDown({
   )
 
   const [start, end] = node
-    ? // As offset is describing a DOMOffset it is non-trivial to determine
-      // which elements might be considered in the same line of text.
-      // TODO: support expanding initial range on multiple clicks if node is given
-      [offset, offset]
+    // As offset is describing a DOMOffset it is non-trivial to determine
+    // which elements might be considered in the same line of text.
+    // TODO: support expanding initial range on multiple clicks if node is given
+    ? [offset, offset]
     : getTextRange(text, offset, clickCount)
 
   // TODO: implement modifying selection per shift/ctrl+mouse
@@ -64,7 +64,7 @@ export function setSelectionPerMouseDown({
     try {
       range.setStart(startNode, startOffset)
       range.setEnd(endNode, endOffset)
-    } catch (e: unknown) {
+    } catch {
       throw new Error('The given offset is out of bounds.')
     }
 
@@ -89,8 +89,8 @@ function getTextRange(
   if (clickCount % 3 === 2) {
     return [
       textPos -
-        (text.substr(0, pos).match(/(\w+|\s+|\W)?$/) as RegExpMatchArray)[0]
-          .length,
+      (text.substr(0, pos).match(/(\w+|\s+|\W)?$/) as RegExpMatchArray)[0]
+        .length,
       pos === undefined
         ? pos
         : pos +
@@ -102,7 +102,7 @@ function getTextRange(
   // triple click
   return [
     textPos -
-      (text.substr(0, pos).match(/[^\r\n]*$/) as RegExpMatchArray)[0].length,
+    (text.substr(0, pos).match(/[^\r\n]*$/) as RegExpMatchArray)[0].length,
     pos === undefined
       ? pos
       : pos +

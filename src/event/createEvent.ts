@@ -7,12 +7,12 @@ import {
 } from './types'
 
 interface InterfaceMap {
-  ClipboardEvent: {type: ClipboardEvent; init: ClipboardEventInit}
-  InputEvent: {type: InputEvent; init: InputEventInit}
-  MouseEvent: {type: MouseEvent; init: MouseEventInit}
-  PointerEvent: {type: PointerEvent; init: PointerEventInit}
-  KeyboardEvent: {type: KeyboardEvent; init: KeyboardEventInit}
-  FocusEvent: {type: FocusEvent; init: FocusEventInit}
+  ClipboardEvent: {type: ClipboardEvent, init: ClipboardEventInit}
+  InputEvent: {type: InputEvent, init: InputEventInit}
+  MouseEvent: {type: MouseEvent, init: MouseEventInit}
+  PointerEvent: {type: PointerEvent, init: PointerEventInit}
+  KeyboardEvent: {type: KeyboardEvent, init: KeyboardEventInit}
+  FocusEvent: {type: FocusEvent, init: FocusEventInit}
 }
 type InterfaceNames = typeof eventMap[keyof typeof eventMap]['EventType']
 type Interface<k extends InterfaceNames> = k extends keyof InterfaceMap
@@ -55,7 +55,6 @@ export function createEvent<K extends EventType>(
 
 /* istanbul ignore next */
 function getEventConstructors(window: Window & typeof globalThis) {
-  /* eslint-disable @typescript-eslint/no-unnecessary-condition, @typescript-eslint/no-extraneous-class */
   const Event = window.Event ?? class Event {}
   const AnimationEvent =
     window.AnimationEvent ?? class AnimationEvent extends Event {}
@@ -79,7 +78,6 @@ function getEventConstructors(window: Window & typeof globalThis) {
   const PointerEvent =
     window.PointerEvent ?? class PointerEvent extends MouseEvent {}
   const TouchEvent = window.TouchEvent ?? class TouchEvent extends UIEvent {}
-  /* eslint-enable @typescript-eslint/no-unnecessary-condition, @typescript-eslint/no-extraneous-class */
 
   return {
     Event,

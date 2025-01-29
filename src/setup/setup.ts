@@ -101,7 +101,7 @@ export function setupDirect(
     keyboardState,
     pointerState,
     ...options
-  }: DirectOptions & {keyboardState?: System; pointerState?: System} = {}, // backward-compatibility
+  }: DirectOptions & {keyboardState?: System, pointerState?: System} = {}, // backward-compatibility
   node?: Node,
 ) {
   const config = createConfig(options, defaultOptionsDirect, node)
@@ -146,9 +146,9 @@ export function createInstance(
   config: Config,
   system: System = new System(),
 ): {
-  instance: Instance
-  api: UserEvent
-} {
+    instance: Instance
+    api: UserEvent
+  } {
   const instance = {} as Instance
   Object.assign(instance, {
     config,

@@ -43,8 +43,7 @@ class DataTransferItemStub implements DataTransferItem {
 
 class DataTransferItemListStub
   extends Array<DataTransferItem>
-  implements DataTransferItemList
-{
+  implements DataTransferItemList {
   add(data: string, type: string): DataTransferItem
   add(file: File): DataTransferItem
   add(...args: never[]) {
@@ -69,8 +68,8 @@ function getTypeMatcher(type: string, exact: boolean) {
     return exact
       ? item.type === (isGroup ? group : type)
       : isGroup
-      ? item.type.startsWith(`${group}/`)
-      : item.type === group
+        ? item.type.startsWith(`${group}/`)
+        : item.type === group
   }
 }
 

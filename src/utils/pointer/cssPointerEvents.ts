@@ -13,9 +13,9 @@ export function hasPointerEvents(
 
 function closestPointerEventsDeclaration(element: Element):
   | {
-      pointerEvents: string
-      tree: Element[]
-    }
+    pointerEvents: string
+    tree: Element[]
+  }
   | undefined {
   const window = getWindow(element)
 
@@ -49,19 +49,19 @@ function checkPointerEvents(instance: Instance, element: Element) {
   const lastCheck = element[PointerEventsCheck]
 
   const needsCheck =
-    instance.config.pointerEventsCheck !== PointerEventsCheckLevel.Never &&
+    instance.config.pointerEventsCheck !== PointerEventsCheckLevel.Never as number &&
     (!lastCheck ||
       (hasBitFlag(
         instance.config.pointerEventsCheck,
         PointerEventsCheckLevel.EachApiCall,
       ) &&
-        lastCheck[ApiLevel.Call] !== getLevelRef(instance, ApiLevel.Call)) ||
+      lastCheck[ApiLevel.Call] !== getLevelRef(instance, ApiLevel.Call)) ||
       (hasBitFlag(
         instance.config.pointerEventsCheck,
         PointerEventsCheckLevel.EachTrigger,
       ) &&
-        lastCheck[ApiLevel.Trigger] !==
-          getLevelRef(instance, ApiLevel.Trigger)))
+      lastCheck[ApiLevel.Trigger] !==
+      getLevelRef(instance, ApiLevel.Trigger)))
 
   if (!needsCheck) {
     return lastCheck?.result
@@ -103,14 +103,14 @@ function printTree(tree: Element[]) {
         el.tagName,
         el.id && `#${el.id}`,
         el.hasAttribute('data-testid') &&
-          `(testId=${el.getAttribute('data-testid')})`,
+        `(testId=${el.getAttribute('data-testid')})`,
         getLabelDescr(el),
         tree.length > 1 &&
-          i === 0 &&
-          '  <-- This element declared `pointer-events: none`',
+        i === 0 &&
+        '  <-- This element declared `pointer-events: none`',
         tree.length > 1 &&
-          i === tree.length - 1 &&
-          '  <-- Asserted pointer events here',
+        i === tree.length - 1 &&
+        '  <-- Asserted pointer events here',
       ]
         .filter(Boolean)
         .join(''),
@@ -153,6 +153,5 @@ function getLabelDescr(element: Element) {
 
 // With the eslint rule and prettier the bitwise operation isn't nice to read
 function hasBitFlag(conf: number, flag: number) {
-  // eslint-disable-next-line no-bitwise
   return (conf & flag) > 0
 }

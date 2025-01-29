@@ -49,7 +49,7 @@ async function selectOptionsBase(
           return matchingOption
         } else {
           throw getConfig().getElementError(
-            `Value "${String(val)}" not found in options`,
+            `Value "${String(val as string)}" not found in options`,
             select,
           )
         }

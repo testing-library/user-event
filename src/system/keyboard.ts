@@ -96,7 +96,6 @@ export class KeyboardHost {
       return !!this.registry[code]?.unpreventedDefault
     }
     delete(code: string) {
-      // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
       delete this.registry[code]
     }
     values() {

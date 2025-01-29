@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-use-before-define */
-
 import {isClickableInput} from '../../utils'
 import {BehaviorPlugin} from '.'
 import {behavior} from './registry'

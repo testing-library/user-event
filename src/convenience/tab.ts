@@ -12,7 +12,7 @@ export async function tab(
     shift === true
       ? '{Shift>}{Tab}{/Shift}'
       : shift === false
-      ? '[/ShiftLeft][/ShiftRight]{Tab}'
-      : '{Tab}',
+        ? '[/ShiftLeft][/ShiftRight]{Tab}'
+        : '{Tab}',
   )
 }

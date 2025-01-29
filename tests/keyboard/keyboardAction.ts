@@ -14,7 +14,7 @@ cases(
     expect(eventWasFired('keypress')).toBe(hasKeyPress)
   },
   {
-    characters: {
+    'characters': {
       code: 'KeyX',
       hasKeyPress: true,
     },
@@ -188,7 +188,7 @@ describe('delay', () => {
     const spy = mocks.spyOn(global, 'setTimeout')
     await user.keyboard('ab')
     expect(spy.mock.calls.length).toBeGreaterThanOrEqual(1)
-  
+
     spy.mockClear()
     await user.setup({delay: null}).keyboard('cd')
     expect(spy).not.toBeCalled()

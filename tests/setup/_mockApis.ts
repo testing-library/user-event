@@ -44,7 +44,7 @@ const fake = {} as {
       get: () => this,
       configurable: true,
     })
-    return (real[key] as Function).apply(this, args)
+    return (real[key] as Function).apply(this, args) as Promise<void>
   }
   Object.defineProperty(mock, 'originalMockImplementation', {
     get: () => mockImpl,

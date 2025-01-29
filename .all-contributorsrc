@@ -1149,6 +1149,13 @@
       "avatar_url": "https://avatars.githubusercontent.com/u/469205?v=4",
       "profile": "http://www.spandrusyszyn.com/joe/",
       "contributions": ["bug", "code"]
+    },
+    {
+      "login": "chuganzy",
+      "name": "Takeru Chuganji",
+      "avatar_url": "https://avatars.githubusercontent.com/u/2619092?v=4",
+      "profile": "http://ganzy.jp/",
+      "contributions": ["code"]
     }
   ],
   "commitConvention": "none",

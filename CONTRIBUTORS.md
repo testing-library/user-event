@@ -214,6 +214,9 @@ Thanks goes to these wonderful people ([emoji key][emojis]):
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/bsheps"><img src="https://avatars.githubusercontent.com/u/35780702?v=4?s=100" width="100px;" alt="bsheps"/><br /><sub><b>bsheps</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=bsheps" title="Documentation">📖</a></td>
       <td align="center" valign="top" width="14.28%"><a href="http://www.spandrusyszyn.com/joe/"><img src="https://avatars.githubusercontent.com/u/469205?v=4?s=100" width="100px;" alt="Joe Spandrusyszyn"/><br /><sub><b>Joe Spandrusyszyn</b></sub></a><br /><a href="https://github.com/testing-library/user-event/issues?q=author%3Aillandril" title="Bug reports">🐛</a> <a href="https://github.com/testing-library/user-event/commits?author=illandril" title="Code">💻</a></td>
     </tr>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="http://ganzy.jp/"><img src="https://avatars.githubusercontent.com/u/2619092?v=4?s=100" width="100px;" alt="Takeru Chuganji"/><br /><sub><b>Takeru Chuganji</b></sub></a><br /><a href="https://github.com/testing-library/user-event/commits?author=chuganzy" title="Code">💻</a></td>
+    </tr>
   </tbody>
 </table>
 

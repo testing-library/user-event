@@ -3,7 +3,6 @@ import {render, setup} from '#testHelpers'
 import {createConfig, createInstance} from '#src/setup/setup'
 import {getUIValue} from '#src/document'
 import {input} from '#src/event'
-import {selectAll} from '#src/event/selection'
 
 function setupInstance() {
   return createInstance(createConfig()).instance
@@ -38,7 +37,7 @@ function setupInstance() {
       }
     },
     {
-      insertText: {
+      'insertText': {
         range: [1, 3],
         data: 'XYZ',
         value: 'aXYZd',
@@ -117,7 +116,7 @@ cases(
     }
   },
   {
-    insertText: {
+    'insertText': {
       range: [1, 3],
       data: 'XYZ',
       textContent: 'aXYZd',
@@ -180,7 +179,7 @@ cases(
     }
   },
   {
-    insertText: {
+    'insertText': {
       range: [1, 3],
       data: 'XYZ',
       html: '<button>a</button>XYZ<button>d</button>',
@@ -241,20 +240,18 @@ test('prevent input on `beforeinput` event', () => {
 
 cases(
   'maxlength',
-  ({html, data, inputType, expectedValue}) => {
+  ({html, data, inputType, expectedValue, selection}) => {
     const {element, eventWasFired} = render(html)
+
+    if (selection) {
+      (element as HTMLInputElement).setSelectionRange(selection[0], selection[1])
+    }
 
     input(setupInstance(), element, data, inputType)
 
     expect(element).toHaveValue(expectedValue)
     expect(eventWasFired('beforeinput')).toBe(true)
     expect(eventWasFired('input')).toBe(!!expectedValue)
-
-    selectAll(element)
-    input(setupInstance(), element, '4')
-    expect(element).toHaveValue(
-      expectedValue ? (typeof expectedValue === 'string' ? '4' : 4) : '',
-    )
   },
   {
     'on text input': {
@@ -287,6 +284,12 @@ cases(
       data: '',
       inputType: 'deleteContentForward',
       expectedValue: 'oo',
+    },
+    'account for selection': {
+      html: `<input value="123" maxlength="3"/>`,
+      selection: [1, 2],
+      data: '4',
+      expectedValue: '143',
     },
   },
 )

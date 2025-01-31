@@ -14,8 +14,8 @@ export function getActiveElement(
   // Browser does not yield disabled elements as document.activeElement - jsdom does
   if (isDisabled(activeElement)) {
     return document.ownerDocument
-      ? // TODO: verify behavior in ShadowRoot
-        /* istanbul ignore next */ document.ownerDocument.body
+      // TODO: verify behavior in ShadowRoot
+      ? /* istanbul ignore next */ document.ownerDocument.body
       : document.body
   }
 

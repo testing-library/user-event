@@ -6,9 +6,9 @@ export function getActiveElement(
   const activeElement = document.activeElement
 
   if (activeElement?.shadowRoot) {
-    const activeShadowRootElement = getActiveElement(activeElement.shadowRoot)
-    if (activeShadowRootElement) {
-      return activeShadowRootElement
+    const activeElementInShadowTree = getActiveElement(activeElement.shadowRoot)
+    if (activeElementInShadowTree) {
+      return activeElementInShadowTree
     }
   }
   // Browser does not yield disabled elements as document.activeElement - jsdom does

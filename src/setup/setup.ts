@@ -1,4 +1,4 @@
-import {patchFocus} from '../document/patchFocus'
+import {patchFocus, restoreFocus} from '../document/patchFocus'
 import {prepareDocument} from '../document/prepareDocument'
 import {dispatchEvent, dispatchUIEvent} from '../event'
 import {defaultKeyMap as defaultKeyboardMap} from '../keyboard/keyMap'
@@ -7,8 +7,10 @@ import {Options, PointerEventsCheckLevel} from '../options'
 import {
   ApiLevel,
   attachClipboardStubToView,
+  detachClipboardStubFromView,
   getDocumentFromNode,
   getWindow,
+  resetClipboardStubOnView,
   setLevelRef,
   wait,
 } from '../utils'
@@ -83,12 +85,9 @@ export function createConfig(
  */
 export function setupMain(options: Options = {}) {
   const config = createConfig(options)
-  prepareDocument(config.document)
-  patchFocus(getWindow(config.document).HTMLElement)
 
-  const view =
-    config.document.defaultView ?? /* istanbul ignore next */ globalThis.window
-  attachClipboardStubToView(view)
+  const view = getWindow(config.document)
+  _prepare(view)
 
   return createInstance(config).api
 }
@@ -105,8 +104,9 @@ export function setupDirect(
   node?: Node,
 ) {
   const config = createConfig(options, defaultOptionsDirect, node)
-  prepareDocument(config.document)
-  patchFocus(getWindow(config.document).HTMLElement)
+
+  const view = getWindow(config.document)
+  _prepare(view, false)
 
   const system = pointerState ?? keyboardState ?? new System()
 
@@ -181,4 +181,45 @@ function getDocument(
   return (
     options.document ?? (node && getDocumentFromNode(node)) ?? defaults.document
   )
+}
+
+function _prepare(
+  view: Window & typeof globalThis,
+  attachClipboardStub = true,
+) {
+  prepareDocument(view.document)
+  patchFocus(view.HTMLElement)
+
+  if (attachClipboardStub) {
+    attachClipboardStubToView(view)
+  }
+}
+
+/**
+ * @experimental
+ */
+export function prepare(
+  view: Window & typeof globalThis,
+) {
+  _prepare(view)
+}
+
+/**
+ * @experimental
+ */
+export function reset(
+  view: Window & typeof globalThis,
+) {
+  restoreFocus(view.HTMLElement)
+  resetClipboardStubOnView(view)
+}
+
+/**
+ * @experimental
+ */
+export function detach(
+  view: Window & typeof globalThis,
+) {
+  restoreFocus(view.HTMLElement)
+  detachClipboardStubFromView(view)
 }

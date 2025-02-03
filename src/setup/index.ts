@@ -7,3 +7,9 @@ export const userEvent = {
   ...directApi,
   setup: setupMain,
 } as const
+
+export {
+  prepare,
+  reset,
+  detach,
+} from './setup'

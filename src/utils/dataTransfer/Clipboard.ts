@@ -209,17 +209,3 @@ export async function writeDataTransferToClipboard(
     throw new Error('The Clipboard API is unavailable.')
   }
 }
-
-const g = globalThis as {
-  afterEach?: (cb?: () => void) => void
-  afterAll?: (cb?: () => void) => void
-}
-/* istanbul ignore else */
-if (typeof g.afterEach === 'function') {
-  g.afterEach(() => resetClipboardStubOnView(globalThis.window))
-}
-
-/* istanbul ignore else */
-if (typeof g.afterAll === 'function') {
-  g.afterAll(() => detachClipboardStubFromView(globalThis.window))
-}

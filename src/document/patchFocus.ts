@@ -5,7 +5,7 @@ const patched = Symbol('patched focus/blur methods')
 
 declare global {
   interface HTMLElement {
-    readonly [patched]?: Pick<HTMLElement, 'focus' | 'blur'>
+    [patched]?: Pick<HTMLElement, 'focus' | 'blur'>
   }
 }
 
@@ -93,11 +93,17 @@ export function restoreFocus(HTMLElement: typeof globalThis['HTMLElement']) {
     Object.defineProperties(HTMLElement.prototype, {
       focus: {
         configurable: true,
-        get: () => focus,
+        value: focus,
+        writable: true,
       },
       blur: {
         configurable: true,
-        get: () => blur,
+        value: blur,
+        writable: true,
+      },
+      [patched]: {
+        configurable: true,
+        get: () => undefined,
       },
     })
   }

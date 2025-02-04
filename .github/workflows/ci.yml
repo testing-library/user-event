@@ -61,8 +61,8 @@ jobs:
     needs: validate
     runs-on: ubuntu-latest
     if: >
-      github.event_name == 'push' && github.repository ==
-      'testing-library/user-event' &&
+      github.event_name == 'push' &&
+      github.repository == 'testing-library/user-event' &&
       contains('refs/heads/main,refs/heads/beta,refs/heads/alpha', github.ref)
     steps:
       - name: ⬇️ Checkout repo

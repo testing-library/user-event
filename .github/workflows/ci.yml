@@ -1,31 +1,45 @@
 name: CI
 on:
   push:
-    branches:
-      [
-        '+([0-9])?(.{+([0-9]),x}).x',
-        'main',
-        'next',
-        'next-major',
-        'beta',
-        'alpha',
-        '!all-contributors/**',
-      ]
+    branches-ignore: ['all-contributors/**']
   pull_request:
     branches-ignore: ['all-contributors/**']
+
 jobs:
   validate:
     runs-on: ubuntu-latest
+    if: >
+      github.event_name != 'pull_request' ||
+      github.event.pull_request.head.repo.fork
     steps:
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v2
-      - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1
+        uses: actions/checkout@v4
+      - id: restore
+        name: ♻️ Restore node_modules
+        uses: actions/cache/restore@v4
         with:
-          useLockFile: false
-          install-command: yarn --silent
+          path: |
+            yarn.lock
+            node_modules
+          key: ${{ hashFiles('package.json') }}
+          restore-keys: ${{ hashFiles('package.json') }}-
+
+      - id: install
+        if: >
+          steps.restore.outputs.cache-matched-key == ''
+        name: 📥 Install deps
+        run: yarn
         env:
           HUSKY_SKIP_INSTALL: true
+      - if: >
+          steps.install.outcome == 'success'
+        name: ♻️ Save node_modules
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            yarn.lock
+            node_modules
+          key: ${{ hashFiles('package.json') }}-${{ hashFiles('yarn.lock') }}
 
       - name: ✍ Lint
         run: npm run lint
@@ -38,24 +52,30 @@ jobs:
       - name: 🏗 Build
         run: npm run build
 
-      - name: ⬆️ Upload coverage report
-        uses: codecov/codecov-action@v1
+      - name: ☂️ Upload coverage report
+        uses: codecov/codecov-action@v5
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   release:
     needs: validate
     runs-on: ubuntu-latest
-    if:
-      ${{ github.repository == 'testing-library/user-event' &&
+    if: >
+      github.event_name == 'push' &&
+      github.repository == 'testing-library/user-event' &&
       contains('refs/heads/main,refs/heads/beta,refs/heads/alpha', github.ref)
-      && github.event_name == 'push' }}
     steps:
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v2
-      - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1
+        uses: actions/checkout@v4
+      - name: ♻️ Restore node_modules
+        uses: actions/cache/restore@v4
         with:
-          useLockFile: false
-          install-command: yarn --silent
+          path: |
+            yarn.lock
+            node_modules
+          key: ${{ runner.os }}-${{ hashFiles('package.json') }}
+      - name: 📥 Install deps
+        run: yarn
         env:
           HUSKY_SKIP_INSTALL: true
 
@@ -64,6 +84,8 @@ jobs:
 
       - name: 🚀 Release
         uses: ph-fritsche/action-release@v2
+        with:
+          dry: ${{ vars.RELEASE_DRY }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

@@ -36,3 +36,4 @@ globalThis.Blob = jsdom.window.Blob
 globalThis.FileReader = jsdom.window.FileReader
 globalThis.FileList = jsdom.window.FileList
 globalThis.customElements = jsdom.window.customElements
+globalThis.HTMLElement = jsdom.window.HTMLElement

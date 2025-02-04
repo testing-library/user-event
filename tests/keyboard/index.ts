@@ -165,3 +165,28 @@ test('disabling activeElement moves action to HTMLBodyElement', async () => {
     body - keyup: c
   `)
 })
+
+test('typing on focused element with shadow root', async () => {
+  const {user, eventWasFired} = setup(
+    '<focusable-custom-element></focusable-custom-element>',
+  )
+
+  await user.keyboard('[Space]')
+  expect(eventWasFired('keypress')).toBe(true)
+})
+
+customElements.define(
+  'focusable-custom-element',
+  class FocusableCustomElement extends HTMLElement {
+    constructor() {
+      super()
+      this.attachShadow({mode: 'open'})
+    }
+
+    connectedCallback() {
+      if (!this.hasAttribute('tabindex')) {
+        this.setAttribute('tabindex', '0')
+      }
+    }
+  },
+)

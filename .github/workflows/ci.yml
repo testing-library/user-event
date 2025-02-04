@@ -55,6 +55,8 @@ jobs:
 
       - name: 🚀 Release
         uses: ph-fritsche/action-release@v2
+        with:
+          dry: ${{ vars.RELEASE_DRY }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

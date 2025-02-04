@@ -31,8 +31,10 @@ jobs:
       - name: 🏗 Build
         run: npm run build
 
-      - name: ⬆️ Upload coverage report
-        uses: codecov/codecov-action@v1
+      - name: ☂️ Upload coverage report
+        uses: codecov/codecov-action@v5
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   release:
     needs: validate

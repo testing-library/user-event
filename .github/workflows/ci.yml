@@ -1,16 +1,7 @@
 name: CI
 on:
   push:
-    branches:
-      [
-        '+([0-9])?(.{+([0-9]),x}).x',
-        'main',
-        'next',
-        'next-major',
-        'beta',
-        'alpha',
-        '!all-contributors/**',
-      ]
+    branches-ignore: ['all-contributors/**']
   pull_request:
     branches-ignore: ['all-contributors/**']
 jobs:

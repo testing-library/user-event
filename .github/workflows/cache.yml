@@ -8,7 +8,8 @@ jobs:
   refresh:
     runs-on: ubuntu-latest
     steps:
-      - if: ${{ github.event_name	== 'schedule' }}
+      - if: >
+          github.event_name == 'schedule'
         name: 🧹🪣 Delete caches
         run: gh cache delete --all
         env:

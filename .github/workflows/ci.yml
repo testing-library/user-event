@@ -4,6 +4,7 @@ on:
     branches-ignore: ['all-contributors/**']
   pull_request:
     branches-ignore: ['all-contributors/**']
+
 jobs:
   validate:
     runs-on: ubuntu-latest
@@ -44,10 +45,10 @@ jobs:
   release:
     needs: validate
     runs-on: ubuntu-latest
-    if:
-      ${{ github.repository == 'testing-library/user-event' &&
+    if: >
+      github.event_name == 'push' && github.repository ==
+      'testing-library/user-event' &&
       contains('refs/heads/main,refs/heads/beta,refs/heads/alpha', github.ref)
-      && github.event_name == 'push' }}
     steps:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v4

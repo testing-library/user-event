@@ -10,6 +10,11 @@ jobs:
     steps:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v4
+      - name: ♻️ Cache node_modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-${{ hashFiles('package.json') }}
       - name: 📥 Download deps
         uses: bahmutov/npm-install@v1
         with:
@@ -42,6 +47,11 @@ jobs:
     steps:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v4
+      - name: ♻️ Restore node_modules
+        uses: actions/cache/restore@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-${{ hashFiles('package.json') }}
       - name: 📥 Download deps
         uses: bahmutov/npm-install@v1
         with:

@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: 📥 Download deps
         uses: bahmutov/npm-install@v1
         with:
@@ -41,7 +41,7 @@ jobs:
       && github.event_name == 'push' }}
     steps:
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: 📥 Download deps
         uses: bahmutov/npm-install@v1
         with:

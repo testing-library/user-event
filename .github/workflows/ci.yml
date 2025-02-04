@@ -14,17 +14,32 @@ jobs:
     steps:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v4
-      - name: ♻️ Cache node_modules
-        uses: actions/cache@v4
+      - id: restore
+        name: ♻️ Restore node_modules
+        uses: actions/cache/restore@v4
         with:
           path: |
             yarn.lock
             node_modules
-          key: ${{ runner.os }}-${{ hashFiles('package.json') }}
-      - name: 📥 Install deps
+          key: ${{ hashFiles('package.json') }}
+          restore-keys: ${{ hashFiles('package.json') }}-
+
+      - id: install
+        if: >
+          steps.restore.outputs.cache-matched-key == ''
+        name: 📥 Install deps
         run: yarn
         env:
           HUSKY_SKIP_INSTALL: true
+      - if: >
+          steps.install.outcome == 'success'
+        name: ♻️ Save node_modules
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            yarn.lock
+            node_modules
+          key: ${{ hashFiles('package.json') }}-${{ hashFiles('yarn.lock') }}
 
       - name: ✍ Lint
         run: npm run lint

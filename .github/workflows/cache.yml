@@ -22,14 +22,17 @@ jobs:
           sparse-checkout-cone-mode: false
           sparse-checkout: |
             package.json
-      - name: 📥 Install deps
+      - id: install
+        name: 📥 Install deps
         run: yarn
         env:
           HUSKY_SKIP_INSTALL: true
-      - name: ♻️ Save node_modules
+      - if: >
+          steps.install.outcome == 'success'
+        name: ♻️ Save node_modules
         uses: actions/cache/save@v4
         with:
           path: |
             yarn.lock
             node_modules
-          key: ${{ runner.os }}-${{ hashFiles('package.json') }}
+          key: ${{ hashFiles('package.json') }}-${{ hashFiles('yarn.lock') }}

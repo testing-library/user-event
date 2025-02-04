@@ -240,8 +240,12 @@ test('prevent input on `beforeinput` event', () => {
 
 cases(
   'maxlength',
-  ({html, data, inputType, expectedValue}) => {
+  ({html, data, inputType, expectedValue, selection}) => {
     const {element, eventWasFired} = render(html)
+
+    if (selection) {
+      (element as HTMLInputElement).setSelectionRange(selection[0], selection[1])
+    }
 
     input(setupInstance(), element, data, inputType)
 
@@ -280,6 +284,12 @@ cases(
       data: '',
       inputType: 'deleteContentForward',
       expectedValue: 'oo',
+    },
+    'account for selection': {
+      html: `<input value="123" maxlength="3"/>`,
+      selection: [1, 2],
+      data: '4',
+      expectedValue: '143',
     },
   },
 )

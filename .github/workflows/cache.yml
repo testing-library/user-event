@@ -1,0 +1,34 @@
+name: Cache
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 4 * * *'
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - if: ${{ github.event_name	== 'schedule' }}
+        name: 🧹🪣 Delete caches
+        run: gh cache delete --all
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+
+      - name: ⬇️ Checkout package.json
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            package.json
+      - name: 📥 Install deps
+        run: yarn
+        env:
+          HUSKY_SKIP_INSTALL: true
+      - name: ♻️ Save node_modules
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            yarn.lock
+            node_modules
+          key: ${{ runner.os }}-${{ hashFiles('package.json') }}

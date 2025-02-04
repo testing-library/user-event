@@ -15,11 +15,8 @@ jobs:
         with:
           path: node_modules
           key: ${{ runner.os }}-${{ hashFiles('package.json') }}
-      - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1
-        with:
-          useLockFile: false
-          install-command: yarn --silent
+      - name: 📥 Install deps
+        run: yarn
         env:
           HUSKY_SKIP_INSTALL: true
 
@@ -52,11 +49,8 @@ jobs:
         with:
           path: node_modules
           key: ${{ runner.os }}-${{ hashFiles('package.json') }}
-      - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1
-        with:
-          useLockFile: false
-          install-command: yarn --silent
+      - name: 📥 Install deps
+        run: yarn
         env:
           HUSKY_SKIP_INSTALL: true
 

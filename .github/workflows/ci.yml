@@ -13,7 +13,9 @@ jobs:
       - name: ♻️ Cache node_modules
         uses: actions/cache@v4
         with:
-          path: node_modules
+          path: |
+            yarn.lock
+            node_modules
           key: ${{ runner.os }}-${{ hashFiles('package.json') }}
       - name: 📥 Install deps
         run: yarn
@@ -49,7 +51,9 @@ jobs:
       - name: ♻️ Restore node_modules
         uses: actions/cache/restore@v4
         with:
-          path: node_modules
+          path: |
+            yarn.lock
+            node_modules
           key: ${{ runner.os }}-${{ hashFiles('package.json') }}
       - name: 📥 Install deps
         run: yarn

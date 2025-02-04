@@ -267,3 +267,24 @@ test('suppress mouse events per preventDefault on pointerdown', async () => {
   expect(eventWasFired('mousemove')).toBe(false)
   expect(eventWasFired('mouseup')).toBe(false)
 })
+
+test('apply default event properties', async () => {
+  const {element, user, getEvents, clearEventCalls} = setup(`<div></div>`)
+
+  await user.pointer({target: element})
+
+  expect(getEvents('pointermove')[0]).toEqual(expect.objectContaining({
+    width: 1,
+    height: 1,
+    pressure: 0,
+  }))
+
+  clearEventCalls()
+  await user.pointer([{keys: '[MouseLeft>]'}, {coords: {x: 20}}])
+
+  expect(getEvents('pointermove')[0]).toEqual(expect.objectContaining({
+    width: 1,
+    height: 1,
+    pressure: 0.5,
+  }))
+})

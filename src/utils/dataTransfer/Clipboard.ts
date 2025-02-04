@@ -216,10 +216,18 @@ const g = globalThis as {
 }
 /* istanbul ignore else */
 if (typeof g.afterEach === 'function') {
-  g.afterEach(() => resetClipboardStubOnView(globalThis.window))
+  g.afterEach(() => {
+    if (typeof globalThis.window !== 'undefined') {
+      resetClipboardStubOnView(globalThis.window)
+    }
+  })
 }
 
 /* istanbul ignore else */
 if (typeof g.afterAll === 'function') {
-  g.afterAll(() => detachClipboardStubFromView(globalThis.window))
+  g.afterAll(() => {
+    if (typeof globalThis.window !== 'undefined') {
+      detachClipboardStubFromView(globalThis.window)
+    }
+  })
 }

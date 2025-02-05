@@ -2,6 +2,7 @@ import {getConfig} from '@testing-library/dom'
 import {hasPointerEvents, isDisabled, isElementType, wait} from '../utils'
 import {type Instance} from '../setup'
 import {focusElement} from '../event'
+import {getVisibleText} from '../utils/misc/getVisibleText'
 
 export async function selectOptions(
   this: Instance,
@@ -43,7 +44,7 @@ async function selectOptionsBase(
         const matchingOption = allOptions.find(
           o =>
             (o as HTMLInputElement | HTMLTextAreaElement).value === val ||
-            o.innerHTML === val,
+            getVisibleText(o as HTMLElement) === val,
         )
         if (matchingOption) {
           return matchingOption

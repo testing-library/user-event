@@ -20,11 +20,13 @@ export function patchFocus(HTMLElement: typeof globalThis['HTMLElement']) {
   Object.defineProperties(HTMLElement.prototype, {
     focus: {
       configurable: true,
-      get: () => patchedFocus,
+      value: patchedFocus,
+      writable: true,
     },
     blur: {
       configurable: true,
-      get: () => patchedBlur,
+      value: patchedBlur,
+      writable: true,
     },
     [patched]: {
       configurable: true,

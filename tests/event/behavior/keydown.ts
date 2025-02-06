@@ -387,3 +387,153 @@ cases(
     },
   },
 )
+
+test("increment number input's value when pressing the arrow up key", () => {
+  const {element} = render<HTMLInputElement>(`<input value="1" type="number"/>`)
+
+  const instance = setupInstance()
+
+  instance.dispatchUIEvent(element, 'keydown', {key: 'ArrowUp'})
+
+  expect(element).toHaveValue(2)
+})
+
+test("do not increment number input's value when pressing the arrow up key and it would go above the max value", () => {
+  const {element} = render<HTMLInputElement>(
+    `<input value="1" type="number" max="1"/>`,
+  )
+
+  const instance = setupInstance()
+
+  instance.dispatchUIEvent(element, 'keydown', {key: 'ArrowUp'})
+
+  expect(element).toHaveValue(1)
+})
+
+test("decrement number input's value when pressing the arrow down key", () => {
+  const {element} = render<HTMLInputElement>(`<input value="1" type="number"/>`)
+
+  const instance = setupInstance()
+
+  instance.dispatchUIEvent(element, 'keydown', {key: 'ArrowDown'})
+
+  expect(element).toHaveValue(0)
+})
+
+test("do not decrement number input's value when pressing the arrow down key and it would go below the min value", () => {
+  const {element} = render<HTMLInputElement>(
+    `<input value="1" type="number" min="1"/>`,
+  )
+
+  const instance = setupInstance()
+
+  instance.dispatchUIEvent(element, 'keydown', {key: 'ArrowDown'})
+
+  expect(element).toHaveValue(1)
+})
+
+test("increments number input's value by the defined steps when pressing the arrow up key", () => {
+  const {element} = render<HTMLInputElement>(
+    `<input value="10" type="number" step="10"/>`,
+  )
+
+  const instance = setupInstance()
+
+  instance.dispatchUIEvent(element, 'keydown', {key: 'ArrowUp'})
+
+  expect(element).toHaveValue(20)
+})
+
+test("decrements number input's value by the defined steps when pressing the arrow down key", () => {
+  const {element} = render<HTMLInputElement>(
+    `<input value="10" type="number" step="10"/>`,
+  )
+
+  const instance = setupInstance()
+
+  instance.dispatchUIEvent(element, 'keydown', {key: 'ArrowDown'})
+
+  expect(element).toHaveValue(0)
+})
+
+test('decrements only to the min value when pressing the arrow down key and steps are too large', async () => {
+  const {element} = render<HTMLInputElement>(
+    `<input value="5" type="number" min="0" step="10"/>`,
+  )
+
+  const instance = setupInstance()
+
+  instance.dispatchUIEvent(element, 'keydown', {key: 'ArrowDown'})
+
+  expect(element).toHaveValue(0)
+})
+
+test('increments only to the max value when pressing the arrow up key and steps are too large', async () => {
+  const {element} = render<HTMLInputElement>(
+    `<input value="5" type="number" max="10" step="10"/>`,
+  )
+
+  const instance = setupInstance()
+
+  instance.dispatchUIEvent(element, 'keydown', {key: 'ArrowUp'})
+
+  expect(element).toHaveValue(10)
+})
+
+test("does not increment number input's value when pressing the arrow up key and the input is disabled", () => {
+  const {element} = render<HTMLInputElement>(
+    `<input value="1" type="number" disabled/>`,
+  )
+
+  const instance = setupInstance()
+
+  instance.dispatchUIEvent(element, 'keydown', {key: 'ArrowUp'})
+
+  expect(element).toHaveValue(1)
+})
+
+test("does not decrement number input's value when pressing the arrow down key and the input is disabled", () => {
+  const {element} = render<HTMLInputElement>(
+    `<input value="1" type="number" disabled/>`,
+  )
+
+  const instance = setupInstance()
+
+  instance.dispatchUIEvent(element, 'keydown', {key: 'ArrowDown'})
+
+  expect(element).toHaveValue(1)
+})
+
+test("does not increment number input's value when pressing the arrow up key and the input is readonly", () => {
+  const {element} = render<HTMLInputElement>(
+    `<input value="1" type="number" readonly/>`,
+  )
+
+  const instance = setupInstance()
+
+  instance.dispatchUIEvent(element, 'keydown', {key: 'ArrowUp'})
+
+  expect(element).toHaveValue(1)
+})
+
+test("does not decrement number input's value when pressing the arrow down key and the input is readonly", () => {
+  const {element} = render<HTMLInputElement>(
+    `<input value="1" type="number" readonly/>`,
+  )
+
+  const instance = setupInstance()
+
+  instance.dispatchUIEvent(element, 'keydown', {key: 'ArrowDown'})
+
+  expect(element).toHaveValue(1)
+})
+
+test('decrements to a negative value when pressing the arrow down key', () => {
+  const {element} = render<HTMLInputElement>(`<input value="0" type="number"/>`)
+
+  const instance = setupInstance()
+
+  instance.dispatchUIEvent(element, 'keydown', {key: 'ArrowDown'})
+
+  expect(element).toHaveValue(-1)
+})

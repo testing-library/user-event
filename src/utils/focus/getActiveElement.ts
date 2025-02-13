@@ -10,6 +10,11 @@ export function getActiveElement(
     if (activeElementInShadowTree) {
       return activeElementInShadowTree
     }
+  } else if (activeElement?.tagName === 'IFRAME') {
+    let contentWindow = (activeElement as HTMLIFrameElement).contentWindow
+    if (contentWindow) {
+      return getActiveElement(contentWindow.document)
+    }
   }
   // Browser does not yield disabled elements as document.activeElement - jsdom does
   if (isDisabled(activeElement)) {

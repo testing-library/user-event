@@ -80,7 +80,7 @@ export interface Options {
    *
    * This is a binary flag option. You can combine multiple Levels.
    *
-   * @default PointerEventsCheckLevel.EachCall
+   * @default PointerEventsCheckLevel.EachApiCall
    */
   pointerEventsCheck?: PointerEventsCheckLevel | number
 

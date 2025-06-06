@@ -15,9 +15,14 @@ behavior.keypress = (event, target, instance) => {
       }
     } else if (isElementType(target, 'input')) {
       const form = target.form
-      const submit = form?.querySelector(
-        'input[type="submit"], button:not([type]), button[type="submit"]',
-      )
+      const submit =
+        form?.querySelector(
+          'input[type="submit"], button:not([type]), button[type="submit"]',
+        ) ??
+        (form?.id &&
+          document.querySelector(
+            `input[form="${form.id}"][type="submit"], button[form="${form.id}"]:not([type]), button[form="${form?.id}"][type="submit"]`,
+          ))
       if (submit) {
         return () => instance.dispatchUIEvent(submit, 'click')
       } else if (

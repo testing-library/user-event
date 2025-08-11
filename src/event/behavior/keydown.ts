@@ -101,7 +101,7 @@ const keydownBehavior: {
   Tab: (event, target, instance) => {
     return () => {
       const dest = getTabDestination(
-        target,
+        document.activeElement ?? target,
         instance.system.keyboard.modifiers.Shift,
       )
       focusElement(dest)

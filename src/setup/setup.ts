@@ -19,8 +19,10 @@ import {DirectOptions} from './directApi'
 
 /**
  * Default options applied when API is called per `userEvent.anyApi()`
+ * We use a function to make sure the document is always the instance
+ * of the time the API is called.
  */
-const defaultOptionsDirect: Required<Options> = {
+const getDefaultOptionsDirect = (): Required<Options> => ({
   applyAccept: true,
   autoModify: true,
   delay: 0,
@@ -33,15 +35,15 @@ const defaultOptionsDirect: Required<Options> = {
   skipHover: false,
   writeToClipboard: false,
   advanceTimers: () => Promise.resolve(),
-}
+})
 
 /**
  * Default options applied when API is called per `userEvent().anyApi()`
  */
-const defaultOptionsSetup: Required<Options> = {
-  ...defaultOptionsDirect,
+const getDefaultOptionsSetup = (): Required<Options> => ({
+  ...getDefaultOptionsDirect(),
   writeToClipboard: true,
-}
+})
 
 export type UserEventApi = typeof userEventApi
 
@@ -65,7 +67,7 @@ export type Config = Required<Options>
 
 export function createConfig(
   options: Options = {},
-  defaults: Required<Options> = defaultOptionsSetup,
+  defaults: Required<Options> = getDefaultOptionsSetup(),
   node?: Node,
 ): Config {
   const document = getDocument(options, node, defaults)
@@ -101,10 +103,10 @@ export function setupDirect(
     keyboardState,
     pointerState,
     ...options
-  }: DirectOptions & {keyboardState?: System, pointerState?: System} = {}, // backward-compatibility
+  }: DirectOptions & {keyboardState?: System; pointerState?: System} = {}, // backward-compatibility
   node?: Node,
 ) {
-  const config = createConfig(options, defaultOptionsDirect, node)
+  const config = createConfig(options, getDefaultOptionsDirect(), node)
   prepareDocument(config.document)
   patchFocus(getWindow(config.document).HTMLElement)
 
@@ -146,9 +148,9 @@ export function createInstance(
   config: Config,
   system: System = new System(),
 ): {
-    instance: Instance
-    api: UserEvent
-  } {
+  instance: Instance
+  api: UserEvent
+} {
   const instance = {} as Instance
   Object.assign(instance, {
     config,

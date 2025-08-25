@@ -1,4 +1,4 @@
 {
-  "node": "18",
+  "node": "20",
   "sandboxes": ["djcc7b", "vbcvs"]
 }

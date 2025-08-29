@@ -1,23 +1,28 @@
 import {copySelection} from '../document'
 import {type Instance} from '../setup'
-import {writeDataTransferToClipboard} from '../utils'
+import {
+  createDataTransfer,
+  getWindow,
+  writeDataTransferToClipboard,
+} from '../utils'
 
 export async function cut(this: Instance) {
   const doc = this.config.document
   const target = doc.activeElement ?? /* istanbul ignore next */ doc.body
 
-  const clipboardData = copySelection(target)
+  const defaultClipboardData = copySelection(target)
 
-  if (clipboardData.items.length === 0) {
-    return
+  const clipboardData = createDataTransfer(getWindow(target))
+  const shouldDoDefault = this.dispatchUIEvent(target, 'cut', {
+    clipboardData,
+  })
+  if (shouldDoDefault) {
+    defaultClipboardData.types.forEach(type => {
+      clipboardData.setData(type, defaultClipboardData.getData(type))
+    })
   }
 
-  if (
-    this.dispatchUIEvent(target, 'cut', {
-      clipboardData,
-    }) &&
-    this.config.writeToClipboard
-  ) {
+  if (clipboardData.items.length > 0 && this.config.writeToClipboard) {
     await writeDataTransferToClipboard(target.ownerDocument, clipboardData)
   }
 

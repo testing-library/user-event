@@ -63,11 +63,15 @@ export function dispatchEvent(
   return wrapEvent(() => target.dispatchEvent(event), target)
 }
 
+/**
+ * Dispatch a DOM event without wrapping it with the configured wrapper.
+ * This is used internally to trigger events that are not triggered natively by JSDOM.
+ * These should not be wrapped explicitly as they are already executed in the triggering wrapped scope.
+ */
 export function dispatchDOMEvent<K extends EventType>(
   target: Element,
   type: K,
   init?: EventTypeInit<K>,
-) {
-  const event = createEvent(type, target, init)
-  wrapEvent(() => target.dispatchEvent(event), target)
+): boolean {
+  return target.dispatchEvent(createEvent(type, target, init))
 }

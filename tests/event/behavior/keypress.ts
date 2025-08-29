@@ -127,9 +127,9 @@ cases(
 cases(
   'submit form on [Enter]',
   async ({html, click, submit}) => {
-    const {eventWasFired, xpathNode} = render(html, {focus: 'form/*[2]'})
+    const {eventWasFired, xpathNode} = render(html, {focus: '//form/*[2]'})
 
-    setupInstance().dispatchUIEvent(xpathNode('form/*[2]'), 'keypress', {
+    setupInstance().dispatchUIEvent(xpathNode('//form/*[2]'), 'keypress', {
       key: 'Enter',
     })
 
@@ -142,8 +142,23 @@ cases(
       click: true,
       submit: true,
     },
+    'with `<input type="submit"/>` outside the form': {
+      html: `<div><form id="test-form"><input/><input/></form><input type="submit" form="test-form"/></div>`,
+      click: true,
+      submit: true,
+    },
+    'with `<input type="submit"/>` outside the form not linked by id': {
+      html: `<div><form><input/><input/></form><input type="submit" form="test-form"/></div>`,
+      click: false,
+      submit: false,
+    },
     'with `<button/>`': {
       html: `<form><input/><input/><button/></form>`,
+      click: true,
+      submit: true,
+    },
+    'with `<button/>` outside the form': {
+      html: `<div><form id="test-form"><input/><input/></form><button form="test-form"/></div>`,
       click: true,
       submit: true,
     },
@@ -152,8 +167,23 @@ cases(
       click: true,
       submit: true,
     },
+    'with `<button type="submit"/>` outside the form': {
+      html: `<div><form id="test-form"><input/><input/></form><button type="submit" form="test-form"/></div>`,
+      click: true,
+      submit: true,
+    },
     'with `<button type="button"/>`': {
       html: `<form><input/><input/><button type="button"/></form>`,
+      click: false,
+      submit: false,
+    },
+    'with `<button type="button">` outside the form': {
+      html: `<div><form id="test-form"><input/><input/></form><button type="button" form="test-form"/></div>`,
+      click: false,
+      submit: false,
+    },
+    'with `<button/>` outside the form not linked to the form': {
+      html: `<div><form id="test-form"><input/><input/></form><button /></div>`,
       click: false,
       submit: false,
     },

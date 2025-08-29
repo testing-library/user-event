@@ -47,7 +47,8 @@ export function prepareDocument(document: Document) {
       const initialValue = getInitialValue(el)
       if (initialValue !== undefined) {
         if (el.value !== initialValue) {
-          dispatchDOMEvent(el, 'change')
+          // a call to blur should already be wrapped in an act
+          el.dispatchEvent(new (document.defaultView ?? window).Event('change'))
         }
         clearInitialValue(el)
       }

@@ -47,7 +47,7 @@ export function createEvent<K extends EventType>(
   const {EventType, defaultInit} = eventMap[type]
   const event = new (getEventConstructors(window)[EventType])(type, defaultInit)
   eventInitializer[EventType].forEach(f =>
-    f(event as never, (init ?? {}) as never),
+    f(event as never, {view: window, ...init} as never),
   )
 
   return event as FixedDocumentEventMap[K]

@@ -29,6 +29,6 @@ export async function paste(
 
 function getClipboardDataFromString(doc: Document, text: string) {
   const dt = createDataTransfer(getWindow(doc))
-  dt.setData('text', text)
+  dt.setData('text/plain', text)
   return dt
 }

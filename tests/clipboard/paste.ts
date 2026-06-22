@@ -86,6 +86,16 @@ test('prevent input per paste event handler', async () => {
   expect(eventWasFired('input')).toBe(false)
 })
 
+test('string clipboard data is exposed as text/plain', async () => {
+  const {getEvents, user} = setup(`<input />`)
+
+  await user.paste('hi')
+
+  const clipboardData = getEvents('paste')[0].clipboardData
+  expect(clipboardData?.types).toContain('text/plain')
+  expect(clipboardData?.getData('text/plain')).toBe('hi')
+})
+
 test.each(['input', 'textarea'])(
   'should paste text in <%s> up to maxLength if provided',
   async type => {

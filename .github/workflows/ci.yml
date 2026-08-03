@@ -110,17 +110,3 @@ jobs:
             ]
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      # Backfill npm when a git tag/GitHub release exists but npm publish was skipped
-      - name: 📦 Ensure latest tag is on npm
-        run: |
-          TAG=$(git describe --tags --abbrev=0)
-          VERSION=${TAG#v}
-          if npm view "@testing-library/user-event@${VERSION}" version >/dev/null 2>&1; then
-            echo "npm already has ${VERSION}"
-            exit 0
-          fi
-          echo "Publishing missing ${VERSION} to npm"
-          npm install -g npm@latest
-          npm version "${VERSION}" --no-git-tag-version
-          npm publish --access public

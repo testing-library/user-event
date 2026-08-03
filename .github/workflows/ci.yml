@@ -67,6 +67,9 @@ jobs:
     steps:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v4
+        with:
+          # semantic-release needs full history + tags to see unreleased commits
+          fetch-depth: 0
       - name: ♻️ Restore node_modules
         uses: actions/cache/restore@v4
         with:
@@ -85,7 +88,8 @@ jobs:
       - name: 🚀 Release
         uses: ph-fritsche/action-release@v2
         with:
-          dry: ${{ vars.RELEASE_DRY }}
+          # Only treat an explicit "true" as dry-run (unset/false publishes)
+          dry: ${{ vars.RELEASE_DRY == 'true' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

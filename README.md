@@ -17,9 +17,6 @@
 [**Read The Docs**](https://testing-library.com/docs/user-event/intro)
 
 <br />
-</div>
-
----
 
 <!-- prettier-ignore-start -->
 [![Build Status][build-badge]][build]
@@ -31,11 +28,23 @@
 [![PRs Welcome][prs-badge]][prs]
 [![Code of Conduct][coc-badge]][coc]
 [![Discord][discord-badge]][discord]
-
-[![Watch on GitHub][github-watch-badge]][github-watch]
-[![Star on GitHub][github-star-badge]][github-star]
-[![Tweet][twitter-badge]][twitter]
 <!-- prettier-ignore-end -->
+
+</div>
+
+> [!IMPORTANT] > **Considering this for new tests?** If your tests can run in a
+> real browser, prefer that over simulating events in jsdom.
+>
+> - [Vitest Browser Mode](https://vitest.dev/guide/browser/) includes a
+>   `userEvent` from `vitest/browser` that mirrors this API but drives a real
+>   browser (recommended over this package in browser mode).
+> - [Playwright](https://playwright.dev) has first-class locator actions
+>   (`click()`, `fill()`, `press()`, etc.) with auto-waiting - usually the
+>   better choice for E2E and Playwright component tests.
+>
+> This package is still reasonable for **jsdom/happy-dom** Testing Library
+> tests. Details and recommendations:
+> [#1319](https://github.com/testing-library/user-event/issues/1319).
 
 ## The problem
 
@@ -91,26 +100,20 @@ possible][contributors]. Contributions of any kind are welcome! 💚
 <!-- prettier-ignore-start -->
 [npm]: https://www.npmjs.com
 [node]: https://nodejs.org
-[build-badge]: https://img.shields.io/github/workflow/status/testing-library/user-event/validate/main?logo=github&style=flat-square
-[build]: https://github.com/testing-library/user-event/actions?query=workflow%3Avalidate
+[build-badge]: https://img.shields.io/github/actions/workflow/status/testing-library/user-event/ci.yml?branch=main&logo=github&style=flat-square
+[build]: https://github.com/testing-library/user-event/actions/workflows/ci.yml
 [coverage-badge]: https://img.shields.io/codecov/c/github/testing-library/user-event.svg?style=flat-square
 [coverage]: https://codecov.io/github/testing-library/user-event
 [version-badge]: https://img.shields.io/npm/v/@testing-library/user-event.svg?style=flat-square
 [package]: https://www.npmjs.com/package/@testing-library/user-event
 [downloads-badge]: https://img.shields.io/npm/dm/@testing-library/user-event.svg?style=flat-square
-[npmtrends]: http://www.npmtrends.com/@testing-library/user-event
+[npmtrends]: https://www.npmtrends.com/@testing-library/user-event
 [license-badge]: https://img.shields.io/npm/l/@testing-library/user-event.svg?style=flat-square
 [license]: https://github.com/testing-library/user-event/blob/main/LICENSE
 [prs-badge]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square
 [prs]: http://makeapullrequest.com
 [coc-badge]: https://img.shields.io/badge/code%20of-conduct-ff69b4.svg?style=flat-square
 [coc]: https://github.com/testing-library/.github/blob/main/CODE_OF_CONDUCT.md
-[github-watch-badge]: https://img.shields.io/github/watchers/testing-library/user-event.svg?style=social
-[github-watch]: https://github.com/testing-library/user-event/watchers
-[github-star-badge]: https://img.shields.io/github/stars/testing-library/user-event.svg?style=social
-[github-star]: https://github.com/testing-library/user-event/stargazers
-[twitter]: https://twitter.com/intent/tweet?text=Check%20out%20user-event%20by%20%40@TestingLib%20https%3A%2F%2Fgithub.com%2Ftesting-library%2Fuser-event%20%F0%9F%91%8D
-[twitter-badge]: https://img.shields.io/twitter/url/https/github.com/testing-library/user-event.svg?style=social
 [all-contributors-badge]: https://img.shields.io/github/all-contributors/testing-library/user-event?color=orange&style=flat-square
 [guiding-principle]: https://twitter.com/kentcdodds/status/977018512689455106
 [bugs]: https://github.com/testing-library/user-event/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+sort%3Acreated-desc+label%3Abug

@@ -316,7 +316,7 @@ cases(
     const instance = setupInstance()
     instance.system.keyboard.modifiers.Shift = shiftKey
 
-    document.activeElement?.addEventListener('keydown', (e) => {
+    document.activeElement?.addEventListener('keydown', () => {
       xpathNode('button[1]').focus()
     })
     instance.dispatchUIEvent(document.activeElement as Element, 'keydown', {

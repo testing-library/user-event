@@ -61,6 +61,18 @@ class DataTransferItemListStub
   }
 }
 
+// The spec requires the format to be converted to ASCII lowercase
+// and the shorthands `text` and `url` to be replaced with their MIME types.
+// https://html.spec.whatwg.org/multipage/dnd.html#dom-datatransfer-setdata
+function normalizeFormat(format: string) {
+  const type = format.replace(/[A-Z]/g, char => char.toLowerCase())
+  return type === 'text'
+    ? 'text/plain'
+    : type === 'url'
+      ? 'text/uri-list'
+      : type
+}
+
 function getTypeMatcher(type: string, exact: boolean) {
   const [group, sub] = type.split('/')
   const isGroup = !sub || sub === '*'
@@ -76,9 +88,10 @@ function getTypeMatcher(type: string, exact: boolean) {
 function createDataTransferStub(window: Window & typeof globalThis) {
   return new (class DataTransferStub implements DataTransfer {
     getData(format: string) {
+      const type = normalizeFormat(format)
       const match =
-        this.items.find(getTypeMatcher(format, true)) ??
-        this.items.find(getTypeMatcher(format, false))
+        this.items.find(getTypeMatcher(type, true)) ??
+        this.items.find(getTypeMatcher(type, false))
 
       let text = ''
       match?.getAsString(t => {
@@ -89,9 +102,10 @@ function createDataTransferStub(window: Window & typeof globalThis) {
     }
 
     setData(format: string, data: string) {
-      const matchIndex = this.items.findIndex(getTypeMatcher(format, true))
+      const type = normalizeFormat(format)
+      const matchIndex = this.items.findIndex(getTypeMatcher(type, true))
 
-      const item = new DataTransferItemStub(data, format) as DataTransferItem
+      const item = new DataTransferItemStub(data, type) as DataTransferItem
       if (matchIndex >= 0) {
         this.items.splice(matchIndex, 1, item)
       } else {
@@ -101,7 +115,8 @@ function createDataTransferStub(window: Window & typeof globalThis) {
 
     clearData(format?: string) {
       if (format) {
-        const matchIndex = this.items.findIndex(getTypeMatcher(format, true))
+        const type = normalizeFormat(format)
+        const matchIndex = this.items.findIndex(getTypeMatcher(type, true))
 
         if (matchIndex >= 0) {
           this.items.remove(matchIndex)

@@ -268,11 +268,7 @@ function initPointerEvent(
     tiltX: sanitizeNumber(tiltX),
     tiltY: sanitizeNumber(tiltY),
     twist: sanitizeNumber(twist),
+    pointerType: pointerType === undefined ? '' : String(pointerType),
     isPrimary: Boolean(isPrimary),
-  })
-  // Do not String(undefined) — that yields the invalid token "undefined".
-  // assignProps also coalesces undefined to null, so set this property directly.
-  Object.defineProperty(event, 'pointerType', {
-    get: () => (pointerType === undefined ? undefined : String(pointerType)),
   })
 }

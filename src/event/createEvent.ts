@@ -222,9 +222,9 @@ function initMouseEvent(
     pageX,
     pageY,
   }: MouseEventInit &
-      Partial<
-        Pick<MouseEvent, 'x' | 'y' | 'offsetX' | 'offsetY' | 'pageX' | 'pageY'>
-      >,
+    Partial<
+      Pick<MouseEvent, 'x' | 'y' | 'offsetX' | 'offsetY' | 'pageX' | 'pageY'>
+    >,
 ) {
   assignProps(event, {
     screenX: sanitizeNumber(screenX),

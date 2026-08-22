@@ -268,7 +268,7 @@ function initPointerEvent(
     tiltX: sanitizeNumber(tiltX),
     tiltY: sanitizeNumber(tiltY),
     twist: sanitizeNumber(twist),
-    pointerType: pointerType === undefined ? '' : String(pointerType),
+    pointerType: String(pointerType ?? ''),
     isPrimary: Boolean(isPrimary),
   })
 }

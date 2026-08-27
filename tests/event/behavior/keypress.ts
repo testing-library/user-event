@@ -101,6 +101,7 @@ cases(
     expect(eventWasFired('click')).toBe(hasClick)
     if (hasClick) {
       expect(getEvents('click')[0]).toHaveProperty('detail', 0)
+      expect(getEvents('click')[0]).toHaveProperty('pointerType', '')
     }
   },
   {

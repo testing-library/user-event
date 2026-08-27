@@ -50,6 +50,19 @@ test('do not leak repeatKey in state', async () => {
   expect(keyboardState).not.toHaveProperty('repeatKey')
 })
 
+test('set `repeat` on repeated keydown events', async () => {
+  const {element, user} = setup(`<input/>`)
+
+  const repeats: boolean[] = []
+  element.addEventListener('keydown', e => {
+    repeats.push((e as KeyboardEvent).repeat)
+  })
+
+  await user.keyboard('{a>5}')
+
+  expect(repeats).toEqual([false, true, true, true, true])
+})
+
 describe('pressing and releasing keys', () => {
   test('fires event with releasing key twice', async () => {
     const {getEventSnapshot, user} = setup(`<input/>`)

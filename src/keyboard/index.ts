@@ -33,7 +33,7 @@ async function keyboardAction(
 
   if (!releasePrevious) {
     for (let i = 1; i <= repeat; i++) {
-      await system.keyboard.keydown(instance, keyDef)
+      await system.keyboard.keydown(instance, keyDef, i > 1)
 
       if (i < repeat) {
         await wait(instance.config)

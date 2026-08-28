@@ -1,4 +1,5 @@
 import {isDisabled} from '../misc/isDisabled'
+import {isElementType} from '../misc/isElementType'
 
 export function getActiveElement(
   document: Document | ShadowRoot,
@@ -10,10 +11,10 @@ export function getActiveElement(
     if (activeElementInShadowTree) {
       return activeElementInShadowTree
     }
-  } else if (activeElement?.tagName === 'IFRAME') {
-    let contentWindow = (activeElement as HTMLIFrameElement).contentWindow
-    if (contentWindow) {
-      return getActiveElement(contentWindow.document)
+  } else if (activeElement && isElementType(activeElement, 'iframe')) {
+    const contentDocument = (activeElement as HTMLIFrameElement).contentDocument
+    if (contentDocument) {
+      return getActiveElement(contentDocument)
     }
   }
   // Browser does not yield disabled elements as document.activeElement - jsdom does

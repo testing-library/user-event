@@ -55,6 +55,24 @@ describe('create DataTransfer', () => {
     expect(dt.getData('text/uri-list')).toBe('https://example.com')
   })
 
+  test('normalize item type case on items.add', async () => {
+    const dt = createDataTransfer(window)
+    dt.items.add('foo', 'TEXT/PLAIN')
+
+    expect(dt.types).toEqual(['text/plain'])
+    expect(dt.getData('TEXT/PLAIN')).toBe('foo')
+    expect(dt.getData('text/plain')).toBe('foo')
+    expect(dt.getData('text')).toBe('foo')
+  })
+
+  test('items.add does not replace format shorthands', async () => {
+    const dt = createDataTransfer(window)
+    dt.items.add('foo', 'TEXT')
+
+    expect(dt.types).toEqual(['text'])
+    expect(dt.getData('text')).toBe('foo')
+  })
+
   test('overwrite item declared per shorthand', async () => {
     const dt = createDataTransfer(window)
     dt.setData('text/plain', 'foo')

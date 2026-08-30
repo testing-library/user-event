@@ -41,13 +41,23 @@ class DataTransferItemStub implements DataTransferItem {
   }
 }
 
+function toAsciiLowercase(value: string) {
+  return value.replace(/[A-Z]/g, char => char.toLowerCase())
+}
+
 class DataTransferItemListStub
   extends Array<DataTransferItem>
   implements DataTransferItemList {
   add(data: string, type: string): DataTransferItem
   add(file: File): DataTransferItem
   add(...args: never[]) {
-    const item = new DataTransferItemStub(args[0], args[1])
+    // The spec converts the type to ASCII lowercase here, but - unlike
+    // `setData()` - does not replace the `text` and `url` shorthands.
+    // https://html.spec.whatwg.org/multipage/dnd.html#dom-datatransferitemlist-add
+    const item = new DataTransferItemStub(
+      args[0],
+      typeof args[0] === 'string' ? toAsciiLowercase(String(args[1])) : args[1],
+    )
     this.push(item)
     return item
   }
@@ -65,7 +75,7 @@ class DataTransferItemListStub
 // and the shorthands `text` and `url` to be replaced with their MIME types.
 // https://html.spec.whatwg.org/multipage/dnd.html#dom-datatransfer-setdata
 function normalizeFormat(format: string) {
-  const type = format.replace(/[A-Z]/g, char => char.toLowerCase())
+  const type = toAsciiLowercase(format)
   return type === 'text'
     ? 'text/plain'
     : type === 'url'

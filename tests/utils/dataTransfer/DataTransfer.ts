@@ -55,21 +55,17 @@ describe('create DataTransfer', () => {
     expect(dt.getData('text/uri-list')).toBe('https://example.com')
   })
 
-  test('normalize item type case on items.add', async () => {
+  test('items.add follows the standard', () => {
     const dt = createDataTransfer(window)
     dt.items.add('foo', 'TEXT/PLAIN')
+    dt.items.add('bar', 'TEXT')
+    dt.items.add('baz', 'URL')
 
-    expect(dt.types).toEqual(['text/plain'])
+    // Chrome currently preserves casing. Keep this spec assertion so the
+    // Toolbox result becomes green when Chrome converges with the standard.
+    expect(dt.types).toEqual(['text/plain', 'text', 'url'])
     expect(dt.getData('TEXT/PLAIN')).toBe('foo')
     expect(dt.getData('text/plain')).toBe('foo')
-    expect(dt.getData('text')).toBe('foo')
-  })
-
-  test('items.add does not replace format shorthands', async () => {
-    const dt = createDataTransfer(window)
-    dt.items.add('foo', 'TEXT')
-
-    expect(dt.types).toEqual(['text'])
     expect(dt.getData('text')).toBe('foo')
   })
 

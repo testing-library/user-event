@@ -54,10 +54,10 @@ class DataTransferItemListStub
     // The spec converts the type to ASCII lowercase here, but - unlike
     // `setData()` - does not replace the `text` and `url` shorthands.
     // https://html.spec.whatwg.org/multipage/dnd.html#dom-datatransferitemlist-add
-    const item = new DataTransferItemStub(
-      args[0],
-      typeof args[0] === 'string' ? toAsciiLowercase(String(args[1])) : args[1],
-    )
+    const item =
+      typeof args[0] === 'string'
+        ? new DataTransferItemStub(args[0], toAsciiLowercase(args[1]))
+        : new DataTransferItemStub(args[0])
     this.push(item)
     return item
   }

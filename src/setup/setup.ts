@@ -5,6 +5,7 @@ import {defaultKeyMap as defaultKeyboardMap} from '../keyboard/keyMap'
 import {defaultKeyMap as defaultPointerMap} from '../pointer/keyMap'
 import {Options, PointerEventsCheckLevel} from '../options'
 import {
+  advanceFakeTimers,
   ApiLevel,
   attachClipboardStubToView,
   getDocumentFromNode,
@@ -32,7 +33,7 @@ const defaultOptionsDirect: Required<Options> = {
   skipClick: false,
   skipHover: false,
   writeToClipboard: false,
-  advanceTimers: () => Promise.resolve(),
+  advanceTimers: advanceFakeTimers,
 }
 
 /**

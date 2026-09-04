@@ -9,8 +9,10 @@ import {
 interface InterfaceMap {
   ClipboardEvent: {type: ClipboardEvent, init: ClipboardEventInit}
   InputEvent: {type: InputEvent, init: InputEventInit}
+  UIEvent: {type: UIEvent, init: UIEventInit}
   MouseEvent: {type: MouseEvent, init: MouseEventInit}
   PointerEvent: {type: PointerEvent, init: PointerEventInit}
+  WheelEvent: {type: WheelEvent, init: WheelEventInit}
   KeyboardEvent: {type: KeyboardEvent, init: KeyboardEventInit}
   FocusEvent: {type: FocusEvent, init: FocusEventInit}
 }
@@ -28,12 +30,19 @@ const eventInitializer: {
   Event: [],
   FocusEvent: [initUIEvent, initFocusEvent],
   InputEvent: [initUIEvent, initInputEvent],
+  UIEvent: [initUIEvent],
   MouseEvent: [initUIEvent, initUIEventModifiers, initMouseEvent],
   PointerEvent: [
     initUIEvent,
     initUIEventModifiers,
     initMouseEvent,
     initPointerEvent,
+  ],
+  WheelEvent: [
+    initUIEvent,
+    initUIEventModifiers,
+    initMouseEvent,
+    initWheelEvent,
   ],
   KeyboardEvent: [initUIEvent, initUIEventModifiers, initKeyboardEvent],
 }
@@ -77,6 +86,7 @@ function getEventConstructors(window: Window & typeof globalThis) {
   const DragEvent = window.DragEvent ?? class DragEvent extends MouseEvent {}
   const PointerEvent =
     window.PointerEvent ?? class PointerEvent extends MouseEvent {}
+  const WheelEvent = window.WheelEvent ?? class WheelEvent extends MouseEvent {}
   const TouchEvent = window.TouchEvent ?? class TouchEvent extends UIEvent {}
 
   return {
@@ -94,6 +104,7 @@ function getEventConstructors(window: Window & typeof globalThis) {
     MouseEvent,
     DragEvent,
     PointerEvent,
+    WheelEvent,
     TouchEvent,
   }
 }
@@ -222,9 +233,9 @@ function initMouseEvent(
     pageX,
     pageY,
   }: MouseEventInit &
-    Partial<
-      Pick<MouseEvent, 'x' | 'y' | 'offsetX' | 'offsetY' | 'pageX' | 'pageY'>
-    >,
+      Partial<
+        Pick<MouseEvent, 'x' | 'y' | 'offsetX' | 'offsetY' | 'pageX' | 'pageY'>
+      >,
 ) {
   assignProps(event, {
     screenX: sanitizeNumber(screenX),
@@ -240,6 +251,18 @@ function initMouseEvent(
     offsetY: sanitizeNumber(offsetY),
     pageX: sanitizeNumber(pageX),
     pageY: sanitizeNumber(pageY),
+  })
+}
+
+function initWheelEvent(
+  event: WheelEvent,
+  {deltaMode, deltaX, deltaY, deltaZ}: WheelEventInit,
+) {
+  assignProps(event, {
+    deltaMode: sanitizeNumber(deltaMode),
+    deltaX: sanitizeNumber(deltaX),
+    deltaY: sanitizeNumber(deltaY),
+    deltaZ: sanitizeNumber(deltaZ),
   })
 }
 

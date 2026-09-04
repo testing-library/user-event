@@ -129,9 +129,17 @@ export const eventMap = {
     EventType: 'PointerEvent',
     defaultInit: {bubbles: false, cancelable: false},
   },
+  scroll: {
+    EventType: 'UIEvent',
+    defaultInit: {bubbles: false, cancelable: false},
+  },
   submit: {
     EventType: 'Event',
     defaultInit: {bubbles: true, cancelable: true},
+  },
+  wheel: {
+    EventType: 'WheelEvent',
+    defaultInit: {bubbles: true, cancelable: true, composed: true},
   },
 } as const
 
@@ -139,7 +147,7 @@ function getEventClass(type: EventType) {
   return eventMap[type].EventType
 }
 
-const mouseEvents = ['MouseEvent', 'PointerEvent']
+const mouseEvents = ['MouseEvent', 'PointerEvent', 'WheelEvent']
 export function isMouseEvent(type: EventType) {
   return mouseEvents.includes(getEventClass(type))
 }

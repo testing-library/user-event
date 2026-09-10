@@ -72,8 +72,9 @@ export function prepareInterceptor<
       then,
     } = interceptorImpl.call(this, ...args)
 
-    const realFunc = ((!applyNative && objectDescriptor) ||
-      (prototypeDescriptor as PropertyDescriptor))[target] as (
+    const sourceDescriptor =
+      !applyNative && objectDescriptor ? objectDescriptor : prototypeDescriptor
+    const realFunc = sourceDescriptor?.[target] as (
       this: ElementType,
       ...a: unknown[]
     ) => unknown
@@ -102,9 +103,11 @@ export function prepareValueInterceptor(
     'value',
     function interceptorImpl(
       this: HTMLInputElement | HTMLTextAreaElement,
-      v: UIValueString | string,
+      v: UIValueString | string | null,
     ) {
-      const isUI = isUIValue(v)
+      // `value` is a [LegacyNullToEmptyString] DOMString.
+      const value = v === null ? '' : v
+      const isUI = isUIValue(value)
 
       if (isUI) {
         startTrackValue(this)
@@ -112,8 +115,8 @@ export function prepareValueInterceptor(
 
       return {
         applyNative: !!isUI,
-        realArgs: sanitizeValue(this, v),
-        then: isUI ? undefined : () => trackOrSetValue(this, String(v)),
+        realArgs: sanitizeValue(this, value),
+        then: isUI ? undefined : () => trackOrSetValue(this, String(value)),
       }
     },
   )

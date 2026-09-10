@@ -137,6 +137,30 @@ test('reset UI selection if value is programmatically set', async () => {
   expect(getUISelection(element)).toHaveProperty('startOffset', 6)
 })
 
+test('programmatic `null` value is treated as empty string', async () => {
+  const {element} = render<HTMLInputElement>(`<input value="abc"/>`)
+
+  prepare(element)
+
+  // HTMLInputElement.value is a [LegacyNullToEmptyString] DOMString.
+  // Callers still assign `null` at runtime; the IDL coerces it to `""`.
+  element.value = null as unknown as string
+
+  expect(element).toHaveValue('')
+  expect(getUIValue(element)).toBe('')
+})
+
+test('programmatic `null` value on number input is treated as empty', async () => {
+  const {element} = render<HTMLInputElement>(`<input type="number" value="1"/>`)
+
+  prepare(element)
+
+  element.value = null as unknown as string
+
+  expect(element).toHaveValue(null)
+  expect(getUIValue(element)).toBe('')
+})
+
 test('clear UI selection if selection is programmatically set', async () => {
   const {element} = render<HTMLInputElement>(`<input/>`)
 

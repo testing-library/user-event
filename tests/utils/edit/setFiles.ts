@@ -1,4 +1,4 @@
-import {createFileList, setFiles} from '#src/utils'
+import {createDataTransfer, createFileList, setFiles} from '#src/utils'
 import {setup} from '#testHelpers'
 
 test('set files', () => {
@@ -31,6 +31,22 @@ test('switching type resets value', () => {
 
   expect(element).toHaveValue('')
   expect(element).toHaveProperty('type', 'text')
+})
+
+test('setting files from DataTransfer updates `files` and `value`', () => {
+  const {element} = setup<HTMLInputElement & {type: 'file'}>(
+    `<input type="file"/>`,
+  )
+
+  const list = createFileList(window, [new File(['foo'], 'foo.txt')])
+  setFiles(element, list)
+
+  const dt = createDataTransfer(window, [new File(['bar'], 'bar.txt')])
+  const transferred = dt.files
+  element.files = transferred
+
+  expect(element).toHaveProperty('files', transferred)
+  expect(element).toHaveValue('C:\\fakepath\\bar.txt')
 })
 
 test('setting value resets `files`', () => {

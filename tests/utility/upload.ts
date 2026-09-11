@@ -1,3 +1,4 @@
+import {createDataTransfer} from '#src/utils'
 import {setup} from '#testHelpers'
 
 test('change file input', async () => {
@@ -97,6 +98,22 @@ test('prevent file dialog per click event handler', async () => {
   await user.upload(label, file)
 
   expect(eventWasFired('input')).toBe(false)
+})
+
+test('allow assigning FileList after upload', async () => {
+  const file = new File(['hello'], 'hello.png', {type: 'image/png'})
+  const {element, user} = setup<HTMLInputElement>('<input type="file" />')
+
+  await user.upload(element, file)
+
+  const dt = createDataTransfer(window, [
+    new File(['there'], 'there.png', {type: 'image/png'}),
+  ])
+  const transferred = dt.files
+  element.files = transferred
+
+  expect(element).toHaveProperty('files', transferred)
+  expect(element).toHaveValue('C:\\fakepath\\there.png')
 })
 
 test('upload multiple files', async () => {

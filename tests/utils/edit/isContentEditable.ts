@@ -3,11 +3,12 @@ import {isContentEditable} from '#src/utils'
 
 test('report if element is contenteditable', async () => {
   const {elements} = setup(
-    `<div></div><div contenteditable="false"></div><div contenteditable></div><div contenteditable="true"></div>`,
+    `<div></div><div contenteditable="false"></div><div contenteditable></div><div contenteditable="true"></div><div contenteditable="plaintext-only"></div>`,
   )
 
   expect(isContentEditable(elements[0])).toBe(false)
   expect(isContentEditable(elements[1])).toBe(false)
   expect(isContentEditable(elements[2])).toBe(true)
   expect(isContentEditable(elements[3])).toBe(true)
+  expect(isContentEditable(elements[4])).toBe(true)
 })

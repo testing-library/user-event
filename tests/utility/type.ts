@@ -1,5 +1,16 @@
 import {setup} from '#testHelpers'
 
+test('type into contenteditable plaintext-only', async () => {
+  const {element, user} = setup(
+    '<div contenteditable="plaintext-only">foo</div>',
+    {focus: false},
+  )
+
+  await user.type(element, 'bar')
+
+  expect(element).toHaveTextContent('foobar')
+})
+
 test('type into input', async () => {
   const {element, getEventSnapshot, user} = setup('<input value="foo"/>', {
     focus: false,

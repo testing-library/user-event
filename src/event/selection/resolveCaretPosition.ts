@@ -34,9 +34,9 @@ function findNodeAtTextOffset(
   offset: number | undefined,
   isRoot = true,
 ): {
-  node: Node
-  offset: number
-} {
+    node: Node
+    offset: number
+  } {
   // When clicking after the content the browser behavior can be complicated:
   // 1. If there is textContent after the last element child,
   // the cursor is moved there.
@@ -67,7 +67,7 @@ function findNodeAtTextOffset(
         // The pre-commit hooks keeps changing this
         // See https://github.com/kentcdodds/kcd-scripts/issues/218
         /* istanbul ignore else */
-        // eslint-disable-next-line no-lonely-if
+
         if (c.nodeType === 3) {
           return {
             node: c as Node,

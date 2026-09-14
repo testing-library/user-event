@@ -1,9 +1,7 @@
-import dtl from '../_interop/dtl'
+import {getConfig} from '@testing-library/dom'
 import {hasPointerEvents, isDisabled, isElementType, wait} from '../utils'
 import {type Instance} from '../setup'
 import {focusElement} from '../event'
-
-const {getConfig} = dtl
 
 export async function selectOptions(
   this: Instance,
@@ -51,7 +49,7 @@ async function selectOptionsBase(
           return matchingOption
         } else {
           throw getConfig().getElementError(
-            `Value "${String(val)}" not found in options`,
+            `Value "${String(val as string)}" not found in options`,
             select,
           )
         }

@@ -3,10 +3,8 @@ Thanks for your interest in the project. Bugs filed and PRs submitted are apprec
 
 Please make sure that you are familiar with and follow the Code of Conduct for
 this project (found in the CODE_OF_CONDUCT.md file).
-
 Also, please make sure you're familiar with and follow the instructions in the
 contributing guidelines (found in the CONTRIBUTING.md file).
-
 If you're new to contributing to open source projects, you might find this free
 video course helpful: http://kcd.im/pull-request
 
@@ -14,28 +12,22 @@ Please fill out the information below to expedite the review and (hopefully)
 merge of your pull request!
 -->
 
-**What**:
-
+### What
 <!-- What changes are being made? (What feature/bug is being fixed here?) -->
 
-**Why**:
-
+### Why
 <!-- Why are these changes necessary? -->
 
-**How**:
-
+### How
 <!-- How were these changes implemented? -->
 
-**Checklist**:
-
+### Checklist
 <!-- Have you done all of these things?  -->
-
 <!-- To check an item, place an "x" in the box like so: "- [x] Documentation" -->
-<!-- If the item is irrelevant to your changes, replace or fill the box with "N/A" -->
+<!-- If the item is irrelevant to your changes, remove the item or replace or fill the box with "N/A" -->
 
 - [ ] Documentation
 - [ ] Tests
-- [ ] Ready to be merged
-      <!-- In your opinion, is this ready to be merged as soon as it's reviewed? -->
+- [ ] Ready to be merged <!-- In your opinion, is this ready to be merged as soon as it's reviewed? -->
 
 <!-- feel free to add additional comments -->

@@ -2,6 +2,9 @@ import {findClosest, getActiveElement, isFocusable} from '../utils'
 import {updateSelectionOnFocus} from './selection'
 import {wrapEvent} from './wrapEvent'
 
+// Browsers do not dispatch FocusEvent if the document does not have focus.
+// TODO: simulate FocusEvent in browsers
+
 /**
  * Focus closest focusable element.
  */

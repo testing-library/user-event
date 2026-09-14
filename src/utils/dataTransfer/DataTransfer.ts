@@ -41,14 +41,23 @@ class DataTransferItemStub implements DataTransferItem {
   }
 }
 
+function toAsciiLowercase(value: string) {
+  return value.replace(/[A-Z]/g, char => char.toLowerCase())
+}
+
 class DataTransferItemListStub
   extends Array<DataTransferItem>
-  implements DataTransferItemList
-{
+  implements DataTransferItemList {
   add(data: string, type: string): DataTransferItem
   add(file: File): DataTransferItem
   add(...args: never[]) {
-    const item = new DataTransferItemStub(args[0], args[1])
+    // The spec converts the type to ASCII lowercase here, but - unlike
+    // `setData()` - does not replace the `text` and `url` shorthands.
+    // https://html.spec.whatwg.org/multipage/dnd.html#dom-datatransferitemlist-add
+    const item =
+      typeof args[0] === 'string'
+        ? new DataTransferItemStub(args[0], toAsciiLowercase(args[1]))
+        : new DataTransferItemStub(args[0])
     this.push(item)
     return item
   }
@@ -62,6 +71,18 @@ class DataTransferItemListStub
   }
 }
 
+// The spec requires the format to be converted to ASCII lowercase
+// and the shorthands `text` and `url` to be replaced with their MIME types.
+// https://html.spec.whatwg.org/multipage/dnd.html#dom-datatransfer-setdata
+function normalizeFormat(format: string) {
+  const type = toAsciiLowercase(format)
+  return type === 'text'
+    ? 'text/plain'
+    : type === 'url'
+      ? 'text/uri-list'
+      : type
+}
+
 function getTypeMatcher(type: string, exact: boolean) {
   const [group, sub] = type.split('/')
   const isGroup = !sub || sub === '*'
@@ -69,17 +90,18 @@ function getTypeMatcher(type: string, exact: boolean) {
     return exact
       ? item.type === (isGroup ? group : type)
       : isGroup
-      ? item.type.startsWith(`${group}/`)
-      : item.type === group
+        ? item.type.startsWith(`${group}/`)
+        : item.type === group
   }
 }
 
 function createDataTransferStub(window: Window & typeof globalThis) {
   return new (class DataTransferStub implements DataTransfer {
     getData(format: string) {
+      const type = normalizeFormat(format)
       const match =
-        this.items.find(getTypeMatcher(format, true)) ??
-        this.items.find(getTypeMatcher(format, false))
+        this.items.find(getTypeMatcher(type, true)) ??
+        this.items.find(getTypeMatcher(type, false))
 
       let text = ''
       match?.getAsString(t => {
@@ -90,9 +112,10 @@ function createDataTransferStub(window: Window & typeof globalThis) {
     }
 
     setData(format: string, data: string) {
-      const matchIndex = this.items.findIndex(getTypeMatcher(format, true))
+      const type = normalizeFormat(format)
+      const matchIndex = this.items.findIndex(getTypeMatcher(type, true))
 
-      const item = new DataTransferItemStub(data, format) as DataTransferItem
+      const item = new DataTransferItemStub(data, type) as DataTransferItem
       if (matchIndex >= 0) {
         this.items.splice(matchIndex, 1, item)
       } else {
@@ -102,7 +125,8 @@ function createDataTransferStub(window: Window & typeof globalThis) {
 
     clearData(format?: string) {
       if (format) {
-        const matchIndex = this.items.findIndex(getTypeMatcher(format, true))
+        const type = normalizeFormat(format)
+        const matchIndex = this.items.findIndex(getTypeMatcher(type, true))
 
         if (matchIndex >= 0) {
           this.items.remove(matchIndex)
@@ -150,16 +174,14 @@ export function createDataTransfer(
   return dt
 }
 
-export function getBlobFromDataTransferItem(
+export async function getBlobFromDataTransferItem(
   window: Window & typeof globalThis,
   item: DataTransferItem,
 ) {
   if (item.kind === 'file') {
     return item.getAsFile() as File
   }
-  let data: string = ''
-  item.getAsString(s => {
-    data = s
+  return new window.Blob([await new Promise(r => item.getAsString(r))], {
+    type: item.type,
   })
-  return new window.Blob([data], {type: item.type})
 }

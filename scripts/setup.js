@@ -1,7 +1,9 @@
 import fs from 'fs/promises'
 import path from 'path'
-import {createBundleBuilder} from '@ph.fritsche/toolbox/dist/builder/index.js'
 import {spawn} from 'child_process'
+import esbuild from 'esbuild'
+import pluginGlobals from 'esbuild-plugin-globals'
+import {NodeModulesPolyfillPlugin} from '@esbuild-plugins/node-modules-polyfill'
 
 const dirname = path.dirname(new URL(import.meta.url).pathname)
 const indexDirLib = path.join(dirname, '../testenv/libs')
@@ -92,61 +94,28 @@ async function buildLib(name, dir) {
 
   process.stdout.write(`Bundling library "${name}" at ${dir}/index.js\n`)
 
-  const builder = createBundleBuilder({
-    basePath: `${dir}/`,
-    globals,
+  await esbuild.build({
+    entryPoints: [`${dir}/index.js`],
+    outfile: `${dir}/index.bundle.js`,
+    bundle: true,
+    plugins: [
+      pluginGlobals(globals),
+    ],
   })
-  builder.inputFiles.set(`${dir}/index.js`, undefined)
-
-  builder.emitter.addListener('complete', e => {
-    const content = String(e.outputFiles.get('index.js')?.content)
-    fs.writeFile(`${dir}/index.bundle.js`, content).then(() =>
-      process.stdout.write(
-        [
-          '<<<',
-          `Wrote ${dir}/index.bundle.js`,
-          `[${content.length} bytes]`,
-          ...(globals && Object.keys(globals).length
-            ? [
-                `  Depending on:`,
-                ...Object.entries(globals).map(
-                  ([module, name]) => `  ${name} => ${module}`,
-                ),
-              ]
-            : []),
-          '>>>',
-          '',
-        ].join('\n'),
-      ),
-    )
-  })
-
-  builder.build()
 }
 
 async function buildEnv(name, file) {
   process.stdout.write(`Bundling environment "${name}" at ${file}\n`)
 
-  const builder = createBundleBuilder({
-    basePath: `${indexDirEnv}/`,
-  })
-  const basename = path.basename(file, '.js')
-  builder.inputFiles.set(file, undefined)
+  const base = path.basename(file, '.js')
 
-  builder.emitter.addListener('complete', e => {
-    const content = String(e.outputFiles.get(`${basename}.js`)?.content)
-    fs.writeFile(`${indexDirEnv}/${basename}.bundle.js`, content).then(() =>
-      process.stdout.write(
-        [
-          '<<<',
-          `Wrote ${indexDirEnv}/${basename}.bundle.js`,
-          `[${content.length} bytes]`,
-          '>>>',
-          '',
-        ].join('\n'),
-      ),
-    )
+  await esbuild.build({
+    entryPoints: [file],
+    outfile: `${indexDirEnv}/${base}.bundle.js`,
+    bundle: true,
+    sourcemap: 'inline',
+    plugins: [
+      NodeModulesPolyfillPlugin(),
+    ],
   })
-
-  builder.build()
 }

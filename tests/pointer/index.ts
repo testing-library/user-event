@@ -1,6 +1,6 @@
 import {type SpyInstance} from 'jest-mock'
 import {PointerEventsCheckLevel} from '#src'
-import {setup} from '#testHelpers'
+import {resetWrappers, setup} from '#testHelpers'
 
 test('continue previous target', async () => {
   const {element, getEvents, user} = setup(`<div></div>`)
@@ -59,6 +59,8 @@ test('apply modifiers from keyboardstate', async () => {
 
 describe('delay', () => {
   const spy = mocks.spyOn(global, 'setTimeout')
+
+  beforeAll(() => resetWrappers())
 
   beforeEach(() => {
     spy.mockClear()
@@ -264,4 +266,25 @@ test('suppress mouse events per preventDefault on pointerdown', async () => {
   expect(eventWasFired('mousedown')).toBe(false)
   expect(eventWasFired('mousemove')).toBe(false)
   expect(eventWasFired('mouseup')).toBe(false)
+})
+
+test('apply default event properties', async () => {
+  const {element, user, getEvents, clearEventCalls} = setup(`<div></div>`)
+
+  await user.pointer({target: element})
+
+  expect(getEvents('pointermove')[0]).toEqual(expect.objectContaining({
+    width: 1,
+    height: 1,
+    pressure: 0,
+  }))
+
+  clearEventCalls()
+  await user.pointer([{keys: '[MouseLeft>]'}, {coords: {x: 20}}])
+
+  expect(getEvents('pointermove')[0]).toEqual(expect.objectContaining({
+    width: 1,
+    height: 1,
+    pressure: 0.5,
+  }))
 })

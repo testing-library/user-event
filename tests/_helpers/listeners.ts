@@ -1,4 +1,4 @@
-import {eventMapKeys} from '#src/event/eventMap'
+import {eventMap} from '#src/event/eventMap'
 import {isElementType} from '#src/utils'
 import {MouseButton, MouseButtonFlip} from '#src/system/pointer/buttons'
 
@@ -31,17 +31,24 @@ export function addEventListener(
 
 export type EventHandlers = {[k in keyof DocumentEventMap]?: EventListener}
 
+const loggedEvents = [
+  ...(Object.keys(eventMap) as Array<keyof typeof eventMap>),
+  'select',
+] as const
+
 /**
  * Add listeners for logging events.
  */
 export function addListeners(
-  element: Element,
+  element: Element | Element[],
   {
     eventHandlers = {},
   }: {
     eventHandlers?: EventHandlers
   } = {},
 ) {
+  const elements = Array.isArray(element) ? element : [element]
+
   type CallData = {
     event: Event
     elementDisplayName: string
@@ -50,16 +57,16 @@ export function addListeners(
 
   const generalListener = mocks.fn(eventHandler).mockName('eventListener')
 
-  for (const eventType of Object.keys(eventMapKeys) as Array<
-    keyof typeof eventMapKeys
-  >) {
-    addEventListener(element, eventType, (...args) => {
-      generalListener(...args)
-      eventHandlers[eventType]?.(...args)
-    })
-  }
+  for (const el of elements) {
+    for (const eventType of loggedEvents) {
+      addEventListener(el, eventType, (...args) => {
+        generalListener(...args)
+        eventHandlers[eventType]?.(...args)
+      })
+    }
 
-  addEventListener(element, 'submit', e => e.preventDefault())
+    addEventListener(el, 'submit', e => e.preventDefault())
+  }
 
   return {
     clearEventCalls,
@@ -93,8 +100,8 @@ export function addListeners(
       isMouseEvent(e)
         ? `${e.type} - button=${e.button}; buttons=${e.buttons}; detail=${e.detail}`
         : isPointerEvent(e)
-        ? `${e.type} - pointerId=${e.pointerId}; pointerType=${e.pointerType}; isPrimary=${e.isPrimary}`
-        : e.type,
+          ? `${e.type} - pointerId=${e.pointerId}; pointerType=${e.pointerType}; isPrimary=${e.isPrimary}; button=${e.button}; buttons=${e.buttons}`
+          : e.type,
     )
     return {snapshot: lines.join('\n')}
   }
@@ -109,6 +116,7 @@ export function addListeners(
 
   function getEventSnapshot() {
     const eventCalls = eventHandlerCalls
+      .filter(({event}) => event.type !== 'select')
       .map(({event, elementDisplayName}) => {
         const firstLine = [
           `${elementDisplayName} - ${event.type}`,
@@ -124,22 +132,20 @@ export function addListeners(
       .join('\n')
       .trim()
 
+    const displayNames = elements.map(el => getElementDisplayName(el)).join(',')
     if (eventCalls.length) {
       return {
-        snapshot: [
-          `Events fired on: ${getElementDisplayName(element)}`,
-          eventCalls,
-        ].join('\n\n'),
+        snapshot: [`Events fired on: ${displayNames}`, eventCalls].join('\n\n'),
       }
     } else {
       return {
-        snapshot: `No events were fired on: ${getElementDisplayName(element)}`,
+        snapshot: `No events were fired on: ${displayNames}`,
       }
     }
   }
 }
 
-function hasProperty<T extends {}, K extends PropertyKey>(
+function hasProperty<T extends object, K extends PropertyKey>(
   obj: T,
   prop: K,
 ): obj is T & {[k in K]: unknown} {
@@ -164,6 +170,10 @@ function isKeyboardEvent(event: Event): event is KeyboardEvent {
   return (
     event.constructor.name === 'KeyboardEvent' || event.type.startsWith('key')
   )
+}
+
+function isFocusEvent(event: Event): event is FocusEvent {
+  return event.constructor.name === 'FocusEvent'
 }
 
 function isPointerEvent(event: Event): event is PointerEvent {
@@ -233,6 +243,22 @@ function getEventLabel(event: Event) {
     return getMouseButtonName(event.button) ?? `button${event.button}`
   } else if (isKeyboardEvent(event)) {
     return event.key === ' ' ? 'Space' : event.key
+  } else if (isFocusEvent(event)) {
+    const direction =
+      event.type === 'focus' || event.type === 'focusin' ? '←' : '→'
+    let label
+    if (
+      !event.relatedTarget ||
+      // Jsdom sets `relatedTarget` to `Document` on blur/focusout
+      ('nodeType' in event.relatedTarget && event.relatedTarget.nodeType === 9)
+    ) {
+      label = 'null'
+    } else if (isElement(event.relatedTarget)) {
+      label = getElementDisplayName(event.relatedTarget)
+    } else {
+      label = event.relatedTarget.constructor.name
+    }
+    return `${direction} ${label}`
   }
 }
 

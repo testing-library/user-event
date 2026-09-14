@@ -1,4 +1,4 @@
-//jsdom is not supporting isContentEditable
+// jsdom is not supporting isContentEditable
 export function isContentEditable(
   element: Element,
 ): element is HTMLElement & {contenteditable: 'true'} {

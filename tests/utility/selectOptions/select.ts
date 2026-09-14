@@ -16,8 +16,8 @@ test('fires correct events', async () => {
     select[name="select"][value="1"] - mousemove
     select[name="select"][value="1"] - pointerdown
     select[name="select"][value="1"] - mousedown: primary
-    select[name="select"][value="1"] - focus
-    select[name="select"][value="1"] - focusin
+    select[name="select"][value="1"] - focus: ← null
+    select[name="select"][value="1"] - focusin: ← null
     select[name="select"][value="1"] - pointerup
     select[name="select"][value="1"] - mouseup: primary
     select[name="select"][value="1"] - click: primary
@@ -81,8 +81,8 @@ test('fires correct events on multi-selects', async () => {
     option[value="1"][selected=false] - mousemove
     option[value="1"][selected=false] - pointerdown
     option[value="1"][selected=false] - mousedown: primary
-    select[name="select"][value=[]] - focus
-    select[name="select"][value=[]] - focusin
+    select[name="select"][value=[]] - focus: ← null
+    select[name="select"][value=[]] - focusin: ← null
     option[value="1"][selected=false] - pointerup
     option[value="1"][selected=false] - mouseup: primary
     select[name="select"][value=["1"]] - input
@@ -136,8 +136,8 @@ test('a previously focused input gets blurred', async () => {
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: button
 
-    button - blur
-    button - focusout
+    button - blur: → select[name="select"][value="1"]
+    button - focusout: → select[name="select"][value="1"]
   `)
 })
 
@@ -224,8 +224,8 @@ test('fire no pointer events when select has disabled pointer events', async () 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: select[name="select"][value="2"]
 
-    select[name="select"][value="1"] - focus
-    select[name="select"][value="1"] - focusin
+    select[name="select"][value="1"] - focus: ← null
+    select[name="select"][value="1"] - focusin: ← null
     select[name="select"][value="2"] - input
     select[name="select"][value="2"] - change
   `)
@@ -244,8 +244,8 @@ test('fire no pointer events when multiple select has disabled pointer events', 
   expect(getEventSnapshot()).toMatchInlineSnapshot(`
     Events fired on: select[name="select"][value=["2","3"]]
 
-    select[name="select"][value=[]] - focus
-    select[name="select"][value=[]] - focusin
+    select[name="select"][value=[]] - focus: ← null
+    select[name="select"][value=[]] - focusin: ← null
     select[name="select"][value=["2"]] - input
     select[name="select"][value=["2"]] - change
     select[name="select"][value=["2","3"]] - input
@@ -278,8 +278,8 @@ test('fires correct events when pointer events set to none but skipPointerEvents
     select[name="select"][value="1"] - mousemove
     select[name="select"][value="1"] - pointerdown
     select[name="select"][value="1"] - mousedown: primary
-    select[name="select"][value="1"] - focus
-    select[name="select"][value="1"] - focusin
+    select[name="select"][value="1"] - focus: ← null
+    select[name="select"][value="1"] - focusin: ← null
     select[name="select"][value="1"] - pointerup
     select[name="select"][value="1"] - mouseup: primary
     select[name="select"][value="1"] - click: primary
@@ -321,8 +321,8 @@ test('fires correct events on multi-selects when pointer events is set and skipP
     option[value="1"][selected=false] - mousemove
     option[value="1"][selected=false] - pointerdown
     option[value="1"][selected=false] - mousedown: primary
-    select[name="select"][value=[]] - focus
-    select[name="select"][value=[]] - focusin
+    select[name="select"][value=[]] - focus: ← null
+    select[name="select"][value=[]] - focusin: ← null
     option[value="1"][selected=false] - pointerup
     option[value="1"][selected=false] - mouseup: primary
     select[name="select"][value=["1"]] - input

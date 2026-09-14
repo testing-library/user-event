@@ -18,7 +18,7 @@ export function createFileList(
 
   // guard for environments without FileList
   /* istanbul ignore else */
-  if (window.FileList as Function | undefined) {
+  if (window.FileList) {
     Object.setPrototypeOf(list, window.FileList.prototype)
   }
 

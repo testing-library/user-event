@@ -14,16 +14,16 @@ export function getNextCursorPosition(
   inputType?: string,
 ):
   | {
-      node: Node
-      offset: number
-    }
+    node: Node
+    offset: number
+  }
   | undefined {
   // The behavior at text node zero offset is inconsistent.
   // When walking backwards:
   // Firefox always moves to zero offset and jumps over last offset.
   // Chrome jumps over zero offset per default but over last offset when Shift is pressed.
   // The cursor always moves to zero offset if the focus area (contenteditable or body) ends there.
-  // When walking foward both ignore zero offset.
+  // When walking forward both ignore zero offset.
   // When walking over input elements the cursor moves before or after that element.
   // When walking over line breaks the cursor moves inside any following text node.
 

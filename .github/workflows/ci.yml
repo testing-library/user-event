@@ -1,31 +1,45 @@
 name: CI
 on:
   push:
-    branches:
-      [
-        '+([0-9])?(.{+([0-9]),x}).x',
-        'main',
-        'next',
-        'next-major',
-        'beta',
-        'alpha',
-        '!all-contributors/**',
-      ]
+    branches-ignore: ['all-contributors/**']
   pull_request:
     branches-ignore: ['all-contributors/**']
+
 jobs:
   validate:
     runs-on: ubuntu-latest
+    if: >
+      github.event_name != 'pull_request' ||
+      github.event.pull_request.head.repo.fork
     steps:
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v2
-      - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1
+        uses: actions/checkout@v4
+      - id: restore
+        name: ♻️ Restore node_modules
+        uses: actions/cache/restore@v4
         with:
-          useLockFile: false
-          install-command: yarn --silent
+          path: |
+            yarn.lock
+            node_modules
+          key: ${{ hashFiles('package.json') }}
+          restore-keys: ${{ hashFiles('package.json') }}-
+
+      - id: install
+        if: >
+          steps.restore.outputs.cache-matched-key == ''
+        name: 📥 Install deps
+        run: yarn
         env:
           HUSKY_SKIP_INSTALL: true
+      - if: >
+          steps.install.outcome == 'success'
+        name: ♻️ Save node_modules
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            yarn.lock
+            node_modules
+          key: ${{ hashFiles('package.json') }}-${{ hashFiles('yarn.lock') }}
 
       - name: ✍ Lint
         run: npm run lint
@@ -38,43 +52,61 @@ jobs:
       - name: 🏗 Build
         run: npm run build
 
-      - name: ⬆️ Upload coverage report
-        uses: codecov/codecov-action@v1
+      - name: ☂️ Upload coverage report
+        uses: codecov/codecov-action@v5
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   release:
     needs: validate
     runs-on: ubuntu-latest
-    if:
-      ${{ github.repository == 'testing-library/user-event' &&
-      contains('refs/heads/main,refs/heads/beta,refs/heads/alpha', github.ref)
-      && github.event_name == 'push' }}
+    environment: production
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+      id-token: write # npm trusted publishing (OIDC)
+    if: >
+      github.event_name == 'push' &&
+      github.repository == 'testing-library/user-event' &&
+      contains('refs/heads/main,refs/heads/beta,refs/heads/alpha', github.ref) &&
+      vars.RELEASE_DRY != 'true'
     steps:
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v2
-      - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1
+        uses: actions/checkout@v4
         with:
-          useLockFile: false
-          install-command: yarn --silent
+          # semantic-release needs full history + tags to see unreleased commits
+          fetch-depth: 0
+      - name: ⎔ Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: ♻️ Restore node_modules
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            yarn.lock
+            node_modules
+          key: ${{ runner.os }}-${{ hashFiles('package.json') }}
+      - name: 📥 Install deps
+        run: yarn
         env:
           HUSKY_SKIP_INSTALL: true
 
       - name: 🏗️ Run build script
         run: npm run build
 
+      # JS action (not Docker) so GitHub OIDC works with npm trusted publishing
       - name: 🚀 Release
-        uses: cycjimmy/semantic-release-action@v2
+        uses: cycjimmy/semantic-release-action@v5
         with:
-          semantic_version: 17
+          semantic_version: 25
           branches: |
             [
               '+([0-9])?(.{+([0-9]),x}).x',
               'main',
-              'next',
-              'next-major',
               {name: 'beta', prerelease: true},
               {name: 'alpha', prerelease: true}
             ]
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

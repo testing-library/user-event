@@ -1,23 +1,42 @@
 import {getWindow} from '../utils'
-import {eventMap, eventMapKeys} from './eventMap'
+import {eventMap} from './eventMap'
 import {
   type EventType,
   type EventTypeInit,
   type FixedDocumentEventMap,
 } from './types'
 
-const eventInitializer = {
+interface InterfaceMap {
+  ClipboardEvent: {type: ClipboardEvent, init: ClipboardEventInit}
+  InputEvent: {type: InputEvent, init: InputEventInit}
+  MouseEvent: {type: MouseEvent, init: MouseEventInit}
+  PointerEvent: {type: PointerEvent, init: PointerEventInit}
+  KeyboardEvent: {type: KeyboardEvent, init: KeyboardEventInit}
+  FocusEvent: {type: FocusEvent, init: FocusEventInit}
+}
+type InterfaceNames = typeof eventMap[keyof typeof eventMap]['EventType']
+type Interface<k extends InterfaceNames> = k extends keyof InterfaceMap
+  ? InterfaceMap[k]
+  : never
+
+const eventInitializer: {
+  [k in InterfaceNames]: Array<
+    (e: Interface<k>['type'], i: Interface<k>['init']) => void
+  >
+} = {
   ClipboardEvent: [initClipboardEvent],
+  Event: [],
+  FocusEvent: [initUIEvent, initFocusEvent],
   InputEvent: [initUIEvent, initInputEvent],
-  MouseEvent: [initUIEvent, initUIEventModififiers, initMouseEvent],
+  MouseEvent: [initUIEvent, initUIEventModifiers, initMouseEvent],
   PointerEvent: [
     initUIEvent,
-    initUIEventModififiers,
+    initUIEventModifiers,
     initMouseEvent,
     initPointerEvent,
   ],
-  KeyboardEvent: [initUIEvent, initUIEventModififiers, initKeyboardEvent],
-} as Record<EventInterface, undefined | Array<(e: Event, i: EventInit) => void>>
+  KeyboardEvent: [initUIEvent, initUIEventModifiers, initKeyboardEvent],
+}
 
 export function createEvent<K extends EventType>(
   type: K,
@@ -25,17 +44,17 @@ export function createEvent<K extends EventType>(
   init?: EventTypeInit<K>,
 ) {
   const window = getWindow(target)
-  const {EventType, defaultInit} =
-    eventMap[eventMapKeys[type] as keyof typeof eventMap]
+  const {EventType, defaultInit} = eventMap[type]
   const event = new (getEventConstructors(window)[EventType])(type, defaultInit)
-  eventInitializer[EventType]?.forEach(f => f(event, init ?? {}))
+  eventInitializer[EventType].forEach(f =>
+    f(event as never, (init ?? {}) as never),
+  )
 
   return event as FixedDocumentEventMap[K]
 }
 
 /* istanbul ignore next */
 function getEventConstructors(window: Window & typeof globalThis) {
-  /* eslint-disable @typescript-eslint/no-unnecessary-condition, @typescript-eslint/no-extraneous-class */
   const Event = window.Event ?? class Event {}
   const AnimationEvent =
     window.AnimationEvent ?? class AnimationEvent extends Event {}
@@ -59,7 +78,6 @@ function getEventConstructors(window: Window & typeof globalThis) {
   const PointerEvent =
     window.PointerEvent ?? class PointerEvent extends MouseEvent {}
   const TouchEvent = window.TouchEvent ?? class TouchEvent extends UIEvent {}
-  /* eslint-enable @typescript-eslint/no-unnecessary-condition, @typescript-eslint/no-extraneous-class */
 
   return {
     Event,
@@ -99,6 +117,12 @@ function initClipboardEvent(
   })
 }
 
+function initFocusEvent(event: FocusEvent, {relatedTarget}: FocusEventInit) {
+  assignProps(event, {
+    relatedTarget,
+  })
+}
+
 function initInputEvent(
   event: InputEvent,
   {data, inputType, isComposing}: InputEventInit,
@@ -117,7 +141,7 @@ function initUIEvent(event: UIEvent, {view, detail}: UIEventInit) {
   })
 }
 
-function initUIEventModififiers(
+function initUIEventModifiers(
   event: KeyboardEvent | MouseEvent,
   {
     altKey,
@@ -193,7 +217,14 @@ function initMouseEvent(
     button,
     buttons,
     relatedTarget,
-  }: MouseEventInit & {x?: number; y?: number},
+    offsetX,
+    offsetY,
+    pageX,
+    pageY,
+  }: MouseEventInit &
+    Partial<
+      Pick<MouseEvent, 'x' | 'y' | 'offsetX' | 'offsetY' | 'pageX' | 'pageY'>
+    >,
 ) {
   assignProps(event, {
     screenX: sanitizeNumber(screenX),
@@ -205,6 +236,10 @@ function initMouseEvent(
     button: sanitizeNumber(button),
     buttons: sanitizeNumber(buttons),
     relatedTarget,
+    offsetX: sanitizeNumber(offsetX),
+    offsetY: sanitizeNumber(offsetY),
+    pageX: sanitizeNumber(pageX),
+    pageY: sanitizeNumber(pageY),
   })
 }
 
@@ -221,18 +256,19 @@ function initPointerEvent(
     twist,
     pointerType,
     isPrimary,
+    buttons,
   }: PointerEventInit,
 ) {
   assignProps(event, {
     pointerId: sanitizeNumber(pointerId),
-    width: sanitizeNumber(width),
-    height: sanitizeNumber(height),
-    pressure: sanitizeNumber(pressure),
+    width: sanitizeNumber(width ?? 1),
+    height: sanitizeNumber(height ?? 1),
+    pressure: sanitizeNumber(pressure ?? (buttons ? 0.5 : 0)),
     tangentialPressure: sanitizeNumber(tangentialPressure),
     tiltX: sanitizeNumber(tiltX),
     tiltY: sanitizeNumber(tiltY),
     twist: sanitizeNumber(twist),
-    pointerType: String(pointerType),
+    pointerType: String(pointerType ?? ''),
     isPrimary: Boolean(isPrimary),
   })
 }

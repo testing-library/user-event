@@ -32,7 +32,7 @@ cases(
     expect(isDisabled(xpathNode<Element>(node))).toBe(expected)
   },
   {
-    control: {
+    'control': {
       html: `<input/>`,
       expected: false,
     },

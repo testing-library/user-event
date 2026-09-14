@@ -126,7 +126,9 @@ function editInputElement(
   if (supportsMaxLength(element)) {
     const maxLength = getMaxLength(element)
     if (maxLength !== undefined && data.length > 0) {
-      const spaceUntilMaxLength = maxLength - element.value.length
+      const selectionLength = inputRange.endOffset - inputRange.startOffset
+      const spaceUntilMaxLength =
+        maxLength - element.value.length + selectionLength
       if (spaceUntilMaxLength > 0) {
         dataToInsert = data.substring(0, spaceUntilMaxLength)
       } else {

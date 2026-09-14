@@ -1,3 +1,4 @@
+import {setUISelectionClean} from '#src/document/UI'
 import {setup} from '#testHelpers'
 
 describe('clear elements', () => {
@@ -10,9 +11,8 @@ describe('clear elements', () => {
     expect(getEventSnapshot()).toMatchInlineSnapshot(`
       Events fired on: input[value=""]
 
-      input[value="hello"] - focus
-      input[value="hello"] - focusin
-      input[value="hello"] - select
+      input[value="hello"] - focus: ← null
+      input[value="hello"] - focusin: ← null
       input[value="hello"] - beforeinput
       input[value=""] - input
     `)
@@ -28,9 +28,8 @@ describe('clear elements', () => {
     expect(getEventSnapshot()).toMatchInlineSnapshot(`
       Events fired on: textarea[value=""]
 
-      textarea[value="hello"] - focus
-      textarea[value="hello"] - focusin
-      textarea[value="hello"] - select
+      textarea[value="hello"] - focus: ← null
+      textarea[value="hello"] - focusin: ← null
       textarea[value="hello"] - beforeinput
       textarea[value=""] - input
     `)
@@ -46,8 +45,8 @@ describe('clear elements', () => {
     expect(getEventSnapshot()).toMatchInlineSnapshot(`
       Events fired on: div
 
-      div - focus
-      div - focusin
+      div - focus: ← null
+      div - focusin: ← null
       div - beforeinput
       div - input
     `)
@@ -101,7 +100,7 @@ describe('throw error when clear is impossible', () => {
 
   test('abort if event handler prevents element being focused', async () => {
     const {element, user} = setup(`<input value="hello"/>`, {focus: false})
-    element.addEventListener('focus', async () => element.blur())
+    element.addEventListener('focus', () => element.blur())
 
     await expect(
       user.clear(element),
@@ -110,12 +109,18 @@ describe('throw error when clear is impossible', () => {
     )
   })
 
-  test('abort if event handler prevents content being selected', async () => {
+  test('abort if selecting content is prevented', async () => {
     const {element, user} = setup<HTMLInputElement>(`<input value="hello"/>`)
-    element.addEventListener('select', async () => {
-      if (element.selectionStart === 0) {
-        element.selectionStart = 1
-      }
+    // In some environments a `select` event handler can reset the selection before we can clear the input.
+    // In browser the `.clear()` API is done before the event is dispatched.
+    Object.defineProperty(element, 'setSelectionRange', {
+      configurable: true,
+      value(start: number, end: number) {
+        ;(
+          Object.getPrototypeOf(element) as HTMLInputElement
+        ).setSelectionRange.call(this, 1, end)
+        setUISelectionClean(element)
+      },
     })
 
     await expect(

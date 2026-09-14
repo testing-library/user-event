@@ -6,7 +6,7 @@ import {
   setSelection,
   setSelectionRange,
 } from '#src/event/selection'
-import {setup} from '#testHelpers'
+import {isJsdomEnv, setup} from '#testHelpers'
 
 test('range on input', async () => {
   const {element} = setup('<input value="foo"/>')
@@ -36,7 +36,16 @@ test('range on input', async () => {
 test('range on contenteditable', async () => {
   const {element} = setup('<div contenteditable="true">foo</div>')
 
-  expect(getInputRange(element)).toBe(undefined)
+  expect(getInputRange(element)).toEqual(
+    isJsdomEnv()
+      ? undefined
+      : expect.objectContaining({
+          startContainer: element.firstChild,
+          startOffset: 0,
+          endContainer: element.firstChild,
+          endOffset: 0,
+        }),
+  )
 
   setSelection({
     focusNode: element,
@@ -193,20 +202,6 @@ describe('move selection', () => {
     moveSelection(element, 1)
 
     expect(document.getSelection()).toHaveProperty('rangeCount', 0)
-  })
-
-  test('move to next cursor position', () => {
-    const {element} = setup(`<div tabindex="0">foo</div>`, {
-      selection: {focusNode: 'div/text()', focusOffset: 1},
-    })
-
-    moveSelection(element, 1)
-
-    expect(document.getSelection()).toHaveProperty(
-      'focusNode',
-      element.firstChild,
-    )
-    expect(document.getSelection()).toHaveProperty('focusOffset', 2)
   })
 
   test('move to next cursor position', () => {

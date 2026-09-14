@@ -1,3 +1,4 @@
+import {patchFocus} from '../document/patchFocus'
 import {prepareDocument} from '../document/prepareDocument'
 import {dispatchEvent, dispatchUIEvent} from '../event'
 import {defaultKeyMap as defaultKeyboardMap} from '../keyboard/keyMap'
@@ -7,6 +8,7 @@ import {
   ApiLevel,
   attachClipboardStubToView,
   getDocumentFromNode,
+  getWindow,
   setLevelRef,
   wait,
 } from '../utils'
@@ -82,6 +84,7 @@ export function createConfig(
 export function setupMain(options: Options = {}) {
   const config = createConfig(options)
   prepareDocument(config.document)
+  patchFocus(getWindow(config.document).HTMLElement)
 
   const view =
     config.document.defaultView ?? /* istanbul ignore next */ globalThis.window
@@ -98,11 +101,13 @@ export function setupDirect(
     keyboardState,
     pointerState,
     ...options
-  }: DirectOptions & {keyboardState?: System; pointerState?: System} = {}, // backward-compatibility
+  }: DirectOptions & {keyboardState?: System, pointerState?: System} = {}, // backward-compatibility
   node?: Node,
 ) {
   const config = createConfig(options, defaultOptionsDirect, node)
   prepareDocument(config.document)
+  patchFocus(getWindow(config.document).HTMLElement)
+
   const system = pointerState ?? keyboardState ?? new System()
 
   return {
@@ -141,9 +146,9 @@ export function createInstance(
   config: Config,
   system: System = new System(),
 ): {
-  instance: Instance
-  api: UserEvent
-} {
+    instance: Instance
+    api: UserEvent
+  } {
   const instance = {} as Instance
   Object.assign(instance, {
     config,

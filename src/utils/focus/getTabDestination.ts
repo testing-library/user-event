@@ -70,7 +70,7 @@ export function getTabDestination(activeElement: Element, shift: boolean) {
     prunedElements.push(el)
   })
 
-  for (let index = prunedElements.findIndex(el => el === activeElement); ; ) {
+  for (let index = prunedElements.findIndex(el => el === activeElement); ;) {
     index += shift ? -1 : 1
 
     // loop at overflow

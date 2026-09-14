@@ -1,5 +1,10 @@
 import {getContentEditable, hasOwnSelection} from '../../utils'
 
+// The browser implementation seems to have changed.
+// When focus is inside <input type="text"/>,
+// Chrome updates Selection to be collapsed at the position of the input element.
+// TODO: update implementation to match that of current browsers
+
 /**
  * Reset the Document Selection when moving focus into an element
  * with own selection implementation.

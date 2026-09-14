@@ -1,6 +1,6 @@
 import cases from 'jest-in-case'
 import userEvent from '#src'
-import {render, setup} from '#testHelpers'
+import {render, resetWrappers, setup} from '#testHelpers'
 
 // Maybe this should not trigger keypress event on HTMLAnchorElement
 // see https://github.com/testing-library/user-event/issues/589
@@ -14,7 +14,7 @@ cases(
     expect(eventWasFired('keypress')).toBe(hasKeyPress)
   },
   {
-    characters: {
+    'characters': {
       code: 'KeyX',
       hasKeyPress: true,
     },
@@ -48,6 +48,19 @@ test('do not leak repeatKey in state', async () => {
 
   const keyboardState = await userEvent.keyboard('{a>2}')
   expect(keyboardState).not.toHaveProperty('repeatKey')
+})
+
+test('set `repeat` on repeated keydown events', async () => {
+  const {element, user} = setup(`<input/>`)
+
+  const repeats: boolean[] = []
+  element.addEventListener('keydown', e => {
+    repeats.push((e as KeyboardEvent).repeat)
+  })
+
+  await user.keyboard('{a>5}')
+
+  expect(repeats).toEqual([false, true, true, true, true])
 })
 
 describe('pressing and releasing keys', () => {
@@ -180,13 +193,17 @@ describe('prevent default behavior', () => {
   })
 })
 
-test('do not call setTimeout with delay `null`', async () => {
-  const {user} = setup(`<div></div>`)
-  const spy = mocks.spyOn(global, 'setTimeout')
-  await user.keyboard('ab')
-  expect(spy.mock.calls.length).toBeGreaterThanOrEqual(1)
+describe('delay', () => {
+  beforeAll(() => resetWrappers())
 
-  spy.mockClear()
-  await user.setup({delay: null}).keyboard('cd')
-  expect(spy).not.toBeCalled()
+  test('do not call setTimeout with delay `null`', async () => {
+    const {user} = setup(`<div></div>`)
+    const spy = mocks.spyOn(global, 'setTimeout')
+    await user.keyboard('ab')
+    expect(spy.mock.calls.length).toBeGreaterThanOrEqual(1)
+
+    spy.mockClear()
+    await user.setup({delay: null}).keyboard('cd')
+    expect(spy).not.toBeCalled()
+  })
 })

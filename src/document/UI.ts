@@ -15,8 +15,8 @@ interface UISelection {
   focusOffset: number
 }
 
-export type UIValueString = String & {[UIValue]: true}
-export type UISelectionStart = Number & {[UISelection]: true}
+export type UIValueString = string & {[UIValue]: true}
+export type UISelectionStart = number & {[UISelection]: true}
 
 export function isUIValue(
   value: string | UIValueString,
@@ -40,7 +40,6 @@ export function setUIValue(
 
   element[UIValue] = value
 
-  // eslint-disable-next-line no-new-wrappers
   element.value = Object.assign(new String(value), {
     [UIValue]: true,
   }) as unknown as string
@@ -52,7 +51,7 @@ export function getUIValue(element: HTMLInputElement | HTMLTextAreaElement) {
     : String(element[UIValue])
 }
 
-/** Flag the IDL value as clean. This does not change the value.*/
+/** Flag the IDL value as clean. This does not change the value. */
 export function setUIValueClean(
   element: HTMLInputElement | HTMLTextAreaElement,
 ) {
@@ -113,7 +112,6 @@ export function setUISelection(
     return
   }
 
-  // eslint-disable-next-line no-new-wrappers
   const startObj = Object.assign(new Number(startOffset), {
     [UISelection]: true,
   }) as unknown as number

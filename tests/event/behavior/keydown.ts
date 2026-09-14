@@ -304,6 +304,51 @@ cases(
 )
 
 cases(
+  'tab from a target moved during the keyboard event',
+  ({focus, shiftKey = false, expectedFocus, expectedSelection}) => {
+    const {xpathNode} = render(
+      `<input value="abc"/><button>1</button><input type="number" value="1e23"/><button>2</button>`,
+      {
+        focus,
+      },
+    )
+
+    const instance = setupInstance()
+    instance.system.keyboard.modifiers.Shift = shiftKey
+
+    document.activeElement?.addEventListener('keydown', () => {
+      xpathNode('button[1]').focus()
+    })
+    instance.dispatchUIEvent(document.activeElement as Element, 'keydown', {
+      key: 'Tab',
+    })
+    expect(xpathNode(expectedFocus)).toHaveFocus()
+    if (expectedSelection) {
+      expect(getUISelection(xpathNode(expectedFocus))).toEqual(
+        expect.objectContaining(expectedSelection),
+      )
+    }
+  },
+  {
+    'tab to input2': {
+      focus: '//body',
+      expectedFocus: 'input[2]',
+      expectedSelection: {startOffset: 0, endOffset: 4},
+    },
+    'tab to number input': {
+      focus: 'input[1]',
+      expectedFocus: 'input[2]',
+      expectedSelection: {startOffset: 0, endOffset: 4},
+    },
+    'tab backward to input1': {
+      focus: 'input[2]',
+      shiftKey: true,
+      expectedFocus: 'input[1]',
+    },
+  },
+)
+
+cases(
   'walk through radio group per arrow keys',
   ({focus, key, expectedTarget}) => {
     const {getEvents, eventWasFired, xpathNode} = render(
@@ -317,6 +362,8 @@ cases(
       <input type="radio" name="" value="nameless2"/>
       <input type="radio" name="group" value="c" disabled/>
       <input type="radio" name="group" value="d"/>
+      <input type="radio" name="group" value="f" aria-disabled />
+      <input type="radio" name="group" value="e" />
       <input type="radio" name="foo"/>
       <input type="text" name="group"/>
     `,
@@ -360,14 +407,14 @@ cases(
       expectedTarget: '//input[@value="a"]',
     },
     'forward around the corner': {
-      focus: '//input[@value="d"]',
+      focus: '//input[@value="e"]',
       key: 'ArrowRight',
       expectedTarget: '//input[@value="a"]',
     },
     'backward around the corner': {
       focus: '//input[@value="a"]',
       key: 'ArrowUp',
-      expectedTarget: '//input[@value="d"]',
+      expectedTarget: '//input[@value="e"]',
     },
     'do nothing on single radio': {
       focus: '//input[@name="solo"]',
@@ -377,6 +424,11 @@ cases(
       focus: '//input[@value="nameless1"]',
       key: 'ArrowRight',
       expectedTarget: '//input[@value="nameless2"]',
+    },
+    'on radios with aria-disabled': {
+      focus: '//input[@value="d"]',
+      key: 'ArrowDown',
+      expectedTarget: '//input[@value="f"]',
     },
   },
 )

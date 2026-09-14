@@ -6,7 +6,7 @@ export function readBlobText(blob: Blob, FileReader: {new (): FileReader}) {
     fr.onerror = rej
     fr.onabort = rej
     fr.onload = () => {
-      res(String(fr.result))
+      res(String(fr.result as string))
     }
     fr.readAsText(blob)
   })

@@ -1,7 +1,9 @@
-import dtl from '../_interop/dtl'
+import {getConfig} from '@testing-library/dom'
 
-const {getConfig} = dtl
-
-export function wrapEvent<R>(cb: () => R, _element: Element) {
+export function wrapEvent<R>(
+  cb: () => R,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _element: Element,
+) {
   return getConfig().eventWrapper(cb) as unknown as R
 }

@@ -192,7 +192,7 @@ export async function writeDataTransferToClipboard(
   const items = []
   for (let i = 0; i < clipboardData.items.length; i++) {
     const dtItem = clipboardData.items[i]
-    const blob = getBlobFromDataTransferItem(window, dtItem)
+    const blob = await getBlobFromDataTransferItem(window, dtItem)
     items.push(createClipboardItem(window, blob))
   }
 
@@ -216,10 +216,18 @@ const g = globalThis as {
 }
 /* istanbul ignore else */
 if (typeof g.afterEach === 'function') {
-  g.afterEach(() => resetClipboardStubOnView(globalThis.window))
+  g.afterEach(() => {
+    if (typeof globalThis.window !== 'undefined') {
+      resetClipboardStubOnView(globalThis.window)
+    }
+  })
 }
 
 /* istanbul ignore else */
 if (typeof g.afterAll === 'function') {
-  g.afterAll(() => detachClipboardStubFromView(globalThis.window))
+  g.afterAll(() => {
+    if (typeof globalThis.window !== 'undefined') {
+      detachClipboardStubFromView(globalThis.window)
+    }
+  })
 }

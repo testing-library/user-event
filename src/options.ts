@@ -37,7 +37,7 @@ export interface Options {
 
   /**
    * Between some subsequent inputs like typing a series of characters
-   * the code execution is delayed per `setTimeout` for (at least) `delay` seconds.
+   * the code execution is delayed per `setTimeout` for (at least) `delay` milliseconds.
    * This moves the next changes at least to next macro task
    * and allows other (asynchronous) code to run between events.
    *
@@ -80,7 +80,7 @@ export interface Options {
    *
    * This is a binary flag option. You can combine multiple Levels.
    *
-   * @default PointerEventsCheckLevel.EachCall
+   * @default PointerEventsCheckLevel.EachApiCall
    */
   pointerEventsCheck?: PointerEventsCheckLevel | number
 

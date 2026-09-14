@@ -35,7 +35,10 @@ behavior.keypress = (event, target, instance) => {
   if (isEditable(target)) {
     const inputType =
       event.key === 'Enter'
-        ? isContentEditable(target) && !instance.system.keyboard.modifiers.Shift
+        ? isContentEditable(target) &&
+        // A plaintext-only host has no paragraphs to break.
+        target.getAttribute('contenteditable') !== 'plaintext-only' &&
+        !instance.system.keyboard.modifiers.Shift
           ? 'insertParagraph'
           : 'insertLineBreak'
         : 'insertText'

@@ -246,3 +246,59 @@ test('circumvent setters/methods for UI changes', () => {
   expect(valueSpy).toBeCalledWith('efgh')
   expect(setSelectionRangeSpy).toBeCalledWith(1, 2)
 })
+
+test('keep track of value in UI for elements in shadow DOM', async () => {
+  const host = document.createElement('div')
+  const shadowRoot = host.attachShadow({mode: 'open'})
+  const element = document.createElement('textarea')
+  shadowRoot.append(element)
+  document.body.append(host)
+
+  prepare(element)
+  element.focus()
+
+  setUIValue(element, 'hello')
+  expect(getUIValue(element)).toBe('hello')
+
+  element.value = ''
+  expect(getUIValue(element)).toBe('')
+})
+
+test('fall back to the event target when the composed path is empty', async () => {
+  const {element} = render<HTMLInputElement>(`<input/>`, {focus: false})
+  const onChange = mocks.fn()
+  element.addEventListener('change', onChange)
+
+  prepare(element)
+
+  // A synthetic event might not have a composed path.
+  const focusEvent = new FocusEvent('focus')
+  focusEvent.composedPath = () => []
+  element.dispatchEvent(focusEvent)
+
+  setUIValue(element, 'a')
+
+  const blurEvent = new FocusEvent('blur')
+  blurEvent.composedPath = () => []
+  element.dispatchEvent(blurEvent)
+
+  expect(onChange).toHaveBeenCalledTimes(1)
+})
+
+test('trigger `change` event for elements in shadow DOM', async () => {
+  const host = document.createElement('div')
+  const shadowRoot = host.attachShadow({mode: 'open'})
+  const element = document.createElement('input')
+  shadowRoot.append(element)
+  document.body.append(host)
+  const onChange = mocks.fn()
+  element.addEventListener('change', onChange)
+
+  prepare(element)
+
+  element.focus()
+  setUIValue(element, 'a')
+  element.blur()
+
+  expect(onChange).toHaveBeenCalledTimes(1)
+})

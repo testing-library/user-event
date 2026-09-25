@@ -89,3 +89,18 @@ test('do nothing on disabled element', async () => {
 
   expect(getEvents()).toHaveLength(0)
 })
+
+test('type into textarea in shadow DOM after value is reset', async () => {
+  const {element: host, user} = setup('<div></div>')
+  const element = host
+    .attachShadow({mode: 'open'})
+    .appendChild(document.createElement('textarea'))
+
+  await user.type(element, 'hello')
+  expect(element).toHaveValue('hello')
+
+  element.value = ''
+
+  await user.type(element, 'world')
+  expect(element).toHaveValue('world')
+})

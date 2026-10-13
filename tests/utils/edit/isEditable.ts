@@ -23,6 +23,7 @@ test.each([
   [`<textarea></textarea>`],
   [`<div contenteditable></div>`],
   [`<div contenteditable="true"></div>`],
+  [`<div contenteditable="plaintext-only"></div>`],
 ])('consider %s an editable element', html => {
   const {element} = render(html)
 

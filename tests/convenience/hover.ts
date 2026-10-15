@@ -15,6 +15,8 @@ describe.each([
     for (const type of events) {
       expect(getEvents(`pointer${type}`)).toHaveLength(1)
       expect(getEvents(`mouse${type}`)).toHaveLength(1)
+      expect(getEvents(`pointer${type}`)[0].relatedTarget).toBe(document.body)
+      expect(getEvents(`mouse${type}`)[0].relatedTarget).toBe(document.body)
     }
   })
 

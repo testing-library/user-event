@@ -223,3 +223,50 @@ test('change select with delayed state update', async () => {
     expect(screen.getByRole('listbox')).toHaveValue(['Chrome', 'Firefox'])
   })
 })
+
+test('click a child that is only rendered while its parent is hovered', async () => {
+  const onClick = mocks.fn()
+  const onMouseLeave = mocks.fn()
+
+  function Card() {
+    const [hovered, setHovered] = useState(false)
+    const handleLeave = () => {
+      onMouseLeave()
+      setHovered(false)
+    }
+
+    return (
+      <div onMouseEnter={() => setHovered(true)} onMouseLeave={handleLeave}>
+        Card
+        {hovered && <button onClick={onClick}>Edit</button>}
+      </div>
+    )
+  }
+
+  render(<Card />)
+  const user = userEvent.setup()
+
+  await user.hover(screen.getByText('Card'))
+  await user.click(screen.getByRole('button'))
+
+  expect(onMouseLeave).not.toHaveBeenCalled()
+  expect(onClick).toHaveBeenCalledTimes(1)
+  expect(screen.getByRole('button')).toBeInTheDocument()
+})
+
+test('call onMouseEnter after the previous hover target was removed', async () => {
+  const onMouseEnter = mocks.fn()
+  render(
+    <div>
+      <span>a</span>
+      <span onMouseEnter={onMouseEnter}>b</span>
+    </div>,
+  )
+  const user = userEvent.setup()
+
+  await user.hover(screen.getByText('a'))
+  screen.getByText('a').remove()
+  await user.hover(screen.getByText('b'))
+
+  expect(onMouseEnter).toHaveBeenCalledTimes(1)
+})

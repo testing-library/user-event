@@ -213,3 +213,16 @@ test('typing on focused element with iframe', async () => {
 
   iframe.remove()
 })
+
+test('toggle <details> per [Enter] and [Space] on <summary>', async () => {
+  const {element, xpathNode, user} = setup<HTMLDetailsElement>(
+    `<details><summary>foo</summary><p>bar</p></details>`,
+  )
+  expect(xpathNode('details/summary')).toHaveFocus()
+
+  await user.keyboard('[Enter]')
+  expect(element.open).toBe(true)
+
+  await user.keyboard('[Space]')
+  expect(element.open).toBe(false)
+})

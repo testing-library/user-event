@@ -1,4 +1,4 @@
-import {isClickableInput} from '../../utils'
+import {isClickableInput, isSummaryForParentDetails} from '../../utils'
 import {BehaviorPlugin} from '.'
 import {behavior} from './registry'
 
@@ -10,7 +10,7 @@ const keyupBehavior: {
   [key: string]: BehaviorPlugin<'keyup'> | undefined
 } = {
   ' ': (event, target, instance) => {
-    if (isClickableInput(target)) {
+    if (isClickableInput(target) || isSummaryForParentDetails(target)) {
       return () => instance.dispatchUIEvent(target, 'click')
     }
   },

@@ -126,6 +126,37 @@ cases(
 )
 
 cases(
+  'trigger click on <summary> for [Enter]',
+  ({html, target = 'details/summary', hasClick = true}) => {
+    const {eventWasFired, getEvents, xpathNode} = render(html)
+
+    setupInstance().dispatchUIEvent(xpathNode(target), 'keypress', {
+      key: 'Enter',
+    })
+
+    expect(eventWasFired('click')).toBe(hasClick)
+    if (hasClick) {
+      expect(getEvents('click')[0]).toHaveProperty('detail', 0)
+    }
+  },
+  {
+    'on summary of details': {
+      html: `<details><summary>foo</summary></details>`,
+    },
+    'omit on summary outside of details': {
+      html: `<div><summary>foo</summary></div>`,
+      target: 'div/summary',
+      hasClick: false,
+    },
+    'omit on second summary of details': {
+      html: `<details><summary>foo</summary><summary>bar</summary></details>`,
+      target: 'details/summary[2]',
+      hasClick: false,
+    },
+  },
+)
+
+cases(
   'submit form on [Enter]',
   async ({html, click, submit}) => {
     const {eventWasFired, xpathNode} = render(html, {focus: 'form/*[2]'})

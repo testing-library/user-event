@@ -60,6 +60,11 @@ async function selectOptionsBase(
   if (isDisabled(select) || !selectedOptions.length) return
 
   const selectOption = (option: HTMLOptionElement) => {
+    // The browser does not fire `input` or `change`
+    // if the selectedness of the option does not change.
+    if (option.selected === newValue) {
+      return
+    }
     option.selected = newValue
     this.dispatchUIEvent(select, 'input', {
       bubbles: true,

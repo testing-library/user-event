@@ -216,6 +216,30 @@ test('should call onChange/input bubbling up the event when a new option is sele
   expect(onInputForm).toHaveBeenCalledTimes(1)
 })
 
+test('does not fire input/change when the option is already selected', async () => {
+  const {select, options, eventWasFired, user} = setupSelect()
+  expect(options[0].selected).toBe(true)
+
+  await user.selectOptions(select, '1')
+
+  expect(eventWasFired('click')).toBe(true)
+  expect(eventWasFired('input')).toBe(false)
+  expect(eventWasFired('change')).toBe(false)
+  expect(options[0].selected).toBe(true)
+})
+
+test('only fires input/change for options that were not selected on multi-selects', async () => {
+  const {select, options, getEvents, user} = setupSelect({multiple: true})
+  options[0].selected = true
+
+  await user.selectOptions(select, ['1', '3'])
+
+  expect(getEvents('click')).toHaveLength(2)
+  expect(getEvents('input')).toHaveLength(1)
+  expect(getEvents('change')).toHaveLength(1)
+  expect(options.map(o => o.selected)).toEqual([true, false, true])
+})
+
 test('fire no pointer events when select has disabled pointer events', async () => {
   const {select, options, getEventSnapshot, user} = setupSelect({
     pointerEvents: 'none',

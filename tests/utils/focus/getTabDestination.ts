@@ -76,6 +76,9 @@ test('exclude hidden elements', () => {
         <input hidden />
         <input style="visibility: hidden"/>
         <input style="display: none"/>
+        <details>
+          <button></button>
+        </details>
     `)
 
   assertTabOrder([elA])

@@ -1,4 +1,4 @@
-import {setupSelect} from './_setup'
+import {setupListbox, setupSelect} from './_setup'
 import {addListeners, setup} from '#testHelpers'
 
 test('fires correct events', async () => {
@@ -106,6 +106,26 @@ test('sets the selected prop on the selected option using option html elements',
 test('throws error when provided element is not a multiple select', async () => {
   const {element, user} = setup(`<select />`)
   await expect(user.deselectOptions(element, [])).rejects.toThrowError(
+    /unable to deselect/i,
+  )
+})
+
+test('deselects options in a multiselectable listbox', async () => {
+  const {listbox, options, user} = setupListbox({multiselectable: true})
+  const [o1, o2, o3] = options
+  o1.setAttribute('aria-selected', 'true')
+  o3.setAttribute('aria-selected', 'true')
+
+  await user.deselectOptions(listbox, ['1', o3])
+
+  expect(o1).toHaveAttribute('aria-selected', 'false')
+  expect(o2).toHaveAttribute('aria-selected', 'false')
+  expect(o3).toHaveAttribute('aria-selected', 'false')
+})
+
+test('throws error when provided listbox is not multiselectable', async () => {
+  const {listbox, user} = setupListbox()
+  await expect(user.deselectOptions(listbox, '1')).rejects.toThrowError(
     /unable to deselect/i,
   )
 })

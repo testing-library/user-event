@@ -36,7 +36,7 @@ export function setupSelect(
   }
 }
 
-export function setupListbox() {
+export function setupListbox({multiselectable = false} = {}) {
   const wrapper = document.createElement('div')
   wrapper.innerHTML = `
     <button id="button" aria-haspopup="listbox">
@@ -46,6 +46,7 @@ export function setupListbox() {
       role="listbox"
       name="listbox"
       aria-labelledby="button"
+      ${multiselectable ? 'aria-multiselectable="true"' : ''}
     >
       <li id="1" role="option" aria-selected="false">1</li>
       <li id="2" role="option" aria-selected="false">2</li>

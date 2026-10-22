@@ -78,3 +78,56 @@ export function setupListbox() {
     user: userEvent.setup(),
   }
 }
+
+export function setupListboxWithComplexOptions() {
+  const wrapper = document.createElement('div')
+  wrapper.innerHTML = `
+    <button id="button" aria-haspopup="listbox">
+      Some label
+    </button>
+    <ul
+      role="listbox"
+      name="listbox"
+      aria-labelledby="button"
+    >
+      <li id="1" role="option" aria-selected="false">
+        <span>1</span>
+      </li>
+      <li id="2" role="option" aria-selected="false">
+        <span>2</span>
+        <span>is the best option</span>
+        <span aria-hidden="true">Not visible 1</span>
+        <span style="display:none">Not visible 2</span>
+        <span style="visibility:hidden">Not visible 3</span>
+      </li>
+      <li id="3" role="option" aria-selected="false">
+        <span>3</span>
+      </li>
+    </ul>
+  `
+  document.body.append(wrapper)
+  const listbox = wrapper.querySelector('[role="listbox"]') as HTMLUListElement
+  const options = Array.from(
+    wrapper.querySelectorAll<HTMLElement>('[role="option"]'),
+  )
+
+  // the user is responsible for handling aria-selected on listbox options
+  options.forEach(el =>
+    el.addEventListener('click', e => {
+      const target = e.currentTarget as HTMLElement
+      target.setAttribute(
+        'aria-selected',
+        JSON.stringify(
+          !JSON.parse(String(target.getAttribute('aria-selected'))),
+        ),
+      )
+    }),
+  )
+
+  return {
+    ...addListeners(listbox),
+    listbox,
+    options,
+    user: userEvent.setup(),
+  }
+}

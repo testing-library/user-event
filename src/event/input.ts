@@ -11,6 +11,8 @@ import {
   EditableInputOrTextarea,
   getMaxLength,
   getNextCursorPosition,
+  isDisabled,
+  isEditable,
   isElementType,
   isValidDateOrTimeValue,
   supportsMaxLength,
@@ -217,6 +219,35 @@ function calculateNewValue(
     if (builtValue !== '' && isValidDateOrTimeValue(node, builtValue)) {
       newValue = builtValue
       newOffset = builtValue.length
+    }
+  }
+
+  if (
+    isElementType(node, 'input', {type: 'number'} as const) &&
+    inputType === 'changeNumberInput' &&
+    !isDisabled(node) &&
+    !node.readOnly
+  ) {
+    const step = node.step ? Number(node.step) : 1
+
+    const reachedMax = value === node.max
+    if (inputData === 'ArrowUp' && !reachedMax) {
+      const exceedsMax = Number(value) + step > Number(node.max)
+      if (exceedsMax && !!node.max) {
+        newValue = node.max
+      } else {
+        newValue = (Number(value) + step).toString()
+      }
+    }
+
+    const reachedMin = value === node.min
+    if (inputData === 'ArrowDown' && !reachedMin) {
+      const exceedsMin = Number(value) - step < Number(node.min)
+      if (exceedsMin && !!node.min) {
+        newValue = node.min
+      } else {
+        newValue = (Number(value) - step).toString()
+      }
     }
   }
 

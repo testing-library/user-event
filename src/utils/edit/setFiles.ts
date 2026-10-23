@@ -45,6 +45,9 @@ export function setFiles(
     files: {
       configurable: true,
       get: () => files,
+      set(v: FileList) {
+        filesDescr?.set?.call(el, v)
+      },
     },
     value: {
       configurable: true,

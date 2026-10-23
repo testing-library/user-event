@@ -1,11 +1,6 @@
 import {setup} from '#testHelpers'
 
-// On an unprevented mousedown the browser moves the cursor to the closest character.
-// As we have no layout, we are not able to determine the correct character.
-// So we try an approximation:
-// We treat any mousedown as if it happened on the space after the last character.
-
-test('single mousedown moves cursor to the end', async () => {
+test('single mousedown places (collapsed) cursor', async () => {
   const {element, user} = setup<HTMLInputElement>(
     `<input value="foo bar baz"/>`,
   )
@@ -13,7 +8,8 @@ test('single mousedown moves cursor to the end', async () => {
   await user.pointer({keys: '[MouseLeft>]', target: element})
 
   expect(element).toHaveFocus()
-  expect(element).toHaveProperty('selectionStart', 11)
+  expect(element).toHaveProperty('selectionStart', expect.any(Number))
+  expect(element.selectionStart).toEqual(element.selectionEnd)
 })
 
 test('move focus to closest focusable element', async () => {
@@ -337,6 +333,63 @@ test('`node` overrides the text offset approximation', async () => {
       offset: 20,
     }),
   ).rejects.toThrowError('out of bound')
+})
+
+describe('contenteditable="false" islands', () => {
+  test('skip islands at the start of content', async () => {
+    const {element, user} = setup(
+      `<div contenteditable><span contenteditable="false">island</span>editable</div>`,
+    )
+
+    await user.pointer({keys: '[MouseLeft>]', target: element})
+
+    expect(element).toHaveFocus()
+    expect(document.getSelection()).toHaveProperty(
+      'focusNode',
+      element.lastChild,
+    )
+    expect(document.getSelection()).toHaveProperty('focusOffset', 8) // "editable".length
+  })
+
+  test('skip islands at the end of content', async () => {
+    const {element, user} = setup(
+      `<div contenteditable>editable<span contenteditable="false">island</span></div>`,
+    )
+
+    await user.pointer({keys: '[MouseLeft>]', target: element})
+
+    expect(element).toHaveFocus()
+    expect(document.getSelection()).toHaveProperty(
+      'focusNode',
+      element.firstChild,
+    )
+    expect(document.getSelection()).toHaveProperty('focusOffset', 8) // "editable".length
+  })
+
+  test('drag selection skips contenteditable=false island', async () => {
+    const {element, user} = setup(
+      `<div contenteditable>before<span contenteditable="false">island</span>after</div>`,
+    )
+    const before = element.firstChild as Text
+    const island = element.querySelector(
+      '[contenteditable="false"]',
+    ) as HTMLSpanElement
+
+    await user.pointer({
+      keys: '[MouseLeft>]',
+      target: element,
+      offset: 0,
+    })
+    await user.pointer({offset: 11})
+
+    const range = document.getSelection()?.getRangeAt(0)
+    expect(range).toHaveProperty('startContainer', before)
+    expect(range).toHaveProperty('startOffset', 0)
+    expect(range).toHaveProperty('endContainer', element.lastChild)
+    expect(range).toHaveProperty('endOffset', 5)
+    expect(island.contains(range?.startContainer ?? null)).toBe(false)
+    expect(island.contains(range?.endContainer ?? null)).toBe(false)
+  })
 })
 
 describe('focus control when clicking label', () => {

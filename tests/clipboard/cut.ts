@@ -1,5 +1,6 @@
 import userEvent from '#src'
 import {render, setup} from '#testHelpers'
+import {readDataTransferFromClipboard} from '#src/utils'
 
 test('cut selected value', async () => {
   const {getEvents, user} = setup<HTMLInputElement>(
@@ -11,7 +12,7 @@ test('cut selected value', async () => {
 
   const dt = await user.cut()
 
-  expect(dt?.getData('text')).toBe('bar')
+  expect(dt.getData('text')).toBe('bar')
   expect(getEvents('cut')).toHaveLength(1)
   expect(getEvents('input')).toHaveLength(1)
 
@@ -25,7 +26,7 @@ test('cut selected text outside of editable', async () => {
 
   const dt = await user.cut()
 
-  expect(dt?.getData('text')).toBe('oo b')
+  expect(dt.getData('text')).toBe('oo b')
   expect(getEvents('cut')).toHaveLength(1)
   expect(getEvents('input')).toHaveLength(0)
 
@@ -42,7 +43,7 @@ test('cut selected text in contenteditable', async () => {
 
   const dt = await user.cut()
 
-  expect(dt?.getData('text')).toBe('oo b')
+  expect(dt.getData('text')).toBe('oo b')
   expect(getEvents('cut')).toHaveLength(1)
   expect(getEvents('input')).toHaveLength(1)
   expect(element).toHaveTextContent('far baz')
@@ -50,14 +51,14 @@ test('cut selected text in contenteditable', async () => {
   await expect(window.navigator.clipboard.readText()).resolves.toBe('oo b')
 })
 
-test('cut on empty selection does nothing', async () => {
+test('cut on empty selection does not change clipboard', async () => {
   const {getEvents, user} = setup(`<input/>`)
   await window.navigator.clipboard.writeText('foo')
 
   await user.cut()
 
   await expect(window.navigator.clipboard.readText()).resolves.toBe('foo')
-  expect(getEvents()).toHaveLength(0)
+  expect(getEvents('cut')).toHaveLength(1)
 })
 
 test('prevent default behavior per event handler', async () => {
@@ -72,9 +73,31 @@ test('prevent default behavior per event handler', async () => {
 
   await user.cut()
   expect(eventWasFired('cut')).toBe(true)
-  expect(getEvents('cut')[0].clipboardData?.getData('text')).toBe('bar')
+  expect(getEvents('cut')[0].clipboardData?.getData('text')).toBe('')
   expect(eventWasFired('input')).toBe(false)
   await expect(window.navigator.clipboard.readText()).resolves.toBe('foo')
+})
+
+test('cuts all items added in event handler', async () => {
+  const {element, user} = setup(`<div tabindex="-1" />`, {})
+
+  element.addEventListener('cut', e => {
+    e.clipboardData?.setData('text/plain', 'a = 42')
+    e.clipboardData?.setData('application/json', '{"a": 42}')
+    e.preventDefault()
+  })
+
+  await user.cut()
+
+  const receivedClipboardData = await readDataTransferFromClipboard(
+    element.ownerDocument,
+  )
+  expect(receivedClipboardData.types).toEqual([
+    'text/plain',
+    'application/json',
+  ])
+  expect(receivedClipboardData.getData('text/plain')).toBe('a = 42')
+  expect(receivedClipboardData.getData('application/json')).toBe('{"a": 42}')
 })
 
 describe('without Clipboard API', () => {
@@ -103,6 +126,6 @@ describe('without Clipboard API', () => {
     })
 
     const dt = await userEvent.cut()
-    expect(dt?.getData('text/plain')).toBe('bar')
+    expect(dt.getData('text/plain')).toBe('bar')
   })
 })

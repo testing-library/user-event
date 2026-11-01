@@ -70,6 +70,18 @@ describe('clear elements', () => {
     await user.clear(number)
     expect(number).toHaveValue(null)
   })
+
+  test('clear input inside a shadow root', async () => {
+    const {element: host, user} = setup('<div></div>', {focus: false})
+    const shadowRoot = host.attachShadow({mode: 'open'})
+    shadowRoot.innerHTML = '<input value="hello" />'
+    const input = shadowRoot.querySelector('input') as HTMLInputElement
+
+    await user.clear(input)
+
+    expect(input).toHaveValue('')
+    expect(shadowRoot.activeElement).toBe(input)
+  })
 })
 
 describe('throw error when clear is impossible', () => {

@@ -99,6 +99,33 @@ test('prevent file dialog per click event handler', async () => {
   expect(eventWasFired('input')).toBe(false)
 })
 
+test('upload a directory with multiple files without the multiple attribute', async () => {
+  const files = [new File(['a'], 'a.txt'), new File(['b'], 'b.txt')]
+  const {element, user} = setup<HTMLInputElement>(
+    '<input type="file" webkitdirectory />',
+  )
+  await user.upload(element, files)
+  expect(element.files).toHaveLength(2)
+  expect(element.files?.item(0)).toBe(files[0])
+  expect(element.files?.item(1)).toBe(files[1])
+})
+
+test('upload multiple files when the directory property is set', async () => {
+  const files = [new File(['a'], 'a.txt'), new File(['b'], 'b.txt')]
+  const {element, user} = setup<HTMLInputElement>('<input type="file" />')
+  element.webkitdirectory = true
+  await user.upload(element, files)
+  expect(element.files).toHaveLength(2)
+})
+
+test('a plain single-file input still keeps only the first file', async () => {
+  const files = [new File(['a'], 'a.txt'), new File(['b'], 'b.txt')]
+  const {element, user} = setup<HTMLInputElement>('<input type="file" />')
+  await user.upload(element, files)
+  expect(element.files).toHaveLength(1)
+  expect(element.files?.item(0)).toBe(files[0])
+})
+
 test('upload multiple files', async () => {
   const files = [
     new File(['hello'], 'hello.png', {type: 'image/png'}),

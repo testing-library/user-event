@@ -70,6 +70,20 @@ test('setting value resets `files`', () => {
   expect(element).toHaveProperty('files', expect.objectContaining({length: 0}))
 })
 
+test('setting files to `null` is a no-op', () => {
+  const {element} = setup<HTMLInputElement & {type: 'file'}>(
+    `<input type="file"/>`,
+  )
+
+  const list = createFileList(window, [new File(['foo'], 'foo.txt')])
+  setFiles(element, list)
+
+  element.files = null
+
+  expect(element).toHaveProperty('files', list)
+  expect(element).toHaveValue('C:\\fakepath\\foo.txt')
+})
+
 test('is save to call multiple times', () => {
   const {element} = setup<HTMLInputElement & {type: 'file'}>(
     `<input type="file"/>`,

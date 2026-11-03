@@ -161,6 +161,22 @@ test('programmatic `null` value on number input is treated as empty', async () =
   expect(getUIValue(element)).toBe('')
 })
 
+test('keep the string form of valid numbers on number input', async () => {
+  const {element} = render<HTMLInputElement>(`<input type="number"/>`)
+
+  prepare(element)
+
+  setUIValue(element, '.80')
+  expect(element.value).toBe('.80')
+
+  setUIValue(element, '007')
+  expect(element.value).toBe('007')
+
+  element.value = '1.50'
+  expect(element.value).toBe('1.50')
+  expect(getUIValue(element)).toBe('1.50')
+})
+
 test('clear UI selection if selection is programmatically set', async () => {
   const {element} = render<HTMLInputElement>(`<input/>`)
 

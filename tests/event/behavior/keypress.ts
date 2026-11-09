@@ -183,5 +183,15 @@ cases(
       click: false,
       submit: false,
     },
+    'with radio and checkbox fields that do not block implicit submission': {
+      html: `<form><input type="radio"/><input/><input type="checkbox"/><input type="hidden"/></form>`,
+      click: false,
+      submit: true,
+    },
+    'with another field that blocks implicit submission': {
+      html: `<form><input type="radio"/><input/><input type="number"/></form>`,
+      click: false,
+      submit: false,
+    },
   },
 )

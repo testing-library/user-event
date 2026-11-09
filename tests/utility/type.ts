@@ -89,3 +89,30 @@ test('do nothing on disabled element', async () => {
 
   expect(getEvents()).toHaveLength(0)
 })
+
+test.each([
+  ['.80', ['', '.8', '.80']],
+  ['1.50', ['1', '1', '1.5', '1.50']],
+  ['007', ['0', '00', '007']],
+  ['-0', ['', '-0']],
+  ['-.5', ['', '', '-.5']],
+  ['1e3', ['1', '', '1e3']],
+] as const)(
+  'keep the typed string in `<input type="number"/>`: %s',
+  async (text, expectedValues) => {
+    const values: string[] = []
+    const {element, user} = setup<HTMLInputElement>(`<input type="number"/>`, {
+      eventHandlers: {
+        input: e => {
+          values.push((e.target as HTMLInputElement).value)
+        },
+      },
+    })
+
+    await user.type(element, text)
+
+    // `value` at each `input` event
+    expect(values).toEqual(expectedValues)
+    expect(element.value).toBe(text)
+  },
+)

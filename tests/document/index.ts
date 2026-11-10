@@ -161,6 +161,85 @@ test('programmatic `null` value on number input is treated as empty', async () =
   expect(getUIValue(element)).toBe('')
 })
 
+test('keep the string form of valid numbers on number input', async () => {
+  const {element} = render<HTMLInputElement>(`<input type="number"/>`)
+
+  prepare(element)
+
+  setUIValue(element, '.80')
+  expect(element.value).toBe('.80')
+
+  setUIValue(element, '007')
+  expect(element.value).toBe('007')
+
+  element.value = '1.50'
+  expect(element.value).toBe('1.50')
+  expect(getUIValue(element)).toBe('1.50')
+})
+
+test.each([
+  '-0',
+  '-.5',
+  '1e3',
+  '1E3',
+  '1e+3',
+  '1e-7',
+  '0.0000001',
+  '12345678901234567890',
+])('keep the string form of valid number %s on number input', value => {
+  const {element} = render<HTMLInputElement>(`<input type="number"/>`)
+
+  prepare(element)
+
+  setUIValue(element, value)
+  expect(element.value).toBe(value)
+
+  element.value = ''
+  element.value = value
+  expect(element.value).toBe(value)
+  expect(getUIValue(element)).toBe(value)
+})
+
+test('clear out-of-range numbers on number input', () => {
+  const {element} = render<HTMLInputElement>(`<input type="number"/>`)
+
+  prepare(element)
+
+  // `1e400` is a valid floating-point number, but it is not finite.
+  setUIValue(element, '1e400')
+  expect(element.value).toBe('')
+  expect(getUIValue(element)).toBe('1e400')
+
+  element.value = '1e400'
+  expect(element.value).toBe('')
+  expect(getUIValue(element)).toBe('')
+})
+
+test.each([
+  // Same number, but a different value
+  ['0.8', ['0.80'], 1],
+  ['1', ['1.', '1.0'], 1],
+  // Different intermediate values, but the same value in the end
+  ['1e3', ['1e', '1e3'], 0],
+  ['007', ['00', '007'], 0],
+] as const)(
+  'trigger `change` event on number input per string value: %s -> %s',
+  (initialValue, uiValues, expectedChangeEvents) => {
+    const {element, getEvents} = render<HTMLInputElement>(
+      `<input type="number" value="${initialValue}"/>`,
+      {focus: false},
+    )
+
+    prepare(element)
+
+    element.focus()
+    uiValues.forEach(v => setUIValue(element, v))
+    element.blur()
+
+    expect(getEvents('change')).toHaveLength(expectedChangeEvents)
+  },
+)
+
 test('clear UI selection if selection is programmatically set', async () => {
   const {element} = render<HTMLInputElement>(`<input/>`)
 

@@ -62,6 +62,39 @@ test.each(['1.5', '1e5'])(
   },
 )
 
+test.each([
+  ['.80', ['.8', '.80']],
+  ['1.50', ['1', '1.5', '1.50']],
+  ['007', ['0', '00', '007']],
+  ['1e3', ['1', '', '1e3']],
+] as const)(
+  'call onChange per string value of controlled `<input type="number"/>`: %s',
+  async (input, expectedValues) => {
+    const values: string[] = []
+    function Input() {
+      const [val, setVal] = useState('')
+
+      return (
+        <input
+          type="number"
+          value={val}
+          onChange={e => {
+            values.push(e.target.value)
+            setVal(e.target.value)
+          }}
+        />
+      )
+    }
+    render(<Input />)
+    const user = userEvent.setup()
+    screen.getByRole('spinbutton').focus()
+
+    await user.keyboard(input)
+    expect(values).toEqual(expectedValues)
+    expect(screen.getByRole<HTMLInputElement>('spinbutton').value).toBe(input)
+  },
+)
+
 test('detect value and selection change', async () => {
   function Input() {
     const el = useRef<HTMLInputElement>(null)

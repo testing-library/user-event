@@ -1,4 +1,5 @@
 export * from './clear'
+export * from './scroll'
 export * from './selectOptions'
 export * from './type'
 export * from './upload'

@@ -38,6 +38,10 @@ const apiDeclarations: ApiDeclarations = {
   pointer: {
     args: ['foo'],
   },
+  scroll: {
+    args: [null, {}],
+    elementArg: 0,
+  },
   selectOptions: {
     args: [null, ['foo']],
     elementArg: 0,
@@ -63,6 +67,10 @@ const apiDeclarations: ApiDeclarations = {
     args: [null, new File(['foo'], 'foo.txt')],
     elementArg: 0,
     elementHtml: `<input type="file"/>`,
+  },
+  wheel: {
+    args: [null, {}],
+    elementArg: 0,
   },
 }
 

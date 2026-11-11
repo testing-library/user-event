@@ -2,7 +2,15 @@ import {click, dblClick, tripleClick, hover, unhover, tab} from '../convenience'
 import {keyboard} from '../keyboard'
 import {copy, cut, paste} from '../clipboard'
 import {pointer} from '../pointer'
-import {clear, deselectOptions, selectOptions, type, upload} from '../utility'
+import {
+  clear,
+  deselectOptions,
+  scroll,
+  selectOptions,
+  type,
+  upload,
+  wheel,
+} from '../utility'
 
 export const userEventApi = {
   click,
@@ -18,7 +26,9 @@ export const userEventApi = {
   pointer,
   clear,
   deselectOptions,
+  scroll,
   selectOptions,
   type,
   upload,
+  wheel,
 }

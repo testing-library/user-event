@@ -122,6 +122,11 @@ export interface Options {
   /**
    * A function to be called internally to advance your fake timers (if applicable)
    *
+   * Fake timers installed by Vitest or Jest's modern fake timers are advanced
+   * automatically.
+   * Set this option if you use another implementation of fake timers,
+   * e.g. Jest's legacy fake timers.
+   *
    * @example jest.advanceTimersByTime
    */
   advanceTimers?: ((delay: number) => Promise<void>) | ((delay: number) => void)

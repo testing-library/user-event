@@ -130,12 +130,18 @@ function sanitizeValue(
   if (
     isElementType(element, 'input', {type: 'number'}) &&
     String(v) !== '' &&
+    !isValidFloatingPointNumber(String(v)) &&
     !Number.isNaN(Number(v))
   ) {
     // Setting value to "1." results in `null` in JSDOM
     return String(Number(v))
   }
   return String(v)
+}
+
+// https://html.spec.whatwg.org/multipage/common-microsyntaxes.html#valid-floating-point-number
+function isValidFloatingPointNumber(v: string) {
+  return /^-?(?:\d+|\d*\.\d+)(?:[eE][-+]?\d+)?$/.test(v)
 }
 
 export function prepareSelectionInterceptor(

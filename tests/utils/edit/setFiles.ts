@@ -1,4 +1,4 @@
-import {createFileList, setFiles} from '#src/utils'
+import {createDataTransfer, createFileList, setFiles} from '#src/utils'
 import {setup} from '#testHelpers'
 
 test('set files', () => {
@@ -33,6 +33,22 @@ test('switching type resets value', () => {
   expect(element).toHaveProperty('type', 'text')
 })
 
+test('setting files from DataTransfer updates `files` and `value`', () => {
+  const {element} = setup<HTMLInputElement & {type: 'file'}>(
+    `<input type="file"/>`,
+  )
+
+  const list = createFileList(window, [new File(['foo'], 'foo.txt')])
+  setFiles(element, list)
+
+  const dt = createDataTransfer(window, [new File(['bar'], 'bar.txt')])
+  const transferred = dt.files
+  element.files = transferred
+
+  expect(element).toHaveProperty('files', transferred)
+  expect(element).toHaveValue('C:\\fakepath\\bar.txt')
+})
+
 test('setting value resets `files`', () => {
   const {element} = setup<HTMLInputElement & {type: 'file'}>(
     `<input type="file"/>`,
@@ -52,6 +68,20 @@ test('setting value resets `files`', () => {
   element.value = ''
 
   expect(element).toHaveProperty('files', expect.objectContaining({length: 0}))
+})
+
+test('setting files to `null` is a no-op', () => {
+  const {element} = setup<HTMLInputElement & {type: 'file'}>(
+    `<input type="file"/>`,
+  )
+
+  const list = createFileList(window, [new File(['foo'], 'foo.txt')])
+  setFiles(element, list)
+
+  element.files = null
+
+  expect(element).toHaveProperty('files', list)
+  expect(element).toHaveValue('C:\\fakepath\\foo.txt')
 })
 
 test('is save to call multiple times', () => {

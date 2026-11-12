@@ -45,6 +45,12 @@ export function setFiles(
     files: {
       configurable: true,
       get: () => files,
+      set(v: FileList | null) {
+        // `files = null` is a no-op in jsdom and keeps the current selection.
+        if (v) {
+          setFiles(el, v)
+        }
+      },
     },
     value: {
       configurable: true,

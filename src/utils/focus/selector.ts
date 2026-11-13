@@ -5,6 +5,7 @@ export const FOCUSABLE_SELECTOR = [
   'textarea:not([disabled])',
   '[contenteditable=""]',
   '[contenteditable="true"]',
+  '[contenteditable="plaintext-only"]',
   'a[href]',
   '[tabindex]:not([disabled])',
   'details > summary',

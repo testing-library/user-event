@@ -160,6 +160,23 @@ describe('without Clipboard API', () => {
   })
 })
 
+test.each([['true'], ['plaintext-only']])(
+  'paste into contenteditable="%s"',
+  async attr => {
+    const {element, getEvents, user} = setup(
+      `<div contenteditable="${attr}">foo</div>`,
+      {focus: false},
+    )
+
+    await user.click(element)
+    await user.paste('bar')
+
+    expect(element).toHaveTextContent('foobar')
+    expect(getEvents('paste')).toHaveLength(1)
+    expect(getEvents('input')).toHaveLength(1)
+  },
+)
+
 test('paste keeps the pasted text in <input type="number"/>', async () => {
   const {element, user} = setup<HTMLInputElement>(`<input type="number"/>`)
 

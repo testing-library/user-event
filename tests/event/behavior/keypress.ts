@@ -75,6 +75,18 @@ cases(
       inputType: 'insertLineBreak',
       expectedHtml: '\n',
     },
+    'trigger insertLineBreak on contenteditable=plaintext-only': {
+      html: `<div contenteditable="plaintext-only"></div>`,
+      inputType: 'insertLineBreak',
+      expectedHtml: '\n',
+    },
+    'with shiftKey=true trigger insertLineBreak on contenteditable=plaintext-only':
+      {
+        html: `<div contenteditable="plaintext-only"></div>`,
+        shiftKey: true,
+        inputType: 'insertLineBreak',
+        expectedHtml: '\n',
+      },
   },
 )
 

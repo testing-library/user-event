@@ -31,7 +31,14 @@ export async function upload(
     .filter(
       file => !this.config.applyAccept || isAcceptableFile(file, input.accept),
     )
-    .slice(0, input.multiple ? undefined : 1)
+    .slice(
+      0,
+      input.multiple ||
+        input.webkitdirectory ||
+        input.hasAttribute('webkitdirectory')
+        ? undefined
+        : 1,
+    )
 
   const fileDialog = () => {
     // do not fire an input event if the file selection does not change

@@ -70,6 +70,36 @@ test('hover inside element', async () => {
   `)
 })
 
+test('set relatedTarget when moving between elements', async () => {
+  const {elements, getEvents, clearEventCalls, user} = setup(`<a></a><p></p>`)
+
+  await user.pointer({target: elements[0]})
+  clearEventCalls()
+  await user.pointer({target: elements[1]})
+
+  for (const type of ['pointer', 'mouse'] as const) {
+    expect(getEvents(`${type}out`)[0].relatedTarget).toBe(elements[1])
+    expect(getEvents(`${type}leave`)[0].relatedTarget).toBe(elements[1])
+    expect(getEvents(`${type}over`)[0].relatedTarget).toBe(elements[0])
+    expect(getEvents(`${type}enter`)[0].relatedTarget).toBe(elements[0])
+  }
+})
+
+test('set relatedTarget to null when the previous element was removed', async () => {
+  const {elements, getEvents, clearEventCalls, user} = setup(`<a></a><p></p>`)
+  const [a, p] = Array.from(elements)
+
+  await user.pointer({target: a})
+  a.remove()
+  clearEventCalls()
+  await user.pointer({target: p})
+
+  for (const type of ['pointer', 'mouse'] as const) {
+    expect(getEvents(`${type}over`)[0].relatedTarget).toBe(null)
+    expect(getEvents(`${type}enter`)[0].relatedTarget).toBe(null)
+  }
+})
+
 test('move touch over elements', async () => {
   const {element, getEventSnapshot, user} = setup(`<div><a></a><p></p></div>`)
 

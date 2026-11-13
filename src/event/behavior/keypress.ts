@@ -23,7 +23,9 @@ behavior.keypress = (event, target, instance) => {
       } else if (
         form &&
         SubmitSingleInputOnEnter.includes(target.type) &&
-        form.querySelectorAll('input').length === 1
+        Array.from(form.querySelectorAll('input')).filter(el =>
+          BlockImplicitSubmission.includes(el.type),
+        ).length === 1
       ) {
         return () => instance.dispatchUIEvent(form, 'submit')
       } else {
@@ -55,6 +57,22 @@ const ClickInputOnEnter = [
   'image',
   'reset',
   'submit',
+]
+
+// https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#field-that-blocks-implicit-submission
+const BlockImplicitSubmission = [
+  'date',
+  'datetime-local',
+  'email',
+  'month',
+  'number',
+  'password',
+  'search',
+  'tel',
+  'text',
+  'time',
+  'url',
+  'week',
 ]
 
 const SubmitSingleInputOnEnter = [

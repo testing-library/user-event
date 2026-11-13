@@ -176,3 +176,11 @@ test.each([['true'], ['plaintext-only']])(
     expect(getEvents('input')).toHaveLength(1)
   },
 )
+
+test('paste keeps the pasted text in <input type="number"/>', async () => {
+  const {element, user} = setup<HTMLInputElement>(`<input type="number"/>`)
+
+  await user.paste('.80')
+
+  expect(element.value).toBe('.80')
+})

@@ -4,7 +4,7 @@ enum maxLengthSupportedTypes {
   'email' = 'email',
   'password' = 'password',
   'search' = 'search',
-  'telephone' = 'telephone',
+  'tel' = 'tel',
   'text' = 'text',
   'url' = 'url',
 }

@@ -1,0 +1,351 @@
+import {render} from '#testHelpers'
+import {
+  getUIValue,
+  setUIValue,
+  getUISelection,
+  setUISelection,
+} from '#src/document'
+import {prepareDocument} from '#src/document/prepareDocument'
+import {patchFocus} from '#src/document/patchFocus'
+
+function prepare(element: Element) {
+  patchFocus(globalThis.window.HTMLElement)
+  prepareDocument(element.ownerDocument)
+  // safe to call multiple times
+  prepareDocument(element.ownerDocument)
+  prepareDocument(element.ownerDocument)
+}
+
+test('keep track of value in UI', async () => {
+  // JSDOM implements the `value` property differently than the browser.
+  // In the browser it is always a `string`.
+  // In JSDOM it is `null` or `number` for `<input type="number"/>`
+  const {element} = render<HTMLInputElement>(`<input type="number"/>`)
+
+  prepare(element)
+
+  setUIValue(element, '2')
+  expect(element).toHaveValue(2)
+
+  setUIValue(element, '2e')
+  expect(element).toHaveValue(null)
+  expect(getUIValue(element)).toBe('2e')
+
+  setUIValue(element, '2e-')
+  expect(element).toHaveValue(null)
+  expect(getUIValue(element)).toBe('2e-')
+
+  setUIValue(element, '2e-5')
+  expect(element).toHaveValue(2e-5)
+  expect(getUIValue(element)).toBe('2e-5')
+
+  element.value = '3'
+  expect(element).toHaveValue(3)
+  expect(getUIValue(element)).toBe('3')
+
+  setUIValue(element, '3.')
+  expect(element).toHaveValue(3)
+  expect(getUIValue(element)).toBe('3.')
+
+  setUIValue(element, '3.5')
+  expect(element).toHaveValue(3.5)
+  expect(getUIValue(element)).toBe('3.5')
+})
+
+test('trigger `change` event if value changed per user input', async () => {
+  const {element, getEvents} = render<HTMLInputElement>(
+    `<input type="number"/>`,
+    {focus: false},
+  )
+
+  prepare(element)
+
+  element.focus()
+  // Invalid value is equal to empty
+  setUIValue(element, '2e-')
+  element.blur()
+
+  expect(getEvents('change')).toHaveLength(0)
+
+  element.focus()
+  // Programmatically changing value is ignored
+  element.value = '3'
+  // Value doesn't change
+  setUIValue(element, '3')
+  element.blur()
+
+  expect(getEvents('change')).toHaveLength(0)
+
+  element.focus()
+  setUIValue(element, '2')
+  // value is reset so there is no change in the end
+  element.value = '3'
+  element.blur()
+
+  expect(getEvents('change')).toHaveLength(0)
+
+  element.focus()
+  setUIValue(element, '2')
+  element.value = '2'
+  element.blur()
+
+  expect(getEvents('change')).toHaveLength(1)
+})
+
+test('maintain selection range like UI', async () => {
+  const {element} = render<HTMLInputElement>(
+    `<input type="text" value="abc"/>`,
+    {
+      selection: {focusOffset: 1},
+    },
+  )
+
+  prepare(element)
+
+  setUIValue(element, 'adbc')
+  setUISelection(element, {focusOffset: 2})
+
+  expect(getUISelection(element)).toHaveProperty('startOffset', 2)
+  expect(getUISelection(element)).toHaveProperty('endOffset', 2)
+  expect(element.selectionStart).toBe(2)
+})
+
+test('maintain selection range on elements without support for selection range', async () => {
+  const {element} = render<HTMLInputElement>(`<input type="number"/>`)
+
+  prepare(element)
+
+  setUIValue(element, '2e-')
+  setUISelection(element, {focusOffset: 2})
+
+  expect(getUISelection(element)).toHaveProperty('startOffset', 2)
+  expect(getUISelection(element)).toHaveProperty('endOffset', 2)
+  expect(element.selectionStart).toBe(null)
+})
+
+test('reset UI selection if value is programmatically set', async () => {
+  const {element} = render<HTMLInputElement>(`<input/>`)
+
+  prepare(element)
+
+  setUIValue(element, 'abc')
+  setUISelection(element, {anchorOffset: 1, focusOffset: 2})
+
+  element.value = 'abcdef'
+  expect(element.selectionStart).toBe(6)
+  expect(getUISelection(element)).toHaveProperty('focusOffset', 6)
+  expect(getUISelection(element)).toHaveProperty('startOffset', 6)
+})
+
+test('programmatic `null` value is treated as empty string', async () => {
+  const {element} = render<HTMLInputElement>(`<input value="abc"/>`)
+
+  prepare(element)
+
+  // HTMLInputElement.value is a [LegacyNullToEmptyString] DOMString.
+  // Callers still assign `null` at runtime; the IDL coerces it to `""`.
+  element.value = null as unknown as string
+
+  expect(element).toHaveValue('')
+  expect(getUIValue(element)).toBe('')
+})
+
+test('programmatic `null` value on number input is treated as empty', async () => {
+  const {element} = render<HTMLInputElement>(`<input type="number" value="1"/>`)
+
+  prepare(element)
+
+  element.value = null as unknown as string
+
+  expect(element).toHaveValue(null)
+  expect(getUIValue(element)).toBe('')
+})
+
+test('keep the string form of valid numbers on number input', async () => {
+  const {element} = render<HTMLInputElement>(`<input type="number"/>`)
+
+  prepare(element)
+
+  setUIValue(element, '.80')
+  expect(element.value).toBe('.80')
+
+  setUIValue(element, '007')
+  expect(element.value).toBe('007')
+
+  element.value = '1.50'
+  expect(element.value).toBe('1.50')
+  expect(getUIValue(element)).toBe('1.50')
+})
+
+test.each([
+  '-0',
+  '-.5',
+  '1e3',
+  '1E3',
+  '1e+3',
+  '1e-7',
+  '0.0000001',
+  '12345678901234567890',
+])('keep the string form of valid number %s on number input', value => {
+  const {element} = render<HTMLInputElement>(`<input type="number"/>`)
+
+  prepare(element)
+
+  setUIValue(element, value)
+  expect(element.value).toBe(value)
+
+  element.value = ''
+  element.value = value
+  expect(element.value).toBe(value)
+  expect(getUIValue(element)).toBe(value)
+})
+
+test('clear out-of-range numbers on number input', () => {
+  const {element} = render<HTMLInputElement>(`<input type="number"/>`)
+
+  prepare(element)
+
+  // `1e400` is a valid floating-point number, but it is not finite.
+  setUIValue(element, '1e400')
+  expect(element.value).toBe('')
+  expect(getUIValue(element)).toBe('1e400')
+
+  element.value = '1e400'
+  expect(element.value).toBe('')
+  expect(getUIValue(element)).toBe('')
+})
+
+test.each([
+  // Same number, but a different value
+  ['0.8', ['0.80'], 1],
+  ['1', ['1.', '1.0'], 1],
+  // Different intermediate values, but the same value in the end
+  ['1e3', ['1e', '1e3'], 0],
+  ['007', ['00', '007'], 0],
+] as const)(
+  'trigger `change` event on number input per string value: %s -> %s',
+  (initialValue, uiValues, expectedChangeEvents) => {
+    const {element, getEvents} = render<HTMLInputElement>(
+      `<input type="number" value="${initialValue}"/>`,
+      {focus: false},
+    )
+
+    prepare(element)
+
+    element.focus()
+    uiValues.forEach(v => setUIValue(element, v))
+    element.blur()
+
+    expect(getEvents('change')).toHaveLength(expectedChangeEvents)
+  },
+)
+
+test('clear UI selection if selection is programmatically set', async () => {
+  const {element} = render<HTMLInputElement>(`<input/>`)
+
+  prepare(element)
+
+  setUIValue(element, 'abc')
+  setUISelection(element, {anchorOffset: 1, focusOffset: 2})
+  expect(element.selectionStart).toBe(1)
+
+  element.setSelectionRange(0, 1)
+  expect(getUISelection(element)).toHaveProperty('startOffset', 0)
+  expect(getUISelection(element)).toHaveProperty('endOffset', 1)
+
+  setUISelection(element, {anchorOffset: 2, focusOffset: 3})
+  expect(getUISelection(element)).toHaveProperty('startOffset', 2)
+  expect(getUISelection(element)).toHaveProperty('endOffset', 3)
+
+  element.selectionEnd = 1
+  expect(getUISelection(element)).toHaveProperty('startOffset', 1)
+  expect(getUISelection(element)).toHaveProperty('endOffset', 1)
+
+  setUISelection(element, {anchorOffset: 1, focusOffset: 0})
+  expect(getUISelection(element)).toHaveProperty('startOffset', 0)
+  expect(getUISelection(element)).toHaveProperty('endOffset', 1)
+
+  element.selectionStart = 2
+  expect(getUISelection(element)).toHaveProperty('startOffset', 2)
+  expect(getUISelection(element)).toHaveProperty('endOffset', 2)
+
+  setUISelection(element, {anchorOffset: 1, focusOffset: 2})
+  element.select()
+  expect(getUISelection(element)).toHaveProperty('startOffset', 0)
+  expect(getUISelection(element)).toHaveProperty('endOffset', 3)
+})
+
+test('select input without selectionRange support', () => {
+  const {element} = render<HTMLInputElement>(
+    `<input type="number" value="123"/>`,
+  )
+
+  prepare(element)
+
+  setUISelection(element, {focusOffset: 1})
+  element.select()
+
+  expect(getUISelection(element)).toHaveProperty('startOffset', 0)
+  expect(getUISelection(element)).toHaveProperty('endOffset', 3)
+})
+
+test('track changes to value and selection per setRangeText', () => {
+  const {element} = render<HTMLInputElement>(`<input/>`)
+  prepare(element)
+  setUIValue(element, 'abcd')
+  setUISelection(element, {focusOffset: 3})
+
+  element.setRangeText('X', 1, 2)
+  expect(element).toHaveValue('aXcd')
+  expect(element).toHaveProperty('selectionStart', 3)
+  expect(getUIValue(element)).toBe('aXcd')
+  expect(getUISelection(element)).toHaveProperty('focusOffset', 3)
+
+  element.setRangeText('Y', 1, 2, 'start')
+  expect(element).toHaveValue('aYcd')
+  expect(element).toHaveProperty('selectionEnd', 1)
+  expect(getUIValue(element)).toBe('aYcd')
+  expect(getUISelection(element)).toHaveProperty('focusOffset', 1)
+})
+
+test('circumvent setters/methods for UI changes', () => {
+  const {element} = render<HTMLInputElement>(`<input/>`, {focus: false})
+
+  const prototypeDescr = Object.getOwnPropertyDescriptors<HTMLInputElement>(
+    Object.getPrototypeOf(element) as HTMLInputElement,
+  )
+  const valueSpy = mocks.fn(prototypeDescr.value.set)
+  const setSelectionRangeSpy = mocks.fn(prototypeDescr.setSelectionRange.value)
+
+  Object.defineProperties(element, {
+    value: {
+      get: () => {
+        throw new Error()
+      },
+      ...prototypeDescr.value,
+      set: valueSpy,
+    },
+    setSelectionRange: {
+      ...prototypeDescr.setSelectionRange,
+      value: setSelectionRangeSpy,
+    },
+  })
+
+  prepare(element)
+  element.focus()
+
+  setUIValue(element, 'abcd')
+  setUISelection(element, {focusOffset: 3})
+
+  expect(element).toHaveValue('abcd')
+  expect(element).toHaveProperty('selectionStart', 3)
+  expect(valueSpy).not.toBeCalled()
+  expect(setSelectionRangeSpy).not.toBeCalled()
+
+  element.value = 'efgh'
+  element.setSelectionRange(1, 2)
+  expect(element).toHaveValue('efgh')
+  expect(element).toHaveProperty('selectionStart', 1)
+  expect(valueSpy).toBeCalledWith('efgh')
+  expect(setSelectionRangeSpy).toBeCalledWith(1, 2)
+})

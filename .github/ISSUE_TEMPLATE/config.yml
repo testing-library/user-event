@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 🙋 Discussions
+    url: https://github.com/testing-library/user-event/discussions/new?category=q-a
+    about: Please ask and answer questions in the Discussions.
+  - name: 💬 Discord
+    url: https://discord.gg/testing-library
+    about: Join our community at Discord.

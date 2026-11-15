@@ -1,4 +1,5 @@
 import {dispatchDOMEvent} from '../event'
+import {updateSelectionOnFocus} from '../event/selection/updateSelectionOnFocus'
 import {isElementType} from '../utils'
 import {
   prepareRangeTextInterceptor,
@@ -50,6 +51,22 @@ export function prepareDocument(document: Document) {
           dispatchDOMEvent(el, 'change')
         }
         clearInitialValue(el)
+      }
+    },
+    {
+      capture: true,
+      passive: true,
+    },
+  )
+
+  // Focus might also be moved per `HTMLElement.focus()`,
+  // e.g. by an event handler reacting to a `click`.
+  document.addEventListener(
+    'focus',
+    e => {
+      const el = e.target as Element
+      if (el === document.activeElement) {
+        updateSelectionOnFocus(el)
       }
     },
     {

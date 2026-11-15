@@ -192,6 +192,25 @@ describe('update selection when moving focus into element with own selection imp
     expect(document.getSelection()).toHaveProperty('focusNode', element)
     expect(document.getSelection()).toHaveProperty('focusOffset', 0)
   })
+
+  test('replace selection when an event handler moves focus', async () => {
+    const {
+      elements: [div, input],
+      user,
+    } = setup(`<div>Some text</div><input/>`, {focus: false})
+    div.addEventListener('click', () => input.focus())
+
+    await user.pointer([
+      {keys: '[MouseLeft>]', target: div, offset: 1},
+      {offset: 8},
+    ])
+    expect(document.getSelection()?.toString()).toBe('ome tex')
+
+    await user.pointer({keys: '[/MouseLeft]'})
+    expect(input).toHaveFocus()
+    expect(document.getSelection()).toHaveProperty('isCollapsed', true)
+    expect(document.getSelection()?.toString()).toBe('')
+  })
 })
 
 describe('move selection', () => {

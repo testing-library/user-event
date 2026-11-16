@@ -24,7 +24,6 @@ export function prepareDocument(document: Document) {
     'focus',
     e => {
       // Focus on elements in a shadow tree is retargeted to the shadow host.
-      // The composed path can be empty for a synthetic event.
       const el = (e.composedPath()[0] ?? e.target) as Element
 
       prepareElement(el)

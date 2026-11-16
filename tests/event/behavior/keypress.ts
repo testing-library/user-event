@@ -1,6 +1,6 @@
 import cases from 'jest-in-case'
 import {createConfig, createInstance} from '#src/setup/setup'
-import {render} from '#testHelpers'
+import {render, setup} from '#testHelpers'
 
 function setupInstance() {
   return createInstance(createConfig()).instance
@@ -183,5 +183,66 @@ cases(
       click: false,
       submit: false,
     },
+    'with radio and checkbox fields that do not block implicit submission': {
+      html: `<form><input type="radio"/><input/><input type="checkbox"/><input type="hidden"/></form>`,
+      click: false,
+      submit: true,
+    },
+    'with another field that blocks implicit submission': {
+      html: `<form><input type="radio"/><input/><input type="number"/></form>`,
+      click: false,
+      submit: false,
+    },
   },
 )
+
+test.each([
+  [`<input type="radio"/>`],
+  [`<input type="checkbox"/>`],
+  [`<input type="hidden"/>`],
+  [`<input type="button"/>`],
+  [`<input type="reset"/>`],
+  [`<input type="range"/>`],
+  [`<input type="color"/>`],
+  [`<input type="file"/>`],
+  [`<select><option>foo</option></select>`],
+  [`<textarea></textarea>`],
+  [
+    `<fieldset><input type="radio" name="choice"/><input type="radio" name="choice"/></fieldset><input type="checkbox"/><input type="hidden"/>`,
+  ],
+])('submit form on Enter with non-blocking controls: %s', async controls => {
+  const {user, getEvents} = setup(
+    `<form><input id="target"/>${controls}</form>`,
+    {focus: 'form/input[@id="target"]'},
+  )
+
+  await user.keyboard('{Enter}')
+
+  expect(getEvents('submit')).toHaveLength(1)
+  expect(getEvents('click')).toHaveLength(0)
+})
+
+test.each([
+  'text',
+  'search',
+  'tel',
+  'url',
+  'email',
+  'password',
+  'date',
+  'month',
+  'week',
+  'time',
+  'datetime-local',
+  'number',
+])('do not submit form on Enter with another blocking %s input', async type => {
+  const {user, getEvents} = setup(
+    `<form><input id="target"/><input type="radio"/><input type="${type}"/></form>`,
+    {focus: 'form/input[@id="target"]'},
+  )
+
+  await user.keyboard('{Enter}')
+
+  expect(getEvents('submit')).toHaveLength(0)
+  expect(getEvents('click')).toHaveLength(0)
+})

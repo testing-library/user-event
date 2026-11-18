@@ -173,6 +173,16 @@ cases(
       click: false,
       submit: true,
     },
+    'with single number input': {
+      html: `<form><div></div><input type="number"/></form>`,
+      click: false,
+      submit: true,
+    },
+    'on number input with another field that blocks implicit submission': {
+      html: `<form><input/><input type="number"/></form>`,
+      click: false,
+      submit: false,
+    },
     'without submit button': {
       html: `<form><input/><input/></form>`,
       click: false,
@@ -220,6 +230,18 @@ test.each([
 
   expect(getEvents('submit')).toHaveLength(1)
   expect(getEvents('click')).toHaveLength(0)
+})
+
+test('submit form on Enter after typing into a single number input', async () => {
+  const {user, getEvents, xpathNode} = setup(
+    `<form><input type="number"/></form>`,
+    {focus: 'form/input'},
+  )
+
+  await user.keyboard('42{Enter}')
+
+  expect(xpathNode('form/input')).toHaveValue(42)
+  expect(getEvents('submit')).toHaveLength(1)
 })
 
 test.each([

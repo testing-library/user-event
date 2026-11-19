@@ -5,7 +5,8 @@ export function isContentEditable(
   return (
     element.hasAttribute('contenteditable') &&
     (element.getAttribute('contenteditable') == 'true' ||
-      element.getAttribute('contenteditable') == '')
+        element.getAttribute('contenteditable') == '' ||
+        element.getAttribute('contenteditable') == 'plaintext-only')
   )
 }
 
@@ -13,12 +14,14 @@ export function isContentEditable(
  * If a node is a contenteditable or inside one, return that element.
  */
 export function getContentEditable(node: Node): Element | null {
-  const element = getElement(node)
-  return (
-    element &&
-    (element.closest('[contenteditable=""]') ||
-      element.closest('[contenteditable="true"]'))
-  )
+  let element = getElement(node)
+  while (element) {
+    if (isContentEditable(element)) {
+      return element
+    }
+    element = element.parentElement
+  }
+  return null
 }
 
 function getElement(node: Node) {

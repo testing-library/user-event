@@ -3,6 +3,11 @@ import {isElementType} from '../misc/isElementType'
 import {isVisible} from '../misc/isVisible'
 import {FOCUSABLE_SELECTOR} from './selector'
 
+// Radios share a group only if they have the same name and the same form owner
+function isSameRadioGroup(a: HTMLInputElement, b: HTMLInputElement) {
+  return a.name === b.name && a.form === b.form
+}
+
 export function getTabDestination(activeElement: Element, shift: boolean) {
   const document = activeElement.ownerDocument
   const focusableElements = document.querySelectorAll(FOCUSABLE_SELECTOR)
@@ -29,12 +34,12 @@ export function getTabDestination(activeElement: Element, shift: boolean) {
     })
   }
 
-  const checkedRadio: Record<string, HTMLInputElement> = {}
+  const checkedRadios: HTMLInputElement[] = []
   let prunedElements = [document.body]
-  const activeRadioGroup = isElementType(activeElement, 'input', {
+  const activeRadio = isElementType(activeElement, 'input', {
     type: 'radio',
   })
-    ? activeElement.name
+    ? activeElement
     : undefined
   enabledElements.forEach(currentElement => {
     const el = currentElement as HTMLInputElement
@@ -47,22 +52,26 @@ export function getTabDestination(activeElement: Element, shift: boolean) {
       if (el === activeElement) {
         prunedElements.push(el)
         return
-      } else if (el.name === activeRadioGroup) {
+      } else if (activeRadio && isSameRadioGroup(el, activeRadio)) {
         return
       }
 
       // If we stumble upon a checked radio, remove the others
       if (el.checked) {
         prunedElements = prunedElements.filter(
-          e => !isElementType(e, 'input', {type: 'radio', name: el.name}),
+          e =>
+            !(
+              isElementType(e, 'input', {type: 'radio'}) &&
+              isSameRadioGroup(e, el)
+            ),
         )
         prunedElements.push(el)
-        checkedRadio[el.name] = el
+        checkedRadios.push(el)
         return
       }
 
       // If we already found the checked one, skip
-      if (typeof checkedRadio[el.name] !== 'undefined') {
+      if (checkedRadios.some(r => isSameRadioGroup(r, el))) {
         return
       }
     }

@@ -432,3 +432,35 @@ cases(
     },
   },
 )
+
+test('walk only through the radio group of the same form per arrow keys', () => {
+  const {getEvents, xpathNode} = render(
+    `
+      <form>
+        <input type="radio" name="size" value="a1" checked/>
+        <input type="radio" name="size" value="a2"/>
+      </form>
+      <form>
+        <input type="radio" name="size" value="b1" checked/>
+        <input type="radio" name="size" value="b2"/>
+      </form>
+    `,
+    {focus: '//input[@value="a2"]'},
+  )
+
+  setupInstance().dispatchUIEvent(
+    xpathNode('//input[@value="a2"]'),
+    'keydown',
+    {
+      key: 'ArrowDown',
+    },
+  )
+
+  expect(getEvents('click')[0]).toHaveProperty(
+    'target',
+    xpathNode('//input[@value="a1"]'),
+  )
+  expect(xpathNode('//input[@value="a1"]')).toHaveFocus()
+  expect(xpathNode('//input[@value="a1"]')).toBeChecked()
+  expect(xpathNode('//input[@value="b1"]')).toBeChecked()
+})

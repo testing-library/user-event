@@ -141,3 +141,26 @@ test('skip unchecked radios if group has one checked', () => {
   expect(getTabDestination(elF, false)).toBe(elG)
   expect(getTabDestination(elF, true)).toBe(elE)
 })
+
+test('radios with the same name in different forms are separate groups', () => {
+  const {xpathNode} = setup(`
+    <input id="a"/>
+    <form>
+      <input id="b" type="radio" name="size" checked/>
+      <input id="c" type="radio" name="size"/>
+    </form>
+    <form>
+      <input id="d" type="radio" name="size" checked/>
+      <input id="e" type="radio" name="size"/>
+    </form>
+    <input id="f"/>
+  `)
+  const [elA, elB, elC, elD, elF] = ['a', 'b', 'c', 'd', 'f'].map(id =>
+    xpathNode(`//*[@id="${id}"]`),
+  )
+
+  assertTabOrder([elA, elB, elD, elF])
+
+  // A focused radio in one form doesn't hide the group in the other form
+  expect(getTabDestination(elC, false)).toBe(elD)
+})

@@ -30,6 +30,7 @@ export * from './misc/isElementType'
 export * from './misc/isVisible'
 export * from './misc/isDisabled'
 export * from './misc/level'
+export * from './misc/timerDetection'
 export * from './misc/wait'
 
 export * from './pointer/cssPointerEvents'

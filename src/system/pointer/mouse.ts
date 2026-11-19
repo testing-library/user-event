@@ -89,14 +89,23 @@ export class Mouse {
     return {
       leave: () => {
         if (prevTarget !== nextTarget) {
-          instance.dispatchUIEvent(prevTarget, 'mouseout', init)
-          leave.forEach(el => instance.dispatchUIEvent(el, 'mouseleave', init))
+          const leaveInit = {...init, relatedTarget: nextTarget}
+          instance.dispatchUIEvent(prevTarget, 'mouseout', leaveInit)
+          leave.forEach(el =>
+            instance.dispatchUIEvent(el, 'mouseleave', leaveInit),
+          )
         }
       },
       enter: () => {
         if (prevTarget !== nextTarget) {
-          instance.dispatchUIEvent(nextTarget, 'mouseover', init)
-          enter.forEach(el => instance.dispatchUIEvent(el, 'mouseenter', init))
+          const enterInit = {
+            ...init,
+            relatedTarget: prevTarget.isConnected ? prevTarget : null,
+          }
+          instance.dispatchUIEvent(nextTarget, 'mouseover', enterInit)
+          enter.forEach(el =>
+            instance.dispatchUIEvent(el, 'mouseenter', enterInit),
+          )
         }
       },
       move: () => {

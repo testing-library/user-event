@@ -65,9 +65,10 @@ export class Pointer {
       leave: () => {
         if (hasPointerEvents(instance, prevTarget)) {
           if (prevTarget !== nextTarget) {
-            instance.dispatchUIEvent(prevTarget, 'pointerout', init)
+            const leaveInit = {...init, relatedTarget: nextTarget}
+            instance.dispatchUIEvent(prevTarget, 'pointerout', leaveInit)
             leave.forEach(el =>
-              instance.dispatchUIEvent(el, 'pointerleave', init),
+              instance.dispatchUIEvent(el, 'pointerleave', leaveInit),
             )
           }
         }
@@ -76,9 +77,13 @@ export class Pointer {
         assertPointerEvents(instance, nextTarget)
 
         if (prevTarget !== nextTarget) {
-          instance.dispatchUIEvent(nextTarget, 'pointerover', init)
+          const enterInit = {
+            ...init,
+            relatedTarget: prevTarget.isConnected ? prevTarget : null,
+          }
+          instance.dispatchUIEvent(nextTarget, 'pointerover', enterInit)
           enter.forEach(el =>
-            instance.dispatchUIEvent(el, 'pointerenter', init),
+            instance.dispatchUIEvent(el, 'pointerenter', enterInit),
           )
         }
       },

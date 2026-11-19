@@ -14,7 +14,7 @@ export function walkRadio(
         ? `input[type="radio"][name="${window.CSS.escape(el.name)}"]`
         : `input[type="radio"][name=""], input[type="radio"]:not([name])`,
     ),
-  )
+  ).filter(e => e.form === el.form)
   for (let i = group.findIndex(e => e === el) + direction; ; i += direction) {
     if (!group[i]) {
       i = direction > 0 ? 0 : group.length - 1

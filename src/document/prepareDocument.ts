@@ -61,12 +61,28 @@ export function prepareDocument(document: Document) {
 
   // Focus might also be moved per `HTMLElement.focus()`,
   // e.g. by an event handler reacting to a `click`.
+  // Only react if focus actually moved to the element,
+  // not to a `focus` event dispatched on an element that already had focus.
+  let focused = document.activeElement
   document.addEventListener(
     'focus',
     e => {
       const el = e.target as Element
-      if (el === document.activeElement) {
+      if (el === document.activeElement && el !== focused) {
+        focused = el
         updateSelectionOnFocus(el)
+      }
+    },
+    {
+      capture: true,
+      passive: true,
+    },
+  )
+  document.addEventListener(
+    'blur',
+    e => {
+      if (e.target === focused && e.target !== document.activeElement) {
+        focused = null
       }
     },
     {

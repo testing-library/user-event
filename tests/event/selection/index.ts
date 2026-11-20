@@ -211,6 +211,57 @@ describe('update selection when moving focus into element with own selection imp
     expect(document.getSelection()).toHaveProperty('isCollapsed', true)
     expect(document.getSelection()?.toString()).toBe('')
   })
+
+  test('retain own selection of an element focused per `HTMLElement.focus()`', () => {
+    const {
+      elements: [div, input],
+    } = setup<[HTMLDivElement, HTMLInputElement]>(
+      `<div>Some text</div><input value="hello world"/>`,
+      {focus: false},
+    )
+    input.setSelectionRange(2, 7)
+    setSelection({
+      focusNode: div.firstChild as Text,
+      anchorOffset: 1,
+      focusOffset: 8,
+    })
+
+    input.focus()
+
+    expect(input).toHaveFocus()
+    expect(input).toHaveProperty('selectionStart', 2)
+    expect(input).toHaveProperty('selectionEnd', 7)
+  })
+
+  test('do not alter document selection on `focus` event for already focused element', () => {
+    const {
+      elements: [div, input],
+    } = setup<[HTMLDivElement, HTMLInputElement]>(
+      `<div>Some text</div><input value="hello world"/>`,
+    )
+    expect(input).toHaveFocus()
+    setSelection({
+      focusNode: div.firstChild as Text,
+      anchorOffset: 1,
+      focusOffset: 8,
+    })
+
+    input.dispatchEvent(new FocusEvent('focus'))
+
+    expect(input).toHaveFocus()
+    expect(document.getSelection()?.toString()).toBe('ome tex')
+  })
+
+  test('do not alter own selection on `focus` event for already focused element', () => {
+    const {element} = setup<HTMLInputElement>(`<input value="hello world"/>`)
+    expect(element).toHaveFocus()
+    element.setSelectionRange(1, 3)
+
+    element.dispatchEvent(new FocusEvent('focus'))
+
+    expect(element).toHaveProperty('selectionStart', 1)
+    expect(element).toHaveProperty('selectionEnd', 3)
+  })
 })
 
 describe('move selection', () => {

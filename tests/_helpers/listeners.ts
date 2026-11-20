@@ -1,5 +1,5 @@
 import {eventMap} from '#src/event/eventMap'
-import {isElementType} from '#src/utils'
+import {isElementType, getVisibleText} from '#src/utils'
 import {MouseButton, MouseButtonFlip} from '#src/system/pointer/buttons'
 
 let eventListeners: Array<{
@@ -218,10 +218,12 @@ function getElementValue(element: Element) {
     return JSON.stringify(Array.from(element.selectedOptions).map(o => o.value))
   } else if (element.getAttribute('role') === 'listbox') {
     return JSON.stringify(
-      element.querySelector('[aria-selected="true"]')?.innerHTML,
+      getVisibleText(
+        element.querySelector('[aria-selected="true"]') as Element,
+      ),
     )
   } else if (element.getAttribute('role') === 'option') {
-    return JSON.stringify(element.innerHTML)
+    return JSON.stringify(getVisibleText(element))
   } else if ('value' in element) {
     return JSON.stringify((element as HTMLInputElement).value)
   }

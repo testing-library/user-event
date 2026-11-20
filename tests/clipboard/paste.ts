@@ -86,6 +86,16 @@ test('prevent input per paste event handler', async () => {
   expect(eventWasFired('input')).toBe(false)
 })
 
+test('paste string provides clipboard data as text/plain', async () => {
+  const {getEvents, user} = setup(`<input/>`)
+
+  await user.paste('foo')
+
+  const clipboardData = getEvents('paste')[0].clipboardData
+  expect(clipboardData?.types).toEqual(['text/plain'])
+  expect(clipboardData?.getData('text/plain')).toBe('foo')
+})
+
 test.each(['input', 'textarea'])(
   'should paste text in <%s> up to maxLength if provided',
   async type => {
@@ -119,6 +129,20 @@ test.each(['input', 'textarea'])(
   },
 )
 
+test('should type and paste text in <input type="tel"> up to maxLength', async () => {
+  const {element, getEvents, user} = setup<HTMLInputElement>(
+    `<input type="tel" maxlength="3" />`,
+  )
+
+  await user.type(element, '12345')
+  expect(element).toHaveValue('123')
+  expect(getEvents('input')).toHaveLength(3)
+
+  element.value = ''
+  await user.paste('12345')
+  expect(element).toHaveValue('123')
+})
+
 test('should replace selected text all at once', async () => {
   const {element, user} = setup<HTMLInputElement>(
     '<input value="hello world" />',
@@ -148,4 +172,12 @@ describe('without Clipboard API', () => {
     )
     expect(getEvents()).toHaveLength(0)
   })
+})
+
+test('paste keeps the pasted text in <input type="number"/>', async () => {
+  const {element, user} = setup<HTMLInputElement>(`<input type="number"/>`)
+
+  await user.paste('.80')
+
+  expect(element.value).toBe('.80')
 })

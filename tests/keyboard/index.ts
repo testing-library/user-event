@@ -190,3 +190,26 @@ customElements.define(
     }
   },
 )
+
+test('typing on focused element with iframe', async () => {
+  let iframe: HTMLIFrameElement
+  let iframeButton: HTMLElement
+  const {user} = setup(
+    '<div id="iframe-container"></div>',
+  )
+  iframe = document.createElement('iframe')
+  window.document.body.appendChild(iframe)
+  iframeButton = iframe.contentWindow!.document.createElement('button')
+  iframe.contentWindow!.document.body.appendChild(iframeButton)
+  let keydown = jest.fn()
+  let keyup = jest.fn()
+  iframeButton.addEventListener('keydown', keydown)
+  iframeButton.addEventListener('keyup', keyup)
+
+  iframeButton.focus()
+  await user.keyboard('[Space]')
+  expect(keydown).toHaveBeenCalled()
+  expect(keyup).toHaveBeenCalled()
+
+  iframe.remove()
+})

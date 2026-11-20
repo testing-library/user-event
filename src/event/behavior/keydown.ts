@@ -1,5 +1,6 @@
 import {getUIValue, setUISelection, getValueOrTextContent} from '../../document'
 import {
+  getActiveElementOrBody,
   getTabDestination,
   hasOwnSelection,
   isContentEditable,
@@ -101,7 +102,9 @@ const keydownBehavior: {
   Tab: (event, target, instance) => {
     return () => {
       const dest = getTabDestination(
-        target,
+        // get target here because target would be stale, it's the element that keydown happened on, but
+        // focus may have been moved to another element so that browser tab behaviour picks up from there
+        getActiveElementOrBody(instance.config.document),
         instance.system.keyboard.modifiers.Shift,
       )
       focusElement(dest)

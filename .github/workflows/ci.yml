@@ -60,13 +60,27 @@ jobs:
   release:
     needs: validate
     runs-on: ubuntu-latest
+    environment: production
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+      id-token: write # npm trusted publishing (OIDC)
     if: >
       github.event_name == 'push' &&
       github.repository == 'testing-library/user-event' &&
-      contains('refs/heads/main,refs/heads/beta,refs/heads/alpha', github.ref)
+      contains('refs/heads/main,refs/heads/beta,refs/heads/alpha', github.ref) &&
+      vars.RELEASE_DRY != 'true'
     steps:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v4
+        with:
+          # semantic-release needs full history + tags to see unreleased commits
+          fetch-depth: 0
+      - name: ⎔ Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
       - name: ♻️ Restore node_modules
         uses: actions/cache/restore@v4
         with:
@@ -82,10 +96,17 @@ jobs:
       - name: 🏗️ Run build script
         run: npm run build
 
+      # JS action (not Docker) so GitHub OIDC works with npm trusted publishing
       - name: 🚀 Release
-        uses: ph-fritsche/action-release@v2
+        uses: cycjimmy/semantic-release-action@v5
         with:
-          dry: ${{ vars.RELEASE_DRY }}
+          semantic_version: 25
+          branches: |
+            [
+              '+([0-9])?(.{+([0-9]),x}).x',
+              'main',
+              {name: 'beta', prerelease: true},
+              {name: 'alpha', prerelease: true}
+            ]
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

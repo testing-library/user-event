@@ -117,7 +117,7 @@ export class KeyboardHost {
   }
 
   /** Press a key */
-  async keydown(instance: Instance, keyDef: keyboardKey) {
+  async keydown(instance: Instance, keyDef: keyboardKey, repeat: boolean = false) {
     const key = String(keyDef.key)
     const code = String(keyDef.code)
 
@@ -133,6 +133,7 @@ export class KeyboardHost {
     const unprevented = instance.dispatchUIEvent(target, 'keydown', {
       key,
       code,
+      repeat,
     })
 
     if (isModifierLock(key) && !this.modifiers[key]) {

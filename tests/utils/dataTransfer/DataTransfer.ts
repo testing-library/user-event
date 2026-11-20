@@ -30,6 +30,70 @@ describe('create DataTransfer', () => {
     expect(dt.getData('text')).toBe('baz')
   })
 
+  test('normalize format shorthands', async () => {
+    const dt = createDataTransfer(window)
+    dt.setData('text', 'foo')
+    dt.setData('url', 'https://example.com')
+
+    expect(dt.types).toEqual(['text/plain', 'text/uri-list'])
+
+    expect(dt.getData('text/plain')).toBe('foo')
+    expect(dt.getData('text')).toBe('foo')
+    expect(dt.getData('text/uri-list')).toBe('https://example.com')
+    expect(dt.getData('url')).toBe('https://example.com')
+  })
+
+  test('normalize format case', async () => {
+    const dt = createDataTransfer(window)
+    dt.setData('TEXT/PLAIN', 'foo')
+    dt.setData('Url', 'https://example.com')
+
+    expect(dt.types).toEqual(['text/plain', 'text/uri-list'])
+
+    expect(dt.getData('text/plain')).toBe('foo')
+    expect(dt.getData('Text')).toBe('foo')
+    expect(dt.getData('text/uri-list')).toBe('https://example.com')
+  })
+
+  test('items.add follows the standard', () => {
+    const dt = createDataTransfer(window)
+    dt.items.add('foo', 'TEXT/PLAIN')
+    dt.items.add('bar', 'TEXT')
+    dt.items.add('baz', 'URL')
+
+    // Chrome currently preserves casing. Keep this spec assertion so the
+    // Toolbox result becomes green when Chrome converges with the standard.
+    expect(dt.types).toEqual(['text/plain', 'text', 'url'])
+    expect(dt.getData('TEXT/PLAIN')).toBe('foo')
+    expect(dt.getData('text/plain')).toBe('foo')
+    expect(dt.getData('text')).toBe('foo')
+  })
+
+  test('overwrite item declared per shorthand', async () => {
+    const dt = createDataTransfer(window)
+    dt.setData('text/plain', 'foo')
+    dt.setData('text', 'bar')
+
+    expect(dt.types).toEqual(['text/plain'])
+    expect(dt.getData('text/plain')).toBe('bar')
+  })
+
+  test('clear data per shorthand', async () => {
+    const dt = createDataTransfer(window)
+    dt.setData('text/plain', 'foo')
+    dt.setData('text/uri-list', 'https://example.com')
+
+    dt.clearData('text')
+
+    expect(dt.types).toEqual(['text/uri-list'])
+    expect(dt.getData('text/plain')).toBe('')
+
+    dt.clearData('URL')
+
+    expect(dt.types).toEqual([])
+    expect(dt.getData('text/uri-list')).toBe('')
+  })
+
   test('overwrite item', async () => {
     const dt = createDataTransfer(window)
     dt.setData('text/plain', 'foo')

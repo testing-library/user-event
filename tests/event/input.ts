@@ -264,6 +264,11 @@ cases(
       data: '123',
       expectedValue: '12',
     },
+    'on tel input': {
+      html: `<input type="tel" maxlength="2"/>`,
+      data: '123',
+      expectedValue: '12',
+    },
     'ignore on number': {
       html: `<input type="number" maxlength="2"/>`,
       data: '123',

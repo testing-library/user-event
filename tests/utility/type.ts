@@ -105,6 +105,71 @@ test('type into textarea in shadow DOM after value is reset', async () => {
   expect(element).toHaveValue('world')
 })
 
+test.each(['{Backspace}', '{Delete}'])(
+  'does not edit siblings when pressing %s in an empty contenteditable',
+  async key => {
+    const {element, getEvents, user} = setup(
+      '<div><span>before</span><div contenteditable></div><span>after</span></div>',
+      {focus: false},
+    )
+    const editor = element.querySelector('[contenteditable]')!
+
+    await user.type(editor, key)
+
+    expect(editor).toHaveFocus()
+    expect({
+      html: element.innerHTML,
+      inputCount: getEvents('input').length,
+    }).toEqual({
+      html: '<span>before</span><div contenteditable=""></div><span>after</span>',
+      inputCount: 0,
+    })
+  },
+)
+
+test.each([
+  ['Backspace', 'true', '', 'befor', 'after', 1],
+  ['Delete', 'true', '', 'before', 'fter', 1],
+  ['Backspace', 'true', 'false', 'before', 'after', 0],
+  ['Delete', 'true', 'FALSE', 'before', 'after', 0],
+  ['Backspace', 'plaintext-only', '', 'befor', 'after', 1],
+  ['Delete', 'plaintext-only', '', 'before', 'fter', 1],
+] as const)(
+  'keeps %s in the editing region of a nested editor (outer=%s, boundary=%s)',
+  async (
+    key,
+    outerMode,
+    boundaryMode,
+    expectedLeft,
+    expectedRight,
+    inputCount,
+  ) => {
+    const boundary = boundaryMode ? ` contenteditable="${boundaryMode}"` : ''
+    const {element, getEvents, user} = setup(
+      `<div contenteditable="${outerMode}"><div${boundary}><span>before</span><span id="editor" contenteditable tabindex="0"></span><span>after</span></div></div>`,
+      {focus: './/span[@id="editor"]', selection: {focusOffset: 0}},
+    )
+    const [left, editor, right] = Array.from(
+      element.firstElementChild!.children,
+    )
+
+    await user.type(editor, `{${key}}`, {skipClick: true})
+
+    expect(editor).toHaveFocus()
+    expect({
+      left: left.textContent,
+      inner: editor.textContent,
+      right: right.textContent,
+      inputs: getEvents('input').length,
+    }).toEqual({
+      left: expectedLeft,
+      inner: '',
+      right: expectedRight,
+      inputs: inputCount,
+    })
+  },
+)
+
 test.each([
   ['.80', ['', '.8', '.80']],
   ['1.50', ['1', '1', '1.5', '1.50']],

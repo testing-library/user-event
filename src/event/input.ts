@@ -84,7 +84,12 @@ function editContenteditable(
       inputType === 'deleteContentBackward' ? -1 : 1,
       inputType,
     )
-    if (nextPosition) {
+    const root = getEditableRoot(element)
+    if (
+      nextPosition &&
+      root.contains(inputRange.startContainer) &&
+      root.contains(nextPosition.node)
+    ) {
       del = true
       const delRange = inputRange.cloneRange()
       if (delRange.comparePoint(nextPosition.node, nextPosition.offset) < 0) {
@@ -113,6 +118,25 @@ function editContenteditable(
   if (del || data) {
     instance.dispatchUIEvent(element, 'input', {inputType})
   }
+}
+
+function getEditableRoot(element: Element) {
+  let root = element
+  // A focusable nested editor can share its ancestors' editable region.
+  for (
+    let parent = element.parentElement;
+    parent;
+    parent = parent.parentElement
+  ) {
+    const mode = parent.getAttribute('contenteditable')?.toLowerCase()
+    if (mode === 'false') {
+      break
+    }
+    if (mode === '' || mode === 'true' || mode === 'plaintext-only') {
+      root = parent
+    }
+  }
+  return root
 }
 
 function editInputElement(

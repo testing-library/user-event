@@ -432,3 +432,34 @@ cases(
     },
   },
 )
+
+test('walk through radio group when the window has no `CSS` global', () => {
+  // jsdom does not implement `window.CSS`.
+  // It is only present here because a test dependency installs a polyfill.
+  const descriptor = Object.getOwnPropertyDescriptor(window, 'CSS')
+  delete (window as {CSS?: unknown}).CSS
+
+  try {
+    const {xpathNode} = render(
+      `
+      <input type="radio" name="group" value="a"/>
+      <input type="radio" name="group" value="b"/>
+      <input type="radio" name="other" value="c"/>
+    `,
+      {focus: '//input[@value="a"]'},
+    )
+
+    setupInstance().dispatchUIEvent(
+      document.activeElement as Element,
+      'keydown',
+      {key: 'ArrowDown'},
+    )
+
+    expect(xpathNode('//input[@value="b"]')).toHaveFocus()
+    expect(xpathNode('//input[@value="b"]')).toBeChecked()
+  } finally {
+    if (descriptor) {
+      Object.defineProperty(window, 'CSS', descriptor)
+    }
+  }
+})

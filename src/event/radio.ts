@@ -1,5 +1,5 @@
 import {type Instance} from '../setup'
-import {getWindow, isDisabled} from '../utils'
+import {isDisabled} from '../utils'
 import {focusElement} from './focus'
 
 export function walkRadio(
@@ -7,14 +7,13 @@ export function walkRadio(
   el: HTMLInputElement & {type: 'radio'},
   direction: -1 | 1,
 ) {
-  const window = getWindow(el)
+  // Compare `name` directly instead of building a selector:
+  // `window.CSS.escape` is not available in every DOM implementation (e.g. jsdom).
   const group = Array.from(
     el.ownerDocument.querySelectorAll<HTMLInputElement & {type: 'radio'}>(
-      el.name
-        ? `input[type="radio"][name="${window.CSS.escape(el.name)}"]`
-        : `input[type="radio"][name=""], input[type="radio"]:not([name])`,
+      'input[type="radio"]',
     ),
-  )
+  ).filter(e => e.name === el.name)
   for (let i = group.findIndex(e => e === el) + direction; ; i += direction) {
     if (!group[i]) {
       i = direction > 0 ? 0 : group.length - 1

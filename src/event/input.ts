@@ -76,6 +76,7 @@ function editContenteditable(
     del = true
     inputRange.deleteContents()
   } else if (
+    element.contains(inputRange.startContainer) &&
     ['deleteContentBackward', 'deleteContentForward'].includes(inputType)
   ) {
     const nextPosition = getNextCursorPosition(
@@ -84,7 +85,8 @@ function editContenteditable(
       inputType === 'deleteContentBackward' ? -1 : 1,
       inputType,
     )
-    if (nextPosition) {
+    // The next cursor position can be outside the active editor.
+    if (nextPosition && element.contains(nextPosition.node)) {
       del = true
       const delRange = inputRange.cloneRange()
       if (delRange.comparePoint(nextPosition.node, nextPosition.offset) < 0) {

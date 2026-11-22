@@ -25,7 +25,11 @@ async function selectOptionsBase(
   select: Element,
   values: HTMLElement | HTMLElement[] | string[] | string,
 ) {
-  if (!newValue && !(select as HTMLSelectElement).multiple) {
+  if (
+    !newValue &&
+    !(select as HTMLSelectElement).multiple &&
+    select.getAttribute('aria-multiselectable') !== 'true'
+  ) {
     throw getConfig().getElementError(
       `Unable to deselect an option in a non-multiple select. Use selectOptions to change the selection instead.`,
       select,
@@ -49,7 +53,7 @@ async function selectOptionsBase(
           return matchingOption
         } else {
           throw getConfig().getElementError(
-            `Value "${String(val as string)}" not found in options`,
+            `Value "${String(val)}" not found in options`,
             select,
           )
         }

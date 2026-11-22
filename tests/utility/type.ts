@@ -64,6 +64,24 @@ test('type with initialSelection', async () => {
   expect(element).toHaveValue('Hello Friend')
 })
 
+test.each(['Backspace', 'Delete'])(
+  '%s in an empty contenteditable leaves neighboring content intact',
+  async key => {
+    const {
+      elements: [before, editor, after],
+      getEvents,
+      user,
+    } = setup('<p>before</p><div contenteditable="true"></div><p>after</p>')
+
+    await user.type(editor, `{${key}}`)
+
+    expect(getEvents('input')).toHaveLength(0)
+    expect(before.textContent).toBe('before')
+    expect(editor.textContent).toBe('')
+    expect(after.textContent).toBe('after')
+  },
+)
+
 describe('automatically release pressed keys', () => {
   test('release keys', async () => {
     const {element, getEvents, user} = setup('<input />')

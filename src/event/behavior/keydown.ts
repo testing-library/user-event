@@ -11,10 +11,20 @@ import {focusElement} from '../focus'
 import {input} from '../input'
 import {moveSelection, selectAll, setSelectionRange} from '../selection'
 import {walkRadio} from '../radio'
+import {stepRange} from '../range'
 import {BehaviorPlugin} from '.'
 import {behavior} from './registry'
 
+const rangeArrowKeys = ['ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowUp']
+
 behavior.keydown = (event, target, instance) => {
+  if (
+    rangeArrowKeys.includes(event.key) &&
+    isElementType(target, 'input', {type: 'range'} as const)
+  ) {
+    return () => stepRange(instance, target, event.key)
+  }
+
   return (
     keydownBehavior[event.key]?.(event, target, instance) ??
     combinationBehavior(event, target, instance)

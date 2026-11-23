@@ -58,7 +58,9 @@ From
 
 `user-event` tries to simulate the real events that would happen in the browser
 as the user interacts with it. For example `userEvent.click(checkbox)` would
-change the state of the checkbox.
+change the state of the checkbox. On a focused `<input type="range">`,
+`await user.keyboard('{ArrowRight}')` moves the slider one step and fires
+`input` and `change` when the value changes.
 
 > [The more your tests resemble the way your software is used, the more
 > confidence they can give you.][guiding-principle]

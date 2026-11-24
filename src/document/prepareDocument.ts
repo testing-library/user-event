@@ -1,6 +1,6 @@
 import {dispatchDOMEvent} from '../event'
 import {updateSelectionOnFocus} from '../event/selection/updateSelectionOnFocus'
-import {isElementType} from '../utils'
+import {getActiveElement, isElementType} from '../utils'
 import {
   prepareRangeTextInterceptor,
   prepareSelectionInterceptor,
@@ -24,7 +24,8 @@ export function prepareDocument(document: Document) {
   document.addEventListener(
     'focus',
     e => {
-      const el = e.target as Element
+      // Focus on elements in a shadow tree is retargeted to the shadow host.
+      const el = (e.composedPath()[0] ?? e.target) as Element
 
       prepareElement(el)
     },
@@ -36,15 +37,16 @@ export function prepareDocument(document: Document) {
 
   // Our test environment defaults to `document.body` as `activeElement`.
   // In other environments this might be `null` when preparing.
+  const activeElement = getActiveElement(document)
   // istanbul ignore else
-  if (document.activeElement) {
-    prepareElement(document.activeElement)
+  if (activeElement) {
+    prepareElement(activeElement)
   }
 
   document.addEventListener(
     'blur',
     e => {
-      const el = e.target as HTMLInputElement
+      const el = (e.composedPath()[0] ?? e.target) as HTMLInputElement
       const initialValue = getInitialValue(el)
       if (initialValue !== undefined) {
         if (el.value !== initialValue) {

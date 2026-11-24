@@ -75,6 +75,7 @@ const BlockImplicitSubmission = [
 const SubmitSingleInputOnEnter = [
   'email',
   'month',
+  'number',
   'password',
   'search',
   'tel',

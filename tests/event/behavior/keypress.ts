@@ -244,6 +244,21 @@ test('submit form on Enter after typing into a single number input', async () =>
   expect(getEvents('submit')).toHaveLength(1)
 })
 
+test.each(['month', 'week'])(
+  'do not submit form on Enter with a single %s input',
+  async type => {
+    const {user, getEvents} = setup(
+      `<form><input type="${type}"/></form>`,
+      {focus: 'form/input'},
+    )
+
+    await user.keyboard('{Enter}')
+
+    expect(getEvents('submit')).toHaveLength(0)
+    expect(getEvents('click')).toHaveLength(0)
+  },
+)
+
 test.each([
   'text',
   'search',

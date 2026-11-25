@@ -1,3 +1,4 @@
+import {dispatchDOMEvent} from '../event'
 import {isElementType} from '../utils'
 import {startTrackValue, trackOrSetValue} from './trackValue'
 import {
@@ -163,7 +164,13 @@ export function prepareSelectionInterceptor(
       return {
         applyNative: !!isUI,
         realArgs: [Number(start), ...others] as [number, number, undefined],
-        then: () => (isUI ? undefined : setUISelectionClean(element)),
+        then: () => {
+          if (!isUI) setUISelectionClean(element)
+
+          if (this.ownerDocument.visibilityState === 'hidden') {
+            dispatchDOMEvent(this, 'select')
+          }
+        },
       }
     },
   )

@@ -69,6 +69,10 @@ export const eventMap = {
     EventType: 'InputEvent',
     defaultInit: {bubbles: true, cancelable: false, composed: true},
   },
+  select: {
+    EventType: 'Event',
+    defaultInit: {bubbles: true, cancelable: false},
+  },
   mousedown: {
     EventType: 'MouseEvent',
     defaultInit: {bubbles: true, cancelable: true, composed: true},

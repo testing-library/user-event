@@ -275,6 +275,17 @@ test('clear UI selection if selection is programmatically set', async () => {
   expect(getUISelection(element)).toHaveProperty('endOffset', 3)
 })
 
+test('programmatic selection dispatches a select event in hidden documents', () => {
+  const {element, getEvents} = render<HTMLInputElement>(`<input value="abc"/>`)
+
+  prepare(element)
+
+  if (element.ownerDocument.visibilityState === 'hidden') {
+    element.setSelectionRange(1, 2)
+    expect(getEvents('select')).toHaveLength(1)
+  }
+})
+
 test('select input without selectionRange support', () => {
   const {element} = render<HTMLInputElement>(
     `<input type="number" value="123"/>`,

@@ -1,6 +1,6 @@
 import {focusElement, input, isAllSelected, selectAll} from '../event'
 import {type Instance} from '../setup'
-import {isDisabled, isEditable} from '../utils'
+import {getActiveElement, isDisabled, isEditable} from '../utils'
 
 export async function clear(this: Instance, element: Element) {
   if (!isEditable(element) || isDisabled(element)) {
@@ -9,7 +9,7 @@ export async function clear(this: Instance, element: Element) {
 
   focusElement(element)
 
-  if (element.ownerDocument.activeElement !== element) {
+  if (getActiveElement(element.ownerDocument) !== element) {
     throw new Error('The element to be cleared could not be focused.')
   }
 

@@ -1,4 +1,5 @@
 export * from './click/isClickableInput'
+export * from './click/isSummaryForParentDetails'
 
 export * from './dataTransfer/Blob'
 export * from './dataTransfer/DataTransfer'

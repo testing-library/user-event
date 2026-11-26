@@ -56,10 +56,20 @@ test('blurs previously focused element', async () => {
     select[name="select"][value=[]] - focusin: ← button
     option[value="1"][selected=false] - pointerup
     option[value="1"][selected=false] - mouseup: primary
-    select[name="select"][value=[]] - input
-    select[name="select"][value=[]] - change
     option[value="1"][selected=false] - click: primary
   `)
+})
+
+test('does not fire input/change when the option is not selected', async () => {
+  const {select, options, eventWasFired, user} = setupSelect({multiple: true})
+  options[1].selected = true
+
+  await user.deselectOptions(select, '1')
+
+  expect(eventWasFired('click')).toBe(true)
+  expect(eventWasFired('input')).toBe(false)
+  expect(eventWasFired('change')).toBe(false)
+  expect(options.map(o => o.selected)).toEqual([false, true, false])
 })
 
 test('toggle options as expected', async () => {

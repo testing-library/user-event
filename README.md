@@ -63,6 +63,11 @@ change the state of the checkbox.
 > [The more your tests resemble the way your software is used, the more
 > confidence they can give you.][guiding-principle]
 
+On a focused single-select dropdown, `await user.keyboard('{ArrowDown}')`
+selects the next available option, and `{ArrowUp}` selects the previous one.
+Both fire `input` and then `change` when the selection changes. This simulates
+navigation in a closed dropdown.
+
 ## Issues
 
 Looking to contribute? Look for the [Good First Issue][good-first-issue] label.

@@ -9,6 +9,7 @@ import {
 } from '../../utils'
 import {focusElement} from '../focus'
 import {input} from '../input'
+import {walkSelect} from '../select'
 import {moveSelection, selectAll, setSelectionRange} from '../selection'
 import {walkRadio} from '../radio'
 import {BehaviorPlugin} from '.'
@@ -21,15 +22,28 @@ behavior.keydown = (event, target, instance) => {
   )
 }
 
+const hasModifierKey = (event: KeyboardEvent) =>
+  event.altKey || event.ctrlKey || event.metaKey || event.shiftKey
+
+const verticalArrow: BehaviorPlugin<'keydown'> = (event, target, instance) => {
+  const direction = event.key === 'ArrowDown' ? 1 : -1
+
+  if (isElementType(target, 'input', {type: 'radio'} as const)) {
+    return () => walkRadio(instance, target, direction)
+  }
+
+  const isDropdownSelect =
+    isElementType(target, 'select') && !target.multiple && target.size <= 1
+
+  if (isDropdownSelect && !hasModifierKey(event)) {
+    return () => walkSelect(instance, target, direction)
+  }
+}
+
 const keydownBehavior: {
   [key: string]: BehaviorPlugin<'keydown'> | undefined
 } = {
-  ArrowDown: (event, target, instance) => {
-    /* istanbul ignore else */
-    if (isElementType(target, 'input', {type: 'radio'} as const)) {
-      return () => walkRadio(instance, target, 1)
-    }
-  },
+  ArrowDown: verticalArrow,
   ArrowLeft: (event, target, instance) => {
     if (isElementType(target, 'input', {type: 'radio'} as const)) {
       return () => walkRadio(instance, target, -1)
@@ -42,12 +56,7 @@ const keydownBehavior: {
     }
     return () => moveSelection(target, 1)
   },
-  ArrowUp: (event, target, instance) => {
-    /* istanbul ignore else */
-    if (isElementType(target, 'input', {type: 'radio'} as const)) {
-      return () => walkRadio(instance, target, -1)
-    }
-  },
+  ArrowUp: verticalArrow,
   Backspace: (event, target, instance) => {
     if (isEditable(target)) {
       return () => {

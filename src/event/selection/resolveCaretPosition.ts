@@ -1,5 +1,5 @@
 import {getUIValue} from '../../document'
-import {hasOwnSelection} from '../../utils'
+import {hasOwnSelection, isContentEditableFalse} from '../../utils'
 
 export function resolveCaretPosition({
   target,
@@ -34,9 +34,9 @@ function findNodeAtTextOffset(
   offset: number | undefined,
   isRoot = true,
 ): {
-    node: Node
-    offset: number
-  } {
+  node: Node
+  offset: number
+} {
   // When clicking after the content the browser behavior can be complicated:
   // 1. If there is textContent after the last element child,
   // the cursor is moved there.
@@ -46,16 +46,22 @@ function findNodeAtTextOffset(
 
   let i = offset === undefined ? node.childNodes.length - 1 : 0
   const step = offset === undefined ? -1 : +1
+  let minIndex =
+    isRoot && offset === undefined ? Math.max(node.childNodes.length - 1, 0) : 0
 
-  while (
-    offset === undefined
-      ? i >= (isRoot ? Math.max(node.childNodes.length - 1, 0) : 0)
-      : i <= node.childNodes.length
-  ) {
+  while (offset === undefined ? i >= minIndex : i <= node.childNodes.length) {
     if (offset && i === node.childNodes.length) {
       throw new Error('The given offset is out of bounds.')
     }
     const c = node.childNodes.item(i)
+
+    if (isContentEditableFalse(c)) {
+      if (offset === undefined && isRoot) {
+        minIndex = 0
+      }
+      i += step
+      continue
+    }
 
     const text = String(c.textContent)
     if (text.length) {

@@ -2,6 +2,7 @@ import {getConfig} from '@testing-library/dom'
 import {hasPointerEvents, isDisabled, isElementType, wait} from '../utils'
 import {type Instance} from '../setup'
 import {focusElement} from '../event'
+import {setOptionSelected} from '../event/select'
 
 export async function selectOptions(
   this: Instance,
@@ -59,16 +60,6 @@ async function selectOptionsBase(
 
   if (isDisabled(select) || !selectedOptions.length) return
 
-  const selectOption = (option: HTMLOptionElement) => {
-    option.selected = newValue
-    this.dispatchUIEvent(select, 'input', {
-      bubbles: true,
-      cancelable: false,
-      composed: true,
-    })
-    this.dispatchUIEvent(select, 'change')
-  }
-
   if (isElementType(select, 'select')) {
     if (select.multiple) {
       for (const option of selectedOptions) {
@@ -96,7 +87,7 @@ async function selectOptionsBase(
           this.dispatchUIEvent(option, 'mouseup')
         }
 
-        selectOption(option as HTMLOptionElement)
+        setOptionSelected(this, select, option as HTMLOptionElement, newValue)
 
         if (withPointerEvents) {
           this.dispatchUIEvent(option, 'click')
@@ -116,7 +107,12 @@ async function selectOptionsBase(
         focusElement(select)
       }
 
-      selectOption(selectedOptions[0] as HTMLOptionElement)
+      setOptionSelected(
+        this,
+        select,
+        selectedOptions[0] as HTMLOptionElement,
+        newValue,
+      )
 
       if (withPointerEvents) {
         // the browser triggers another click event on the select for the click on the option

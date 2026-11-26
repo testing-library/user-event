@@ -1,5 +1,6 @@
 import {type Options} from '../options'
 import {type PointerInput} from '../pointer'
+import {type ScrollOptions} from '../utility'
 import {type System} from '../system'
 import {setupDirect, type UserEventApi} from './setup'
 
@@ -62,6 +63,14 @@ export function paste(
   return setupDirect(options).api.paste(clipboardData)
 }
 
+export function scroll(
+  element: Element,
+  scrollOptions: ScrollOptions = {},
+  options: DirectOptions = {},
+) {
+  return setupDirect(options, element).api.scroll(element, scrollOptions)
+}
+
 export function selectOptions(
   select: Element,
   values: HTMLElement | HTMLElement[] | string[] | string,
@@ -87,6 +96,14 @@ export function unhover(element: Element, options: DirectOptions = {}) {
   system.pointer.setMousePosition({target: element})
 
   return api.unhover(element)
+}
+
+export function wheel(
+  element: Element,
+  init: WheelEventInit = {},
+  options: DirectOptions = {},
+) {
+  return setupDirect(options, element).api.wheel(element, init)
 }
 
 export function upload(

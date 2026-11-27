@@ -212,6 +212,24 @@ describe('update selection when moving focus into element with own selection imp
     expect(document.getSelection()?.toString()).toBe('')
   })
 
+  test('replace selection when the label focuses its associated input', async () => {
+    const {
+      elements: [div, input],
+      user,
+    } = setup(`<label for="foo">Some text</label><input id="foo" />`, {focus: false})
+
+    await user.pointer([
+      {keys: '[MouseLeft>]', target: div, offset: 1},
+      {offset: 8},
+    ])
+    expect(document.getSelection()?.toString()).toBe('ome tex')
+
+    await user.pointer({keys: '[/MouseLeft]'})
+    expect(input).toHaveFocus()
+    expect(document.getSelection()).toHaveProperty('isCollapsed', true)
+    expect(document.getSelection()?.toString()).toBe('')
+  })
+
   test('retain own selection of an element focused per `HTMLElement.focus()`', () => {
     const {
       elements: [div, input],

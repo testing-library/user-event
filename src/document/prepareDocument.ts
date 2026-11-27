@@ -1,12 +1,12 @@
 import {dispatchDOMEvent} from '../event'
 import {updateSelectionOnFocus} from '../event/selection/updateSelectionOnFocus'
-import {getActiveElement, isElementType} from '../utils'
+import {getActiveElement, hasOwnSelection, isElementType} from '../utils'
 import {
   prepareRangeTextInterceptor,
   prepareSelectionInterceptor,
   prepareValueInterceptor,
 } from './interceptor'
-import {clearInitialValue, getInitialValue} from './UI'
+import {clearInitialValue, getInitialValue, hasUISelection} from './UI'
 
 const isPrepared = Symbol('Node prepared with document state workarounds')
 
@@ -72,7 +72,21 @@ export function prepareDocument(document: Document) {
       const el = e.target as Element
       if (el === document.activeElement && el !== focused) {
         focused = el
-        updateSelectionOnFocus(el)
+        // Browsers might reset the selection of an element with own selection
+        // implementation when the document selection is moved to it.
+        // Focusing per `HTMLElement.focus()` retains the programmatic selection.
+        if (hasOwnSelection(el) && !hasUISelection(el)) {
+          const {selectionStart, selectionEnd} = el
+          updateSelectionOnFocus(el)
+          if (
+            el.selectionStart !== selectionStart ||
+            el.selectionEnd !== selectionEnd
+          ) {
+            el.setSelectionRange(selectionStart, selectionEnd)
+          }
+        } else {
+          updateSelectionOnFocus(el)
+        }
       }
     },
     {

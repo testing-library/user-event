@@ -11,6 +11,7 @@ import {focusElement} from '../focus'
 import {input} from '../input'
 import {moveSelection, selectAll, setSelectionRange} from '../selection'
 import {walkRadio} from '../radio'
+import {stepRange} from '../range'
 import {BehaviorPlugin} from '.'
 import {behavior} from './registry'
 
@@ -21,33 +22,29 @@ behavior.keydown = (event, target, instance) => {
   )
 }
 
+const arrowBehavior: BehaviorPlugin<'keydown'> = (event, target, instance) => {
+  if (isElementType(target, 'input', {type: 'range'} as const)) {
+    return () => stepRange(instance, target, event.key)
+  }
+
+  const direction =
+    event.key === 'ArrowLeft' || event.key === 'ArrowUp' ? -1 : 1
+  if (isElementType(target, 'input', {type: 'radio'} as const)) {
+    return () => walkRadio(instance, target, direction)
+  }
+
+  if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+    return () => moveSelection(target, direction)
+  }
+}
+
 const keydownBehavior: {
   [key: string]: BehaviorPlugin<'keydown'> | undefined
 } = {
-  ArrowDown: (event, target, instance) => {
-    /* istanbul ignore else */
-    if (isElementType(target, 'input', {type: 'radio'} as const)) {
-      return () => walkRadio(instance, target, 1)
-    }
-  },
-  ArrowLeft: (event, target, instance) => {
-    if (isElementType(target, 'input', {type: 'radio'} as const)) {
-      return () => walkRadio(instance, target, -1)
-    }
-    return () => moveSelection(target, -1)
-  },
-  ArrowRight: (event, target, instance) => {
-    if (isElementType(target, 'input', {type: 'radio'} as const)) {
-      return () => walkRadio(instance, target, 1)
-    }
-    return () => moveSelection(target, 1)
-  },
-  ArrowUp: (event, target, instance) => {
-    /* istanbul ignore else */
-    if (isElementType(target, 'input', {type: 'radio'} as const)) {
-      return () => walkRadio(instance, target, -1)
-    }
-  },
+  ArrowDown: arrowBehavior,
+  ArrowLeft: arrowBehavior,
+  ArrowRight: arrowBehavior,
+  ArrowUp: arrowBehavior,
   Backspace: (event, target, instance) => {
     if (isEditable(target)) {
       return () => {

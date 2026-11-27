@@ -6,6 +6,7 @@ import {
   setSelection,
   setSelectionRange,
 } from '#src/event/selection'
+import {getWindow} from '#src/utils'
 import {isJsdomEnv, setup} from '#testHelpers'
 
 test('range on input', async () => {
@@ -216,7 +217,9 @@ describe('update selection when moving focus into element with own selection imp
     const {
       elements: [div, input],
       user,
-    } = setup(`<label for="foo">Some text</label><input id="foo" />`, {focus: false})
+    } = setup(`<label for="foo">Some text</label><input id="foo" />`, {
+      focus: false,
+    })
 
     await user.pointer([
       {keys: '[MouseLeft>]', target: div, offset: 1},
@@ -264,7 +267,7 @@ describe('update selection when moving focus into element with own selection imp
       focusOffset: 8,
     })
 
-    input.dispatchEvent(new FocusEvent('focus'))
+    input.dispatchEvent(new (getWindow(input).FocusEvent)('focus'))
 
     expect(input).toHaveFocus()
     expect(document.getSelection()?.toString()).toBe('ome tex')
@@ -275,7 +278,7 @@ describe('update selection when moving focus into element with own selection imp
     expect(element).toHaveFocus()
     element.setSelectionRange(1, 3)
 
-    element.dispatchEvent(new FocusEvent('focus'))
+    element.dispatchEvent(new (getWindow(element).FocusEvent)('focus'))
 
     expect(element).toHaveProperty('selectionStart', 1)
     expect(element).toHaveProperty('selectionEnd', 3)

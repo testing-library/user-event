@@ -6,6 +6,7 @@ import {
   setSelection,
   setSelectionRange,
 } from '#src/event/selection'
+import {getWindow} from '#src/utils'
 import {isJsdomEnv, setup} from '#testHelpers'
 
 test('range on input', async () => {
@@ -191,6 +192,96 @@ describe('update selection when moving focus into element with own selection imp
     expect(document.getSelection()).toHaveProperty('anchorOffset', 0)
     expect(document.getSelection()).toHaveProperty('focusNode', element)
     expect(document.getSelection()).toHaveProperty('focusOffset', 0)
+  })
+
+  test('replace selection when an event handler moves focus', async () => {
+    const {
+      elements: [div, input],
+      user,
+    } = setup(`<div>Some text</div><input/>`, {focus: false})
+    div.addEventListener('click', () => input.focus())
+
+    await user.pointer([
+      {keys: '[MouseLeft>]', target: div, offset: 1},
+      {offset: 8},
+    ])
+    expect(document.getSelection()?.toString()).toBe('ome tex')
+
+    await user.pointer({keys: '[/MouseLeft]'})
+    expect(input).toHaveFocus()
+    expect(document.getSelection()).toHaveProperty('isCollapsed', true)
+    expect(document.getSelection()?.toString()).toBe('')
+  })
+
+  test('replace selection when the label focuses its associated input', async () => {
+    const {
+      elements: [div, input],
+      user,
+    } = setup(`<label for="foo">Some text</label><input id="foo" />`, {
+      focus: false,
+    })
+
+    await user.pointer([
+      {keys: '[MouseLeft>]', target: div, offset: 1},
+      {offset: 8},
+    ])
+    expect(document.getSelection()?.toString()).toBe('ome tex')
+
+    await user.pointer({keys: '[/MouseLeft]'})
+    expect(input).toHaveFocus()
+    expect(document.getSelection()).toHaveProperty('isCollapsed', true)
+    expect(document.getSelection()?.toString()).toBe('')
+  })
+
+  test('retain own selection of an element focused per `HTMLElement.focus()`', () => {
+    const {
+      elements: [div, input],
+    } = setup<[HTMLDivElement, HTMLInputElement]>(
+      `<div>Some text</div><input value="hello world"/>`,
+      {focus: false},
+    )
+    input.setSelectionRange(2, 7)
+    setSelection({
+      focusNode: div.firstChild as Text,
+      anchorOffset: 1,
+      focusOffset: 8,
+    })
+
+    input.focus()
+
+    expect(input).toHaveFocus()
+    expect(input).toHaveProperty('selectionStart', 2)
+    expect(input).toHaveProperty('selectionEnd', 7)
+  })
+
+  test('do not alter document selection on `focus` event for already focused element', () => {
+    const {
+      elements: [div, input],
+    } = setup<[HTMLDivElement, HTMLInputElement]>(
+      `<div>Some text</div><input value="hello world"/>`,
+    )
+    expect(input).toHaveFocus()
+    setSelection({
+      focusNode: div.firstChild as Text,
+      anchorOffset: 1,
+      focusOffset: 8,
+    })
+
+    input.dispatchEvent(new (getWindow(input).FocusEvent)('focus'))
+
+    expect(input).toHaveFocus()
+    expect(document.getSelection()?.toString()).toBe('ome tex')
+  })
+
+  test('do not alter own selection on `focus` event for already focused element', () => {
+    const {element} = setup<HTMLInputElement>(`<input value="hello world"/>`)
+    expect(element).toHaveFocus()
+    element.setSelectionRange(1, 3)
+
+    element.dispatchEvent(new (getWindow(element).FocusEvent)('focus'))
+
+    expect(element).toHaveProperty('selectionStart', 1)
+    expect(element).toHaveProperty('selectionEnd', 3)
   })
 })
 
